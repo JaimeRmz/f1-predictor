@@ -13,6 +13,7 @@ const COMPLETED_2026 = [
     { raceId: 1174, round: 6, name: "Monaco GP",              flag: "🇲🇨" },
     { raceId: 1175, round: 7, name: "Spanish GP (Barcelona)", flag: "🇪🇸" },
     { raceId: 1176, round: 8, name: "Austrian GP",            flag: "🇦🇹" },
+    { raceId: 1177, round: 9, name: "British GP",             flag: "🇬🇧" },
 ];
 
 const CALENDAR_FLAGS = { 9:"🇬🇧",10:"🇧🇪",11:"🇭🇺",12:"🇳🇱",13:"🇮🇹",14:"🇪🇸",15:"🇦🇿",16:"🇸🇬",17:"🇺🇸",18:"🇲🇽",19:"🇧🇷",20:"🇺🇸",21:"🇶🇦",22:"🇦🇪" };
@@ -21,17 +22,18 @@ const Season2026Page = () => {
   const [accuracy, setAccuracy] = useState(null);
   const [loadingAcc, setLoadingAcc] = useState(true);
 
+  // Post-Silverstone (round 9) standings
   const standings = [
-    { driver: "Kimi Antonelli",  team: "Mercedes",     pts: 171, wins: 5, color: "#00d2be" },
-    { driver: "George Russell",  team: "Mercedes",      pts: 131, wins: 2, color: "#00d2be" },
-    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 125, wins: 1, color: "#e10600" },
-    { driver: "Oscar Piastri",   team: "McLaren",       pts: 80,  wins: 0, color: "#ff8000" },
-    { driver: "Lando Norris",    team: "McLaren",       pts: 79,  wins: 0, color: "#ff8000" },
-    { driver: "Charles Leclerc", team: "Ferrari",       pts: 79,  wins: 0, color: "#e10600" },
-    { driver: "Max Verstappen",  team: "Red Bull",      pts: 73,  wins: 0, color: "#3671c6" },
-    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 42,  wins: 0, color: "#3671c6" },
-    { driver: "Pierre Gasly",    team: "Alpine",        pts: 41,  wins: 0, color: "#0093cc" },
-    { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 30,  wins: 0, color: "#6692ff" },
+    { driver: "Kimi Antonelli",  team: "Mercedes",     pts: 179, wins: 5, color: "#00d2be" },
+    { driver: "George Russell",  team: "Mercedes",      pts: 154, wins: 2, color: "#00d2be" },
+    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 147, wins: 1, color: "#e10600" },
+    { driver: "Charles Leclerc", team: "Ferrari",       pts: 108, wins: 1, color: "#e10600" },
+    { driver: "Lando Norris",    team: "McLaren",       pts: 97,  wins: 0, color: "#ff8000" },
+    { driver: "Oscar Piastri",   team: "McLaren",       pts: 82,  wins: 0, color: "#ff8000" },
+    { driver: "Max Verstappen",  team: "Red Bull",      pts: 76,  wins: 0, color: "#3671c6" },
+    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 52,  wins: 0, color: "#3671c6" },
+    { driver: "Pierre Gasly",    team: "Alpine",        pts: 42,  wins: 0, color: "#0093cc" },
+    { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 39,  wins: 0, color: "#6692ff" },
   ];
 
   useEffect(() => {
@@ -79,21 +81,21 @@ const Season2026Page = () => {
       <SectionHeader
         eyebrow="Live Test Set · Post-Training Data"
         title="2026 Formula One Season"
-        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>8 RACES COMPLETE</div></div>}
+        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>9 RACES COMPLETE</div></div>}
       />
 
       {/* Season summary bar */}
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <StatCard label="Completed"  value="8 / 22"       sub="races"             />
-        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+40 pts gap" />
-        <StatCard label="Remaining"  value="14"            sub="races to go"       />
-        <StatCard label="Next Race"  value="British GP"    sub="Jul 5 · Silverstone" />
+        <StatCard label="Completed"  value="9 / 22"       sub="races"             />
+        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+25 pts gap" />
+        <StatCard label="Remaining"  value="13"            sub="races to go"       />
+        <StatCard label="Next Race"  value="Belgian GP"    sub="Jul 19 · Spa" />
       </div>
 
       {/* Championship standings */}
       <div className="chart-enter" style={{ ...card }}>
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Driver Championship — after 8 rounds</span>
+          <span className="section-label">Driver Championship — after 9 rounds</span>
         </div>
         {standings.map((s, i) => (
           <div key={i} className="data-row stagger-item row-gap-tight" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.75rem 1rem", borderBottom: i < standings.length - 1 ? "1px solid var(--border)" : "none" }}>
@@ -105,7 +107,7 @@ const Season2026Page = () => {
             </div>
             <div className="standings-bar" style={{ width: "140px", flexShrink: 0 }}>
               <div style={{ height: "2px", background: "var(--dimmed)", marginBottom: "3px" }}>
-                <div className="prob-bar" style={{ height: "100%", width: `${(s.pts / 171) * 100}%`, background: i === 0 ? "var(--red)" : s.color }} />
+                <div className="prob-bar" style={{ height: "100%", width: `${(s.pts / 179) * 100}%`, background: i === 0 ? "var(--red)" : s.color }} />
               </div>
             </div>
             <span style={{ fontFamily: "var(--mono)", fontSize: "0.88rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--text)", width: "40px", textAlign: "right", flexShrink: 0 }}>{s.pts}</span>
@@ -171,7 +173,7 @@ const Season2026Page = () => {
       {/* Remaining calendar */}
       <div className="chart-enter" style={{ ...card }}>
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Remaining 2026 Calendar — 14 rounds</span>
+          <span className="section-label">Remaining 2026 Calendar — 13 rounds</span>
         </div>
         {UPCOMING_RACES_2026.map((r, i) => (
           <div key={i} className="data-row stagger-item" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 1rem", borderBottom: i < UPCOMING_RACES_2026.length - 1 ? "1px solid var(--border)" : "none" }}>

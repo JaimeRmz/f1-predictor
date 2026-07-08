@@ -57,7 +57,7 @@ const HealthIndicator = () => {
 
 // ── NAV ────────────────────────────────────────────────────────
 const Nav = ({ page, setPage, onNavigate }) => {
-  const links = ["Home", "Predictor", "Next Race 🇬🇧", "What-If 🎮", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
+  const links = ["Home", "Predictor", "Next Race 🇧🇪", "What-If 🎮", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
   return (
     <nav style={{ background: "#080812", position: "sticky", top: 0, zIndex: 100 }}>
       <div className="nav-scroll" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem", display: "flex", overflowX: "auto" }}>
@@ -1353,7 +1353,7 @@ export default function App() {
   const pages = {
     "Home": <HomePage />,
     "Predictor": <PredictorPage />,
-    "Next Race 🇬🇧": <NextRacePage />,
+    "Next Race 🇧🇪": <NextRacePage />,
     "What-If 🎮": <WhatIfPage />,
     "Championship": <ChampionshipPage />,
     "Drivers": <DriversPage />,

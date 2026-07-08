@@ -32,7 +32,7 @@ const ChampionshipPage = () => {
       <SectionHeader
         eyebrow="ML Simulation · Historical Win Rates"
         title="2026 Championship Predictor"
-        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>14 RACES REMAINING</div></div>}
+        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>13 RACES REMAINING</div></div>}
       />
 
       {offline && <OfflinePanel detail="The championship simulation request failed." onRetry={retry} />}

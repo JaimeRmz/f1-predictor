@@ -287,16 +287,17 @@ def compare_drivers(driver1: str, driver2: str):
 
 @app.get("/championship/simulate")
 def simulate_championship():
+    # Post-Silverstone (round 9) standings
     current_standings = [
-        {"driver": "Kimi Antonelli",  "driverRef": "antonelli",      "team": "Mercedes",     "points": 171, "color": "#00d2be"},
-        {"driver": "George Russell",  "driverRef": "russell",         "team": "Mercedes",     "points": 131, "color": "#00d2be"},
-        {"driver": "Lewis Hamilton",  "driverRef": "hamilton",        "team": "Ferrari",      "points": 125, "color": "#e10600"},
-        {"driver": "Oscar Piastri",   "driverRef": "piastri",         "team": "McLaren",      "points": 80,  "color": "#ff8000"},
-        {"driver": "Lando Norris",    "driverRef": "norris",          "team": "McLaren",      "points": 79,  "color": "#ff8000"},
-        {"driver": "Charles Leclerc", "driverRef": "leclerc",         "team": "Ferrari",      "points": 79,  "color": "#e10600"},
-        {"driver": "Max Verstappen",  "driverRef": "max_verstappen",  "team": "Red Bull",     "points": 73,  "color": "#3671c6"},
+        {"driver": "Kimi Antonelli",  "driverRef": "antonelli",      "team": "Mercedes",     "points": 179, "color": "#00d2be"},
+        {"driver": "George Russell",  "driverRef": "russell",         "team": "Mercedes",     "points": 154, "color": "#00d2be"},
+        {"driver": "Lewis Hamilton",  "driverRef": "hamilton",        "team": "Ferrari",      "points": 147, "color": "#e10600"},
+        {"driver": "Charles Leclerc", "driverRef": "leclerc",         "team": "Ferrari",      "points": 108, "color": "#e10600"},
+        {"driver": "Lando Norris",    "driverRef": "norris",          "team": "McLaren",      "points": 97,  "color": "#ff8000"},
+        {"driver": "Oscar Piastri",   "driverRef": "piastri",         "team": "McLaren",      "points": 82,  "color": "#ff8000"},
+        {"driver": "Max Verstappen",  "driverRef": "max_verstappen",  "team": "Red Bull",     "points": 76,  "color": "#3671c6"},
     ]
-    remaining_races  = 14
+    remaining_races  = 13
     points_available = remaining_races * 26  # 26 = win (25) + fastest lap (1)
     leader_pts       = current_standings[0]["points"]
     simulated = []
