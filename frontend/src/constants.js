@@ -1,5 +1,10 @@
 // Shared non-component constants and helpers.
-export const API = `http://${window.location.hostname}:8000`;
+// In production (Vercel) the backend URL is injected at build time via
+// VITE_API_URL. For local dev we fall back to the same host the app is served
+// from on port 8000 — that resolves to http://127.0.0.1:8000 (or localhost),
+// and also lets the LAN-exposed dev server (vite host:true) reach the API from
+// another device without reconfiguration.
+export const API = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8000`;
 
 export const card = {
   background: "rgba(255, 255, 255, 0.04)",

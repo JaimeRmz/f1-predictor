@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import joblib
@@ -6,21 +7,34 @@ import numpy as np
 import requests as http_requests
 from datetime import datetime
 
+# Resolve model/data paths relative to THIS file, not the process CWD, so the
+# app loads correctly whether Render (or anything else) starts it from the repo
+# root or from backend/. Models live beside main.py; the CSVs live in ../data.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "..", "data")
+
 app = FastAPI(title="F1 Predictor API")
+
+# Allowed browser origins come from FRONTEND_URL (comma-separated, so we can add
+# the Vercel deployment URL in Render's dashboard without a code change),
+# falling back to the local Vite dev server for development.
+_dev_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+_env_origins = [o.strip() for o in os.environ.get("FRONTEND_URL", "").split(",") if o.strip()]
+allowed_origins = _env_origins or _dev_origins
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-podium_model = joblib.load("podium_model.pkl")
-winner_model = joblib.load("winner_model.pkl")
-features = joblib.load("features.pkl")
-quali_model = joblib.load("quali_model.pkl")
-quali_features = joblib.load("quali_features.pkl")
-df = pd.read_csv("../data/f1_master.csv")
+podium_model = joblib.load(os.path.join(BASE_DIR, "podium_model.pkl"))
+winner_model = joblib.load(os.path.join(BASE_DIR, "winner_model.pkl"))
+features = joblib.load(os.path.join(BASE_DIR, "features.pkl"))
+quali_model = joblib.load(os.path.join(BASE_DIR, "quali_model.pkl"))
+quali_features = joblib.load(os.path.join(BASE_DIR, "quali_features.pkl"))
+df = pd.read_csv(os.path.join(DATA_DIR, "f1_master.csv"))
 df["grid"]   = pd.to_numeric(df["grid"],   errors="coerce").fillna(0).astype(int)
 df["points"] = pd.to_numeric(df["points"], errors="coerce").fillna(0)
 df = df.sort_values(["year", "round", "positionOrder"]).reset_index(drop=True)
@@ -425,3 +439,10 @@ def whatif_predict(drivers: list[dict], circuitRef: str = "", auto_quali: bool =
             result["predicted_quali_position"] = grid_value
         results.append(result)
     return sorted(results, key=lambda x: x['podium_probability'], reverse=True)
+
+
+if __name__ == "__main__":
+    # Local convenience runner. In production Render invokes uvicorn directly
+    # via the start command (see render.yaml) and supplies $PORT itself.
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))

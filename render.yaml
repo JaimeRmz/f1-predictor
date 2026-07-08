@@ -1,0 +1,19 @@
+# Render Blueprint for the F1 Predictor backend (FastAPI).
+# The frontend deploys separately on Vercel (see frontend/.env.example).
+services:
+  - type: web
+    name: f1-predictor-api
+    runtime: python
+    # rootDir makes backend/ the working directory, so main.py's model paths
+    # (BASE_DIR-relative) and requirements.txt resolve without extra prefixes.
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.5"
+      # Set to the deployed Vercel URL(s) after the frontend is live.
+      # Comma-separated for multiple origins (e.g. preview + production).
+      - key: FRONTEND_URL
+        sync: false
