@@ -3,7 +3,7 @@ import axios from "axios";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
-import { StatCard, OfflinePanel, SkeletonList } from "../shared.jsx";
+import { StatCard, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card } from "../constants.js";
 
 // ── DRIVERS PAGE ───────────────────────────────────────────────
@@ -70,7 +70,7 @@ const DriversPage = () => {
         ))}
       </div>
       <div>
-        {offline && <OfflinePanel detail="The driver data request failed." onRetry={retry} />}
+        {offline && <BackendPanel detail="The driver data request failed." onRetry={retry} />}
         {!selected && !offline && <div style={{ ...card, padding: "3rem", textAlign: "center" }}><p style={{ fontFamily: "var(--mono)", color: "var(--muted)", fontSize: "0.72rem", letterSpacing: "0.12em" }}>SELECT A DRIVER</p></div>}
         {loading && <SkeletonList rows={5} metrics={1} />}
         {stats && !loading && (

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { card, prefersReducedMotion } from "./constants.js";
+import { useHealth } from "./health.jsx";
 
 // ── Shared components ──────────────────────────────────────────
 
@@ -55,6 +56,53 @@ export const OfflinePanel = ({ detail = "The prediction engine isn't responding.
     )}
   </div>
 );
+
+// Backend cold-start state, styled after the header's SYS STATUS readout but
+// in amber (calm/expected, not the red alarm of a true failure). Shown while
+// the free-tier instance is spinning up.
+export const WakingPanel = () => (
+  <div style={{ ...card, borderColor: "rgba(255,176,32,0.35)", padding: "3rem 2rem", textAlign: "center" }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
+      <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--amber)", animation: "pulse 1.2s infinite" }} />
+      <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "700", color: "var(--amber)", letterSpacing: "0.2em" }}>SYS STATUS · WAKING</span>
+    </div>
+    <div style={{ fontSize: "1rem", fontWeight: "900", fontStyle: "italic", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.5rem" }}>Waking model server</div>
+    <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.8, margin: "0 auto 1.5rem", maxWidth: "440px" }}>
+      Free-tier instance is spinning up — this takes about 30–50 seconds on first visit. Predictions will load automatically.
+    </p>
+    <div className="loading-bar amber" style={{ maxWidth: "440px", margin: "0 auto" }} />
+  </div>
+);
+
+// Single entry point for the "data couldn't load" state on a page. Reads the
+// shared backend health: shows WAKING (with auto-retry, no button) while the
+// instance is spinning up, and only falls back to the red OFFLINE panel (with
+// a manual retry button) once the backend is genuinely unreachable.
+// onRetry should re-run the page's failed request; it's auto-invoked every 5s
+// while waking and once the moment the backend reports ready.
+export const BackendPanel = ({ onRetry, detail }) => {
+  const { status } = useHealth();
+  const cbRef = useRef(onRetry);
+  cbRef.current = onRetry;
+
+  // Auto-retry the failed request every 5s while not offline. Kept on a ref so
+  // a page re-render (which hands us a fresh onRetry closure) doesn't reset the
+  // interval; it only re-arms when the health status itself changes.
+  useEffect(() => {
+    if (status === "offline") return;
+    const id = setInterval(() => cbRef.current?.(), 5000);
+    return () => clearInterval(id);
+  }, [status]);
+
+  // Retry immediately the instant the backend comes online, so data appears
+  // without waiting out the 5s tick.
+  useEffect(() => {
+    if (status === "online") cbRef.current?.();
+  }, [status]);
+
+  if (status === "offline") return <OfflinePanel detail={detail} onRetry={onRetry} />;
+  return <WakingPanel />;
+};
 
 // Glass-card placeholder rows shown while driver lists load. Mirrors the
 // real row layout (position chip, name + sub-line, right-aligned metrics).

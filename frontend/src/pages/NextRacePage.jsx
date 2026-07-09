@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { SectionHeader, CountUp, OfflinePanel, SkeletonList } from "../shared.jsx";
+import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
 
 // ── NEXT RACE PAGE (Belgian GP 2026) ───────────────────────────
@@ -97,7 +97,7 @@ const NextRacePage = () => {
         ))}
       </div>
 
-      {offline && <OfflinePanel detail="The Spa prediction request failed." onRetry={retry} />}
+      {offline && <BackendPanel detail="The Spa prediction request failed." onRetry={retry} />}
 
       {/* Predicted qualifying order */}
       <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying Order — Spa-Francorchamps" />

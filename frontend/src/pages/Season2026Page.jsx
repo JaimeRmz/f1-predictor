@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Spinner, StatCard, SectionHeader } from "../shared.jsx";
+import { Spinner, StatCard, SectionHeader, BackendPanel } from "../shared.jsx";
 import { API, card, UPCOMING_RACES_2026 } from "../constants.js";
+import { useHealth } from "../health.jsx";
 
 // ── 2026 SEASON PAGE ───────────────────────────────────────────
 const COMPLETED_2026 = [
@@ -21,6 +22,8 @@ const CALENDAR_FLAGS = { 9:"🇬🇧",10:"🇧🇪",11:"🇭🇺",12:"🇳🇱",
 const Season2026Page = () => {
   const [accuracy, setAccuracy] = useState(null);
   const [loadingAcc, setLoadingAcc] = useState(true);
+  const [accFailed, setAccFailed] = useState(false);
+  const { wakeEpoch } = useHealth();
 
   // Post-Silverstone (round 9) standings
   const standings = [
@@ -36,7 +39,8 @@ const Season2026Page = () => {
     { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 39,  wins: 0, color: "#6692ff" },
   ];
 
-  useEffect(() => {
+  const loadAccuracy = () => {
+    setLoadingAcc(true);
     Promise.all(COMPLETED_2026.map(r =>
       axios.get(`${API}/predict/${r.raceId}`)
         .then(res => {
@@ -62,8 +66,12 @@ const Season2026Page = () => {
             winnerCorrect,
           };
         })
-        .catch(() => ({ ...r, predictedNames: ["—", "—", "—"], actualNames: ["—", "—", "—"], predictedWinnerName: "—", actualWinnerName: "—", podiumCorrect: false, winnerCorrect: false }))
+        .catch(() => ({ ...r, __failed: true, predictedNames: ["—", "—", "—"], actualNames: ["—", "—", "—"], predictedWinnerName: "—", actualWinnerName: "—", podiumCorrect: false, winnerCorrect: false }))
     )).then(results => {
+      // Every race failing means the backend is down/warming, not a real 0%
+      // accuracy — surface that as WAKING/OFFLINE instead of bogus stats.
+      if (results.every(r => r.__failed)) { setAccFailed(true); setLoadingAcc(false); return; }
+      setAccFailed(false);
       const podiumCorrectCount = results.filter(r => r.podiumCorrect).length;
       const winnerCorrectCount = results.filter(r => r.winnerCorrect).length;
       setAccuracy({
@@ -74,7 +82,10 @@ const Season2026Page = () => {
       });
       setLoadingAcc(false);
     });
-  }, []);
+  };
+
+  // Reload on mount and again each time the backend transitions to ready.
+  useEffect(loadAccuracy, [wakeEpoch]);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -130,7 +141,11 @@ const Season2026Page = () => {
             </div>
           )}
         </div>
-        {loadingAcc ? <Spinner text="LOADING ACCURACY DATA..." /> : (
+        {accFailed ? (
+          <div style={{ padding: "1rem" }}>
+            <BackendPanel detail="The 2026 accuracy backfill request failed." onRetry={loadAccuracy} />
+          </div>
+        ) : loadingAcc ? <Spinner text="LOADING ACCURACY DATA..." /> : accuracy && (
           <>
             <div className="accuracy-grid" style={{ display: "grid", gridTemplateColumns: "100px 1fr 1fr 44px 1fr 1fr 44px", borderBottom: "1px solid var(--border)" }}>
               {[

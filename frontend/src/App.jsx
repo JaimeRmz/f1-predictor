@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, Fragment, lazy, Suspense } from "react";
 import { MotionConfig } from "framer-motion";
 import { StatCard } from "./shared.jsx";
-import { API, prefersReducedMotion } from "./constants.js";
+import { prefersReducedMotion } from "./constants.js";
+import { HealthProvider, useHealth } from "./health.jsx";
 
 const PredictorPage = lazy(() => import("./pages/PredictorPage.jsx"));
 const NextRacePage = lazy(() => import("./pages/NextRacePage.jsx"));
@@ -21,35 +22,25 @@ const PageLoader = () => (
   </div>
 );
 
-// Live backend health readout for the header. Pings the API on mount and
-// every 30s after (plain fetch — keeps axios out of the eager bundle).
+// Live backend health readout for the header. Reads the shared health context
+// (single poller in HealthProvider) so it, and every data page, agree on the
+// same three states — including the cold-start WAKING state.
+const HEALTH_UI = {
+  online:  { color: "var(--green)", label: "ONLINE" },
+  waking:  { color: "var(--amber)", label: "WAKING" },
+  offline: { color: "var(--red)",   label: "OFFLINE" },
+};
 const HealthIndicator = () => {
-  const [online, setOnline] = useState(true);
-
-  useEffect(() => {
-    let mounted = true;
-    const check = async () => {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 4000);
-      try {
-        const res = await fetch(`${API}/races`, { signal: ctrl.signal });
-        if (mounted) setOnline(res.ok);
-      } catch {
-        if (mounted) setOnline(false);
-      } finally {
-        clearTimeout(timer);
-      }
-    };
-    check();
-    const interval = setInterval(check, 30000);
-    return () => { mounted = false; clearInterval(interval); };
-  }, []);
+  const { status } = useHealth();
+  const ui = HEALTH_UI[status] || HEALTH_UI.offline;
+  // Waking pulses a touch faster to read as "actively working".
+  const pulse = status === "waking" ? "pulse 1.2s infinite" : "pulse 2s infinite";
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-      <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: online ? "var(--green)" : "var(--red)", animation: "pulse 2s infinite" }} />
-      <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: online ? "var(--green)" : "var(--red)", fontWeight: "700", letterSpacing: "0.1em" }}>
-        {online ? "ONLINE" : "OFFLINE"}
+      <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: ui.color, animation: pulse }} />
+      <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: ui.color, fontWeight: "700", letterSpacing: "0.1em" }}>
+        {ui.label}
       </span>
     </div>
   );
@@ -1363,6 +1354,7 @@ export default function App() {
   };
 
   return (
+    <HealthProvider>
     <MotionConfig reducedMotion="user">
     <div style={{ background: "#080812", minHeight: "100vh", color: "var(--text)", fontFamily: "var(--sans)" }}>
       <div style={{ height: "3px", background: "rgba(225,6,0,0.35)" }} />
@@ -1395,5 +1387,6 @@ export default function App() {
       </main>
     </div>
     </MotionConfig>
+    </HealthProvider>
   );
 }

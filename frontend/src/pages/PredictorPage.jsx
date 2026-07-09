@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell, LineChart, Line, Legend
 } from "recharts";
-import { StatCard, Pill, CustomTooltip, SectionHeader, CountUp, RaceSelector, OfflinePanel, SkeletonList } from "../shared.jsx";
+import { StatCard, Pill, CustomTooltip, SectionHeader, CountUp, RaceSelector, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card, CONSTRUCTOR_OVERRIDES, UPCOMING_RACES_2026, UPCOMING_IDS, STANDINGS_GRID_2026 } from "../constants.js";
 
 // ── PREDICTOR PAGE ─────────────────────────────────────────────
@@ -90,7 +90,7 @@ const PredictorPage = () => {
         <RaceSelector upcoming={UPCOMING_RACES_2026} completed={races} value={selectedRaceId} onSelect={predict} />
       </div>
 
-      {offline && <OfflinePanel detail="The race list or prediction request failed." onRetry={retry} />}
+      {offline && <BackendPanel detail="The race list or prediction request failed." onRetry={retry} />}
 
       {loading && <SkeletonList rows={10} />}
 

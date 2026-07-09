@@ -8,7 +8,10 @@ services:
     # (BASE_DIR-relative) and requirements.txt resolve without extra prefixes.
     rootDir: backend
     plan: free
-    buildCommand: pip install -r requirements.txt
+    # Regenerate the lookups cache from the current CSV during build so the
+    # committed lookups.pkl is never stale on deploy (runtime falls back to
+    # recomputing anyway if the row-count sentinel doesn't match).
+    buildCommand: pip install -r requirements.txt && python build_lookups.py
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION

@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend
 } from "recharts";
-import { SectionHeader, CountUp, OfflinePanel, SkeletonList } from "../shared.jsx";
+import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card } from "../constants.js";
 
 // ── CHAMPIONSHIP PAGE ──────────────────────────────────────────
@@ -35,7 +35,7 @@ const ChampionshipPage = () => {
         right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>13 RACES REMAINING</div></div>}
       />
 
-      {offline && <OfflinePanel detail="The championship simulation request failed." onRetry={retry} />}
+      {offline && <BackendPanel detail="The championship simulation request failed." onRetry={retry} />}
 
       {loading && <SkeletonList rows={6} metrics={1} />}
 

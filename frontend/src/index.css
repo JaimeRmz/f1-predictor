@@ -15,6 +15,7 @@
   --mono: 'JetBrains Mono', monospace;
   --sans: 'Titillium Web', sans-serif;
   --green: #00c853;
+  --amber: #ffb020;
   --gold: #FFD700;
   --silver: #C0C0C0;
   --bronze: #CD7F32;
@@ -150,6 +151,8 @@ body {
   background: var(--red);
   animation: loadingSweep 1.3s ease-in-out infinite;
 }
+/* Amber variant for the backend-waking (cold start) state. */
+.loading-bar.amber::after { background: var(--amber); }
 
 /* ── Page transitions ── */
 .page-enter { animation: pageFadeUp 0.25s cubic-bezier(0.25,0.46,0.45,0.94) both; }

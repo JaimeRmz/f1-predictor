@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend
 } from "recharts";
-import { Spinner, DriverSelector, OfflinePanel } from "../shared.jsx";
+import { Spinner, DriverSelector, BackendPanel } from "../shared.jsx";
 import { API, card } from "../constants.js";
 
 // ── COMPARE PAGE ───────────────────────────────────────────────
@@ -52,7 +52,7 @@ const ComparePage = () => {
         </button>
       </div>
 
-      {offline && <OfflinePanel detail="The driver comparison request failed." onRetry={retry} />}
+      {offline && <BackendPanel detail="The driver comparison request failed." onRetry={retry} />}
 
       {loading && <Spinner text="COMPARING DRIVERS..." />}
 

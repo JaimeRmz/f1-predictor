@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { SectionHeader, CountUp, OfflinePanel, SkeletonList } from "../shared.jsx";
+import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card, cardRed, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
 
 // ── WHAT IF SIMULATOR (next race: Belgian GP · Spa) ────────────
@@ -282,7 +282,7 @@ const WhatIfPage = () => {
             Live Podium Probabilities
             {loading && <span style={{ fontFamily: "var(--mono)", color: "var(--red)", marginLeft: "0.75rem", fontSize: "0.58rem", animation: "pulse 0.8s infinite" }}>● COMPUTING</span>}
           </div>
-          {offline && <OfflinePanel detail="The live model call failed." onRetry={reset} />}
+          {offline && <BackendPanel detail="The live model call failed." onRetry={reset} />}
           {!offline && results.length === 0 && <SkeletonList rows={6} metrics={1} />}
           <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {results.map((r, i) => {

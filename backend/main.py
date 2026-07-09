@@ -1,10 +1,9 @@
 import os
-from fastapi import FastAPI
+import time
+import threading
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import joblib
-import pandas as pd
-import numpy as np
-import requests as http_requests
 from datetime import datetime
 
 # Resolve model/data paths relative to THIS file, not the process CWD, so the
@@ -13,7 +12,109 @@ from datetime import datetime
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "..", "data")
 
-app = FastAPI(title="F1 Predictor API")
+# ── Lazy startup ────────────────────────────────────────────────────────────
+# The heavy work — importing pandas/xgboost (via joblib), reading the master
+# CSV, loading the 3 models and building the derived lookups — is ~7-30s and is
+# dominated by the imports. On a Render free-tier cold start that would make the
+# very first request hang for the better part of a minute. So instead we defer
+# ALL of it to a background thread that starts AFTER the server is already
+# accepting connections. The health check ("/") answers in milliseconds and
+# reports models_ready; data endpoints return 503 until the warmup finishes.
+STATE = {"models_ready": False, "error": None}
+
+# Populated by _load(); predeclared so any stray reference degrades to an empty
+# result rather than a NameError.
+pd = None
+df = None
+podium_model = winner_model = quali_model = None
+features = quali_features = None
+driver_last5_lookup = {}
+driver_circuit_dcpr = {}
+driver_circuit_quali_avg_lookup = {}
+quali_constructor_season_avg = {}
+quali_driver_season_avg = {}
+quali_driver_last3_avg = {}
+quali_driver_champ_pos = {}
+quali_constructor_champ_pos = {}
+
+
+def _load():
+    """Background warmup. Logs a per-step ms breakdown to stdout (visible in
+    Render logs) and flips STATE['models_ready'] once everything is in place."""
+    global pd, df, podium_model, winner_model, quali_model, features, quali_features
+    global driver_last5_lookup, driver_circuit_dcpr, driver_circuit_quali_avg_lookup
+    global quali_constructor_season_avg, quali_driver_season_avg, quali_driver_last3_avg
+    global quali_driver_champ_pos, quali_constructor_champ_pos
+
+    t0 = time.perf_counter()
+
+    def lap(label, since):
+        now = time.perf_counter()
+        print(f"[startup] {(now - since) * 1000:8.1f} ms  {label}", flush=True)
+        return now
+
+    try:
+        t = t0
+        import pandas as _pd
+        import joblib
+        pd = _pd
+        t = lap("import pandas + joblib", t)
+
+        from lookups import prepare_df, compute_lookups
+        _df = pd.read_csv(os.path.join(DATA_DIR, "f1_master.csv"))
+        t = lap(f"read_csv f1_master ({len(_df)} rows)", t)
+        _df = prepare_df(_df)
+        t = lap("prepare_df", t)
+
+        pm = joblib.load(os.path.join(BASE_DIR, "podium_model.pkl"))
+        wm = joblib.load(os.path.join(BASE_DIR, "winner_model.pkl"))
+        ft = joblib.load(os.path.join(BASE_DIR, "features.pkl"))
+        qm = joblib.load(os.path.join(BASE_DIR, "quali_model.pkl"))
+        qf = joblib.load(os.path.join(BASE_DIR, "quali_features.pkl"))
+        t = lap("joblib.load models (imports xgboost)", t)
+
+        # Prefer the precomputed cache; fall back to computing from the CSV if
+        # it's missing or its row-count sentinel no longer matches (stale).
+        cache = os.path.join(BASE_DIR, "lookups.pkl")
+        L = None
+        if os.path.exists(cache):
+            cand = joblib.load(cache)
+            if isinstance(cand, dict) and cand.get("_row_count") == len(_df):
+                L = cand
+                t = lap("load cached lookups.pkl", t)
+            else:
+                t = lap("lookups.pkl stale — recomputing", t)
+        if L is None:
+            L = compute_lookups(_df)
+            t = lap("compute_lookups (no valid cache)", t)
+
+        podium_model, winner_model, quali_model = pm, wm, qm
+        features, quali_features = ft, qf
+        driver_last5_lookup = L["driver_last5_lookup"]
+        driver_circuit_dcpr = L["driver_circuit_dcpr"]
+        driver_circuit_quali_avg_lookup = L["driver_circuit_quali_avg_lookup"]
+        quali_constructor_season_avg = L["quali_constructor_season_avg"]
+        quali_driver_season_avg = L["quali_driver_season_avg"]
+        quali_driver_last3_avg = L["quali_driver_last3_avg"]
+        quali_driver_champ_pos = L["quali_driver_champ_pos"]
+        quali_constructor_champ_pos = L["quali_constructor_champ_pos"]
+        df = _df
+        STATE["models_ready"] = True
+        print(f"[startup] READY — total {(time.perf_counter() - t0) * 1000:.1f} ms", flush=True)
+    except Exception as e:  # never crash the process — let "/" report the failure
+        STATE["error"] = repr(e)
+        print(f"[startup] FAILED: {e!r}", flush=True)
+
+
+@asynccontextmanager
+async def lifespan(app):
+    # Kick off warmup on a daemon thread, then yield immediately so uvicorn
+    # starts serving right away — the health check is up while models load.
+    threading.Thread(target=_load, name="model-loader", daemon=True).start()
+    yield
+
+
+app = FastAPI(title="F1 Predictor API", lifespan=lifespan)
 
 # Allowed browser origins come from FRONTEND_URL (comma-separated, so we can add
 # the Vercel deployment URL in Render's dashboard without a code change),
@@ -29,81 +130,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-podium_model = joblib.load(os.path.join(BASE_DIR, "podium_model.pkl"))
-winner_model = joblib.load(os.path.join(BASE_DIR, "winner_model.pkl"))
-features = joblib.load(os.path.join(BASE_DIR, "features.pkl"))
-quali_model = joblib.load(os.path.join(BASE_DIR, "quali_model.pkl"))
-quali_features = joblib.load(os.path.join(BASE_DIR, "quali_features.pkl"))
-df = pd.read_csv(os.path.join(DATA_DIR, "f1_master.csv"))
-df["grid"]   = pd.to_numeric(df["grid"],   errors="coerce").fillna(0).astype(int)
-df["points"] = pd.to_numeric(df["points"], errors="coerce").fillna(0)
-df = df.sort_values(["year", "round", "positionOrder"]).reset_index(drop=True)
-# Recompute driver_last5_points so it's always current (even if CSV predates the feature)
-df["driver_last5_points"] = (
-    df.groupby("driverRef")["points"]
-    .transform(lambda x: x.shift(1).rolling(5, min_periods=1).sum())
-).fillna(0)
-# Per-driver lookup: last5 points heading into the NEXT (unseen) race
-driver_last5_lookup = (
-    df.sort_values(["year", "round"])
-    .groupby("driverRef")["driver_last5_points"]
-    .last()
-    .to_dict()
-)
-# Decayed circuit podium rate lookup: (driverRef, circuitRef) → rate entering next year
-# Mirrors the decay=0.75 used during training so /canada/predict stays consistent.
-_next_yr = int(df["year"].max()) + 1
-_yr_cir  = df.groupby(["driverRef", "circuitRef", "year"])["podium"].mean().reset_index()
-_cr      = _yr_cir[_yr_cir["year"] < _next_yr].copy()
-_cr["_w"]  = 0.75 ** (_next_yr - _cr["year"])
-_cr["_wp"] = _cr["podium"] * _cr["_w"]
-_cr_agg  = (
-    _cr.groupby(["driverRef", "circuitRef"])
-    .apply(lambda g: g["_wp"].sum() / g["_w"].sum(), include_groups=False)
-    .reset_index(name="rate")
-)
-driver_circuit_dcpr = dict(zip(
-    zip(_cr_agg["driverRef"], _cr_agg["circuitRef"]),
-    _cr_agg["rate"]
-))
 
-# ── Qualifying model feature lookups ──
-# f1_master.csv already carries every quali feature per-row (computed during
-# training with shift(1)/expanding()/rolling() to avoid leakage - i.e. each
-# row holds the value "entering that race"). For live predictions we reuse
-# each driver/constructor's most recent row's value, same convention already
-# used above for driver_last5_lookup - one race stale, but consistent.
-def _last_value_lookup(col, key):
-    return (
-        df.sort_values(["year", "round"])
-        .dropna(subset=[col])
-        .groupby(key)[col]
-        .last()
-        .to_dict()
-    )
+def require_ready():
+    """Guard for endpoints that need the models/data. 503 while warming up so
+    the frontend keeps showing WAKING and auto-retries; 500 if warmup failed."""
+    if not STATE["models_ready"]:
+        if STATE["error"]:
+            raise HTTPException(status_code=500, detail=f"Startup failed: {STATE['error']}")
+        raise HTTPException(status_code=503, detail="Models are still loading")
 
-quali_constructor_season_avg = _last_value_lookup("constructor_season_quali_avg", "constructorRef")
-quali_driver_season_avg      = _last_value_lookup("driver_season_quali_avg", "driverRef")
-quali_driver_last3_avg       = _last_value_lookup("driver_last3_quali_avg", "driverRef")
-quali_driver_champ_pos       = _last_value_lookup("driver_championship_position", "driverRef")
-quali_constructor_champ_pos  = _last_value_lookup("constructor_championship_position", "constructorRef")
-
-# Decayed circuit qualifying-average lookup: (driverRef, circuitRef) → avg
-# quali position entering next year. Mirrors driver_circuit_dcpr exactly,
-# swapped to quali_position mean instead of podium mean.
-_yr_cir_q = df.groupby(["driverRef", "circuitRef", "year"])["quali_position"].mean().reset_index()
-_cr_q     = _yr_cir_q[_yr_cir_q["year"] < _next_yr].copy()
-_cr_q["_w"]  = 0.75 ** (_next_yr - _cr_q["year"])
-_cr_q["_wp"] = _cr_q["quali_position"] * _cr_q["_w"]
-_cr_q_agg = (
-    _cr_q.groupby(["driverRef", "circuitRef"])
-    .apply(lambda g: g["_wp"].sum() / g["_w"].sum(), include_groups=False)
-    .reset_index(name="avg")
-)
-driver_circuit_quali_avg_lookup = dict(zip(
-    zip(_cr_q_agg["driverRef"], _cr_q_agg["circuitRef"]),
-    _cr_q_agg["avg"]
-))
 
 def get_quali_features_for_driver(driver_ref: str, circuit_ref: str = ""):
     """Builds a QUALI_FEATURES-ordered feature row + that driver's most recent
@@ -127,11 +162,18 @@ def get_quali_features_for_driver(driver_ref: str, circuit_ref: str = ""):
     return feat, latest
 
 @app.get("/")
-def root():
-    return {"message": "F1 Predictor API is running"}
+async def root():
+    # Fast, dependency-free health check. Reports whether the background warmup
+    # has finished so the frontend can show WAKING vs ONLINE. async so it runs
+    # straight on the event loop and stays responsive even while _load() churns.
+    return {
+        "message": "F1 Predictor API is running",
+        "models_ready": STATE["models_ready"],
+    }
 
 @app.get("/drivers")
 def get_drivers():
+    require_ready()
     meta = (
         df.groupby(['driverRef', 'driver_name'])
         .agg(max_year=('year', 'max'), min_year=('year', 'min'))
@@ -155,6 +197,7 @@ def get_drivers():
 
 @app.get("/driver/{driver_ref}")
 def get_driver_stats(driver_ref: str):
+    require_ready()
     d = df[df['driverRef'] == driver_ref].copy()
     if d.empty:
         return {"error": "Driver not found"}
@@ -185,12 +228,14 @@ def get_driver_stats(driver_ref: str):
 
 @app.get("/races")
 def get_races():
+    require_ready()
     races = df[['raceId', 'year', 'round', 'name_race', 'circuitRef']].drop_duplicates()
     races = races.sort_values(['year', 'round'], ascending=False)
     return races.head(200).to_dict(orient="records")
 
 @app.get("/season/{year}")
 def get_season(year: int):
+    require_ready()
     season = df[df['year'] == year].copy()
     if season.empty:
         return {"error": "Season not found"}
@@ -204,6 +249,7 @@ def get_season(year: int):
 
 @app.get("/predict/{race_id}")
 def predict_race(race_id: int):
+    require_ready()
     race_data = df[df['raceId'] == race_id].copy()
     if race_data.empty:
         return {"error": "Race not found"}
@@ -227,6 +273,7 @@ def predict_race(race_id: int):
 
 @app.get("/predict/qualifying/{race_id}")
 def predict_qualifying(race_id: int):
+    require_ready()
     race_data = df[df['raceId'] == race_id].copy()
     if race_data.empty:
         return {"error": "Race not found"}
@@ -242,6 +289,7 @@ def predict_qualifying(race_id: int):
 
 @app.post("/whatif/qualifying")
 def whatif_qualifying(driver_refs: list[str], circuitRef: str = ""):
+    require_ready()
     rows, valid = [], []
     for ref in driver_refs:
         got = get_quali_features_for_driver(ref, circuitRef)
@@ -270,6 +318,7 @@ def whatif_qualifying(driver_refs: list[str], circuitRef: str = ""):
 
 @app.get("/compare")
 def compare_drivers(driver1: str, driver2: str):
+    require_ready()
     d1 = df[df['driverRef'] == driver1]
     d2 = df[df['driverRef'] == driver2]
     def stats(d):
@@ -301,6 +350,7 @@ def compare_drivers(driver1: str, driver2: str):
 
 @app.get("/championship/simulate")
 def simulate_championship():
+    require_ready()
     # Post-Silverstone (round 9) standings
     current_standings = [
         {"driver": "Kimi Antonelli",  "driverRef": "antonelli",      "team": "Mercedes",     "points": 179, "color": "#00d2be"},
@@ -357,6 +407,7 @@ def get_canada_schedule():
 
 @app.get("/canada/predict")
 def predict_canada():
+    require_ready()
     canada_drivers = [
         {"driverRef": "russell", "grid": 1},
         {"driverRef": "antonelli", "grid": 2},
@@ -391,6 +442,7 @@ def predict_canada():
 
 @app.post("/whatif")
 def whatif_predict(drivers: list[dict], circuitRef: str = "", auto_quali: bool = False):
+    require_ready()
     # For upcoming races, run the qualifying model first and use its
     # predicted order as the grid fed into the race predictor below, instead
     # of trusting each driver dict's caller-supplied 'grid' (which the
