@@ -84,6 +84,7 @@ export const BackendPanel = ({ onRetry, detail }) => {
   const { status } = useHealth();
   const cbRef = useRef(onRetry);
   cbRef.current = onRetry;
+  const prevStatus = useRef(status);
 
   // Auto-retry the failed request every 5s while not offline. Kept on a ref so
   // a page re-render (which hands us a fresh onRetry closure) doesn't reset the
@@ -94,10 +95,16 @@ export const BackendPanel = ({ onRetry, detail }) => {
     return () => clearInterval(id);
   }, [status]);
 
-  // Retry immediately the instant the backend comes online, so data appears
-  // without waiting out the 5s tick.
+  // Retry once when the backend TRANSITIONS into online (e.g. warmup just
+  // finished), so data appears without waiting out the 5s tick. Guarding on the
+  // transition — not merely "status === online" — is essential: onRetry usually
+  // clears the page's failed flag, which unmounts+remounts this panel, so firing
+  // on every mount-while-online would spin a tight retry loop whenever a single
+  // data endpoint returns 503 while the health check itself is healthy. In that
+  // case we simply let the 5s interval poll instead.
   useEffect(() => {
-    if (status === "online") cbRef.current?.();
+    if (prevStatus.current !== "online" && status === "online") cbRef.current?.();
+    prevStatus.current = status;
   }, [status]);
 
   if (status === "offline") return <OfflinePanel detail={detail} onRetry={onRetry} />;
