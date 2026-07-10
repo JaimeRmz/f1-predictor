@@ -22,6 +22,7 @@ const POLL_ONLINE_MS = 30000;    // relaxed heartbeat once healthy
 const REQ_TIMEOUT_MS = 8000;     // per-ping ceiling
 
 const HealthContext = createContext({ status: "waking", wakeEpoch: 0, retry: () => {} });
+// eslint-disable-next-line react-refresh/only-export-components -- context hook co-located with its provider
 export const useHealth = () => useContext(HealthContext);
 
 export const HealthProvider = ({ children }) => {
@@ -34,7 +35,7 @@ export const HealthProvider = ({ children }) => {
   const timerRef = useRef(null);
   const mountedRef = useRef(true);
   const statusRef = useRef(status);
-  statusRef.current = status;
+  useEffect(() => { statusRef.current = status; });
 
   const ping = useCallback(async () => {
     const ctrl = new AbortController();
@@ -67,6 +68,7 @@ export const HealthProvider = ({ children }) => {
     const delay = statusRef.current === "online" ? POLL_ONLINE_MS : POLL_WAKING_MS;
     timerRef.current = setTimeout(async () => {
       await ping();
+      // eslint-disable-next-line react-hooks/immutability -- intentional self-scheduling poll loop
       if (mountedRef.current) schedule();
     }, delay);
   }, [ping]);
@@ -82,6 +84,7 @@ export const HealthProvider = ({ children }) => {
     // Fire the very first ping immediately on app mount (before any page data
     // request) so a spun-down instance starts waking while the user is still on
     // the Home screen — by the time they click into a data page it may be warm.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- kicks off the async poll; setState happens later in ping()
     ping().then(() => { if (mountedRef.current) schedule(); });
     return () => { mountedRef.current = false; clearTimeout(timerRef.current); };
   }, [ping, schedule]);

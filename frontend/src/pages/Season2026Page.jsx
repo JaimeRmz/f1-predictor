@@ -85,6 +85,9 @@ const Season2026Page = () => {
   };
 
   // Reload on mount and again each time the backend transitions to ready.
+  // loadAccuracy sets a loading flag then fetches — a standard data-loading
+  // effect; the sync setState is intentional here.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(loadAccuracy, [wakeEpoch]);
 
   return (

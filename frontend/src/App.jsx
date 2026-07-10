@@ -3,6 +3,7 @@ import { MotionConfig } from "framer-motion";
 import { StatCard } from "./shared.jsx";
 import { prefersReducedMotion } from "./constants.js";
 import { HealthProvider, useHealth } from "./health.jsx";
+import { CAR_TARGET_COUNT, computeGeometry, sparseSampleTargets } from "./carSampling.js";
 
 const PredictorPage = lazy(() => import("./pages/PredictorPage.jsx"));
 const NextRacePage = lazy(() => import("./pages/NextRacePage.jsx"));
@@ -167,146 +168,75 @@ const buildFallbackCarTargets = () => [
   ...alongLine(0.40, 0.42, 0.68, 0.42, 169),         // sidepods
 ].map(([x, y]) => [x, y, 200, 20, 20, 0]);
 
-const CAR_TARGET_COUNT = 1500; // capped for performance on the larger full-width canvas
+// Car-silhouette sampling constants + the sparse sampler now live in
+// ./carSampling.js (shared with carSampler.worker.js). CAR_TARGET_COUNT,
+// computeGeometry and sparseSampleTargets are imported at the top.
 
-const CAR_SAMPLE_SCALE = 5; // render the PNG at 5x for much denser coverage on thin parts (wings, wheels)
-const CAR_FILL_PADDING = 0.75; // canvas is now very wide (full-width layout) — scale the car up to fill ~75% of the width
+// Memoized car targets, keyed by rounded canvas WxH — returning to the Home
+// tab reuses the computed silhouette instead of re-sampling (A3).
+const carTargetsCache = new Map();
 
-// Loads the real F1 car PNG (transparent background, car drawn cleanly),
-// draws it letterboxed onto a hidden offscreen canvas rendered at 5x the main
-// canvas's size (for far denser, more accurate sampling), reads back pixel
-// data, and keeps every opaque pixel as a candidate silhouette point — since
-// the background is fully transparent, alpha alone is enough to separate car
-// from background, no color-based exclusion needed. Randomly subsampled down
-// to exactly CAR_TARGET_COUNT points, then sorted into scanline order so the
-// assembly animation reads as the car being "drawn" top to bottom rather than
-// popping in at random.
-const loadCarTargetsFromPng = (canvasW, canvasH) => new Promise((resolve, reject) => {
+// Sample in a Web Worker (OffscreenCanvas + createImageBitmap) so the 5x pixel
+// read never touches the main thread (A4). A fresh worker per request is fine —
+// memoization means this runs at most once per unique canvas size — and it's
+// terminated on settle. A timeout guards against a worker that never responds.
+const sampleViaWorker = (canvasW, canvasH) => new Promise((resolve, reject) => {
+  let worker, done = false;
+  const finish = (fn, arg) => {
+    if (done) return;
+    done = true;
+    clearTimeout(timer);
+    try { if (worker) worker.terminate(); } catch { /* already gone */ }
+    fn(arg);
+  };
+  const timer = setTimeout(() => finish(reject, new Error("car sampler worker timed out")), 3000);
+  try {
+    worker = new Worker(new URL("./carSampler.worker.js", import.meta.url), { type: "module" });
+  } catch (e) { finish(reject, e); return; }
+  worker.onmessage = (e) => {
+    if (e.data && e.data.ok) finish(resolve, e.data.pts);
+    else finish(reject, new Error((e.data && e.data.error) || "car sampler worker failed"));
+  };
+  worker.onerror = (e) => finish(reject, new Error(e.message || "car sampler worker error"));
+  worker.postMessage({ canvasW, canvasH });
+});
+
+// Main-thread fallback for browsers without Worker/OffscreenCanvas. Same sparse
+// sampler; a single getImageData is the only notable cost, and it's bounded —
+// no longer the old resolution-scaled scan of every pixel.
+const sampleMainThread = (canvasW, canvasH) => new Promise((resolve, reject) => {
   const img = new Image();
   img.onload = () => {
     try {
-      console.log("[AnimatedCanvas] f1-car.png natural size:", img.naturalWidth, "x", img.naturalHeight);
-      const pngW = img.naturalWidth;
-      const pngH = img.naturalHeight;
-      const hiW = canvasW * CAR_SAMPLE_SCALE;
-      const hiH = canvasH * CAR_SAMPLE_SCALE;
-      const scale = Math.min(hiW / pngW, hiH / pngH) * CAR_FILL_PADDING;
-      const drawW = pngW * scale;
-      const drawH = pngH * scale;
-      const offsetX = (hiW - drawW) / 2;
-      // Position in the upper third rather than dead-center: the PNG is
-      // very wide/short (~3:1) but the canvas is portrait, so centering
-      // vertically pushes the car too low. This leaves room below for the
-      // Monaco circuit to read clearly once particles disintegrate into it.
-      const offsetY = (hiH - drawH) * 0.40;
-
+      const geom = computeGeometry(img.naturalWidth, img.naturalHeight, canvasW, canvasH);
       const off = document.createElement("canvas");
-      off.width = hiW;
-      off.height = hiH;
+      off.width = geom.hiW;
+      off.height = geom.hiH;
       const offCtx = off.getContext("2d", { willReadFrequently: true });
-      offCtx.clearRect(0, 0, hiW, hiH);
-      offCtx.drawImage(img, offsetX, offsetY, drawW, drawH);
-
-      const { data } = offCtx.getImageData(0, 0, hiW, hiH);
-      const candidates = []; // raw [x, y, r, g, b] (position not yet normalized)
-      for (let y = 0; y < hiH; y++) {
-        for (let x = 0; x < hiW; x++) {
-          const idx = (y * hiW + x) * 4;
-          const a = data[idx + 3];
-          if (a <= 30) continue; // transparent background
-          candidates.push([x, y, data[idx], data[idx + 1], data[idx + 2]]);
-        }
-      }
-
-      console.log("[AnimatedCanvas] candidate pixels found:", candidates.length);
-      if (candidates.length === 0) { reject(new Error("no opaque pixels found in f1-car.png render")); return; }
-
-      const shuffle = arr => {
-        for (let i = arr.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [arr[i], arr[j]] = [arr[j], arr[i]];
-        }
-        return arr;
-      };
-
-      // Edge detection: a candidate pixel is an "edge" pixel if it's at the
-      // render boundary or any of its 4 neighbors is not also a candidate
-      // (i.e. it borders transparent background). Biasing sampling toward
-      // edges makes the outline read as a recognizable car silhouette
-      // instead of a uniform, shapeless cloud filling the whole body.
-      const candidateSet = new Set(candidates.map(([x, y]) => y * hiW + x));
-      const edgePixels = [];
-      const interiorPixels = [];
-      for (const c of candidates) {
-        const [x, y] = c;
-        const isEdge = x === 0 || x === hiW - 1 || y === 0 || y === hiH - 1 ||
-          !candidateSet.has(y * hiW + (x - 1)) ||
-          !candidateSet.has(y * hiW + (x + 1)) ||
-          !candidateSet.has((y - 1) * hiW + x) ||
-          !candidateSet.has((y + 1) * hiW + x);
-        (isEdge ? edgePixels : interiorPixels).push(c); // keep the full [x,y,r,g,b] tuple, not just [x,y]
-      }
-      console.log("[AnimatedCanvas] edge pixels:", edgePixels.length, "interior pixels:", interiorPixels.length);
-
-      shuffle(edgePixels);
-
-      // Weighted random sampling without replacement (Efraimidis-Spirakis):
-      // each item gets a key = random() ** (1/weight), and taking the top-N
-      // keys yields a sample where higher-weight items are proportionally
-      // more likely to be picked, without ever picking the same item twice.
-      const weightedSample = (items, weightFn, k) => {
-        if (items.length <= k) return items.slice();
-        const keyed = items.map(item => {
-          const w = Math.max(weightFn(item), 0.02); // floor avoids 0-weight items being mathematically unpickable
-          return { item, key: Math.pow(Math.random(), 1 / w) };
-        });
-        keyed.sort((a, b) => b.key - a.key);
-        return keyed.slice(0, k).map(entry => entry.item);
-      };
-
-      const edgeTarget = Math.round(CAR_TARGET_COUNT * 0.3); // 30% edge
-      const chosenEdge = edgePixels.slice(0, edgeTarget);
-
-      const interiorTarget = CAR_TARGET_COUNT - chosenEdge.length; // 70% (or more if edge was short)
-      // Brighter interior pixels (red panels, highlights) are weighted to be
-      // picked more often than dark/shadowed ones, so particle density itself
-      // traces the car's lighting instead of filling uniformly at random.
-      const chosenInterior = weightedSample(
-        interiorPixels,
-        ([, , r, g, b]) => (r + g + b) / 3 / 255,
-        interiorTarget,
-      );
-
-      const combined = [
-        ...chosenEdge.map(c => [...c, 1]),       // 1 = edge
-        ...chosenInterior.map(c => [...c, 0]),   // 0 = interior
-      ];
-      // Degenerate fallback: if edge + interior together still fall short of
-      // CAR_TARGET_COUNT (a very sparse render), pad from the full pool.
-      while (combined.length < CAR_TARGET_COUNT) combined.push([...candidates[Math.floor(Math.random() * candidates.length)], 0]);
-
-      shuffle(combined);
-
-      // Stretch the car 25% wider around its own horizontal center for a
-      // wider, sportier stance, clamped back into canvas bounds.
-      const centerXFrac = (offsetX + drawW / 2) / hiW;
-      const pts = combined.map(([x, y, r, g, b, isEdge]) => {
-        const xFrac = x / hiW;
-        const stretchedX = Math.max(0, Math.min(1, centerXFrac + (xFrac - centerXFrac) * 1.25));
-        return [stretchedX, y / hiH, r, g, b, isEdge];
-      });
-
-      // Scanline order so particles assemble top-to-bottom instead of randomly.
-      pts.sort((p1, p2) => (Math.floor(p1[1] * 20) * 1000 + p1[0]) - (Math.floor(p2[1] * 20) * 1000 + p2[0]));
-
-      resolve(pts);
-    } catch (err) {
-      reject(err);
-    }
+      offCtx.clearRect(0, 0, geom.hiW, geom.hiH);
+      offCtx.drawImage(img, geom.offsetX, geom.offsetY, geom.drawW, geom.drawH);
+      const { data } = offCtx.getImageData(0, 0, geom.hiW, geom.hiH);
+      resolve(sparseSampleTargets(data, geom));
+    } catch (err) { reject(err); }
   };
   img.onerror = () => reject(new Error("failed to load /f1-car.png"));
   img.src = "/f1-car.png";
 });
+
+// Cached car targets for a given canvas size. Prefers the worker, falls back to
+// the main thread, and memoizes the result across HomePage mounts.
+const getCarTargets = (canvasW, canvasH) => {
+  const key = `${canvasW}x${canvasH}`;
+  const cached = carTargetsCache.get(key);
+  if (cached) return Promise.resolve(cached);
+  const canWorker = typeof Worker !== "undefined" &&
+    typeof OffscreenCanvas !== "undefined" &&
+    typeof createImageBitmap !== "undefined";
+  const attempt = canWorker
+    ? sampleViaWorker(canvasW, canvasH).catch(() => sampleMainThread(canvasW, canvasH))
+    : sampleMainThread(canvasW, canvasH);
+  return attempt.then(pts => { carTargetsCache.set(key, pts); return pts; });
+};
 
 // Samples `count` evenly spaced points along an SVG path string using the
 // browser's own path geometry (no external library needed). The path's
@@ -598,25 +528,45 @@ const BACKGROUND_GRID_MIN_WIDTH = 600; // perf guard: skip the grid entirely bel
 // Static ambient background points, built once at setup — a subset (~1-in-4,
 // randomized here rather than every literal 4th index) gets a slow pulsing
 // brightness so the background doesn't read as completely static.
-const buildBackgroundGrid = (width, height) => {
-  const points = [];
+//
+// The ~75% that never change (constant alpha 0.06) are baked ONCE into an
+// offscreen canvas at device resolution; each frame we blit that in a single
+// drawImage instead of re-stroking ~300 identical arcs. Only the ~25% pulsing
+// dots are redrawn live. Dots never overlap (40px spacing, 0.8px radius), so
+// splitting static-vs-live and compositing them in either order is pixel-for-
+// pixel identical to drawing them all inline.
+const buildBackgroundGrid = (width, height, dpr) => {
+  const staticCanvas = document.createElement("canvas");
+  staticCanvas.width = Math.max(1, Math.round(width * dpr));
+  staticCanvas.height = Math.max(1, Math.round(height * dpr));
+  const sctx = staticCanvas.getContext("2d");
+  sctx.scale(dpr, dpr);
+  sctx.fillStyle = "rgba(255,255,255,0.06)";
+  const brightPoints = [];
+  let i = -1; // preserves each point's original row-major index for its pulse phase
   for (let y = 0; y <= height; y += BACKGROUND_GRID_SPACING) {
     for (let x = 0; x <= width; x += BACKGROUND_GRID_SPACING) {
-      points.push({ x, y, bright: Math.random() < 0.25 });
+      i++;
+      if (Math.random() < 0.25) {
+        brightPoints.push({ x, y, i });
+      } else {
+        sctx.beginPath();
+        sctx.arc(x, y, 0.8, 0, Math.PI * 2);
+        sctx.fill();
+      }
     }
   }
-  return points;
+  return { staticCanvas, brightPoints };
 };
 
-const drawBackgroundGrid = (ctx, points, elapsed, { width }) => {
+const drawBackgroundGrid = (ctx, grid, elapsed, { width, height }) => {
   if (width < BACKGROUND_GRID_MIN_WIDTH) return;
-  for (let i = 0; i < points.length; i++) {
-    const pt = points[i];
-    let alpha = 0.06;
-    if (pt.bright) {
-      const wave = 0.5 + 0.5 * Math.sin(elapsed / 2000 + i);
-      alpha = 0.04 + wave * (0.10 - 0.04);
-    }
+  // One blit for every static dot (baked at device resolution → 1:1, no resample).
+  ctx.drawImage(grid.staticCanvas, 0, 0, width, height);
+  // Only the pulsing subset is stroked live.
+  for (const pt of grid.brightPoints) {
+    const wave = 0.5 + 0.5 * Math.sin(elapsed / 2000 + pt.i);
+    const alpha = 0.04 + wave * (0.10 - 0.04);
     ctx.beginPath();
     ctx.arc(pt.x, pt.y, 0.8, 0, Math.PI * 2);
     ctx.fillStyle = `rgba(255,255,255,${alpha})`;
@@ -1066,96 +1016,75 @@ const AnimatedCanvas = () => {
       console.log("[AnimatedCanvas] dimensions ready after", attempts, "retries:", dimsRef.current);
     };
 
-    // Races a promise against a timeout without ever leaving the timeout
-    // dangling on the event loop once the promise wins (or vice versa).
-    const withTimeout = (promise, ms) => new Promise(resolve => {
-      let settled = false;
-      const timer = setTimeout(() => {
-        if (!settled) { settled = true; resolve({ timedOut: true }); }
-      }, ms);
-      promise.then(value => {
-        if (!settled) { settled = true; clearTimeout(timer); resolve({ timedOut: false, value }); }
-      }).catch(err => {
-        if (!settled) { settled = true; clearTimeout(timer); resolve({ timedOut: false, error: err }); }
-      });
-    });
-
-    // Single linear sequence: wait for dimensions, wait for the PNG (max
-    // 3000ms — index.html's <link rel="preload"> means this is usually
-    // near-instant), THEN — and only then — create particles and start the
-    // real animation loop. Nothing about the particle system starts before
-    // every input it needs is ready, so there's no swap and no elapsed reset.
+    // Start the scatter animation immediately with particles at random
+    // positions, then swap in the real car targets the moment the (worker)
+    // sampler resolves. The circuit only needs the point COUNT, not the car
+    // pixels, so it's sampled up front on the main thread (cheap). The main
+    // thread never blocks on the silhouette read; reduced motion skips the
+    // car sampler entirely.
     (async () => {
       await waitForValidDimensions();
       if (cancelled) return;
 
-      const outcome = await withTimeout(loadCarTargetsFromPng(dimsRef.current.width, dimsRef.current.height), 3000);
-      if (cancelled) return;
-
-      let carTargets;
-      if (outcome.timedOut) {
-        console.error("[AnimatedCanvas] loadCarTargetsFromPng timed out after 3000ms, using procedural fallback");
-        carTargets = buildFallbackCarTargets();
-      } else if (outcome.error) {
-        console.error("[AnimatedCanvas] loadCarTargetsFromPng failed, using procedural fallback:", outcome.error);
-        carTargets = buildFallbackCarTargets();
-      } else {
-        carTargets = outcome.value;
-        console.log("[AnimatedCanvas] car targets loaded, count:", carTargets.length, "first target:", carTargets[0]);
-      }
-
-      cancelAnimationFrame(loadingRafId); // real data is ready — stop the loading indicator
+      const W = dimsRef.current.width;
+      const H = dimsRef.current.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       let circuitTargets;
       try {
         const result = samplePathPoints(
-          MONACO_CIRCUIT_PATH, carTargets.length, MONACO_CIRCUIT_VIEWBOX,
-          dimsRef.current.width, dimsRef.current.height,
+          MONACO_CIRCUIT_PATH, CAR_TARGET_COUNT, MONACO_CIRCUIT_VIEWBOX, W, H,
         );
         circuitTargets = result.points;
         circuitFractionRef.current = result.fractionAtT;
       } catch (err) {
         console.error("[AnimatedCanvas] samplePathPoints failed, using fallback ellipse:", err);
-        const fallback = buildFallbackCircuitTargets(carTargets.length);
+        const fallback = buildFallbackCircuitTargets(CAR_TARGET_COUNT);
         circuitTargets = fallback.points;
         circuitFractionRef.current = fallback.fractionAtT;
       }
       if (cancelled) return;
 
-      gridPointsRef.current = buildBackgroundGrid(dimsRef.current.width, dimsRef.current.height);
+      gridPointsRef.current = buildBackgroundGrid(W, H, dpr);
 
-      particlesRef.current = carTargets.map((car, i) => {
-        const circuit = circuitTargets[i];
-        const startX = Math.random() * dimsRef.current.width;
-        const startY = Math.random() * dimsRef.current.height;
-        const [carX, carY, r, g, b, isEdge] = car;
-        const [circuitX, circuitY, circuitRow] = circuit;
-        const isEdgeBool = isEdge === 1;
-        const sourceColor = classifySourceColor(r ?? 200, g ?? 20, b ?? 20);
-        const lit = applyCarLighting(carY, isEdgeBool, sourceColor);
-        return {
-          x: startX, y: startY,
-          prevX: startX, prevY: startY,
-          vx: (Math.random() - 0.5) * 0.6,
-          vy: (Math.random() - 0.5) * 0.6,
-          carX, carY,
-          isEdge: isEdgeBool,
-          circuitX, circuitY, circuitRow: circuitRow ?? 0,
-          sourceColor,
-          litColor: lit.color, litOpacity: lit.opacity,
-          scatterX: 0, scatterY: 0, scattered: false,
-          holdX: 0, holdY: 0, disintegrating: false,
-          radius: 1, color: [255, 255, 255], alpha: 0.3,
-          phase: Math.random() * Math.PI * 2,
-          trailActive: false, trailX: 0, trailY: 0, trailOpacity: 0,
-        };
-      });
-      console.log("[AnimatedCanvas] particles created:", particlesRef.current.length);
+      // Assigns the car-target fields (position + baked lighting) onto existing
+      // particles — the exact per-particle car math the original ran at
+      // creation time, just deferred until the sampler resolves.
+      const assignCarTargets = (carTargets) => {
+        const parts = particlesRef.current;
+        const n = Math.min(parts.length, carTargets.length);
+        for (let i = 0; i < n; i++) {
+          const [carX, carY, r, g, b, isEdge] = carTargets[i];
+          const isEdgeBool = isEdge === 1;
+          const sourceColor = classifySourceColor(r ?? 200, g ?? 20, b ?? 20);
+          const lit = applyCarLighting(carY, isEdgeBool, sourceColor);
+          const p = parts[i];
+          p.carX = carX; p.carY = carY;
+          p.isEdge = isEdgeBool;
+          p.sourceColor = sourceColor;
+          p.litColor = lit.color; p.litOpacity = lit.opacity;
+        }
+      };
 
-      // Reduced motion: skip the whole scatter→assemble→disintegrate loop
-      // and render the settled circuit as a single static frame (lap dot
-      // parked at the start/finish line). Re-runs on resize via the ref.
+      // Reduced motion: render the settled circuit as a single static frame.
+      // The car never appears, so the silhouette sampler is never run.
       if (prefersReducedMotion()) {
+        particlesRef.current = circuitTargets.map(([circuitX, circuitY, circuitRow]) => {
+          const x = circuitX * W, y = circuitY * H;
+          return {
+            x, y, prevX: x, prevY: y,
+            vx: 0, vy: 0,
+            carX: 0, carY: 0, isEdge: false,
+            circuitX, circuitY, circuitRow: circuitRow ?? 0,
+            sourceColor: [204, 0, 0], litColor: [255, 255, 255], litOpacity: 0.3,
+            scatterX: 0, scatterY: 0, scattered: false,
+            holdX: 0, holdY: 0, disintegrating: false,
+            radius: 1.2, color: [200, 200, 200], alpha: 0.9,
+            phase: Math.random() * Math.PI * 2,
+            trailActive: false, trailX: 0, trailY: 0, trailOpacity: 0,
+          };
+        });
+        cancelAnimationFrame(loadingRafId);
         const drawStaticFrame = () => {
           const staticElapsed = STAGE4_END + 1;
           updateParticles(particlesRef.current, staticElapsed, dimsRef.current, 0, null);
@@ -1168,20 +1097,57 @@ const AnimatedCanvas = () => {
         return;
       }
 
+      // Full animation: create scatter particles now (car fields filled in when
+      // the sampler resolves), so the first frame paints immediately.
+      particlesRef.current = circuitTargets.map(([circuitX, circuitY, circuitRow]) => {
+        const startX = Math.random() * W;
+        const startY = Math.random() * H;
+        return {
+          x: startX, y: startY,
+          prevX: startX, prevY: startY,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          carX: 0, carY: 0, isEdge: false,
+          circuitX, circuitY, circuitRow: circuitRow ?? 0,
+          sourceColor: [204, 0, 0], litColor: [255, 255, 255], litOpacity: 0.3,
+          scatterX: 0, scatterY: 0, scattered: false,
+          holdX: 0, holdY: 0, disintegrating: false,
+          radius: 1, color: [255, 255, 255], alpha: 0.3,
+          phase: Math.random() * Math.PI * 2,
+          trailActive: false, trailX: 0, trailY: 0, trailOpacity: 0,
+        };
+      });
+      cancelAnimationFrame(loadingRafId); // particles paint from here on
+
+      let carReady = false;
+      getCarTargets(W, H).then(carTargets => {
+        if (cancelled) return;
+        assignCarTargets(carTargets);
+        carReady = true;
+      }).catch(err => {
+        if (cancelled) return;
+        console.error("[AnimatedCanvas] car sampling failed, using procedural fallback:", err);
+        assignCarTargets(buildFallbackCarTargets());
+        carReady = true;
+      });
+
       let lastTime = performance.now();
       let elapsed = 0;
       let accumulator = 0;
-      let loggedFirstFrame = false;
       const loggedStages = new Set();
 
       const loop = now => {
-        if (!loggedFirstFrame) { console.log("[AnimatedCanvas] animation loop is running"); loggedFirstFrame = true; }
         const dt = now - lastTime;
         lastTime = now;
         accumulator += dt;
         if (!document.hidden && accumulator >= FRAME_INTERVAL) {
           elapsed += accumulator;
           accumulator = 0;
+          // Hold at the end of the scatter stage until car targets land, so no
+          // particle assembles toward an unset target. With the worker this
+          // resolves well within the 1s scatter window, so on capable hardware
+          // no hold ever occurs and the timing is identical to before.
+          if (!carReady && elapsed > STAGE1_END - 1) elapsed = STAGE1_END - 1;
           for (const threshold of [STAGE1_END, STAGE2_END, STAGE3_END, STAGE4_END]) {
             if (elapsed >= threshold && !loggedStages.has(threshold)) {
               loggedStages.add(threshold);

@@ -83,7 +83,9 @@ export const WakingPanel = () => (
 export const BackendPanel = ({ onRetry, detail }) => {
   const { status } = useHealth();
   const cbRef = useRef(onRetry);
-  cbRef.current = onRetry;
+  // Keep the latest onRetry in a ref (updated after render, before any timer
+  // fires) so the interval/transition effects don't re-arm on every re-render.
+  useEffect(() => { cbRef.current = onRetry; });
   const prevStatus = useRef(status);
 
   // Auto-retry the failed request every 5s while not offline. Kept on a ref so
