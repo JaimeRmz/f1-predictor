@@ -3,14 +3,14 @@ import axios from "axios";
 import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
 
-// ── NEXT RACE PAGE (Belgian GP 2026) ───────────────────────────
+// ── NEXT RACE PAGE (Hungarian GP 2026) ───────────────────────────
 // Countdown owns its own 1-second interval state, so each tick re-renders
 // only this small component — not the whole page (3 lists × 22 rows).
 const RaceCountdown = () => {
   const [countdown, setCountdown] = useState("");
 
   useEffect(() => {
-    const raceDate = new Date("2026-07-19T13:00:00Z"); // 15:00 CEST / 8:00 AM CDT
+    const raceDate = new Date("2026-07-26T13:00:00Z"); // 15:00 CEST / 8:00 AM CDT
     const tick = () => {
       const now = new Date();
       const diff = raceDate - now;
@@ -37,7 +37,7 @@ const NextRacePage = () => {
   // setState only ever runs inside the async callbacks (or the retry click
   // handler below), never synchronously inside the mount effect.
   const fetchPredictions = () => {
-    axios.post(`${API}/whatif?circuitRef=spa&auto_quali=true`, STANDINGS_GRID_2026)
+    axios.post(`${API}/whatif?circuitRef=hungaroring&auto_quali=true`, STANDINGS_GRID_2026)
       .then(r => { setPredictions([...r.data].sort((a, b) => a.grid - b.grid)); setPredLoading(false); })
       .catch(() => { setPredLoading(false); setOffline(true); });
   };
@@ -48,14 +48,14 @@ const NextRacePage = () => {
 
   const teamColors = TEAM_COLORS;
 
-  // Normal weekend — races.csv row 1178: fp1/fp2 Jul 17, fp3/quali Jul 18, no sprint.
+  // Normal weekend — races.csv row 1179: fp1/fp2 Jul 24, fp3/quali Jul 25, no sprint.
   // Times converted from CEST (UTC+2) to Central Time / Houston (CDT, UTC-5) — a 7-hour offset.
   const schedule = [
-    { session: "Practice 1", day: "Friday Jul 17",   time: "6:30 AM CDT",  emoji: "🔧" },
-    { session: "Practice 2", day: "Friday Jul 17",   time: "10:00 AM CDT", emoji: "🔧" },
-    { session: "Practice 3", day: "Saturday Jul 18", time: "5:30 AM CDT",  emoji: "🔧" },
-    { session: "Qualifying", day: "Saturday Jul 18", time: "9:00 AM CDT",  emoji: "⚡" },
-    { session: "Race",       day: "Sunday Jul 19",   time: "8:00 AM CDT",  emoji: "🏁", featured: true },
+    { session: "Practice 1", day: "Friday Jul 24",   time: "6:30 AM CDT",  emoji: "🔧" },
+    { session: "Practice 2", day: "Friday Jul 24",   time: "10:00 AM CDT", emoji: "🔧" },
+    { session: "Practice 3", day: "Saturday Jul 25", time: "5:30 AM CDT",  emoji: "🔧" },
+    { session: "Qualifying", day: "Saturday Jul 25", time: "9:00 AM CDT",  emoji: "⚡" },
+    { session: "Race",       day: "Sunday Jul 26",   time: "8:00 AM CDT",  emoji: "🏁", featured: true },
   ];
 
   return (
@@ -63,9 +63,9 @@ const NextRacePage = () => {
       {/* Hero */}
       <div className="canada-hero scanline-overlay" style={{ background: "var(--red)", padding: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
         <div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND 10 · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
-          <div style={{ fontSize: "1.6rem", fontWeight: "900", fontStyle: "italic", letterSpacing: "0.02em" }}>🇧🇪 BELGIAN GRAND PRIX</div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "500", opacity: 0.8, marginTop: "0.3rem" }}>Circuit de Spa-Francorchamps · Ardennes, Belgium · July 17–19, 2026</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND 11 · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
+          <div style={{ fontSize: "1.6rem", fontWeight: "900", fontStyle: "italic", letterSpacing: "0.02em" }}>🇭🇺 HUNGARIAN GRAND PRIX</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "500", opacity: 0.8, marginTop: "0.3rem" }}>Hungaroring · Mogyoród, Hungary · July 24–26, 2026</div>
         </div>
         <div style={{ textAlign: "right" }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.75, marginBottom: "0.3rem" }}>RACE COUNTDOWN</div>
@@ -97,10 +97,10 @@ const NextRacePage = () => {
         ))}
       </div>
 
-      {offline && <BackendPanel detail="The Spa prediction request failed." onRetry={retry} />}
+      {offline && <BackendPanel detail="The Hungaroring prediction request failed." onRetry={retry} />}
 
       {/* Predicted qualifying order */}
-      <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying Order — Spa-Francorchamps" />
+      <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying Order — Hungaroring" />
       {predLoading && <SkeletonList rows={6} metrics={1} />}
       {!predLoading && predictions.length > 0 && (
         <div className="chart-enter" style={{ ...card }}>
@@ -124,7 +124,7 @@ const NextRacePage = () => {
       )}
 
       {/* Pre-race prediction */}
-      <SectionHeader eyebrow="XGBoost · Spa Circuit History · Uses Predicted Grid Above" title="Belgian GP Pre-Race Prediction" />
+      <SectionHeader eyebrow="XGBoost · Hungaroring Circuit History · Uses Predicted Grid Above" title="Hungarian GP Pre-Race Prediction" />
       {predLoading && <SkeletonList rows={8} />}
       {!predLoading && predictions.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -160,7 +160,7 @@ const NextRacePage = () => {
       <div style={{ ...card, padding: "20px", display: "flex", gap: "0.75rem" }}>
         <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
         <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
-          Standard race weekend — three practice sessions. Grid auto-predicted by qualifying model · updates after real qualifying. Circuit Podium Rate uses exponential decay (0.75^years) weighting recent Spa history more heavily.
+          Standard race weekend — three practice sessions. Grid auto-predicted by qualifying model · updates after real qualifying. Circuit Podium Rate uses exponential decay (0.75^years) weighting recent Hungaroring history more heavily.
         </p>
       </div>
     </div>

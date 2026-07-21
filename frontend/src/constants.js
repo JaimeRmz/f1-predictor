@@ -50,7 +50,6 @@ export const TEAM_COLORS = {
 
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
-  { raceId: 1178, round: 10, name: "Belgian Grand Prix",         circuit: "Spa",         circuitRef: "spa",          date: "Jul 19" },
   { raceId: 1179, round: 11, name: "Hungarian Grand Prix",       circuit: "Hungaroring", circuitRef: "hungaroring",  date: "Jul 26" },
   { raceId: 1180, round: 12, name: "Dutch Grand Prix",           circuit: "Zandvoort",   circuitRef: "zandvoort",    date: "Aug 23" },
   { raceId: 1181, round: 13, name: "Italian Grand Prix",         circuit: "Monza",       circuitRef: "monza",        date: "Sep 6"  },
@@ -66,11 +65,11 @@ export const UPCOMING_RACES_2026 = [
 ];
 export const UPCOMING_IDS = new Set(UPCOMING_RACES_2026.map(r => String(r.raceId)));
 
-// Roster ordered by post-Silverstone (round 9) championship standings.
+// Roster ordered by post-Belgium (round 10) championship standings.
 export const STANDINGS_GRID_2026 = [
   { driverRef: "antonelli",  driver_name: "Kimi Antonelli",    team: "Mercedes",      grid: 1  },
-  { driverRef: "russell",    driver_name: "George Russell",     team: "Mercedes",      grid: 2  },
-  { driverRef: "hamilton",   driver_name: "Lewis Hamilton",     team: "Ferrari",       grid: 3  },
+  { driverRef: "hamilton",   driver_name: "Lewis Hamilton",     team: "Ferrari",       grid: 2  },
+  { driverRef: "russell",    driver_name: "George Russell",     team: "Mercedes",      grid: 3  },
   { driverRef: "leclerc",    driver_name: "Charles Leclerc",    team: "Ferrari",       grid: 4  },
   { driverRef: "norris",     driver_name: "Lando Norris",       team: "McLaren",       grid: 5  },
   { driverRef: "piastri",    driver_name: "Oscar Piastri",      team: "McLaren",       grid: 6  },
@@ -79,8 +78,8 @@ export const STANDINGS_GRID_2026 = [
   { driverRef: "gasly",      driver_name: "Pierre Gasly",       team: "Alpine",        grid: 9  },
   { driverRef: "lawson",     driver_name: "Liam Lawson",        team: "Racing Bulls",  grid: 10 },
   { driverRef: "lindblad",   driver_name: "Arvid Lindblad",     team: "Racing Bulls",  grid: 11 },
-  { driverRef: "bearman",    driver_name: "Oliver Bearman",     team: "Haas",          grid: 12 },
-  { driverRef: "colapinto",  driver_name: "Franco Colapinto",   team: "Alpine",        grid: 13 },
+  { driverRef: "colapinto",  driver_name: "Franco Colapinto",   team: "Alpine",        grid: 12 },
+  { driverRef: "bearman",    driver_name: "Oliver Bearman",     team: "Haas",          grid: 13 },
   { driverRef: "bortoleto",  driver_name: "Gabriel Bortoleto",  team: "Audi",          grid: 14 },
   { driverRef: "sainz",      driver_name: "Carlos Sainz",       team: "Williams",      grid: 15 },
   { driverRef: "albon",      driver_name: "Alex Albon",         team: "Williams",      grid: 16 },
