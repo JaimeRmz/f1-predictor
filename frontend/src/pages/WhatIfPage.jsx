@@ -4,18 +4,19 @@ import { motion } from "framer-motion";
 import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card, cardRed, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
 
-// ── WHAT IF SIMULATOR (next race: Belgian GP · Spa) ────────────
-const NEXT_RACE_CIRCUIT = "spa";
-const NEXT_RACE_NAME = "Belgian GP";
+// ── WHAT IF SIMULATOR (next race: Hungarian GP · Hungaroring) ────────────
+const NEXT_RACE_CIRCUIT = "hungaroring";
+const NEXT_RACE_NAME = "Hungarian GP";
 
 // Fallback grid only — shown briefly on mount and used only if the
-// Spa qualifying-order preload request fails.
+// Hungaroring qualifying-order preload request fails. Ordered by
+// post-Belgium (round 10) championship standings.
 const WHATIF_FALLBACK_DRIVERS = [
-  { driverRef: "russell", driver_name: "George Russell", team: "Mercedes", grid: 1 },
-  { driverRef: "antonelli", driver_name: "Kimi Antonelli", team: "Mercedes", grid: 2 },
-  { driverRef: "leclerc", driver_name: "Charles Leclerc", team: "Ferrari", grid: 3 },
-  { driverRef: "norris", driver_name: "Lando Norris", team: "McLaren", grid: 4 },
-  { driverRef: "hamilton", driver_name: "Lewis Hamilton", team: "Ferrari", grid: 5 },
+  { driverRef: "antonelli", driver_name: "Kimi Antonelli", team: "Mercedes", grid: 1 },
+  { driverRef: "hamilton", driver_name: "Lewis Hamilton", team: "Ferrari", grid: 2 },
+  { driverRef: "russell", driver_name: "George Russell", team: "Mercedes", grid: 3 },
+  { driverRef: "leclerc", driver_name: "Charles Leclerc", team: "Ferrari", grid: 4 },
+  { driverRef: "norris", driver_name: "Lando Norris", team: "McLaren", grid: 5 },
   { driverRef: "piastri", driver_name: "Oscar Piastri", team: "McLaren", grid: 6 },
   { driverRef: "verstappen", driver_name: "Max Verstappen", team: "Red Bull", grid: 7 },
 ];
@@ -24,7 +25,7 @@ const WhatIfPage = () => {
   const teamColors = TEAM_COLORS;
 
   // The "default" to revert to on RESET - starts as the hardcoded fallback,
-  // replaced once the real Spa predicted qualifying order loads.
+  // replaced once the real Hungaroring predicted qualifying order loads.
   const [defaultDrivers, setDefaultDrivers] = useState(WHATIF_FALLBACK_DRIVERS);
   const [drivers, setDrivers] = useState(WHATIF_FALLBACK_DRIVERS);
   const [results, setResults] = useState([]);
@@ -71,7 +72,7 @@ const WhatIfPage = () => {
         setDrivers(preloaded);
         runPrediction(preloaded);
       } catch (e) {
-        console.error("Failed to preload Spa qualifying order, using fallback grid:", e);
+        console.error("Failed to preload Hungaroring qualifying order, using fallback grid:", e);
         runPrediction(WHATIF_FALLBACK_DRIVERS);
       }
     })();
@@ -221,8 +222,8 @@ const WhatIfPage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <SectionHeader
-        eyebrow="Interactive ML · Live Model Calls · Spa-Francorchamps"
-        title={`What-If Grid Simulator — ${NEXT_RACE_NAME} · Spa`}
+        eyebrow="Interactive ML · Live Model Calls · Hungaroring"
+        title={`What-If Grid Simulator — ${NEXT_RACE_NAME} · Hungaroring`}
         right={
           <button onClick={reset} className="btn-ghost" style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff", padding: "0.45rem 1rem", fontSize: "0.68rem", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>
             ↺ RESET
@@ -233,7 +234,7 @@ const WhatIfPage = () => {
       <div style={{ ...card, padding: "14px 20px", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--gold)", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6 }}>
-          Grid pre-loaded with predicted qualifying order for Spa · Drag to simulate alternative scenarios
+          Grid pre-loaded with predicted qualifying order for Hungaroring · Drag to simulate alternative scenarios
         </span>
       </div>
 
