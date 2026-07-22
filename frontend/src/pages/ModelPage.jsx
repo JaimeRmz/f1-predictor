@@ -18,8 +18,8 @@ const ModelPage = () => {
 
   const pipeline = [
     { stage: "01", name: "Qualifying Model", type: "XGBRegressor", desc: "Predicts each driver's grid position ahead of a race.", metricLabel: "Top-10 Accuracy", metricValue: "77.8%" },
-    { stage: "02", name: "Winner Model", type: "XGBClassifier", desc: "Predicts who wins the race, using the predicted grid as input.", metricLabel: "ROC-AUC", metricValue: "0.973" },
-    { stage: "03", name: "Podium Model", type: "XGBClassifier", desc: "Predicts every driver's odds of finishing in the top 3.", metricLabel: "ROC-AUC", metricValue: "0.942" },
+    { stage: "02", name: "Winner Model", type: "XGBClassifier", desc: "Predicts who wins the race, using the predicted grid as input.", metricLabel: "ROC-AUC", metricValue: "0.972" },
+    { stage: "03", name: "Podium Model", type: "XGBClassifier", desc: "Predicts every driver's odds of finishing in the top 3.", metricLabel: "ROC-AUC", metricValue: "0.945" },
   ];
 
   return (
@@ -51,7 +51,7 @@ const ModelPage = () => {
 
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
         <StatCard label="Algorithm" value="XGBoost" accent="var(--red)" sub="gradient boosted trees" />
-        <StatCard label="ROC-AUC" value="0.942" accent="var(--red)" sub="2025–2026 test set" />
+        <StatCard label="ROC-AUC" value="0.945" accent="var(--red)" sub="2025–2026 test set" />
         <StatCard label="Recall" value="89%" sub="podiums caught" />
         <StatCard label="Training" value="6,436" sub="race entries 2010–2024" />
       </div>
@@ -87,7 +87,7 @@ const ModelPage = () => {
             ["Features", "9 engineered features using rolling averages and exponential decay. All calculated from strictly pre-race data — no leakage from future results."],
             ["Training", "XGBoost trained on 2010–2024 (6,436 entries). Time-based split — 2025–2026 seasons held out for evaluation."],
             ["Target", "Binary classification: did the driver finish top 3? Outputs 0–100% podium probability."],
-            ["Evaluation", "Tested on 2025–2026 holdout. ROC-AUC 0.942 — down 0.030 from the original 0.972 after correcting a data leakage bug in the circuit history feature. The drop reflects honest evaluation, not model degradation."],
+            ["Evaluation", "Tested on the 2025–2026 holdout. ROC-AUC 0.945, measured after correcting two data-leakage bugs in feature engineering — the circuit-history rate (see features above) and a same-race constructor-feature leak. The figure is computed on strictly pre-race inputs, so it reflects honest out-of-sample performance rather than an inflated in-sample score."],
           ].map(([title, body], i, arr) => (
             <div key={i} style={{ display: "flex", gap: "1.25rem", padding: "0.75rem 0", borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none" }}>
               <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0, width: "70px", paddingTop: "1px", letterSpacing: "0.05em" }}>{title.toUpperCase()}</span>

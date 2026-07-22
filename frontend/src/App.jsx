@@ -1255,7 +1255,7 @@ const HomePage = () => (
       </p>
       <div className="stat-cards-row home-stats" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
         <StatCard label="Models" value="3" sub="prediction pipeline" accent="var(--red)" />
-        <StatCard label="ROC-AUC" value="0.973" accent="var(--red)" sub="winner model" />
+        <StatCard label="ROC-AUC" value="0.972" accent="var(--red)" sub="winner model" />
         <StatCard label="Training" value="6,436" sub="race entries" />
         <StatCard label="Season" value="2026" sub="live" />
       </div>
