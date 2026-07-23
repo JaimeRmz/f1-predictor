@@ -3,6 +3,7 @@ import { MotionConfig } from "framer-motion";
 import { StatCard } from "./shared.jsx";
 import { prefersReducedMotion } from "./constants.js";
 import { HealthProvider, useHealth } from "./health.jsx";
+import { AuthProvider } from "./auth.jsx";
 import { CAR_TARGET_COUNT, computeGeometry, sparseSampleTargets } from "./carSampling.js";
 
 const PredictorPage = lazy(() => import("./pages/PredictorPage.jsx"));
@@ -12,6 +13,7 @@ const ChampionshipPage = lazy(() => import("./pages/ChampionshipPage.jsx"));
 const DriversPage = lazy(() => import("./pages/DriversPage.jsx"));
 const ComparePage = lazy(() => import("./pages/ComparePage.jsx"));
 const Season2026Page = lazy(() => import("./pages/Season2026Page.jsx"));
+const MyPicksPage = lazy(() => import("./pages/MyPicksPage.jsx"));
 const ModelPage = lazy(() => import("./pages/ModelPage.jsx"));
 
 // Suspense fallback while a lazy page chunk downloads — styled like the
@@ -49,7 +51,7 @@ const HealthIndicator = () => {
 
 // ── NAV ────────────────────────────────────────────────────────
 const Nav = ({ page, setPage, onNavigate }) => {
-  const links = ["Home", "Predictor", "Next Race 🇭🇺", "What-If 🎮", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
+  const links = ["Home", "Predictor", "Next Race 🇭🇺", "What-If 🎮", "My Picks 🎯", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
   return (
     <nav style={{ background: "#080812", position: "sticky", top: 0, zIndex: 100 }}>
       <div className="nav-scroll" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem", display: "flex", overflowX: "auto" }}>
@@ -1312,6 +1314,7 @@ export default function App() {
     "Predictor": <PredictorPage />,
     "Next Race 🇭🇺": <NextRacePage />,
     "What-If 🎮": <WhatIfPage />,
+    "My Picks 🎯": <MyPicksPage />,
     "Championship": <ChampionshipPage />,
     "Drivers": <DriversPage />,
     "Compare": <ComparePage />,
@@ -1321,6 +1324,7 @@ export default function App() {
 
   return (
     <HealthProvider>
+    <AuthProvider>
     <MotionConfig reducedMotion="user">
     <div style={{ background: "#080812", minHeight: "100vh", color: "var(--text)", fontFamily: "var(--sans)" }}>
       <div style={{ height: "3px", background: "rgba(225,6,0,0.35)" }} />
@@ -1353,6 +1357,7 @@ export default function App() {
       </main>
     </div>
     </MotionConfig>
+    </AuthProvider>
     </HealthProvider>
   );
 }

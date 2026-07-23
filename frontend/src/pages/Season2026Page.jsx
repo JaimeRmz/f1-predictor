@@ -1,23 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Spinner, StatCard, SectionHeader, BackendPanel } from "../shared.jsx";
-import { API, card, UPCOMING_RACES_2026 } from "../constants.js";
+import { API, card, UPCOMING_RACES_2026, COMPLETED_2026 } from "../constants.js";
 import { useHealth } from "../health.jsx";
 
 // ── 2026 SEASON PAGE ───────────────────────────────────────────
-const COMPLETED_2026 = [
-    { raceId: 1169, round: 1, name: "Australian GP",         flag: "🇦🇺" },
-    { raceId: 1170, round: 2, name: "Chinese GP",             flag: "🇨🇳" },
-    { raceId: 1171, round: 3, name: "Japanese GP",            flag: "🇯🇵" },
-    { raceId: 1172, round: 4, name: "Miami GP",               flag: "🇺🇸" },
-    { raceId: 1173, round: 5, name: "Canadian GP",            flag: "🇨🇦" },
-    { raceId: 1174, round: 6, name: "Monaco GP",              flag: "🇲🇨" },
-    { raceId: 1175, round: 7, name: "Spanish GP (Barcelona)", flag: "🇪🇸" },
-    { raceId: 1176, round: 8, name: "Austrian GP",            flag: "🇦🇹" },
-    { raceId: 1177, round: 9, name: "British GP",             flag: "🇬🇧" },
-    { raceId: 1178, round: 10, name: "Belgian GP",            flag: "🇧🇪" },
-];
-
 const CALENDAR_FLAGS = { 9:"🇬🇧",10:"🇧🇪",11:"🇭🇺",12:"🇳🇱",13:"🇮🇹",14:"🇪🇸",15:"🇦🇿",16:"🇸🇬",17:"🇺🇸",18:"🇲🇽",19:"🇧🇷",20:"🇺🇸",21:"🇶🇦",22:"🇦🇪" };
 
 const Season2026Page = () => {

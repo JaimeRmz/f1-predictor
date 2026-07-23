@@ -65,6 +65,37 @@ export const UPCOMING_RACES_2026 = [
 ];
 export const UPCOMING_IDS = new Set(UPCOMING_RACES_2026.map(r => String(r.raceId)));
 
+// The current upcoming race, as the single source of truth for the countdown,
+// the What-If/Next-Race pages, and the prediction picker's lock. `qualiCutoffISO`
+// is the machine-readable version of NextRacePage's "Qualifying · Sat Jul 25 ·
+// 9:00 AM CDT" schedule row (09:00 CDT = 14:00 UTC): once qualifying starts, the
+// picker locks. `raceISO` matches RaceCountdown's target (15:00 CEST = 13:00 UTC).
+export const NEXT_RACE = {
+  raceId: 1179,
+  round: 11,
+  name: "Hungarian Grand Prix",
+  circuit: "Hungaroring",
+  circuitRef: "hungaroring",
+  flag: "🇭🇺",
+  raceISO: "2026-07-26T13:00:00Z",
+  qualiCutoffISO: "2026-07-25T14:00:00Z",
+};
+
+// Completed 2026 rounds, shared by the 2026 Season page and the My Picks
+// history/results view. Ordered by round.
+export const COMPLETED_2026 = [
+  { raceId: 1169, round: 1,  name: "Australian GP",         flag: "🇦🇺" },
+  { raceId: 1170, round: 2,  name: "Chinese GP",            flag: "🇨🇳" },
+  { raceId: 1171, round: 3,  name: "Japanese GP",           flag: "🇯🇵" },
+  { raceId: 1172, round: 4,  name: "Miami GP",              flag: "🇺🇸" },
+  { raceId: 1173, round: 5,  name: "Canadian GP",           flag: "🇨🇦" },
+  { raceId: 1174, round: 6,  name: "Monaco GP",             flag: "🇲🇨" },
+  { raceId: 1175, round: 7,  name: "Spanish GP (Barcelona)", flag: "🇪🇸" },
+  { raceId: 1176, round: 8,  name: "Austrian GP",           flag: "🇦🇹" },
+  { raceId: 1177, round: 9,  name: "British GP",            flag: "🇬🇧" },
+  { raceId: 1178, round: 10, name: "Belgian GP",            flag: "🇧🇪" },
+];
+
 // Roster ordered by post-Belgium (round 10) championship standings.
 export const STANDINGS_GRID_2026 = [
   { driverRef: "antonelli",  driver_name: "Kimi Antonelli",    team: "Mercedes",      grid: 1  },
