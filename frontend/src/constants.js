@@ -65,6 +65,28 @@ export const UPCOMING_RACES_2026 = [
 ];
 export const UPCOMING_IDS = new Set(UPCOMING_RACES_2026.map(r => String(r.raceId)));
 
+// Public site URL, shown on the shareable prediction card.
+export const SITE_URL = "https://f1predictor.app";
+
+// Circuit → ISO-3166 alpha-2 country code, for real flag images on the share
+// card (emoji flags render as bare letters on Windows, which has no flag-emoji
+// glyphs). Keyed by the same circuitRef used across the race constants.
+export const CIRCUIT_COUNTRY = {
+  hungaroring: "hu", zandvoort: "nl", monza: "it", madrid: "es", baku: "az",
+  marina_bay: "sg", americas: "us", rodriguez: "mx", interlagos: "br",
+  las_vegas: "us", losail: "qa", yas_marina: "ae",
+};
+
+// Flag image URL for a circuit (flagcdn.com, CORS-enabled so html-to-image can
+// inline it into the captured PNG). Null when the circuit isn't mapped. A raster
+// PNG (w320, crisp at the card's ~48px height) is used rather than SVG because
+// html-to-image can't reliably embed an external SVG inside its foreignObject
+// serialization — an SVG flag captures blank.
+export const flagUrl = (circuitRef) => {
+  const cc = CIRCUIT_COUNTRY[circuitRef];
+  return cc ? `https://flagcdn.com/w320/${cc}.png` : null;
+};
+
 // The current upcoming race, as the single source of truth for the countdown,
 // the What-If/Next-Race pages, and the prediction picker's lock. `qualiCutoffISO`
 // is the machine-readable version of NextRacePage's "Qualifying · Sat Jul 25 ·

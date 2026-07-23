@@ -1,7 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { toPng } from "html-to-image";
 import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
-import { API, card, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
+import { API, card, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS, NEXT_RACE, SITE_URL, flagUrl } from "../constants.js";
+import SharePredictionCard from "../components/SharePredictionCard.jsx";
 
 // ── NEXT RACE PAGE (Hungarian GP 2026) ───────────────────────────
 // Countdown owns its own 1-second interval state, so each tick re-renders
@@ -47,6 +49,75 @@ const NextRacePage = () => {
   const retry = () => { setPredLoading(true); setOffline(false); fetchPredictions(); };
 
   const teamColors = TEAM_COLORS;
+
+  // ── Shareable prediction card ──
+  // The card wants the model's podium order (top-3 by podium_probability),
+  // whereas `predictions` above is sorted by grid — so re-sort here.
+  const cardRef = useRef(null);
+  const [shareState, setShareState] = useState("idle"); // "idle" | "working"
+
+  const podiumRanked = [...predictions].sort((a, b) => (b.podium_probability ?? 0) - (a.podium_probability ?? 0));
+  const sharePicks = podiumRanked.slice(0, 3).map(p => {
+    const team = CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team;
+    return {
+      driver_name: p.driver_name,
+      team,
+      color: TEAM_COLORS[team] || "#5a5a6e",
+      win_probability: p.win_probability,
+      podium_probability: p.podium_probability,
+    };
+  });
+  const shareRace = {
+    flagUrl: flagUrl(NEXT_RACE.circuitRef),
+    name: NEXT_RACE.name,
+    round: NEXT_RACE.round,
+    date: new Date(NEXT_RACE.raceISO).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }),
+  };
+  const canShare = !predLoading && sharePicks.length === 3;
+
+  const handleShare = async () => {
+    if (!cardRef.current || shareState === "working") return;
+    setShareState("working");
+    try {
+      // html-to-image captures whatever is rendered right now, so a flag <img>
+      // that hasn't finished loading would come out blank — wait for it to decode.
+      await Promise.all(
+        [...cardRef.current.querySelectorAll("img")].map(img =>
+          img.complete && img.naturalWidth ? null : img.decode().catch(() => {})
+        )
+      );
+
+      // The off-screen card is a plain laid-out node; snapshot it 1:1 to 1200×630.
+      // skipFonts: the site's web fonts are already loaded in the document, and
+      // trying to inline the cross-origin Google Fonts stylesheet throws a
+      // SecurityError (can't read cssRules) that stalls the capture — the fonts
+      // still render from the page, with a clean monospace/sans-serif fallback.
+      const dataUrl = await toPng(cardRef.current, {
+        width: 1200, height: 630, pixelRatio: 1, cacheBust: true, skipFonts: true,
+      });
+      const blob = await (await fetch(dataUrl)).blob();
+      const file = new File([blob], "hungarian-gp-prediction.png", { type: "image/png" });
+
+      // Native share sheet (mobile) when it can take the file; otherwise download.
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: "F1 Race Predictor", text: "Model prediction before qualifying." });
+      } else {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+    } catch (err) {
+      // User dismissing the share sheet throws AbortError — not a real failure.
+      if (err?.name !== "AbortError") console.error("Share failed:", err);
+    } finally {
+      setShareState("idle");
+    }
+  };
 
   // Normal weekend — races.csv row 1179: fp1/fp2 Jul 24, fp3/quali Jul 25, no sprint.
   // Times converted from CEST (UTC+2) to Central Time / Houston (CDT, UTC-5) — a 7-hour offset.
@@ -153,6 +224,38 @@ const NextRacePage = () => {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Share prediction */}
+      {canShare && (
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "4px" }}>
+          <button
+            onClick={handleShare}
+            disabled={shareState === "working"}
+            className="btn-ghost"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "0.5rem",
+              background: shareState === "working" ? "rgba(255,255,255,0.06)" : "var(--red)",
+              border: "1px solid " + (shareState === "working" ? "rgba(255,255,255,0.15)" : "var(--red)"),
+              color: shareState === "working" ? "var(--muted)" : "#fff",
+              padding: "0.6rem 1.5rem", fontSize: "0.72rem", fontWeight: "700", letterSpacing: "0.12em",
+              textTransform: "uppercase", cursor: shareState === "working" ? "wait" : "pointer",
+              fontFamily: "var(--mono)",
+            }}
+          >
+            {shareState === "working"
+              ? <><span style={{ animation: "pulse 1s infinite" }}>●</span> Generating…</>
+              : <>📸 Share Prediction</>}
+          </button>
+        </div>
+      )}
+
+      {/* Off-screen capture target for the share card. Laid out (not display:none)
+          but pushed off-viewport so html-to-image can snapshot it correctly. */}
+      {canShare && (
+        <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: 0, pointerEvents: "none" }}>
+          <SharePredictionCard ref={cardRef} race={shareRace} picks={sharePicks} siteUrl={SITE_URL} />
         </div>
       )}
 
