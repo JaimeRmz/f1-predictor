@@ -3,11 +3,13 @@ import axios from "axios";
 import { SectionHeader, StatCard, Spinner, BackendPanel, DriverSelector } from "../shared.jsx";
 import {
   API, card, NEXT_RACE, COMPLETED_2026, STANDINGS_GRID_2026,
-  TEAM_COLORS, CONSTRUCTOR_OVERRIDES,
+  TEAM_COLORS, CONSTRUCTOR_OVERRIDES, SITE_URL, flagUrl,
 } from "../constants.js";
 import { useHealth } from "../health.jsx";
 import { useAuth } from "../auth.jsx";
 import { supabase } from "../lib/supabaseClient.js";
+import SharePredictionCard from "../components/SharePredictionCard.jsx";
+import { useShareCard } from "../useShareCard.js";
 
 // ── MY PICKS PAGE ────────────────────────────────────────────────
 // Two sections behind one anonymous Supabase identity:
@@ -67,6 +69,12 @@ const Picker = () => {
   const [error, setError] = useState(null);
   const [justSaved, setJustSaved] = useState(false);
 
+  // Model's frozen snapshot for this race — the source for the comparison card
+  // (NOT a live /whatif, so the numbers can't drift after the fact).
+  const [snap, setSnap] = useState(null);
+  const [snapState, setSnapState] = useState("loading"); // loading | ready | stale | missing | error
+  const { cardRef, shareState, share } = useShareCard("hungarian-me-vs-model.png", "My podium pick vs the model.");
+
   // Load any existing pick for this race so re-visits/edits start from it.
   useEffect(() => {
     if (!userId) return;
@@ -89,6 +97,26 @@ const Picker = () => {
       });
     return () => { alive = false; };
   }, [userId]);
+
+  // Load the model's frozen snapshot (public read; independent of the user's pick).
+  useEffect(() => {
+    let alive = true;
+    supabase
+      .from("model_snapshots")
+      .select("predicted_p1, predicted_p2, predicted_p3, p1_win, p1_podium, p2_win, p2_podium, p3_win, p3_podium")
+      .eq("race_id", NEXT_RACE.raceId)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!alive) return;
+        if (error) { setSnapState("error"); return; }
+        if (!data || !data.predicted_p1) { setSnapState("missing"); return; }
+        setSnap(data);
+        // A row that predates the probability freeze has null p*_win — usable
+        // picks but no % to show, so treat it as not-yet-shareable.
+        setSnapState(data.p1_win == null ? "stale" : "ready");
+      });
+    return () => { alive = false; };
+  }, []);
 
   const chosen = [picks.p1, picks.p2, picks.p3];
   const complete = chosen.every(Boolean);
@@ -123,6 +151,30 @@ const Picker = () => {
 
   const quali = new Date(NEXT_RACE.qualiCutoffISO);
   const cutoffLabel = quali.toLocaleString(undefined, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+
+  // ── Me-vs-Model share card data ──
+  const cardDriver = (ref) => ({ driver_name: BASE_NAMES[ref] || ref, team: teamOf(ref), color: colorOf(ref) });
+  const userPicks = saved ? saved.map(cardDriver) : null;
+  const modelPicks = snap ? [
+    { ...cardDriver(snap.predicted_p1), win_probability: snap.p1_win, podium_probability: snap.p1_podium },
+    { ...cardDriver(snap.predicted_p2), win_probability: snap.p2_win, podium_probability: snap.p2_podium },
+    { ...cardDriver(snap.predicted_p3), win_probability: snap.p3_win, podium_probability: snap.p3_podium },
+  ] : null;
+  const shareRace = {
+    flagUrl: flagUrl(NEXT_RACE.circuitRef),
+    name: NEXT_RACE.name,
+    round: NEXT_RACE.round,
+    date: new Date(NEXT_RACE.raceISO).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }),
+  };
+  // Share is available only once the user has a saved pick AND the model's
+  // snapshot (with frozen %) exists for this race.
+  const shareReady = !!saved && snapState === "ready";
+  const snapReason = {
+    loading: "Loading the model's pick…",
+    stale: "The model snapshot predates the probability freeze — re-run the snapshot to enable this.",
+    missing: "The model's snapshot for this race isn't available yet.",
+    error: "Couldn't load the model's pick.",
+  }[snapState];
 
   return (
     <div className="chart-enter" style={{ ...card }}>
@@ -201,6 +253,42 @@ const Picker = () => {
                 <span style={{ fontFamily: "var(--mono)", fontSize: "0.66rem", fontWeight: "700", color: "var(--green)", letterSpacing: "0.06em" }}>✓ Saved</span>
               )}
             </div>
+          </div>
+        )}
+
+        {/* Share: only once a pick has actually been submitted for this race. */}
+        {saved && (
+          <div style={{ marginTop: "1.1rem", paddingTop: "1rem", borderTop: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
+            <button
+              onClick={share}
+              disabled={!shareReady || shareState === "working"}
+              className="btn-ghost"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "0.5rem",
+                background: shareReady && shareState !== "working" ? "var(--red)" : "rgba(255,255,255,0.06)",
+                border: "1px solid " + (shareReady && shareState !== "working" ? "var(--red)" : "rgba(255,255,255,0.15)"),
+                color: shareReady && shareState !== "working" ? "#fff" : "var(--muted)",
+                padding: "0.55rem 1.4rem", fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.12em",
+                textTransform: "uppercase", cursor: shareReady && shareState !== "working" ? "pointer" : "not-allowed",
+                fontFamily: "var(--mono)",
+              }}
+            >
+              {shareState === "working"
+                ? <><span style={{ animation: "pulse 1s infinite" }}>●</span> Generating…</>
+                : <>📸 Share My Pick</>}
+            </button>
+            {!shareReady && snapReason && (
+              <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: snapState === "error" ? "var(--red)" : snapState === "loading" ? "var(--muted)" : "var(--amber)" }}>
+                {snapReason}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Off-screen capture target for the Me-vs-Model comparison card. */}
+        {shareReady && (
+          <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: 0, pointerEvents: "none" }}>
+            <SharePredictionCard ref={cardRef} race={shareRace} picks={modelPicks} userPicks={userPicks} siteUrl={SITE_URL} />
           </div>
         )}
       </div>

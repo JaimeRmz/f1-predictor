@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import { toPng } from "html-to-image";
 import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
 import { API, card, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS, NEXT_RACE, SITE_URL, flagUrl } from "../constants.js";
 import SharePredictionCard from "../components/SharePredictionCard.jsx";
+import { useShareCard } from "../useShareCard.js";
 
 // ── NEXT RACE PAGE (Hungarian GP 2026) ───────────────────────────
 // Countdown owns its own 1-second interval state, so each tick re-renders
@@ -52,9 +52,9 @@ const NextRacePage = () => {
 
   // ── Shareable prediction card ──
   // The card wants the model's podium order (top-3 by podium_probability),
-  // whereas `predictions` above is sorted by grid — so re-sort here.
-  const cardRef = useRef(null);
-  const [shareState, setShareState] = useState("idle"); // "idle" | "working"
+  // whereas `predictions` above is sorted by grid — so re-sort here. Capture
+  // plumbing (toPng, flag decode, share/download) lives in the shared hook.
+  const { cardRef, shareState, share } = useShareCard("hungarian-gp-prediction.png", "Model prediction before qualifying.");
 
   const podiumRanked = [...predictions].sort((a, b) => (b.podium_probability ?? 0) - (a.podium_probability ?? 0));
   const sharePicks = podiumRanked.slice(0, 3).map(p => {
@@ -74,50 +74,6 @@ const NextRacePage = () => {
     date: new Date(NEXT_RACE.raceISO).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }),
   };
   const canShare = !predLoading && sharePicks.length === 3;
-
-  const handleShare = async () => {
-    if (!cardRef.current || shareState === "working") return;
-    setShareState("working");
-    try {
-      // html-to-image captures whatever is rendered right now, so a flag <img>
-      // that hasn't finished loading would come out blank — wait for it to decode.
-      await Promise.all(
-        [...cardRef.current.querySelectorAll("img")].map(img =>
-          img.complete && img.naturalWidth ? null : img.decode().catch(() => {})
-        )
-      );
-
-      // The off-screen card is a plain laid-out node; snapshot it 1:1 to 1200×630.
-      // skipFonts: the site's web fonts are already loaded in the document, and
-      // trying to inline the cross-origin Google Fonts stylesheet throws a
-      // SecurityError (can't read cssRules) that stalls the capture — the fonts
-      // still render from the page, with a clean monospace/sans-serif fallback.
-      const dataUrl = await toPng(cardRef.current, {
-        width: 1200, height: 630, pixelRatio: 1, cacheBust: true, skipFonts: true,
-      });
-      const blob = await (await fetch(dataUrl)).blob();
-      const file = new File([blob], "hungarian-gp-prediction.png", { type: "image/png" });
-
-      // Native share sheet (mobile) when it can take the file; otherwise download.
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: "F1 Race Predictor", text: "Model prediction before qualifying." });
-      } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = file.name;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(url);
-      }
-    } catch (err) {
-      // User dismissing the share sheet throws AbortError — not a real failure.
-      if (err?.name !== "AbortError") console.error("Share failed:", err);
-    } finally {
-      setShareState("idle");
-    }
-  };
 
   // Normal weekend — races.csv row 1179: fp1/fp2 Jul 24, fp3/quali Jul 25, no sprint.
   // Times converted from CEST (UTC+2) to Central Time / Houston (CDT, UTC-5) — a 7-hour offset.
@@ -231,7 +187,7 @@ const NextRacePage = () => {
       {canShare && (
         <div style={{ display: "flex", justifyContent: "center", marginTop: "4px" }}>
           <button
-            onClick={handleShare}
+            onClick={share}
             disabled={shareState === "working"}
             className="btn-ghost"
             style={{

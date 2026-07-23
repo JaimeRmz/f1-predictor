@@ -109,7 +109,8 @@ def wait_for_ready(api_base, timeout=90):
 
 def top3_from_records(records):
     """Given per-driver prediction records, return the 3 driverRefs with the
-    highest podium_probability, most-likely first."""
+    highest podium_probability (most-likely first), plus lookups of driver name,
+    podium probability and win probability keyed by ref."""
     ranked = sorted(records, key=lambda d: d.get("podium_probability", 0), reverse=True)
     top3 = ranked[:3]
     if len(top3) < 3:
@@ -117,7 +118,8 @@ def top3_from_records(records):
     refs = [d["driverRef"] for d in top3]
     names = {d["driverRef"]: d.get("driver_name", d["driverRef"]) for d in ranked}
     probs = {d["driverRef"]: d.get("podium_probability", 0) for d in ranked}
-    return refs, names, probs
+    wins = {d["driverRef"]: d.get("win_probability", 0) for d in ranked}
+    return refs, names, probs, wins
 
 
 def predict_completed(api_base, race_id):
@@ -213,7 +215,7 @@ def print_row(race_id, rnd, name, refs, names, probs, status):
 
 
 # ── Modes ────────────────────────────────────────────────────────
-def snapshot_one(supa, api_base, race_id, refs, names, probs, rnd, name, *, force, dry_run):
+def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *, force, dry_run):
     """Decide insert / update / skip for one race and (unless dry-run) do it.
     Returns the status string."""
     row = {
@@ -221,6 +223,10 @@ def snapshot_one(supa, api_base, race_id, refs, names, probs, rnd, name, *, forc
         "predicted_p1": refs[0],
         "predicted_p2": refs[1],
         "predicted_p3": refs[2],
+        # Frozen probabilities per pick (win + podium), 4dp like the API.
+        "p1_win": round(wins[refs[0]], 4), "p1_podium": round(probs[refs[0]], 4),
+        "p2_win": round(wins[refs[1]], 4), "p2_podium": round(probs[refs[1]], 4),
+        "p3_win": round(wins[refs[2]], 4), "p3_podium": round(probs[refs[2]], 4),
     }
     if dry_run:
         return "DRY-RUN (no write)"
@@ -238,9 +244,9 @@ def snapshot_one(supa, api_base, race_id, refs, names, probs, rnd, name, *, forc
 def run_backfill(args, supa, api_base):
     print_header("BACKFILL - completed 2026 races (model /predict top-3)")
     for race_id, rnd, name in COMPLETED_2026:
-        refs, names, probs = predict_completed(api_base, race_id)
+        refs, names, probs, wins = predict_completed(api_base, race_id)
         # Backfill never overwrites (force is meaningless here).
-        status = snapshot_one(supa, api_base, race_id, refs, names, probs, rnd, name,
+        status = snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name,
                               force=False, dry_run=args.dry_run)
         print_row(race_id, rnd, name, refs, names, probs, status)
     print()
@@ -250,16 +256,16 @@ def run_single(args, supa, api_base):
     race_id = args.race_id
     upcoming = race_id not in COMPLETED_IDS
     if upcoming:
-        refs, names, probs = predict_upcoming(api_base, race_id)
+        refs, names, probs, wins = predict_upcoming(api_base, race_id)
         rnd, name = "—", UPCOMING_NAME.get(race_id, f"race {race_id}")
         source = "/whatif auto-quali"
     else:
-        refs, names, probs = predict_completed(api_base, race_id)
+        refs, names, probs, wins = predict_completed(api_base, race_id)
         rnd, name = RACE_ROUND[race_id], RACE_NAME[race_id]
         source = "/predict"
 
     print_header(f"SINGLE RACE {race_id} ({name}) — model pick via {source}")
-    status = snapshot_one(supa, api_base, race_id, refs, names, probs, rnd, name,
+    status = snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name,
                           force=args.force, dry_run=args.dry_run)
     print_row(race_id, rnd, name, refs, names, probs, status)
     if status.startswith("SKIPPED"):
