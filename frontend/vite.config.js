@@ -24,5 +24,8 @@ export default defineConfig({
   plugins: [react(), cacheImageAssets()],
   server: {
     host: true,
+    // Allow serving the repo-root data/ dir (one level above this Vite root) so
+    // the strategy JSON can be loaded on-demand via import.meta.glob('../../data/...').
+    fs: { allow: ['..'] },
   },
 })

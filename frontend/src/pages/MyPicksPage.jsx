@@ -9,6 +9,7 @@ import { useHealth } from "../health.jsx";
 import { useAuth } from "../auth.jsx";
 import { supabase } from "../lib/supabaseClient.js";
 import SharePredictionCard from "../components/SharePredictionCard.jsx";
+import RaceStrategy from "../components/RaceStrategy.jsx";
 import { useShareCard } from "../useShareCard.js";
 
 // ── MY PICKS PAGE ────────────────────────────────────────────────
@@ -356,6 +357,12 @@ const History = () => {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [snapshotsMissing, setSnapshotsMissing] = useState(false);
+  const [openRaces, setOpenRaces] = useState(() => new Set());
+  const toggleRace = (rid) => setOpenRaces(s => {
+    const n = new Set(s);
+    n.has(rid) ? n.delete(rid) : n.add(rid);
+    return n;
+  });
 
   const load = () => {
     if (!userId) return;
@@ -463,6 +470,29 @@ const History = () => {
             <PickColumn title="Model's Pick" refs={r.modelRefs} actualSet={r.actualSet} actualWinnerRef={r.resultKnown ? r.actualWinnerRef : null} accent="var(--muted)" />
             <ActualColumn orderedRefs={r.actualPodium} />
           </div>
+
+          {/* On-demand strategy & telemetry (OpenF1) */}
+          {r.resultKnown && (
+            <>
+              <button
+                onClick={() => toggleRace(r.raceId)}
+                className="data-row"
+                style={{
+                  width: "100%", border: "none", borderTop: "1px solid var(--border)", background: "transparent",
+                  color: "var(--muted)", cursor: "pointer", textAlign: "left",
+                  padding: "0.6rem 1rem", fontFamily: "var(--mono)", fontSize: "0.62rem",
+                  fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase",
+                }}
+              >
+                {openRaces.has(r.raceId) ? "▾" : "▸"} Race Strategy &amp; Telemetry
+              </button>
+              {openRaces.has(r.raceId) && (
+                <div style={{ borderTop: "1px solid var(--border)", padding: "0.75rem 0.85rem 0.9rem" }}>
+                  <RaceStrategy raceId={r.raceId} />
+                </div>
+              )}
+            </>
+          )}
         </div>
       ))}
     </div>
