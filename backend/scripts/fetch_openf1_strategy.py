@@ -183,6 +183,31 @@ def build_driver_map(session_key, by_name, by_ref):
     return num_to_ref
 
 
+# ── safety car / VSC periods from /race_control ──
+def parse_safety_cars(rc_rows):
+    """[{type: 'SC'|'VSC', lap_start, lap_end}] from race-control messages.
+    'DEPLOYED' opens a period; 'IN THIS LAP' (SC) / 'ENDING' (VSC) closes it."""
+    periods, cur = [], None
+    for r in sorted(rc_rows, key=lambda x: (x.get("date") or "")):
+        msg = (r.get("message") or "").upper()
+        lap = r.get("lap_number")
+        is_vsc = "VIRTUAL SAFETY CAR" in msg
+        is_sc = ("SAFETY CAR" in msg) and not is_vsc
+        if not (is_vsc or is_sc):
+            continue
+        if "DEPLOYED" in msg:
+            if cur:
+                periods.append(cur)
+            cur = {"type": "VSC" if is_vsc else "SC", "lap_start": lap, "lap_end": lap}
+        elif ("IN THIS LAP" in msg or "ENDING" in msg) and cur:
+            cur["lap_end"] = lap or cur["lap_start"]
+            periods.append(cur)
+            cur = None
+    if cur:
+        periods.append(cur)
+    return [p for p in periods if p.get("lap_start")]
+
+
 # ── step 3: lap-by-lap position via forward-fill of the /position stream ──
 def build_position_series(position_rows):
     """Per driver_number: sorted [(epoch, position)] event list + a lookup that
@@ -246,6 +271,7 @@ def build_lap_positions(laps_rows, series, checkered_t=None):
         by_driver.setdefault(lp["driver_number"], []).append(lp)
 
     out = {}
+    confident = {}  # dn -> last lap whose position is backed by a real event (not extrapolated)
     for dn, laps in by_driver.items():
         laps.sort(key=lambda x: x.get("lap_number") or 0)
         # Compute a start epoch per lap; if date_start is null, derive from the
@@ -261,7 +287,17 @@ def build_lap_positions(laps_rows, series, checkered_t=None):
             prev_epoch = e if e is not None else prev_epoch
 
         events = series.get(dn, [])
+        # Time of the driver's last real position event BEFORE the flag. Capping at
+        # the checkered is essential: post-race cool-down events would otherwise make
+        # every lap look "backed" and suppress the approximate-tail marking.
+        e_last = None
+        for t, _ in events:
+            if checkered_t is None or t <= checkered_t:
+                e_last = t
+            else:
+                break
         rows = []
+        ct = 0
         for idx, lp in enumerate(laps):
             ln = lp.get("lap_number")
             # crossing time completing THIS lap = start of the next lap; for the
@@ -280,8 +316,14 @@ def build_lap_positions(laps_rows, series, checkered_t=None):
             pos = position_asof(events, end_t)
             if pos is not None:
                 rows.append({"lap": ln, "position": pos, "lap_duration": lp.get("lap_duration")})
+                # A lap is "backed" (not extrapolated) if its crossing time is at
+                # or before the last real position event — i.e. we're interpolating
+                # between known events, not guessing past the last one.
+                if e_last is not None and end_t is not None and end_t <= e_last:
+                    ct = ln
         out[dn] = rows
-    return out
+        confident[dn] = ct
+    return out, confident
 
 
 # ── assembling one race ──
@@ -302,8 +344,10 @@ def fetch_race(race_id, races, circuits, by_name, by_ref, id_to_ref, resolve_onl
     stint_rows = of1_get("stints", session_key=sk)
     lap_rows = of1_get("laps", session_key=sk)
     pos_rows = of1_get("position", session_key=sk)
+    rc_rows = of1_get("race_control", session_key=sk)
+    safety_cars = parse_safety_cars(rc_rows)
     print(f"  fetched: {len(pit_rows)} pit, {len(stint_rows)} stint, "
-          f"{len(lap_rows)} lap, {len(pos_rows)} position rows")
+          f"{len(lap_rows)} lap, {len(pos_rows)} position rows; {len(safety_cars)} SC/VSC period(s)")
 
     # Authoritative classified finish comes from THIS repo's results.csv (Jolpica,
     # penalty-adjusted) — not OpenF1's /session_result, which shows on-track order
@@ -315,7 +359,7 @@ def fetch_race(race_id, races, circuits, by_name, by_ref, id_to_ref, resolve_onl
 
     checkered_t = checkered_time(lap_rows)
     series = build_position_series(pos_rows)
-    lap_pos = build_lap_positions(lap_rows, series, checkered_t)
+    lap_pos, confident = build_lap_positions(lap_rows, series, checkered_t)
 
     # group pit/stints by driver_number
     pits_by = {}
@@ -340,11 +384,22 @@ def fetch_race(race_id, races, circuits, by_name, by_ref, id_to_ref, resolve_onl
         # Anchor the final chart point to the authoritative classified position:
         # /position's last on-track sample can be gappy (a late, unrecorded drop)
         # or reflect the pre-penalty order.
+        corrected = False
         if laps and result_pos is not None and is_fin:
             finishers += 1
             if laps[-1]["position"] == result_pos:
                 pre_match += 1          # on-track order already agreed before anchoring
+            else:
+                corrected = True        # a change was missed between last event & flag
             laps[-1] = {**laps[-1], "position": result_pos}
+        # Per-lap confidence: mark as approximate ONLY where we have evidence of
+        # unreliability — a finisher whose endpoint had to be corrected, on the
+        # extrapolated tail past their last real position event. The final point
+        # is anchored to results.csv, so it is always definitive (approx=False).
+        ct = confident.get(dn, 0)
+        last_i = len(laps) - 1
+        for i, lp in enumerate(laps):
+            lp["approx"] = bool(corrected and i != last_i and lp["lap"] > ct)
         drivers_out[ref] = {
             "driver_number": dn,
             "result_position": result_pos,
@@ -363,6 +418,11 @@ def fetch_race(race_id, races, circuits, by_name, by_ref, id_to_ref, resolve_onl
         "circuit": circuit["circuitRef"],
         "date": race["date"],
         "fetched_at": datetime.utcnow().isoformat() + "Z",
+        # Race-level confidence: how many finishers' on-track order matched the
+        # official result before anchoring. A low ratio flags a sparse race whose
+        # mid-race trajectory should read as approximate.
+        "position_confidence": {"finishers": finishers, "on_track_agreed": pre_match},
+        "safety_cars": safety_cars,
         "drivers": drivers_out,
     }
 

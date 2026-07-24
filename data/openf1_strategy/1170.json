@@ -4,7 +4,18 @@
   "session_key": 11245,
   "circuit": "shanghai",
   "date": "2026-03-15",
-  "fetched_at": "2026-07-24T00:43:05.115311Z",
+  "fetched_at": "2026-07-24T19:17:31.268505Z",
+  "position_confidence": {
+    "finishers": 15,
+    "on_track_agreed": 15
+  },
+  "safety_cars": [
+    {
+      "type": "SC",
+      "lap_start": 10,
+      "lap_end": 13
+    }
+  ],
   "drivers": {
     "norris": {
       "driver_number": 1,
@@ -52,232 +63,278 @@
         {
           "lap": 1,
           "position": 13,
-          "lap_duration": 108.363
+          "lap_duration": 108.363,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 10,
-          "lap_duration": 100.295
+          "lap_duration": 100.295,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 10,
-          "lap_duration": 99.08
+          "lap_duration": 99.08,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 10,
-          "lap_duration": 99.12
+          "lap_duration": 99.12,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 10,
-          "lap_duration": 99.582
+          "lap_duration": 99.582,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 10,
-          "lap_duration": 99.206
+          "lap_duration": 99.206,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 10,
-          "lap_duration": 99.574
+          "lap_duration": 99.574,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 10,
-          "lap_duration": 99.465
+          "lap_duration": 99.465,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 12,
-          "lap_duration": 105.525
+          "lap_duration": 105.525,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 15,
-          "lap_duration": 143.152
+          "lap_duration": 143.152,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 14,
-          "lap_duration": 135.068
+          "lap_duration": 135.068,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 13,
-          "lap_duration": 129.669
+          "lap_duration": 129.669,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 13,
-          "lap_duration": 142.347
+          "lap_duration": 142.347,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 11,
-          "lap_duration": 99.573
+          "lap_duration": 99.573,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 11,
-          "lap_duration": 99.068
+          "lap_duration": 99.068,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 11,
-          "lap_duration": 98.953
+          "lap_duration": 98.953,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 10,
-          "lap_duration": 98.267
+          "lap_duration": 98.267,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 9,
-          "lap_duration": 97.35
+          "lap_duration": 97.35,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 9,
-          "lap_duration": 99.035
+          "lap_duration": 99.035,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 8,
-          "lap_duration": 98.531
+          "lap_duration": 98.531,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 7,
-          "lap_duration": 98.768
+          "lap_duration": 98.768,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 6,
-          "lap_duration": 98.147
+          "lap_duration": 98.147,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 6,
-          "lap_duration": 98.039
+          "lap_duration": 98.039,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 6,
-          "lap_duration": 97.88
+          "lap_duration": 97.88,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 6,
-          "lap_duration": 97.869
+          "lap_duration": 97.869,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 6,
-          "lap_duration": 97.38
+          "lap_duration": 97.38,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 6,
-          "lap_duration": 97.645
+          "lap_duration": 97.645,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 6,
-          "lap_duration": 97.368
+          "lap_duration": 97.368,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 6,
-          "lap_duration": 97.672
+          "lap_duration": 97.672,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 6,
-          "lap_duration": 97.587
+          "lap_duration": 97.587,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 6,
-          "lap_duration": 97.518
+          "lap_duration": 97.518,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 6,
-          "lap_duration": 97.76
+          "lap_duration": 97.76,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 6,
-          "lap_duration": 97.381
+          "lap_duration": 97.381,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 6,
-          "lap_duration": 97.41
+          "lap_duration": 97.41,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 6,
-          "lap_duration": 97.49
+          "lap_duration": 97.49,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 6,
-          "lap_duration": 97.229
+          "lap_duration": 97.229,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 6,
-          "lap_duration": 97.15
+          "lap_duration": 97.15,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 6,
-          "lap_duration": 97.063
+          "lap_duration": 97.063,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 6,
-          "lap_duration": 97.046
+          "lap_duration": 97.046,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 6,
-          "lap_duration": 97.255
+          "lap_duration": 97.255,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 6,
-          "lap_duration": 97.405
+          "lap_duration": 97.405,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 6,
-          "lap_duration": 97.383
+          "lap_duration": 97.383,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 6,
-          "lap_duration": 97.123
+          "lap_duration": 97.123,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 6,
-          "lap_duration": 97.092
+          "lap_duration": 97.092,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 13,
-          "lap_duration": 154.867
+          "lap_duration": 154.867,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 16,
-          "lap_duration": null
+          "lap_duration": null,
+          "approx": false
         }
       ]
     },
@@ -299,7 +356,8 @@
         {
           "lap": 1,
           "position": 21,
-          "lap_duration": null
+          "lap_duration": null,
+          "approx": false
         }
       ]
     },
@@ -344,282 +402,338 @@
         {
           "lap": 1,
           "position": 18,
-          "lap_duration": 124.065
+          "lap_duration": 124.065,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 18,
-          "lap_duration": 120.199
+          "lap_duration": 120.199,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 18,
-          "lap_duration": 98.812
+          "lap_duration": 98.812,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 18,
-          "lap_duration": 99.088
+          "lap_duration": 99.088,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 18,
-          "lap_duration": 98.824
+          "lap_duration": 98.824,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 18,
-          "lap_duration": 98.261
+          "lap_duration": 98.261,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 18,
-          "lap_duration": 98.457
+          "lap_duration": 98.457,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 18,
-          "lap_duration": 98.661
+          "lap_duration": 98.661,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 18,
-          "lap_duration": 98.662
+          "lap_duration": 98.662,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 17,
-          "lap_duration": 128.038
+          "lap_duration": 128.038,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 17,
-          "lap_duration": 154.638
+          "lap_duration": 154.638,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 17,
-          "lap_duration": 111.211
+          "lap_duration": 111.211,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 17,
-          "lap_duration": 133.423
+          "lap_duration": 133.423,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 14,
-          "lap_duration": 99.331
+          "lap_duration": 99.331,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 14,
-          "lap_duration": 99.161
+          "lap_duration": 99.161,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 14,
-          "lap_duration": 99.689
+          "lap_duration": 99.689,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 14,
-          "lap_duration": 98.952
+          "lap_duration": 98.952,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 14,
-          "lap_duration": 98.823
+          "lap_duration": 98.823,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 14,
-          "lap_duration": 98.757
+          "lap_duration": 98.757,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 14,
-          "lap_duration": 99.269
+          "lap_duration": 99.269,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 14,
-          "lap_duration": 99.133
+          "lap_duration": 99.133,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 13,
-          "lap_duration": 98.392
+          "lap_duration": 98.392,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 13,
-          "lap_duration": 98.437
+          "lap_duration": 98.437,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 13,
-          "lap_duration": 98.88
+          "lap_duration": 98.88,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 12,
-          "lap_duration": 98.617
+          "lap_duration": 98.617,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 12,
-          "lap_duration": 98.374
+          "lap_duration": 98.374,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 12,
-          "lap_duration": 98.293
+          "lap_duration": 98.293,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 12,
-          "lap_duration": 98.359
+          "lap_duration": 98.359,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 11,
-          "lap_duration": 98.082
+          "lap_duration": 98.082,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 11,
-          "lap_duration": 97.919
+          "lap_duration": 97.919,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 11,
-          "lap_duration": 97.868
+          "lap_duration": 97.868,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 10,
-          "lap_duration": 98.089
+          "lap_duration": 98.089,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 10,
-          "lap_duration": 97.821
+          "lap_duration": 97.821,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 10,
-          "lap_duration": 98.039
+          "lap_duration": 98.039,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 9,
-          "lap_duration": 97.938
+          "lap_duration": 97.938,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 9,
-          "lap_duration": 97.754
+          "lap_duration": 97.754,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 9,
-          "lap_duration": 97.842
+          "lap_duration": 97.842,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 9,
-          "lap_duration": 97.579
+          "lap_duration": 97.579,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 9,
-          "lap_duration": 97.653
+          "lap_duration": 97.653,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 9,
-          "lap_duration": 97.935
+          "lap_duration": 97.935,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 9,
-          "lap_duration": 97.923
+          "lap_duration": 97.923,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 9,
-          "lap_duration": 97.353
+          "lap_duration": 97.353,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 9,
-          "lap_duration": 97.647
+          "lap_duration": 97.647,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 9,
-          "lap_duration": 97.359
+          "lap_duration": 97.359,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 8,
-          "lap_duration": 97.616
+          "lap_duration": 97.616,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 8,
-          "lap_duration": 97.311
+          "lap_duration": 97.311,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 8,
-          "lap_duration": 98.205
+          "lap_duration": 98.205,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 8,
-          "lap_duration": 98.006
+          "lap_duration": 98.006,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 8,
-          "lap_duration": 97.83
+          "lap_duration": 97.83,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 8,
-          "lap_duration": 97.689
+          "lap_duration": 97.689,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 8,
-          "lap_duration": 98.003
+          "lap_duration": 98.003,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 8,
-          "lap_duration": 97.805
+          "lap_duration": 97.805,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 8,
-          "lap_duration": 97.937
+          "lap_duration": 97.937,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 8,
-          "lap_duration": 97.925
+          "lap_duration": 97.925,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 8,
-          "lap_duration": 97.798
+          "lap_duration": 97.798,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 8,
-          "lap_duration": 97.544
+          "lap_duration": 97.544,
+          "approx": false
         }
       ]
     },
@@ -653,282 +767,338 @@
         {
           "lap": 1,
           "position": 5,
-          "lap_duration": 102.984
+          "lap_duration": 102.984,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 5,
-          "lap_duration": 98.917
+          "lap_duration": 98.917,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 5,
-          "lap_duration": 98.923
+          "lap_duration": 98.923,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 5,
-          "lap_duration": 98.717
+          "lap_duration": 98.717,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 5,
-          "lap_duration": 98.474
+          "lap_duration": 98.474,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 5,
-          "lap_duration": 98.298
+          "lap_duration": 98.298,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 5,
-          "lap_duration": 98.635
+          "lap_duration": 98.635,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 5,
-          "lap_duration": 98.427
+          "lap_duration": 98.427,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 5,
-          "lap_duration": 98.609
+          "lap_duration": 98.609,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 5,
-          "lap_duration": 112.994
+          "lap_duration": 112.994,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 9,
-          "lap_duration": 158.639
+          "lap_duration": 158.639,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 9,
-          "lap_duration": 150.075
+          "lap_duration": 150.075,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 9,
-          "lap_duration": 145.559
+          "lap_duration": 145.559,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 10,
-          "lap_duration": 100.408
+          "lap_duration": 100.408,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 10,
-          "lap_duration": 98.883
+          "lap_duration": 98.883,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 9,
-          "lap_duration": 98.644
+          "lap_duration": 98.644,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 8,
-          "lap_duration": 98.238
+          "lap_duration": 98.238,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 8,
-          "lap_duration": 97.593
+          "lap_duration": 97.593,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 8,
-          "lap_duration": 99.325
+          "lap_duration": 99.325,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 9,
-          "lap_duration": 99.504
+          "lap_duration": 99.504,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 9,
-          "lap_duration": 99.208
+          "lap_duration": 99.208,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 10,
-          "lap_duration": 99.338
+          "lap_duration": 99.338,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 9,
-          "lap_duration": 98.067
+          "lap_duration": 98.067,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 9,
-          "lap_duration": 98.373
+          "lap_duration": 98.373,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 9,
-          "lap_duration": 98.568
+          "lap_duration": 98.568,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 9,
-          "lap_duration": 97.82
+          "lap_duration": 97.82,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 9,
-          "lap_duration": 98.163
+          "lap_duration": 98.163,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 8,
-          "lap_duration": 98.225
+          "lap_duration": 98.225,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 7,
-          "lap_duration": 97.566
+          "lap_duration": 97.566,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 7,
-          "lap_duration": 98.132
+          "lap_duration": 98.132,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 7,
-          "lap_duration": 97.634
+          "lap_duration": 97.634,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 7,
-          "lap_duration": 97.253
+          "lap_duration": 97.253,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 7,
-          "lap_duration": 97.123
+          "lap_duration": 97.123,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 7,
-          "lap_duration": 97.193
+          "lap_duration": 97.193,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 7,
-          "lap_duration": 97.293
+          "lap_duration": 97.293,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 7,
-          "lap_duration": 97.103
+          "lap_duration": 97.103,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 7,
-          "lap_duration": 96.752
+          "lap_duration": 96.752,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 7,
-          "lap_duration": 96.672
+          "lap_duration": 96.672,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 7,
-          "lap_duration": 96.754
+          "lap_duration": 96.754,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 7,
-          "lap_duration": 96.865
+          "lap_duration": 96.865,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 7,
-          "lap_duration": 97.214
+          "lap_duration": 97.214,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 7,
-          "lap_duration": 97.026
+          "lap_duration": 97.026,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 7,
-          "lap_duration": 96.877
+          "lap_duration": 96.877,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 7,
-          "lap_duration": 96.764
+          "lap_duration": 96.764,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 6,
-          "lap_duration": 96.895
+          "lap_duration": 96.895,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 6,
-          "lap_duration": 96.748
+          "lap_duration": 96.748,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 6,
-          "lap_duration": 97.584
+          "lap_duration": 97.584,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 6,
-          "lap_duration": 97.01
+          "lap_duration": 97.01,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 6,
-          "lap_duration": 96.752
+          "lap_duration": 96.752,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 6,
-          "lap_duration": 97.04
+          "lap_duration": 97.04,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 6,
-          "lap_duration": 96.753
+          "lap_duration": 96.753,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 6,
-          "lap_duration": 96.642
+          "lap_duration": 96.642,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 6,
-          "lap_duration": 96.505
+          "lap_duration": 96.505,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 6,
-          "lap_duration": 96.682
+          "lap_duration": 96.682,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 6,
-          "lap_duration": 96.638
+          "lap_duration": 96.638,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 6,
-          "lap_duration": 96.569
+          "lap_duration": 96.569,
+          "approx": false
         }
       ]
     },
@@ -962,277 +1132,332 @@
         {
           "lap": 1,
           "position": 17,
-          "lap_duration": 115.495
+          "lap_duration": 115.495,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 17,
-          "lap_duration": 101.066
+          "lap_duration": 101.066,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 17,
-          "lap_duration": 101.224
+          "lap_duration": 101.224,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 17,
-          "lap_duration": 100.934
+          "lap_duration": 100.934,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 17,
-          "lap_duration": 100.978
+          "lap_duration": 100.978,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 17,
-          "lap_duration": 100.557
+          "lap_duration": 100.557,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 17,
-          "lap_duration": 100.918
+          "lap_duration": 100.918,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 17,
-          "lap_duration": 101.103
+          "lap_duration": 101.103,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 17,
-          "lap_duration": 101.781
+          "lap_duration": 101.781,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 13,
-          "lap_duration": 121.617
+          "lap_duration": 121.617,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 12,
-          "lap_duration": 138.719
+          "lap_duration": 138.719,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 16,
-          "lap_duration": 137.935
+          "lap_duration": 137.935,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 16,
-          "lap_duration": 139.666
+          "lap_duration": 139.666,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 17,
-          "lap_duration": 101.759
+          "lap_duration": 101.759,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 16,
-          "lap_duration": 100.004
+          "lap_duration": 100.004,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 16,
-          "lap_duration": 99.621
+          "lap_duration": 99.621,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 17,
-          "lap_duration": 102.203
+          "lap_duration": 102.203,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 16,
-          "lap_duration": 99.321
+          "lap_duration": 99.321,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 16,
-          "lap_duration": 99.731
+          "lap_duration": 99.731,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 16,
-          "lap_duration": 100.134
+          "lap_duration": 100.134,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 16,
-          "lap_duration": 99.682
+          "lap_duration": 99.682,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 16,
-          "lap_duration": 99.622
+          "lap_duration": 99.622,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 16,
-          "lap_duration": 99.75
+          "lap_duration": 99.75,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 16,
-          "lap_duration": 99.736
+          "lap_duration": 99.736,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 16,
-          "lap_duration": 100.542
+          "lap_duration": 100.542,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 16,
-          "lap_duration": 100.01
+          "lap_duration": 100.01,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 16,
-          "lap_duration": 100.307
+          "lap_duration": 100.307,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 16,
-          "lap_duration": 99.583
+          "lap_duration": 99.583,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 16,
-          "lap_duration": 100.437
+          "lap_duration": 100.437,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 16,
-          "lap_duration": 100.016
+          "lap_duration": 100.016,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 16,
-          "lap_duration": 99.977
+          "lap_duration": 99.977,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 16,
-          "lap_duration": 99.799
+          "lap_duration": 99.799,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 15,
-          "lap_duration": 100.106
+          "lap_duration": 100.106,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 16,
-          "lap_duration": 100.185
+          "lap_duration": 100.185,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 16,
-          "lap_duration": 99.48
+          "lap_duration": 99.48,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 15,
-          "lap_duration": 99.551
+          "lap_duration": 99.551,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 15,
-          "lap_duration": 99.606
+          "lap_duration": 99.606,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 16,
-          "lap_duration": 100.111
+          "lap_duration": 100.111,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 16,
-          "lap_duration": 99.616
+          "lap_duration": 99.616,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 16,
-          "lap_duration": 99.591
+          "lap_duration": 99.591,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 16,
-          "lap_duration": 100.557
+          "lap_duration": 100.557,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 16,
-          "lap_duration": 99.127
+          "lap_duration": 99.127,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 16,
-          "lap_duration": 101.151
+          "lap_duration": 101.151,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 16,
-          "lap_duration": 103.964
+          "lap_duration": 103.964,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 16,
-          "lap_duration": 108.834
+          "lap_duration": 108.834,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 15,
-          "lap_duration": 100.983
+          "lap_duration": 100.983,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 14,
-          "lap_duration": 99.88
+          "lap_duration": 99.88,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 14,
-          "lap_duration": 100.227
+          "lap_duration": 100.227,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 14,
-          "lap_duration": 99.462
+          "lap_duration": 99.462,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 14,
-          "lap_duration": 98.523
+          "lap_duration": 98.523,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 14,
-          "lap_duration": 99.014
+          "lap_duration": 99.014,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 15,
-          "lap_duration": 99.526
+          "lap_duration": 99.526,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 15,
-          "lap_duration": 98.959
+          "lap_duration": 98.959,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 15,
-          "lap_duration": 99.076
+          "lap_duration": 99.076,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 15,
-          "lap_duration": 98.898
+          "lap_duration": 98.898,
+          "approx": false
         }
       ]
     },
@@ -1266,282 +1491,338 @@
         {
           "lap": 1,
           "position": 2,
-          "lap_duration": 100.643
+          "lap_duration": 100.643,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 1,
-          "lap_duration": 98.305
+          "lap_duration": 98.305,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 1,
-          "lap_duration": 98.013
+          "lap_duration": 98.013,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 1,
-          "lap_duration": 97.394
+          "lap_duration": 97.394,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 1,
-          "lap_duration": 97.535
+          "lap_duration": 97.535,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 1,
-          "lap_duration": 97.172
+          "lap_duration": 97.172,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 1,
-          "lap_duration": 97.412
+          "lap_duration": 97.412,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 1,
-          "lap_duration": 97.322
+          "lap_duration": 97.322,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 1,
-          "lap_duration": 97.356
+          "lap_duration": 97.356,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 1,
-          "lap_duration": 106.671
+          "lap_duration": 106.671,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 1,
-          "lap_duration": 167.222
+          "lap_duration": 167.222,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 1,
-          "lap_duration": 149.91
+          "lap_duration": 149.91,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 1,
-          "lap_duration": 150.521
+          "lap_duration": 150.521,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 1,
-          "lap_duration": 98.957
+          "lap_duration": 98.957,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 1,
-          "lap_duration": 98.222
+          "lap_duration": 98.222,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 1,
-          "lap_duration": 96.604
+          "lap_duration": 96.604,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 1,
-          "lap_duration": 96.555
+          "lap_duration": 96.555,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 1,
-          "lap_duration": 97.059
+          "lap_duration": 97.059,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 1,
-          "lap_duration": 96.816
+          "lap_duration": 96.816,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 1,
-          "lap_duration": 96.762
+          "lap_duration": 96.762,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 1,
-          "lap_duration": 96.929
+          "lap_duration": 96.929,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 1,
-          "lap_duration": 96.612
+          "lap_duration": 96.612,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 1,
-          "lap_duration": 96.806
+          "lap_duration": 96.806,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 1,
-          "lap_duration": 96.513
+          "lap_duration": 96.513,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 1,
-          "lap_duration": 96.514
+          "lap_duration": 96.514,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 1,
-          "lap_duration": 96.588
+          "lap_duration": 96.588,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 1,
-          "lap_duration": 96.59
+          "lap_duration": 96.59,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 1,
-          "lap_duration": 96.589
+          "lap_duration": 96.589,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 1,
-          "lap_duration": 96.381
+          "lap_duration": 96.381,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 1,
-          "lap_duration": 96.166
+          "lap_duration": 96.166,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 1,
-          "lap_duration": 96.108
+          "lap_duration": 96.108,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 1,
-          "lap_duration": 95.983
+          "lap_duration": 95.983,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 1,
-          "lap_duration": 96.443
+          "lap_duration": 96.443,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 1,
-          "lap_duration": 96.021
+          "lap_duration": 96.021,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 1,
-          "lap_duration": 96.037
+          "lap_duration": 96.037,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 1,
-          "lap_duration": 96.014
+          "lap_duration": 96.014,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 1,
-          "lap_duration": 96.159
+          "lap_duration": 96.159,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 1,
-          "lap_duration": 95.526
+          "lap_duration": 95.526,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 1,
-          "lap_duration": 95.494
+          "lap_duration": 95.494,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 1,
-          "lap_duration": 96.15
+          "lap_duration": 96.15,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 1,
-          "lap_duration": 95.343
+          "lap_duration": 95.343,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 1,
-          "lap_duration": 95.93
+          "lap_duration": 95.93,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 1,
-          "lap_duration": 95.936
+          "lap_duration": 95.936,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 1,
-          "lap_duration": 95.332
+          "lap_duration": 95.332,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 1,
-          "lap_duration": 95.528
+          "lap_duration": 95.528,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 1,
-          "lap_duration": 95.282
+          "lap_duration": 95.282,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 1,
-          "lap_duration": 95.501
+          "lap_duration": 95.501,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 1,
-          "lap_duration": 95.706
+          "lap_duration": 95.706,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 1,
-          "lap_duration": 95.523
+          "lap_duration": 95.523,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 1,
-          "lap_duration": 95.659
+          "lap_duration": 95.659,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 1,
-          "lap_duration": 96.011
+          "lap_duration": 96.011,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 1,
-          "lap_duration": 95.275
+          "lap_duration": 95.275,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 1,
-          "lap_duration": 97.53
+          "lap_duration": 97.53,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 1,
-          "lap_duration": 96.176
+          "lap_duration": 96.176,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 1,
-          "lap_duration": 96.378
+          "lap_duration": 96.378,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 1,
-          "lap_duration": 96.929
+          "lap_duration": 96.929,
+          "approx": false
         }
       ]
     },
@@ -1575,167 +1856,200 @@
         {
           "lap": 1,
           "position": 10,
-          "lap_duration": 107.644
+          "lap_duration": 107.644,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 13,
-          "lap_duration": 102.291
+          "lap_duration": 102.291,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 14,
-          "lap_duration": 101.588
+          "lap_duration": 101.588,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 14,
-          "lap_duration": 100.471
+          "lap_duration": 100.471,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 14,
-          "lap_duration": 101.554
+          "lap_duration": 101.554,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 15,
-          "lap_duration": 101.824
+          "lap_duration": 101.824,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 15,
-          "lap_duration": 101.659
+          "lap_duration": 101.659,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 15,
-          "lap_duration": 101.113
+          "lap_duration": 101.113,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 15,
-          "lap_duration": 101.631
+          "lap_duration": 101.631,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 11,
-          "lap_duration": 119.919
+          "lap_duration": 119.919,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 11,
-          "lap_duration": 135.393
+          "lap_duration": 135.393,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 11,
-          "lap_duration": 140.998
+          "lap_duration": 140.998,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 11,
-          "lap_duration": 143.746
+          "lap_duration": 143.746,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 16,
-          "lap_duration": 103.5
+          "lap_duration": 103.5,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 17,
-          "lap_duration": 101.183
+          "lap_duration": 101.183,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 17,
-          "lap_duration": 100.26
+          "lap_duration": 100.26,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 16,
-          "lap_duration": 100.363
+          "lap_duration": 100.363,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 17,
-          "lap_duration": 101.241
+          "lap_duration": 101.241,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 17,
-          "lap_duration": 100.356
+          "lap_duration": 100.356,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 17,
-          "lap_duration": 100.254
+          "lap_duration": 100.254,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 17,
-          "lap_duration": 99.812
+          "lap_duration": 99.812,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 17,
-          "lap_duration": 99.938
+          "lap_duration": 99.938,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 17,
-          "lap_duration": 99.801
+          "lap_duration": 99.801,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 17,
-          "lap_duration": 99.767
+          "lap_duration": 99.767,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 17,
-          "lap_duration": 99.721
+          "lap_duration": 99.721,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 17,
-          "lap_duration": 99.755
+          "lap_duration": 99.755,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 17,
-          "lap_duration": 100.242
+          "lap_duration": 100.242,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 17,
-          "lap_duration": 99.745
+          "lap_duration": 99.745,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 17,
-          "lap_duration": 99.945
+          "lap_duration": 99.945,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 17,
-          "lap_duration": 100.349
+          "lap_duration": 100.349,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 17,
-          "lap_duration": 106.419
+          "lap_duration": 106.419,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 17,
-          "lap_duration": 127.515
+          "lap_duration": 127.515,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 17,
-          "lap_duration": null
+          "lap_duration": null,
+          "approx": false
         }
       ]
     },
@@ -1769,282 +2083,338 @@
         {
           "lap": 1,
           "position": 3,
-          "lap_duration": 101.481
+          "lap_duration": 101.481,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 3,
-          "lap_duration": 98.558
+          "lap_duration": 98.558,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 4,
-          "lap_duration": 99.148
+          "lap_duration": 99.148,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 4,
-          "lap_duration": 97.835
+          "lap_duration": 97.835,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 4,
-          "lap_duration": 97.863
+          "lap_duration": 97.863,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 4,
-          "lap_duration": 98.136
+          "lap_duration": 98.136,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 4,
-          "lap_duration": 97.994
+          "lap_duration": 97.994,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 4,
-          "lap_duration": 97.794
+          "lap_duration": 97.794,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 4,
-          "lap_duration": 98.13
+          "lap_duration": 98.13,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 4,
-          "lap_duration": 112.397
+          "lap_duration": 112.397,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 7,
-          "lap_duration": 161.733
+          "lap_duration": 161.733,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 7,
-          "lap_duration": 150.182
+          "lap_duration": 150.182,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 7,
-          "lap_duration": 146.486
+          "lap_duration": 146.486,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 6,
-          "lap_duration": 99.851
+          "lap_duration": 99.851,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 4,
-          "lap_duration": 97.205
+          "lap_duration": 97.205,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 3,
-          "lap_duration": 97.306
+          "lap_duration": 97.306,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 3,
-          "lap_duration": 96.877
+          "lap_duration": 96.877,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 3,
-          "lap_duration": 96.599
+          "lap_duration": 96.599,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 3,
-          "lap_duration": 96.861
+          "lap_duration": 96.861,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 3,
-          "lap_duration": 96.833
+          "lap_duration": 96.833,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 3,
-          "lap_duration": 96.705
+          "lap_duration": 96.705,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 3,
-          "lap_duration": 96.643
+          "lap_duration": 96.643,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 3,
-          "lap_duration": 96.813
+          "lap_duration": 96.813,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 2,
-          "lap_duration": 97.277
+          "lap_duration": 97.277,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 2,
-          "lap_duration": 97.681
+          "lap_duration": 97.681,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 3,
-          "lap_duration": 97.574
+          "lap_duration": 97.574,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 2,
-          "lap_duration": 97.872
+          "lap_duration": 97.872,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 2,
-          "lap_duration": 97.076
+          "lap_duration": 97.076,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 3,
-          "lap_duration": 97.107
+          "lap_duration": 97.107,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 3,
-          "lap_duration": 96.797
+          "lap_duration": 96.797,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 3,
-          "lap_duration": 96.409
+          "lap_duration": 96.409,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 3,
-          "lap_duration": 96.624
+          "lap_duration": 96.624,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 3,
-          "lap_duration": 96.55
+          "lap_duration": 96.55,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 3,
-          "lap_duration": 96.729
+          "lap_duration": 96.729,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 4,
-          "lap_duration": 98.511
+          "lap_duration": 98.511,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 4,
-          "lap_duration": 97.247
+          "lap_duration": 97.247,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 4,
-          "lap_duration": 96.767
+          "lap_duration": 96.767,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 4,
-          "lap_duration": 96.759
+          "lap_duration": 96.759,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 3,
-          "lap_duration": 96.993
+          "lap_duration": 96.993,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 4,
-          "lap_duration": 98.256
+          "lap_duration": 98.256,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 4,
-          "lap_duration": 96.84
+          "lap_duration": 96.84,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 4,
-          "lap_duration": 96.795
+          "lap_duration": 96.795,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 4,
-          "lap_duration": 96.584
+          "lap_duration": 96.584,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 4,
-          "lap_duration": 96.649
+          "lap_duration": 96.649,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 4,
-          "lap_duration": 97.224
+          "lap_duration": 97.224,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 4,
-          "lap_duration": 96.271
+          "lap_duration": 96.271,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 4,
-          "lap_duration": 96.204
+          "lap_duration": 96.204,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 4,
-          "lap_duration": 96.228
+          "lap_duration": 96.228,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 4,
-          "lap_duration": 96.331
+          "lap_duration": 96.331,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 4,
-          "lap_duration": 96.387
+          "lap_duration": 96.387,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 4,
-          "lap_duration": 96.744
+          "lap_duration": 96.744,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 4,
-          "lap_duration": 96.324
+          "lap_duration": 96.324,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 4,
-          "lap_duration": 96.32
+          "lap_duration": 96.32,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 4,
-          "lap_duration": 96.213
+          "lap_duration": 96.213,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 4,
-          "lap_duration": 96.134
+          "lap_duration": 96.134,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 4,
-          "lap_duration": 96.011
+          "lap_duration": 96.011,
+          "approx": false
         }
       ]
     },
@@ -2066,52 +2436,62 @@
         {
           "lap": 1,
           "position": 16,
-          "lap_duration": 109.872
+          "lap_duration": 109.872,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 16,
-          "lap_duration": 101.83
+          "lap_duration": 101.83,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 16,
-          "lap_duration": 101.798
+          "lap_duration": 101.798,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 16,
-          "lap_duration": 101.854
+          "lap_duration": 101.854,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 16,
-          "lap_duration": 100.992
+          "lap_duration": 100.992,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 16,
-          "lap_duration": 100.971
+          "lap_duration": 100.971,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 16,
-          "lap_duration": 100.956
+          "lap_duration": 100.956,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 16,
-          "lap_duration": 101.174
+          "lap_duration": 101.174,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 16,
-          "lap_duration": 100.883
+          "lap_duration": 100.883,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 18,
-          "lap_duration": null
+          "lap_duration": null,
+          "approx": false
         }
       ]
     },
@@ -2161,277 +2541,332 @@
         {
           "lap": 1,
           "position": 15,
-          "lap_duration": 109.052
+          "lap_duration": 109.052,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 15,
-          "lap_duration": 101.634
+          "lap_duration": 101.634,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 13,
-          "lap_duration": 99.907
+          "lap_duration": 99.907,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 13,
-          "lap_duration": 99.517
+          "lap_duration": 99.517,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 13,
-          "lap_duration": 99.264
+          "lap_duration": 99.264,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 13,
-          "lap_duration": 98.775
+          "lap_duration": 98.775,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 12,
-          "lap_duration": 99.39
+          "lap_duration": 99.39,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 12,
-          "lap_duration": 99.027
+          "lap_duration": 99.027,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 10,
-          "lap_duration": 99.164
+          "lap_duration": 99.164,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 9,
-          "lap_duration": 113.809
+          "lap_duration": 113.809,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 8,
-          "lap_duration": 141.998
+          "lap_duration": 141.998,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 8,
-          "lap_duration": 150.857
+          "lap_duration": 150.857,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 8,
-          "lap_duration": 145.608
+          "lap_duration": 145.608,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 9,
-          "lap_duration": 100.945
+          "lap_duration": 100.945,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 9,
-          "lap_duration": 99.198
+          "lap_duration": 99.198,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 10,
-          "lap_duration": 99.566
+          "lap_duration": 99.566,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 11,
-          "lap_duration": 99.235
+          "lap_duration": 99.235,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 11,
-          "lap_duration": 98.874
+          "lap_duration": 98.874,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 10,
-          "lap_duration": 98.382
+          "lap_duration": 98.382,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 10,
-          "lap_duration": 98.824
+          "lap_duration": 98.824,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 10,
-          "lap_duration": 98.394
+          "lap_duration": 98.394,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 9,
-          "lap_duration": 98.443
+          "lap_duration": 98.443,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 10,
-          "lap_duration": 99.496
+          "lap_duration": 99.496,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 10,
-          "lap_duration": 98.712
+          "lap_duration": 98.712,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 10,
-          "lap_duration": 98.588
+          "lap_duration": 98.588,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 10,
-          "lap_duration": 98.302
+          "lap_duration": 98.302,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 10,
-          "lap_duration": 97.959
+          "lap_duration": 97.959,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 10,
-          "lap_duration": 98.15
+          "lap_duration": 98.15,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 9,
-          "lap_duration": 98.677
+          "lap_duration": 98.677,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 9,
-          "lap_duration": 97.859
+          "lap_duration": 97.859,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 9,
-          "lap_duration": 97.762
+          "lap_duration": 97.762,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 8,
-          "lap_duration": 98.296
+          "lap_duration": 98.296,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 8,
-          "lap_duration": 98.663
+          "lap_duration": 98.663,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 8,
-          "lap_duration": 98.427
+          "lap_duration": 98.427,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 10,
-          "lap_duration": 104.913
+          "lap_duration": 104.913,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 16,
-          "lap_duration": 132.21
+          "lap_duration": 132.21,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 16,
-          "lap_duration": 96.62
+          "lap_duration": 96.62,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 14,
-          "lap_duration": 96.18
+          "lap_duration": 96.18,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 14,
-          "lap_duration": 97.116
+          "lap_duration": 97.116,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 14,
-          "lap_duration": 96.873
+          "lap_duration": 96.873,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 14,
-          "lap_duration": 96.625
+          "lap_duration": 96.625,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 14,
-          "lap_duration": 98.675
+          "lap_duration": 98.675,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 12,
-          "lap_duration": 96.761
+          "lap_duration": 96.761,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 12,
-          "lap_duration": 96.868
+          "lap_duration": 96.868,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 11,
-          "lap_duration": 96.901
+          "lap_duration": 96.901,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 11,
-          "lap_duration": 96.985
+          "lap_duration": 96.985,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 11,
-          "lap_duration": 98.763
+          "lap_duration": 98.763,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 11,
-          "lap_duration": 96.776
+          "lap_duration": 96.776,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 11,
-          "lap_duration": 98.064
+          "lap_duration": 98.064,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 11,
-          "lap_duration": 97.696
+          "lap_duration": 97.696,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 11,
-          "lap_duration": 97.505
+          "lap_duration": 97.505,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 11,
-          "lap_duration": 97.614
+          "lap_duration": 97.614,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 11,
-          "lap_duration": 97.97
+          "lap_duration": 97.97,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 11,
-          "lap_duration": 97.609
+          "lap_duration": 97.609,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 11,
-          "lap_duration": 97.571
+          "lap_duration": 97.571,
+          "approx": false
         }
       ]
     },
@@ -2465,282 +2900,338 @@
         {
           "lap": 1,
           "position": 7,
-          "lap_duration": 106.347
+          "lap_duration": 106.347,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 7,
-          "lap_duration": 99.798
+          "lap_duration": 99.798,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 7,
-          "lap_duration": 98.947
+          "lap_duration": 98.947,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 7,
-          "lap_duration": 99.114
+          "lap_duration": 99.114,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 8,
-          "lap_duration": 100.055
+          "lap_duration": 100.055,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 8,
-          "lap_duration": 99.51
+          "lap_duration": 99.51,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 8,
-          "lap_duration": 99.709
+          "lap_duration": 99.709,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 8,
-          "lap_duration": 99.878
+          "lap_duration": 99.878,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 11,
-          "lap_duration": 106.179
+          "lap_duration": 106.179,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 14,
-          "lap_duration": 142.138
+          "lap_duration": 142.138,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 13,
-          "lap_duration": 135.169
+          "lap_duration": 135.169,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 12,
-          "lap_duration": 130.584
+          "lap_duration": 130.584,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 12,
-          "lap_duration": 142.417
+          "lap_duration": 142.417,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 12,
-          "lap_duration": 100.779
+          "lap_duration": 100.779,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 12,
-          "lap_duration": 99.02
+          "lap_duration": 99.02,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 12,
-          "lap_duration": 99.437
+          "lap_duration": 99.437,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 12,
-          "lap_duration": 98.909
+          "lap_duration": 98.909,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 12,
-          "lap_duration": 98.709
+          "lap_duration": 98.709,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 12,
-          "lap_duration": 98.989
+          "lap_duration": 98.989,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 12,
-          "lap_duration": 99.187
+          "lap_duration": 99.187,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 11,
-          "lap_duration": 98.491
+          "lap_duration": 98.491,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 11,
-          "lap_duration": 98.8
+          "lap_duration": 98.8,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 11,
-          "lap_duration": 98.552
+          "lap_duration": 98.552,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 11,
-          "lap_duration": 98.546
+          "lap_duration": 98.546,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 11,
-          "lap_duration": 98.599
+          "lap_duration": 98.599,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 11,
-          "lap_duration": 98.445
+          "lap_duration": 98.445,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 11,
-          "lap_duration": 98.358
+          "lap_duration": 98.358,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 11,
-          "lap_duration": 98.389
+          "lap_duration": 98.389,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 10,
-          "lap_duration": 98.308
+          "lap_duration": 98.308,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 10,
-          "lap_duration": 97.894
+          "lap_duration": 97.894,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 10,
-          "lap_duration": 98.084
+          "lap_duration": 98.084,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 9,
-          "lap_duration": 97.959
+          "lap_duration": 97.959,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 9,
-          "lap_duration": 97.898
+          "lap_duration": 97.898,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 9,
-          "lap_duration": 98.224
+          "lap_duration": 98.224,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 8,
-          "lap_duration": 98.009
+          "lap_duration": 98.009,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 8,
-          "lap_duration": 97.981
+          "lap_duration": 97.981,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 8,
-          "lap_duration": 97.972
+          "lap_duration": 97.972,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 8,
-          "lap_duration": 97.568
+          "lap_duration": 97.568,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 8,
-          "lap_duration": 97.763
+          "lap_duration": 97.763,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 8,
-          "lap_duration": 97.81
+          "lap_duration": 97.81,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 8,
-          "lap_duration": 97.616
+          "lap_duration": 97.616,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 8,
-          "lap_duration": 97.556
+          "lap_duration": 97.556,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 8,
-          "lap_duration": 97.561
+          "lap_duration": 97.561,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 8,
-          "lap_duration": 97.354
+          "lap_duration": 97.354,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 7,
-          "lap_duration": 97.547
+          "lap_duration": 97.547,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 7,
-          "lap_duration": 97.369
+          "lap_duration": 97.369,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 7,
-          "lap_duration": 97.298
+          "lap_duration": 97.298,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 7,
-          "lap_duration": 97.443
+          "lap_duration": 97.443,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 7,
-          "lap_duration": 97.457
+          "lap_duration": 97.457,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 7,
-          "lap_duration": 97.201
+          "lap_duration": 97.201,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 7,
-          "lap_duration": 97.393
+          "lap_duration": 97.393,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 7,
-          "lap_duration": 97.324
+          "lap_duration": 97.324,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 7,
-          "lap_duration": 97.35
+          "lap_duration": 97.35,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 7,
-          "lap_duration": 97.202
+          "lap_duration": 97.202,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 7,
-          "lap_duration": 97.166
+          "lap_duration": 97.166,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 7,
-          "lap_duration": 97.096
+          "lap_duration": 97.096,
+          "approx": false
         }
       ]
     },
@@ -2785,277 +3276,332 @@
         {
           "lap": 1,
           "position": 9,
-          "lap_duration": 107.14
+          "lap_duration": 107.14,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 8,
-          "lap_duration": 99.736
+          "lap_duration": 99.736,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 8,
-          "lap_duration": 99.082
+          "lap_duration": 99.082,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 8,
-          "lap_duration": 99.102
+          "lap_duration": 99.102,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 7,
-          "lap_duration": 98.846
+          "lap_duration": 98.846,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 7,
-          "lap_duration": 98.758
+          "lap_duration": 98.758,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 7,
-          "lap_duration": 99.086
+          "lap_duration": 99.086,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 7,
-          "lap_duration": 99.015
+          "lap_duration": 99.015,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 7,
-          "lap_duration": 99.018
+          "lap_duration": 99.018,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 7,
-          "lap_duration": 112.375
+          "lap_duration": 112.375,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 3,
-          "lap_duration": 144.244
+          "lap_duration": 144.244,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 3,
-          "lap_duration": 149.854
+          "lap_duration": 149.854,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 3,
-          "lap_duration": 149.97
+          "lap_duration": 149.97,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 4,
-          "lap_duration": 100.325
+          "lap_duration": 100.325,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 5,
-          "lap_duration": 99.043
+          "lap_duration": 99.043,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 6,
-          "lap_duration": 99.417
+          "lap_duration": 99.417,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 6,
-          "lap_duration": 98.357
+          "lap_duration": 98.357,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 6,
-          "lap_duration": 98.671
+          "lap_duration": 98.671,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 7,
-          "lap_duration": 99.911
+          "lap_duration": 99.911,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 7,
-          "lap_duration": 98.991
+          "lap_duration": 98.991,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 8,
-          "lap_duration": 99.822
+          "lap_duration": 99.822,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 8,
-          "lap_duration": 98.7
+          "lap_duration": 98.7,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 8,
-          "lap_duration": 98.334
+          "lap_duration": 98.334,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 8,
-          "lap_duration": 98.85
+          "lap_duration": 98.85,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 8,
-          "lap_duration": 98.331
+          "lap_duration": 98.331,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 8,
-          "lap_duration": 97.825
+          "lap_duration": 97.825,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 8,
-          "lap_duration": 98.121
+          "lap_duration": 98.121,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 7,
-          "lap_duration": 98.669
+          "lap_duration": 98.669,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 12,
-          "lap_duration": 104.567
+          "lap_duration": 104.567,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 15,
-          "lap_duration": 118.996
+          "lap_duration": 118.996,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 14,
-          "lap_duration": 96.926
+          "lap_duration": 96.926,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 14,
-          "lap_duration": 97.104
+          "lap_duration": 97.104,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 16,
-          "lap_duration": 108.417
+          "lap_duration": 108.417,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 15,
-          "lap_duration": 98.474
+          "lap_duration": 98.474,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 15,
-          "lap_duration": 98.037
+          "lap_duration": 98.037,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 13,
-          "lap_duration": 98.817
+          "lap_duration": 98.817,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 13,
-          "lap_duration": 97.83
+          "lap_duration": 97.83,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 13,
-          "lap_duration": 97.694
+          "lap_duration": 97.694,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 13,
-          "lap_duration": 98.017
+          "lap_duration": 98.017,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 13,
-          "lap_duration": 98.068
+          "lap_duration": 98.068,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 13,
-          "lap_duration": 97.901
+          "lap_duration": 97.901,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 13,
-          "lap_duration": 98.014
+          "lap_duration": 98.014,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 13,
-          "lap_duration": 99.758
+          "lap_duration": 99.758,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 13,
-          "lap_duration": 97.846
+          "lap_duration": 97.846,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 12,
-          "lap_duration": 99.146
+          "lap_duration": 99.146,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 13,
-          "lap_duration": 103.55
+          "lap_duration": 103.55,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 15,
-          "lap_duration": 140.887
+          "lap_duration": 140.887,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 15,
-          "lap_duration": 96.461
+          "lap_duration": 96.461,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 15,
-          "lap_duration": 96.746
+          "lap_duration": 96.746,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 15,
-          "lap_duration": 96.427
+          "lap_duration": 96.427,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 15,
-          "lap_duration": 96.476
+          "lap_duration": 96.476,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 14,
-          "lap_duration": 97.671
+          "lap_duration": 97.671,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 14,
-          "lap_duration": 96.642
+          "lap_duration": 96.642,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 14,
-          "lap_duration": 95.964
+          "lap_duration": 95.964,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 14,
-          "lap_duration": 96.281
+          "lap_duration": 96.281,
+          "approx": false
         }
       ]
     },
@@ -3089,277 +3635,332 @@
         {
           "lap": 1,
           "position": 8,
-          "lap_duration": 106.956
+          "lap_duration": 106.956,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 9,
-          "lap_duration": 101.049
+          "lap_duration": 101.049,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 9,
-          "lap_duration": 99.308
+          "lap_duration": 99.308,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 9,
-          "lap_duration": 99.298
+          "lap_duration": 99.298,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 9,
-          "lap_duration": 99.395
+          "lap_duration": 99.395,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 9,
-          "lap_duration": 99.363
+          "lap_duration": 99.363,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 9,
-          "lap_duration": 99.198
+          "lap_duration": 99.198,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 9,
-          "lap_duration": 99.45
+          "lap_duration": 99.45,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 8,
-          "lap_duration": 99.859
+          "lap_duration": 99.859,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 8,
-          "lap_duration": 113.138
+          "lap_duration": 113.138,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 6,
-          "lap_duration": 143.056
+          "lap_duration": 143.056,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 6,
-          "lap_duration": 149.824
+          "lap_duration": 149.824,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 6,
-          "lap_duration": 147.571
+          "lap_duration": 147.571,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 7,
-          "lap_duration": 100.873
+          "lap_duration": 100.873,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 7,
-          "lap_duration": 99.084
+          "lap_duration": 99.084,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 8,
-          "lap_duration": 99.328
+          "lap_duration": 99.328,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 9,
-          "lap_duration": 99.287
+          "lap_duration": 99.287,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 10,
-          "lap_duration": 99.47
+          "lap_duration": 99.47,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 11,
-          "lap_duration": 99.363
+          "lap_duration": 99.363,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 11,
-          "lap_duration": 99.466
+          "lap_duration": 99.466,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 12,
-          "lap_duration": 99.78
+          "lap_duration": 99.78,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 12,
-          "lap_duration": 99.306
+          "lap_duration": 99.306,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 12,
-          "lap_duration": 98.456
+          "lap_duration": 98.456,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 12,
-          "lap_duration": 98.975
+          "lap_duration": 98.975,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 13,
-          "lap_duration": 99.529
+          "lap_duration": 99.529,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 13,
-          "lap_duration": 99.139
+          "lap_duration": 99.139,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 14,
-          "lap_duration": 110.154
+          "lap_duration": 110.154,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 14,
-          "lap_duration": 99.843
+          "lap_duration": 99.843,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 14,
-          "lap_duration": 98.66
+          "lap_duration": 98.66,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 13,
-          "lap_duration": 98.503
+          "lap_duration": 98.503,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 13,
-          "lap_duration": 98.543
+          "lap_duration": 98.543,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 13,
-          "lap_duration": 98.387
+          "lap_duration": 98.387,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 12,
-          "lap_duration": 98.223
+          "lap_duration": 98.223,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 12,
-          "lap_duration": 98.471
+          "lap_duration": 98.471,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 12,
-          "lap_duration": 98.321
+          "lap_duration": 98.321,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 11,
-          "lap_duration": 98.052
+          "lap_duration": 98.052,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 11,
-          "lap_duration": 98.067
+          "lap_duration": 98.067,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 11,
-          "lap_duration": 97.97
+          "lap_duration": 97.97,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 11,
-          "lap_duration": 98.031
+          "lap_duration": 98.031,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 11,
-          "lap_duration": 98.037
+          "lap_duration": 98.037,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 12,
-          "lap_duration": 100.061
+          "lap_duration": 100.061,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 12,
-          "lap_duration": 103.637
+          "lap_duration": 103.637,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 14,
-          "lap_duration": 117.028
+          "lap_duration": 117.028,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 14,
-          "lap_duration": 96.338
+          "lap_duration": 96.338,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 14,
-          "lap_duration": 96.104
+          "lap_duration": 96.104,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 12,
-          "lap_duration": 96.099
+          "lap_duration": 96.099,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 12,
-          "lap_duration": 96.147
+          "lap_duration": 96.147,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 12,
-          "lap_duration": 96.224
+          "lap_duration": 96.224,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 12,
-          "lap_duration": 96.203
+          "lap_duration": 96.203,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 12,
-          "lap_duration": 96.382
+          "lap_duration": 96.382,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 12,
-          "lap_duration": 96.782
+          "lap_duration": 96.782,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 12,
-          "lap_duration": 96.945
+          "lap_duration": 96.945,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 12,
-          "lap_duration": 97.164
+          "lap_duration": 97.164,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 12,
-          "lap_duration": 97.477
+          "lap_duration": 97.477,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 12,
-          "lap_duration": 97.504
+          "lap_duration": 97.504,
+          "approx": false
         }
       ]
     },
@@ -3393,277 +3994,332 @@
         {
           "lap": 1,
           "position": 6,
-          "lap_duration": 105.792
+          "lap_duration": 105.792,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 6,
-          "lap_duration": 99.308
+          "lap_duration": 99.308,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 6,
-          "lap_duration": 98.925
+          "lap_duration": 98.925,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 6,
-          "lap_duration": 98.865
+          "lap_duration": 98.865,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 6,
-          "lap_duration": 98.91
+          "lap_duration": 98.91,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 6,
-          "lap_duration": 98.734
+          "lap_duration": 98.734,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 6,
-          "lap_duration": 98.805
+          "lap_duration": 98.805,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 6,
-          "lap_duration": 98.959
+          "lap_duration": 98.959,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 6,
-          "lap_duration": 99.036
+          "lap_duration": 99.036,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 6,
-          "lap_duration": 111.471
+          "lap_duration": 111.471,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 2,
-          "lap_duration": 146.642
+          "lap_duration": 146.642,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 2,
-          "lap_duration": 149.978
+          "lap_duration": 149.978,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 2,
-          "lap_duration": 150.492
+          "lap_duration": 150.492,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 2,
-          "lap_duration": 99.465
+          "lap_duration": 99.465,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 3,
-          "lap_duration": 98.829
+          "lap_duration": 98.829,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 5,
-          "lap_duration": 100.106
+          "lap_duration": 100.106,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 5,
-          "lap_duration": 98.383
+          "lap_duration": 98.383,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 5,
-          "lap_duration": 98.946
+          "lap_duration": 98.946,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 5,
-          "lap_duration": 99.566
+          "lap_duration": 99.566,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 5,
-          "lap_duration": 98.955
+          "lap_duration": 98.955,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 6,
-          "lap_duration": 99.324
+          "lap_duration": 99.324,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 7,
-          "lap_duration": 99.182
+          "lap_duration": 99.182,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 7,
-          "lap_duration": 98.493
+          "lap_duration": 98.493,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 7,
-          "lap_duration": 98.447
+          "lap_duration": 98.447,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 7,
-          "lap_duration": 98.384
+          "lap_duration": 98.384,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 7,
-          "lap_duration": 98.07
+          "lap_duration": 98.07,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 7,
-          "lap_duration": 98.288
+          "lap_duration": 98.288,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 9,
-          "lap_duration": 99.299
+          "lap_duration": 99.299,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 8,
-          "lap_duration": 98.724
+          "lap_duration": 98.724,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 8,
-          "lap_duration": 98.235
+          "lap_duration": 98.235,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 8,
-          "lap_duration": 97.802
+          "lap_duration": 97.802,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 11,
-          "lap_duration": 102.819
+          "lap_duration": 102.819,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 13,
-          "lap_duration": 124.117
+          "lap_duration": 124.117,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 13,
-          "lap_duration": 97.233
+          "lap_duration": 97.233,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 13,
-          "lap_duration": 96.783
+          "lap_duration": 96.783,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 12,
-          "lap_duration": 97.023
+          "lap_duration": 97.023,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 12,
-          "lap_duration": 96.958
+          "lap_duration": 96.958,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 12,
-          "lap_duration": 96.819
+          "lap_duration": 96.819,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 12,
-          "lap_duration": 97.217
+          "lap_duration": 97.217,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 12,
-          "lap_duration": 96.841
+          "lap_duration": 96.841,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 11,
-          "lap_duration": 97.448
+          "lap_duration": 97.448,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 11,
-          "lap_duration": 97.53
+          "lap_duration": 97.53,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 11,
-          "lap_duration": 97.381
+          "lap_duration": 97.381,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 11,
-          "lap_duration": 97.075
+          "lap_duration": 97.075,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 10,
-          "lap_duration": 97.426
+          "lap_duration": 97.426,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 10,
-          "lap_duration": 97.139
+          "lap_duration": 97.139,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 10,
-          "lap_duration": 97.504
+          "lap_duration": 97.504,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 10,
-          "lap_duration": 97.598
+          "lap_duration": 97.598,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 10,
-          "lap_duration": 99.052
+          "lap_duration": 99.052,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 10,
-          "lap_duration": 97.592
+          "lap_duration": 97.592,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 10,
-          "lap_duration": 97.781
+          "lap_duration": 97.781,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 10,
-          "lap_duration": 98.022
+          "lap_duration": 98.022,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 10,
-          "lap_duration": 99.609
+          "lap_duration": 99.609,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 10,
-          "lap_duration": 98.685
+          "lap_duration": 98.685,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 10,
-          "lap_duration": 98.237
+          "lap_duration": 98.237,
+          "approx": false
         }
       ]
     },
@@ -3697,282 +4353,338 @@
         {
           "lap": 1,
           "position": 1,
-          "lap_duration": 99.893
+          "lap_duration": 99.893,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 2,
-          "lap_duration": 99.561
+          "lap_duration": 99.561,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 2,
-          "lap_duration": 98.587
+          "lap_duration": 98.587,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 3,
-          "lap_duration": 98.234
+          "lap_duration": 98.234,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 3,
-          "lap_duration": 97.636
+          "lap_duration": 97.636,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 3,
-          "lap_duration": 97.962
+          "lap_duration": 97.962,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 3,
-          "lap_duration": 98.221
+          "lap_duration": 98.221,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 3,
-          "lap_duration": 97.929
+          "lap_duration": 97.929,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 3,
-          "lap_duration": 98.371
+          "lap_duration": 98.371,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 3,
-          "lap_duration": 109.946
+          "lap_duration": 109.946,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 5,
-          "lap_duration": 162.319
+          "lap_duration": 162.319,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 5,
-          "lap_duration": 150.004
+          "lap_duration": 150.004,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 5,
-          "lap_duration": 148.395
+          "lap_duration": 148.395,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 3,
-          "lap_duration": 98.966
+          "lap_duration": 98.966,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 2,
-          "lap_duration": 97.073
+          "lap_duration": 97.073,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 2,
-          "lap_duration": 96.931
+          "lap_duration": 96.931,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 2,
-          "lap_duration": 96.697
+          "lap_duration": 96.697,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 2,
-          "lap_duration": 97.117
+          "lap_duration": 97.117,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 2,
-          "lap_duration": 97.103
+          "lap_duration": 97.103,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 2,
-          "lap_duration": 96.915
+          "lap_duration": 96.915,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 2,
-          "lap_duration": 96.972
+          "lap_duration": 96.972,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 2,
-          "lap_duration": 97.006
+          "lap_duration": 97.006,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 2,
-          "lap_duration": 97.049
+          "lap_duration": 97.049,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 3,
-          "lap_duration": 98.223
+          "lap_duration": 98.223,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 3,
-          "lap_duration": 97.893
+          "lap_duration": 97.893,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 2,
-          "lap_duration": 96.739
+          "lap_duration": 96.739,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 4,
-          "lap_duration": 99.232
+          "lap_duration": 99.232,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 4,
-          "lap_duration": 97.218
+          "lap_duration": 97.218,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 4,
-          "lap_duration": 96.771
+          "lap_duration": 96.771,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 4,
-          "lap_duration": 96.685
+          "lap_duration": 96.685,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 4,
-          "lap_duration": 96.496
+          "lap_duration": 96.496,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 4,
-          "lap_duration": 96.629
+          "lap_duration": 96.629,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 4,
-          "lap_duration": 96.496
+          "lap_duration": 96.496,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 4,
-          "lap_duration": 96.752
+          "lap_duration": 96.752,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 3,
-          "lap_duration": 97.337
+          "lap_duration": 97.337,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 3,
-          "lap_duration": 97.001
+          "lap_duration": 97.001,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 3,
-          "lap_duration": 96.649
+          "lap_duration": 96.649,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 3,
-          "lap_duration": 96.876
+          "lap_duration": 96.876,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 4,
-          "lap_duration": 98.092
+          "lap_duration": 98.092,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 3,
-          "lap_duration": 96.952
+          "lap_duration": 96.952,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 3,
-          "lap_duration": 96.471
+          "lap_duration": 96.471,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 3,
-          "lap_duration": 96.516
+          "lap_duration": 96.516,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 3,
-          "lap_duration": 96.218
+          "lap_duration": 96.218,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 3,
-          "lap_duration": 96.24
+          "lap_duration": 96.24,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 3,
-          "lap_duration": 96.396
+          "lap_duration": 96.396,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 3,
-          "lap_duration": 96.309
+          "lap_duration": 96.309,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 3,
-          "lap_duration": 96.204
+          "lap_duration": 96.204,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 3,
-          "lap_duration": 96.151
+          "lap_duration": 96.151,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 3,
-          "lap_duration": 96.385
+          "lap_duration": 96.385,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 3,
-          "lap_duration": 96.237
+          "lap_duration": 96.237,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 3,
-          "lap_duration": 96.134
+          "lap_duration": 96.134,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 3,
-          "lap_duration": 96.296
+          "lap_duration": 96.296,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 3,
-          "lap_duration": 96.199
+          "lap_duration": 96.199,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 3,
-          "lap_duration": 96.44
+          "lap_duration": 96.44,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 3,
-          "lap_duration": 96.092
+          "lap_duration": 96.092,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 3,
-          "lap_duration": 96.103
+          "lap_duration": 96.103,
+          "approx": false
         }
       ]
     },
@@ -4006,277 +4718,332 @@
         {
           "lap": 1,
           "position": 11,
-          "lap_duration": 107.793
+          "lap_duration": 107.793,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 11,
-          "lap_duration": 100.743
+          "lap_duration": 100.743,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 11,
-          "lap_duration": 99.987
+          "lap_duration": 99.987,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 11,
-          "lap_duration": 98.988
+          "lap_duration": 98.988,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 11,
-          "lap_duration": 99.754
+          "lap_duration": 99.754,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 12,
-          "lap_duration": 100.138
+          "lap_duration": 100.138,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 13,
-          "lap_duration": 100.631
+          "lap_duration": 100.631,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 13,
-          "lap_duration": 99.913
+          "lap_duration": 99.913,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 13,
-          "lap_duration": 105.134
+          "lap_duration": 105.134,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 16,
-          "lap_duration": 143.187
+          "lap_duration": 143.187,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 15,
-          "lap_duration": 135.222
+          "lap_duration": 135.222,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 14,
-          "lap_duration": 127.751
+          "lap_duration": 127.751,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 14,
-          "lap_duration": 141.35
+          "lap_duration": 141.35,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 13,
-          "lap_duration": 100.484
+          "lap_duration": 100.484,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 13,
-          "lap_duration": 99.125
+          "lap_duration": 99.125,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 13,
-          "lap_duration": 99.428
+          "lap_duration": 99.428,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 13,
-          "lap_duration": 99.029
+          "lap_duration": 99.029,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 13,
-          "lap_duration": 98.657
+          "lap_duration": 98.657,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 13,
-          "lap_duration": 99.119
+          "lap_duration": 99.119,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 13,
-          "lap_duration": 99.397
+          "lap_duration": 99.397,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 13,
-          "lap_duration": 99.144
+          "lap_duration": 99.144,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 14,
-          "lap_duration": 100.245
+          "lap_duration": 100.245,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 14,
-          "lap_duration": 99.101
+          "lap_duration": 99.101,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 14,
-          "lap_duration": 98.964
+          "lap_duration": 98.964,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 14,
-          "lap_duration": 98.754
+          "lap_duration": 98.754,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 14,
-          "lap_duration": 98.708
+          "lap_duration": 98.708,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 13,
-          "lap_duration": 99.708
+          "lap_duration": 99.708,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 13,
-          "lap_duration": 98.672
+          "lap_duration": 98.672,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 13,
-          "lap_duration": 98.814
+          "lap_duration": 98.814,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 12,
-          "lap_duration": 98.509
+          "lap_duration": 98.509,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 12,
-          "lap_duration": 98.46
+          "lap_duration": 98.46,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 12,
-          "lap_duration": 98.339
+          "lap_duration": 98.339,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 11,
-          "lap_duration": 98.462
+          "lap_duration": 98.462,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 11,
-          "lap_duration": 98.763
+          "lap_duration": 98.763,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 11,
-          "lap_duration": 98.672
+          "lap_duration": 98.672,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 10,
-          "lap_duration": 98.744
+          "lap_duration": 98.744,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 10,
-          "lap_duration": 98.48
+          "lap_duration": 98.48,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 10,
-          "lap_duration": 98.495
+          "lap_duration": 98.495,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 10,
-          "lap_duration": 98.585
+          "lap_duration": 98.585,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 10,
-          "lap_duration": 98.358
+          "lap_duration": 98.358,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 10,
-          "lap_duration": 98.421
+          "lap_duration": 98.421,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 10,
-          "lap_duration": 98.272
+          "lap_duration": 98.272,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 10,
-          "lap_duration": 98.283
+          "lap_duration": 98.283,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 10,
-          "lap_duration": 98.268
+          "lap_duration": 98.268,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 9,
-          "lap_duration": 98.104
+          "lap_duration": 98.104,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 9,
-          "lap_duration": 98.034
+          "lap_duration": 98.034,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 9,
-          "lap_duration": 98.329
+          "lap_duration": 98.329,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 9,
-          "lap_duration": 98.022
+          "lap_duration": 98.022,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 9,
-          "lap_duration": 98.022
+          "lap_duration": 98.022,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 9,
-          "lap_duration": 99.03
+          "lap_duration": 99.03,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 9,
-          "lap_duration": 97.981
+          "lap_duration": 97.981,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 9,
-          "lap_duration": 98.424
+          "lap_duration": 98.424,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 9,
-          "lap_duration": 100.087
+          "lap_duration": 100.087,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 9,
-          "lap_duration": 98.254
+          "lap_duration": 98.254,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 9,
-          "lap_duration": 98.228
+          "lap_duration": 98.228,
+          "approx": false
         }
       ]
     },
@@ -4310,282 +5077,338 @@
         {
           "lap": 1,
           "position": 4,
-          "lap_duration": 102.273
+          "lap_duration": 102.273,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 4,
-          "lap_duration": 98.075
+          "lap_duration": 98.075,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 3,
-          "lap_duration": 98.125
+          "lap_duration": 98.125,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 2,
-          "lap_duration": 97.093
+          "lap_duration": 97.093,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 2,
-          "lap_duration": 97.462
+          "lap_duration": 97.462,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 2,
-          "lap_duration": 97.375
+          "lap_duration": 97.375,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 2,
-          "lap_duration": 97.383
+          "lap_duration": 97.383,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 2,
-          "lap_duration": 97.266
+          "lap_duration": 97.266,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 2,
-          "lap_duration": 97.261
+          "lap_duration": 97.261,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 2,
-          "lap_duration": 112.779
+          "lap_duration": 112.779,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 4,
-          "lap_duration": 162.723
+          "lap_duration": 162.723,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 4,
-          "lap_duration": 149.667
+          "lap_duration": 149.667,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 4,
-          "lap_duration": 149.28
+          "lap_duration": 149.28,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 5,
-          "lap_duration": 100.588
+          "lap_duration": 100.588,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 6,
-          "lap_duration": 98.91
+          "lap_duration": 98.91,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 4,
-          "lap_duration": 97.532
+          "lap_duration": 97.532,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 4,
-          "lap_duration": 96.42
+          "lap_duration": 96.42,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 4,
-          "lap_duration": 96.313
+          "lap_duration": 96.313,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 4,
-          "lap_duration": 96.668
+          "lap_duration": 96.668,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 4,
-          "lap_duration": 96.617
+          "lap_duration": 96.617,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 4,
-          "lap_duration": 96.663
+          "lap_duration": 96.663,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 4,
-          "lap_duration": 96.894
+          "lap_duration": 96.894,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 4,
-          "lap_duration": 96.561
+          "lap_duration": 96.561,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 4,
-          "lap_duration": 97.445
+          "lap_duration": 97.445,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 4,
-          "lap_duration": 98.063
+          "lap_duration": 98.063,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 4,
-          "lap_duration": 97.187
+          "lap_duration": 97.187,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 3,
-          "lap_duration": 97.771
+          "lap_duration": 97.771,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 3,
-          "lap_duration": 96.971
+          "lap_duration": 96.971,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 2,
-          "lap_duration": 96.158
+          "lap_duration": 96.158,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 2,
-          "lap_duration": 96.438
+          "lap_duration": 96.438,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 2,
-          "lap_duration": 96.207
+          "lap_duration": 96.207,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 2,
-          "lap_duration": 95.977
+          "lap_duration": 95.977,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 2,
-          "lap_duration": 96.107
+          "lap_duration": 96.107,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 2,
-          "lap_duration": 95.852
+          "lap_duration": 95.852,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 2,
-          "lap_duration": 96.162
+          "lap_duration": 96.162,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 2,
-          "lap_duration": 95.914
+          "lap_duration": 95.914,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 2,
-          "lap_duration": 95.531
+          "lap_duration": 95.531,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 2,
-          "lap_duration": 95.529
+          "lap_duration": 95.529,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 2,
-          "lap_duration": 95.497
+          "lap_duration": 95.497,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 2,
-          "lap_duration": 95.636
+          "lap_duration": 95.636,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 2,
-          "lap_duration": 95.641
+          "lap_duration": 95.641,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 2,
-          "lap_duration": 96.661
+          "lap_duration": 96.661,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 2,
-          "lap_duration": 95.644
+          "lap_duration": 95.644,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 2,
-          "lap_duration": 95.542
+          "lap_duration": 95.542,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 2,
-          "lap_duration": 95.677
+          "lap_duration": 95.677,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 2,
-          "lap_duration": 96.407
+          "lap_duration": 96.407,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 2,
-          "lap_duration": 95.668
+          "lap_duration": 95.668,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 2,
-          "lap_duration": 96.095
+          "lap_duration": 96.095,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 2,
-          "lap_duration": 95.87
+          "lap_duration": 95.87,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 2,
-          "lap_duration": 95.681
+          "lap_duration": 95.681,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 2,
-          "lap_duration": 95.531
+          "lap_duration": 95.531,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 2,
-          "lap_duration": 95.547
+          "lap_duration": 95.547,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 2,
-          "lap_duration": 95.691
+          "lap_duration": 95.691,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 2,
-          "lap_duration": 96.457
+          "lap_duration": 96.457,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 2,
-          "lap_duration": 95.695
+          "lap_duration": 95.695,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 2,
-          "lap_duration": 95.4
+          "lap_duration": 95.4,
+          "approx": false
         }
       ]
     },
@@ -4619,277 +5442,332 @@
         {
           "lap": 1,
           "position": 14,
-          "lap_duration": 108.738
+          "lap_duration": 108.738,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 14,
-          "lap_duration": 101.601
+          "lap_duration": 101.601,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 15,
-          "lap_duration": 101.829
+          "lap_duration": 101.829,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 15,
-          "lap_duration": 100.904
+          "lap_duration": 100.904,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 15,
-          "lap_duration": 101.396
+          "lap_duration": 101.396,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 14,
-          "lap_duration": 100.278
+          "lap_duration": 100.278,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 14,
-          "lap_duration": 100.875
+          "lap_duration": 100.875,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 14,
-          "lap_duration": 101.258
+          "lap_duration": 101.258,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 14,
-          "lap_duration": 101.349
+          "lap_duration": 101.349,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 12,
-          "lap_duration": 125.131
+          "lap_duration": 125.131,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 16,
-          "lap_duration": 156.783
+          "lap_duration": 156.783,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 15,
-          "lap_duration": 121.448
+          "lap_duration": 121.448,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 15,
-          "lap_duration": 139.819
+          "lap_duration": 139.819,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 15,
-          "lap_duration": 101.294
+          "lap_duration": 101.294,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 15,
-          "lap_duration": 100.006
+          "lap_duration": 100.006,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 15,
-          "lap_duration": 99.739
+          "lap_duration": 99.739,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 15,
-          "lap_duration": 100.23
+          "lap_duration": 100.23,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 15,
-          "lap_duration": 100.099
+          "lap_duration": 100.099,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 15,
-          "lap_duration": 100.164
+          "lap_duration": 100.164,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 15,
-          "lap_duration": 99.976
+          "lap_duration": 99.976,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 15,
-          "lap_duration": 100.045
+          "lap_duration": 100.045,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 15,
-          "lap_duration": 99.813
+          "lap_duration": 99.813,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 15,
-          "lap_duration": 99.967
+          "lap_duration": 99.967,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 15,
-          "lap_duration": 99.846
+          "lap_duration": 99.846,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 15,
-          "lap_duration": 99.813
+          "lap_duration": 99.813,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 15,
-          "lap_duration": 99.744
+          "lap_duration": 99.744,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 15,
-          "lap_duration": 100.805
+          "lap_duration": 100.805,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 15,
-          "lap_duration": 99.636
+          "lap_duration": 99.636,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 15,
-          "lap_duration": 99.566
+          "lap_duration": 99.566,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 14,
-          "lap_duration": 99.692
+          "lap_duration": 99.692,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 15,
-          "lap_duration": 99.768
+          "lap_duration": 99.768,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 15,
-          "lap_duration": 99.542
+          "lap_duration": 99.542,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 14,
-          "lap_duration": 101.146
+          "lap_duration": 101.146,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 14,
-          "lap_duration": 99.695
+          "lap_duration": 99.695,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 14,
-          "lap_duration": 99.539
+          "lap_duration": 99.539,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 14,
-          "lap_duration": 100.552
+          "lap_duration": 100.552,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 14,
-          "lap_duration": 99.444
+          "lap_duration": 99.444,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 15,
-          "lap_duration": 100.047
+          "lap_duration": 100.047,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 15,
-          "lap_duration": 99.734
+          "lap_duration": 99.734,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 15,
-          "lap_duration": 100.571
+          "lap_duration": 100.571,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 15,
-          "lap_duration": 100.077
+          "lap_duration": 100.077,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 15,
-          "lap_duration": 99.02
+          "lap_duration": 99.02,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 15,
-          "lap_duration": 99.461
+          "lap_duration": 99.461,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 15,
-          "lap_duration": 98.914
+          "lap_duration": 98.914,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 15,
-          "lap_duration": 100.379
+          "lap_duration": 100.379,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 14,
-          "lap_duration": 99.658
+          "lap_duration": 99.658,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 13,
-          "lap_duration": 98.93
+          "lap_duration": 98.93,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 13,
-          "lap_duration": 99.135
+          "lap_duration": 99.135,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 13,
-          "lap_duration": 99.212
+          "lap_duration": 99.212,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 13,
-          "lap_duration": 99.327
+          "lap_duration": 99.327,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 13,
-          "lap_duration": 99.581
+          "lap_duration": 99.581,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 13,
-          "lap_duration": 99.423
+          "lap_duration": 99.423,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 13,
-          "lap_duration": 99.353
+          "lap_duration": 99.353,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 13,
-          "lap_duration": 99.423
+          "lap_duration": 99.423,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 13,
-          "lap_duration": 98.393
+          "lap_duration": 98.393,
+          "approx": false
         }
       ]
     },
@@ -4911,7 +5789,8 @@
         {
           "lap": 1,
           "position": 19,
-          "lap_duration": null
+          "lap_duration": null,
+          "approx": false
         }
       ]
     },
@@ -4945,282 +5824,338 @@
         {
           "lap": 1,
           "position": 12,
-          "lap_duration": 108.363
+          "lap_duration": 108.363,
+          "approx": false
         },
         {
           "lap": 2,
           "position": 12,
-          "lap_duration": 101.136
+          "lap_duration": 101.136,
+          "approx": false
         },
         {
           "lap": 3,
           "position": 12,
-          "lap_duration": 99.715
+          "lap_duration": 99.715,
+          "approx": false
         },
         {
           "lap": 4,
           "position": 12,
-          "lap_duration": 99.18
+          "lap_duration": 99.18,
+          "approx": false
         },
         {
           "lap": 5,
           "position": 12,
-          "lap_duration": 99.504
+          "lap_duration": 99.504,
+          "approx": false
         },
         {
           "lap": 6,
           "position": 11,
-          "lap_duration": 98.61
+          "lap_duration": 98.61,
+          "approx": false
         },
         {
           "lap": 7,
           "position": 11,
-          "lap_duration": 99.323
+          "lap_duration": 99.323,
+          "approx": false
         },
         {
           "lap": 8,
           "position": 11,
-          "lap_duration": 99.436
+          "lap_duration": 99.436,
+          "approx": false
         },
         {
           "lap": 9,
           "position": 9,
-          "lap_duration": 99.71
+          "lap_duration": 99.71,
+          "approx": false
         },
         {
           "lap": 10,
           "position": 10,
-          "lap_duration": 117.43
+          "lap_duration": 117.43,
+          "approx": false
         },
         {
           "lap": 11,
           "position": 10,
-          "lap_duration": 152.03
+          "lap_duration": 152.03,
+          "approx": false
         },
         {
           "lap": 12,
           "position": 10,
-          "lap_duration": 140.475
+          "lap_duration": 140.475,
+          "approx": false
         },
         {
           "lap": 13,
           "position": 10,
-          "lap_duration": 144.54
+          "lap_duration": 144.54,
+          "approx": false
         },
         {
           "lap": 14,
           "position": 8,
-          "lap_duration": 99.24
+          "lap_duration": 99.24,
+          "approx": false
         },
         {
           "lap": 15,
           "position": 8,
-          "lap_duration": 99.289
+          "lap_duration": 99.289,
+          "approx": false
         },
         {
           "lap": 16,
           "position": 7,
-          "lap_duration": 98.269
+          "lap_duration": 98.269,
+          "approx": false
         },
         {
           "lap": 17,
           "position": 7,
-          "lap_duration": 98.343
+          "lap_duration": 98.343,
+          "approx": false
         },
         {
           "lap": 18,
           "position": 7,
-          "lap_duration": 98.197
+          "lap_duration": 98.197,
+          "approx": false
         },
         {
           "lap": 19,
           "position": 6,
-          "lap_duration": 99.009
+          "lap_duration": 99.009,
+          "approx": false
         },
         {
           "lap": 20,
           "position": 6,
-          "lap_duration": 98.618
+          "lap_duration": 98.618,
+          "approx": false
         },
         {
           "lap": 21,
           "position": 5,
-          "lap_duration": 98.526
+          "lap_duration": 98.526,
+          "approx": false
         },
         {
           "lap": 22,
           "position": 5,
-          "lap_duration": 97.867
+          "lap_duration": 97.867,
+          "approx": false
         },
         {
           "lap": 23,
           "position": 5,
-          "lap_duration": 97.615
+          "lap_duration": 97.615,
+          "approx": false
         },
         {
           "lap": 24,
           "position": 5,
-          "lap_duration": 97.86
+          "lap_duration": 97.86,
+          "approx": false
         },
         {
           "lap": 25,
           "position": 5,
-          "lap_duration": 97.68
+          "lap_duration": 97.68,
+          "approx": false
         },
         {
           "lap": 26,
           "position": 5,
-          "lap_duration": 97.392
+          "lap_duration": 97.392,
+          "approx": false
         },
         {
           "lap": 27,
           "position": 5,
-          "lap_duration": 97.405
+          "lap_duration": 97.405,
+          "approx": false
         },
         {
           "lap": 28,
           "position": 5,
-          "lap_duration": 97.638
+          "lap_duration": 97.638,
+          "approx": false
         },
         {
           "lap": 29,
           "position": 5,
-          "lap_duration": 97.684
+          "lap_duration": 97.684,
+          "approx": false
         },
         {
           "lap": 30,
           "position": 5,
-          "lap_duration": 97.276
+          "lap_duration": 97.276,
+          "approx": false
         },
         {
           "lap": 31,
           "position": 5,
-          "lap_duration": 97.583
+          "lap_duration": 97.583,
+          "approx": false
         },
         {
           "lap": 32,
           "position": 5,
-          "lap_duration": 97.496
+          "lap_duration": 97.496,
+          "approx": false
         },
         {
           "lap": 33,
           "position": 5,
-          "lap_duration": 97.267
+          "lap_duration": 97.267,
+          "approx": false
         },
         {
           "lap": 34,
           "position": 5,
-          "lap_duration": 97.395
+          "lap_duration": 97.395,
+          "approx": false
         },
         {
           "lap": 35,
           "position": 5,
-          "lap_duration": 97.42
+          "lap_duration": 97.42,
+          "approx": false
         },
         {
           "lap": 36,
           "position": 5,
-          "lap_duration": 97.48
+          "lap_duration": 97.48,
+          "approx": false
         },
         {
           "lap": 37,
           "position": 5,
-          "lap_duration": 97.242
+          "lap_duration": 97.242,
+          "approx": false
         },
         {
           "lap": 38,
           "position": 5,
-          "lap_duration": 97.222
+          "lap_duration": 97.222,
+          "approx": false
         },
         {
           "lap": 39,
           "position": 5,
-          "lap_duration": 97.043
+          "lap_duration": 97.043,
+          "approx": false
         },
         {
           "lap": 40,
           "position": 5,
-          "lap_duration": 97.153
+          "lap_duration": 97.153,
+          "approx": false
         },
         {
           "lap": 41,
           "position": 5,
-          "lap_duration": 97.029
+          "lap_duration": 97.029,
+          "approx": false
         },
         {
           "lap": 42,
           "position": 5,
-          "lap_duration": 97.712
+          "lap_duration": 97.712,
+          "approx": false
         },
         {
           "lap": 43,
           "position": 5,
-          "lap_duration": 97.214
+          "lap_duration": 97.214,
+          "approx": false
         },
         {
           "lap": 44,
           "position": 5,
-          "lap_duration": 97.416
+          "lap_duration": 97.416,
+          "approx": false
         },
         {
           "lap": 45,
           "position": 5,
-          "lap_duration": 97.232
+          "lap_duration": 97.232,
+          "approx": false
         },
         {
           "lap": 46,
           "position": 5,
-          "lap_duration": 97.301
+          "lap_duration": 97.301,
+          "approx": false
         },
         {
           "lap": 47,
           "position": 5,
-          "lap_duration": 96.805
+          "lap_duration": 96.805,
+          "approx": false
         },
         {
           "lap": 48,
           "position": 5,
-          "lap_duration": 97.238
+          "lap_duration": 97.238,
+          "approx": false
         },
         {
           "lap": 49,
           "position": 5,
-          "lap_duration": 97.642
+          "lap_duration": 97.642,
+          "approx": false
         },
         {
           "lap": 50,
           "position": 5,
-          "lap_duration": 96.989
+          "lap_duration": 96.989,
+          "approx": false
         },
         {
           "lap": 51,
           "position": 5,
-          "lap_duration": 96.825
+          "lap_duration": 96.825,
+          "approx": false
         },
         {
           "lap": 52,
           "position": 5,
-          "lap_duration": 96.778
+          "lap_duration": 96.778,
+          "approx": false
         },
         {
           "lap": 53,
           "position": 5,
-          "lap_duration": 96.68
+          "lap_duration": 96.68,
+          "approx": false
         },
         {
           "lap": 54,
           "position": 5,
-          "lap_duration": 96.788
+          "lap_duration": 96.788,
+          "approx": false
         },
         {
           "lap": 55,
           "position": 5,
-          "lap_duration": 96.648
+          "lap_duration": 96.648,
+          "approx": false
         },
         {
           "lap": 56,
           "position": 5,
-          "lap_duration": 96.429
+          "lap_duration": 96.429,
+          "approx": false
         }
       ]
     }
