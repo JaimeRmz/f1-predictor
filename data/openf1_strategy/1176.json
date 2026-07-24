@@ -1,0 +1,7565 @@
+{
+  "raceId": 1176,
+  "meeting_key": 1288,
+  "session_key": 11315,
+  "circuit": "red_bull_ring",
+  "date": "2026-06-28",
+  "fetched_at": "2026-07-24T00:44:27.101441Z",
+  "drivers": {
+    "norris": {
+      "driver_number": 1,
+      "result_position": 7,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 21,
+          "duration": 21.5
+        },
+        {
+          "lap": 47,
+          "duration": 21.8
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 21,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 22,
+          "lap_end": 47,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 48,
+          "lap_end": 71,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 7,
+          "lap_duration": 78.958
+        },
+        {
+          "lap": 2,
+          "position": 7,
+          "lap_duration": 73.406
+        },
+        {
+          "lap": 3,
+          "position": 7,
+          "lap_duration": 73.015
+        },
+        {
+          "lap": 4,
+          "position": 7,
+          "lap_duration": 72.63
+        },
+        {
+          "lap": 5,
+          "position": 7,
+          "lap_duration": 72.439
+        },
+        {
+          "lap": 6,
+          "position": 7,
+          "lap_duration": 72.493
+        },
+        {
+          "lap": 7,
+          "position": 7,
+          "lap_duration": 73.459
+        },
+        {
+          "lap": 8,
+          "position": 7,
+          "lap_duration": 73.025
+        },
+        {
+          "lap": 9,
+          "position": 7,
+          "lap_duration": 73.013
+        },
+        {
+          "lap": 10,
+          "position": 7,
+          "lap_duration": 73.197
+        },
+        {
+          "lap": 11,
+          "position": 7,
+          "lap_duration": 73.335
+        },
+        {
+          "lap": 12,
+          "position": 7,
+          "lap_duration": 73.25
+        },
+        {
+          "lap": 13,
+          "position": 5,
+          "lap_duration": 73.591
+        },
+        {
+          "lap": 14,
+          "position": 5,
+          "lap_duration": 73.423
+        },
+        {
+          "lap": 15,
+          "position": 5,
+          "lap_duration": 73.419
+        },
+        {
+          "lap": 16,
+          "position": 5,
+          "lap_duration": 73.323
+        },
+        {
+          "lap": 17,
+          "position": 5,
+          "lap_duration": 73.157
+        },
+        {
+          "lap": 18,
+          "position": 5,
+          "lap_duration": 73.381
+        },
+        {
+          "lap": 19,
+          "position": 3,
+          "lap_duration": 74.33
+        },
+        {
+          "lap": 20,
+          "position": 2,
+          "lap_duration": 73.655
+        },
+        {
+          "lap": 21,
+          "position": 5,
+          "lap_duration": 78.354
+        },
+        {
+          "lap": 22,
+          "position": 8,
+          "lap_duration": 90.005
+        },
+        {
+          "lap": 23,
+          "position": 8,
+          "lap_duration": 72.148
+        },
+        {
+          "lap": 24,
+          "position": 8,
+          "lap_duration": 78.463
+        },
+        {
+          "lap": 25,
+          "position": 8,
+          "lap_duration": 96.995
+        },
+        {
+          "lap": 26,
+          "position": 8,
+          "lap_duration": 84.972
+        },
+        {
+          "lap": 27,
+          "position": 8,
+          "lap_duration": 71.773
+        },
+        {
+          "lap": 28,
+          "position": 8,
+          "lap_duration": 71.568
+        },
+        {
+          "lap": 29,
+          "position": 8,
+          "lap_duration": 71.843
+        },
+        {
+          "lap": 30,
+          "position": 8,
+          "lap_duration": 71.797
+        },
+        {
+          "lap": 31,
+          "position": 8,
+          "lap_duration": 71.666
+        },
+        {
+          "lap": 32,
+          "position": 8,
+          "lap_duration": 71.593
+        },
+        {
+          "lap": 33,
+          "position": 8,
+          "lap_duration": 71.542
+        },
+        {
+          "lap": 34,
+          "position": 8,
+          "lap_duration": 71.916
+        },
+        {
+          "lap": 35,
+          "position": 8,
+          "lap_duration": 71.547
+        },
+        {
+          "lap": 36,
+          "position": 8,
+          "lap_duration": 71.824
+        },
+        {
+          "lap": 37,
+          "position": 8,
+          "lap_duration": 72.345
+        },
+        {
+          "lap": 38,
+          "position": 7,
+          "lap_duration": 71.788
+        },
+        {
+          "lap": 39,
+          "position": 7,
+          "lap_duration": 72.229
+        },
+        {
+          "lap": 40,
+          "position": 6,
+          "lap_duration": 72.078
+        },
+        {
+          "lap": 41,
+          "position": 6,
+          "lap_duration": 72.134
+        },
+        {
+          "lap": 42,
+          "position": 6,
+          "lap_duration": 71.746
+        },
+        {
+          "lap": 43,
+          "position": 4,
+          "lap_duration": 72.194
+        },
+        {
+          "lap": 44,
+          "position": 4,
+          "lap_duration": 72.353
+        },
+        {
+          "lap": 45,
+          "position": 4,
+          "lap_duration": 72.274
+        },
+        {
+          "lap": 46,
+          "position": 4,
+          "lap_duration": 72.465
+        },
+        {
+          "lap": 47,
+          "position": 4,
+          "lap_duration": 76.801
+        },
+        {
+          "lap": 48,
+          "position": 8,
+          "lap_duration": 88.64
+        },
+        {
+          "lap": 49,
+          "position": 8,
+          "lap_duration": 70.994
+        },
+        {
+          "lap": 50,
+          "position": 8,
+          "lap_duration": 70.865
+        },
+        {
+          "lap": 51,
+          "position": 8,
+          "lap_duration": 71.17
+        },
+        {
+          "lap": 52,
+          "position": 8,
+          "lap_duration": 82.848
+        },
+        {
+          "lap": 53,
+          "position": 8,
+          "lap_duration": 70.659
+        },
+        {
+          "lap": 54,
+          "position": 8,
+          "lap_duration": 70.983
+        },
+        {
+          "lap": 55,
+          "position": 8,
+          "lap_duration": 70.652
+        },
+        {
+          "lap": 56,
+          "position": 8,
+          "lap_duration": 70.907
+        },
+        {
+          "lap": 57,
+          "position": 8,
+          "lap_duration": 70.979
+        },
+        {
+          "lap": 58,
+          "position": 8,
+          "lap_duration": 71.465
+        },
+        {
+          "lap": 59,
+          "position": 7,
+          "lap_duration": 71.584
+        },
+        {
+          "lap": 60,
+          "position": 7,
+          "lap_duration": 71.216
+        },
+        {
+          "lap": 61,
+          "position": 7,
+          "lap_duration": 71.205
+        },
+        {
+          "lap": 62,
+          "position": 7,
+          "lap_duration": 71.586
+        },
+        {
+          "lap": 63,
+          "position": 7,
+          "lap_duration": 71.385
+        },
+        {
+          "lap": 64,
+          "position": 7,
+          "lap_duration": 71.318
+        },
+        {
+          "lap": 65,
+          "position": 7,
+          "lap_duration": 71.409
+        },
+        {
+          "lap": 66,
+          "position": 7,
+          "lap_duration": 71.497
+        },
+        {
+          "lap": 67,
+          "position": 7,
+          "lap_duration": 72.49
+        },
+        {
+          "lap": 68,
+          "position": 7,
+          "lap_duration": 71.939
+        },
+        {
+          "lap": 69,
+          "position": 7,
+          "lap_duration": 71.821
+        },
+        {
+          "lap": 70,
+          "position": 7,
+          "lap_duration": 72.674
+        },
+        {
+          "lap": 71,
+          "position": 7,
+          "lap_duration": 72.739
+        }
+      ]
+    },
+    "max_verstappen": {
+      "driver_number": 3,
+      "result_position": 2,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 18,
+          "duration": 21.3
+        },
+        {
+          "lap": 49,
+          "duration": 21.2
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 18,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 19,
+          "lap_end": 49,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 50,
+          "lap_end": 71,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 5,
+          "lap_duration": 78.166
+        },
+        {
+          "lap": 2,
+          "position": 3,
+          "lap_duration": 72.102
+        },
+        {
+          "lap": 3,
+          "position": 3,
+          "lap_duration": 72.084
+        },
+        {
+          "lap": 4,
+          "position": 3,
+          "lap_duration": 71.733
+        },
+        {
+          "lap": 5,
+          "position": 3,
+          "lap_duration": 71.846
+        },
+        {
+          "lap": 6,
+          "position": 3,
+          "lap_duration": 71.845
+        },
+        {
+          "lap": 7,
+          "position": 3,
+          "lap_duration": 72.072
+        },
+        {
+          "lap": 8,
+          "position": 3,
+          "lap_duration": 72.396
+        },
+        {
+          "lap": 9,
+          "position": 3,
+          "lap_duration": 72.558
+        },
+        {
+          "lap": 10,
+          "position": 3,
+          "lap_duration": 72.875
+        },
+        {
+          "lap": 11,
+          "position": 3,
+          "lap_duration": 74.413
+        },
+        {
+          "lap": 12,
+          "position": 2,
+          "lap_duration": 73.34
+        },
+        {
+          "lap": 13,
+          "position": 2,
+          "lap_duration": 72.789
+        },
+        {
+          "lap": 14,
+          "position": 2,
+          "lap_duration": 72.607
+        },
+        {
+          "lap": 15,
+          "position": 2,
+          "lap_duration": 72.765
+        },
+        {
+          "lap": 16,
+          "position": 2,
+          "lap_duration": 72.626
+        },
+        {
+          "lap": 17,
+          "position": 2,
+          "lap_duration": 72.733
+        },
+        {
+          "lap": 18,
+          "position": 3,
+          "lap_duration": 76.633
+        },
+        {
+          "lap": 19,
+          "position": 6,
+          "lap_duration": 88.537
+        },
+        {
+          "lap": 20,
+          "position": 5,
+          "lap_duration": 71.48
+        },
+        {
+          "lap": 21,
+          "position": 4,
+          "lap_duration": 71.484
+        },
+        {
+          "lap": 22,
+          "position": 3,
+          "lap_duration": 72.409
+        },
+        {
+          "lap": 23,
+          "position": 3,
+          "lap_duration": 71.787
+        },
+        {
+          "lap": 24,
+          "position": 3,
+          "lap_duration": 72.016
+        },
+        {
+          "lap": 25,
+          "position": 2,
+          "lap_duration": 96.916
+        },
+        {
+          "lap": 26,
+          "position": 2,
+          "lap_duration": 93.03
+        },
+        {
+          "lap": 27,
+          "position": 2,
+          "lap_duration": 71.307
+        },
+        {
+          "lap": 28,
+          "position": 2,
+          "lap_duration": 71.072
+        },
+        {
+          "lap": 29,
+          "position": 2,
+          "lap_duration": 71.209
+        },
+        {
+          "lap": 30,
+          "position": 2,
+          "lap_duration": 71.041
+        },
+        {
+          "lap": 31,
+          "position": 2,
+          "lap_duration": 71.249
+        },
+        {
+          "lap": 32,
+          "position": 2,
+          "lap_duration": 71.492
+        },
+        {
+          "lap": 33,
+          "position": 2,
+          "lap_duration": 71.442
+        },
+        {
+          "lap": 34,
+          "position": 2,
+          "lap_duration": 71.846
+        },
+        {
+          "lap": 35,
+          "position": 2,
+          "lap_duration": 71.606
+        },
+        {
+          "lap": 36,
+          "position": 2,
+          "lap_duration": 71.931
+        },
+        {
+          "lap": 37,
+          "position": 2,
+          "lap_duration": 71.809
+        },
+        {
+          "lap": 38,
+          "position": 2,
+          "lap_duration": 72.159
+        },
+        {
+          "lap": 39,
+          "position": 2,
+          "lap_duration": 72.245
+        },
+        {
+          "lap": 40,
+          "position": 2,
+          "lap_duration": 72.132
+        },
+        {
+          "lap": 41,
+          "position": 2,
+          "lap_duration": 71.892
+        },
+        {
+          "lap": 42,
+          "position": 2,
+          "lap_duration": 72.168
+        },
+        {
+          "lap": 43,
+          "position": 1,
+          "lap_duration": 72.087
+        },
+        {
+          "lap": 44,
+          "position": 1,
+          "lap_duration": 72.414
+        },
+        {
+          "lap": 45,
+          "position": 1,
+          "lap_duration": 72.356
+        },
+        {
+          "lap": 46,
+          "position": 1,
+          "lap_duration": 72.38
+        },
+        {
+          "lap": 47,
+          "position": 1,
+          "lap_duration": 72.63
+        },
+        {
+          "lap": 48,
+          "position": 1,
+          "lap_duration": 72.681
+        },
+        {
+          "lap": 49,
+          "position": 2,
+          "lap_duration": 77.001
+        },
+        {
+          "lap": 50,
+          "position": 3,
+          "lap_duration": 87.513
+        },
+        {
+          "lap": 51,
+          "position": 3,
+          "lap_duration": 70.888
+        },
+        {
+          "lap": 52,
+          "position": 2,
+          "lap_duration": 77.264
+        },
+        {
+          "lap": 53,
+          "position": 2,
+          "lap_duration": 76.936
+        },
+        {
+          "lap": 54,
+          "position": 2,
+          "lap_duration": 70.596
+        },
+        {
+          "lap": 55,
+          "position": 2,
+          "lap_duration": 70.599
+        },
+        {
+          "lap": 56,
+          "position": 2,
+          "lap_duration": 70.633
+        },
+        {
+          "lap": 57,
+          "position": 2,
+          "lap_duration": 70.483
+        },
+        {
+          "lap": 58,
+          "position": 2,
+          "lap_duration": 70.622
+        },
+        {
+          "lap": 59,
+          "position": 2,
+          "lap_duration": 70.508
+        },
+        {
+          "lap": 60,
+          "position": 2,
+          "lap_duration": 70.9
+        },
+        {
+          "lap": 61,
+          "position": 2,
+          "lap_duration": 70.828
+        },
+        {
+          "lap": 62,
+          "position": 2,
+          "lap_duration": 71.077
+        },
+        {
+          "lap": 63,
+          "position": 2,
+          "lap_duration": 70.936
+        },
+        {
+          "lap": 64,
+          "position": 2,
+          "lap_duration": 70.846
+        },
+        {
+          "lap": 65,
+          "position": 2,
+          "lap_duration": 71.038
+        },
+        {
+          "lap": 66,
+          "position": 2,
+          "lap_duration": 71.149
+        },
+        {
+          "lap": 67,
+          "position": 2,
+          "lap_duration": 71.467
+        },
+        {
+          "lap": 68,
+          "position": 2,
+          "lap_duration": 71.016
+        },
+        {
+          "lap": 69,
+          "position": 2,
+          "lap_duration": 71.034
+        },
+        {
+          "lap": 70,
+          "position": 2,
+          "lap_duration": 71.133
+        },
+        {
+          "lap": 71,
+          "position": 2,
+          "lap_duration": 71.246
+        }
+      ]
+    },
+    "bortoleto": {
+      "driver_number": 5,
+      "result_position": 11,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 17,
+          "duration": 22.6
+        },
+        {
+          "lap": 44,
+          "duration": 21.8
+        }
+      ],
+      "stints": [
+        {
+          "compound": "SOFT",
+          "lap_start": 1,
+          "lap_end": 17,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 18,
+          "lap_end": 44,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 45,
+          "lap_end": 70,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 11,
+          "lap_duration": 80.765
+        },
+        {
+          "lap": 2,
+          "position": 12,
+          "lap_duration": 74.516
+        },
+        {
+          "lap": 3,
+          "position": 12,
+          "lap_duration": 73.538
+        },
+        {
+          "lap": 4,
+          "position": 12,
+          "lap_duration": 74.13
+        },
+        {
+          "lap": 5,
+          "position": 12,
+          "lap_duration": 74.049
+        },
+        {
+          "lap": 6,
+          "position": 12,
+          "lap_duration": 73.725
+        },
+        {
+          "lap": 7,
+          "position": 11,
+          "lap_duration": 73.833
+        },
+        {
+          "lap": 8,
+          "position": 11,
+          "lap_duration": 73.96
+        },
+        {
+          "lap": 9,
+          "position": 11,
+          "lap_duration": 73.808
+        },
+        {
+          "lap": 10,
+          "position": 11,
+          "lap_duration": 73.956
+        },
+        {
+          "lap": 11,
+          "position": 11,
+          "lap_duration": 73.978
+        },
+        {
+          "lap": 12,
+          "position": 11,
+          "lap_duration": 73.764
+        },
+        {
+          "lap": 13,
+          "position": 10,
+          "lap_duration": 74.046
+        },
+        {
+          "lap": 14,
+          "position": 10,
+          "lap_duration": 74.714
+        },
+        {
+          "lap": 15,
+          "position": 10,
+          "lap_duration": 74.091
+        },
+        {
+          "lap": 16,
+          "position": 10,
+          "lap_duration": 74.072
+        },
+        {
+          "lap": 17,
+          "position": 11,
+          "lap_duration": 78.144
+        },
+        {
+          "lap": 18,
+          "position": 15,
+          "lap_duration": 90.698
+        },
+        {
+          "lap": 19,
+          "position": 14,
+          "lap_duration": 73.064
+        },
+        {
+          "lap": 20,
+          "position": 13,
+          "lap_duration": 72.538
+        },
+        {
+          "lap": 21,
+          "position": 11,
+          "lap_duration": 73.017
+        },
+        {
+          "lap": 22,
+          "position": 11,
+          "lap_duration": 72.981
+        },
+        {
+          "lap": 23,
+          "position": 11,
+          "lap_duration": 72.431
+        },
+        {
+          "lap": 24,
+          "position": 11,
+          "lap_duration": 81.475
+        },
+        {
+          "lap": 25,
+          "position": 11,
+          "lap_duration": 98.256
+        },
+        {
+          "lap": 26,
+          "position": 11,
+          "lap_duration": 82.075
+        },
+        {
+          "lap": 27,
+          "position": 11,
+          "lap_duration": 72.556
+        },
+        {
+          "lap": 28,
+          "position": 11,
+          "lap_duration": 72.458
+        },
+        {
+          "lap": 29,
+          "position": 11,
+          "lap_duration": 72.496
+        },
+        {
+          "lap": 30,
+          "position": 11,
+          "lap_duration": 72.771
+        },
+        {
+          "lap": 31,
+          "position": 11,
+          "lap_duration": 72.88
+        },
+        {
+          "lap": 32,
+          "position": 11,
+          "lap_duration": 72.898
+        },
+        {
+          "lap": 33,
+          "position": 11,
+          "lap_duration": 73.034
+        },
+        {
+          "lap": 34,
+          "position": 11,
+          "lap_duration": 73.192
+        },
+        {
+          "lap": 35,
+          "position": 11,
+          "lap_duration": 73.366
+        },
+        {
+          "lap": 36,
+          "position": 11,
+          "lap_duration": 73.252
+        },
+        {
+          "lap": 37,
+          "position": 11,
+          "lap_duration": 73.535
+        },
+        {
+          "lap": 38,
+          "position": 11,
+          "lap_duration": 73.537
+        },
+        {
+          "lap": 39,
+          "position": 11,
+          "lap_duration": 73.355
+        },
+        {
+          "lap": 40,
+          "position": 11,
+          "lap_duration": 73.826
+        },
+        {
+          "lap": 41,
+          "position": 11,
+          "lap_duration": 73.73
+        },
+        {
+          "lap": 42,
+          "position": 11,
+          "lap_duration": 74.21
+        },
+        {
+          "lap": 43,
+          "position": 11,
+          "lap_duration": 74.387
+        },
+        {
+          "lap": 44,
+          "position": 11,
+          "lap_duration": 78.407
+        },
+        {
+          "lap": 45,
+          "position": 12,
+          "lap_duration": 89.12
+        },
+        {
+          "lap": 46,
+          "position": 11,
+          "lap_duration": 72.136
+        },
+        {
+          "lap": 47,
+          "position": 11,
+          "lap_duration": 72.131
+        },
+        {
+          "lap": 48,
+          "position": 11,
+          "lap_duration": 72.313
+        },
+        {
+          "lap": 49,
+          "position": 11,
+          "lap_duration": 72.125
+        },
+        {
+          "lap": 50,
+          "position": 11,
+          "lap_duration": 73.446
+        },
+        {
+          "lap": 51,
+          "position": 11,
+          "lap_duration": 77.129
+        },
+        {
+          "lap": 52,
+          "position": 11,
+          "lap_duration": 79.903
+        },
+        {
+          "lap": 53,
+          "position": 11,
+          "lap_duration": 72.1
+        },
+        {
+          "lap": 54,
+          "position": 11,
+          "lap_duration": 72.171
+        },
+        {
+          "lap": 55,
+          "position": 11,
+          "lap_duration": 72.229
+        },
+        {
+          "lap": 56,
+          "position": 11,
+          "lap_duration": 73.56
+        },
+        {
+          "lap": 57,
+          "position": 11,
+          "lap_duration": 72.132
+        },
+        {
+          "lap": 58,
+          "position": 11,
+          "lap_duration": 73.493
+        },
+        {
+          "lap": 59,
+          "position": 11,
+          "lap_duration": 71.866
+        },
+        {
+          "lap": 60,
+          "position": 11,
+          "lap_duration": 71.897
+        },
+        {
+          "lap": 61,
+          "position": 11,
+          "lap_duration": 72.314
+        },
+        {
+          "lap": 62,
+          "position": 11,
+          "lap_duration": 72.451
+        },
+        {
+          "lap": 63,
+          "position": 11,
+          "lap_duration": 74.277
+        },
+        {
+          "lap": 64,
+          "position": 11,
+          "lap_duration": 72.393
+        },
+        {
+          "lap": 65,
+          "position": 11,
+          "lap_duration": 72.488
+        },
+        {
+          "lap": 66,
+          "position": 11,
+          "lap_duration": 72.929
+        },
+        {
+          "lap": 67,
+          "position": 11,
+          "lap_duration": 74.258
+        },
+        {
+          "lap": 68,
+          "position": 11,
+          "lap_duration": 72.818
+        },
+        {
+          "lap": 69,
+          "position": 11,
+          "lap_duration": 72.816
+        },
+        {
+          "lap": 70,
+          "position": 11,
+          "lap_duration": 74.827
+        }
+      ]
+    },
+    "hadjar": {
+      "driver_number": 6,
+      "result_position": 6,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 18,
+          "duration": 21.7
+        },
+        {
+          "lap": 40,
+          "duration": 21.2
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 18,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 19,
+          "lap_end": 40,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 41,
+          "lap_end": 71,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 9,
+          "lap_duration": 80.001
+        },
+        {
+          "lap": 2,
+          "position": 9,
+          "lap_duration": 73.413
+        },
+        {
+          "lap": 3,
+          "position": 9,
+          "lap_duration": 73.499
+        },
+        {
+          "lap": 4,
+          "position": 8,
+          "lap_duration": 73.029
+        },
+        {
+          "lap": 5,
+          "position": 8,
+          "lap_duration": 72.593
+        },
+        {
+          "lap": 6,
+          "position": 8,
+          "lap_duration": 72.357
+        },
+        {
+          "lap": 7,
+          "position": 8,
+          "lap_duration": 72.706
+        },
+        {
+          "lap": 8,
+          "position": 8,
+          "lap_duration": 72.917
+        },
+        {
+          "lap": 9,
+          "position": 8,
+          "lap_duration": 72.857
+        },
+        {
+          "lap": 10,
+          "position": 8,
+          "lap_duration": 73.262
+        },
+        {
+          "lap": 11,
+          "position": 8,
+          "lap_duration": 73.449
+        },
+        {
+          "lap": 12,
+          "position": 8,
+          "lap_duration": 73.467
+        },
+        {
+          "lap": 13,
+          "position": 6,
+          "lap_duration": 73.556
+        },
+        {
+          "lap": 14,
+          "position": 6,
+          "lap_duration": 73.885
+        },
+        {
+          "lap": 15,
+          "position": 6,
+          "lap_duration": 73.518
+        },
+        {
+          "lap": 16,
+          "position": 6,
+          "lap_duration": 73.745
+        },
+        {
+          "lap": 17,
+          "position": 6,
+          "lap_duration": 73.478
+        },
+        {
+          "lap": 18,
+          "position": 6,
+          "lap_duration": 76.939
+        },
+        {
+          "lap": 19,
+          "position": 9,
+          "lap_duration": 89.177
+        },
+        {
+          "lap": 20,
+          "position": 8,
+          "lap_duration": 71.839
+        },
+        {
+          "lap": 21,
+          "position": 8,
+          "lap_duration": 71.268
+        },
+        {
+          "lap": 22,
+          "position": 7,
+          "lap_duration": 71.798
+        },
+        {
+          "lap": 23,
+          "position": 7,
+          "lap_duration": 71.527
+        },
+        {
+          "lap": 24,
+          "position": 7,
+          "lap_duration": 72.139
+        },
+        {
+          "lap": 25,
+          "position": 7,
+          "lap_duration": 100.46
+        },
+        {
+          "lap": 26,
+          "position": 6,
+          "lap_duration": 87.592
+        },
+        {
+          "lap": 27,
+          "position": 6,
+          "lap_duration": 71.621
+        },
+        {
+          "lap": 28,
+          "position": 6,
+          "lap_duration": 71.801
+        },
+        {
+          "lap": 29,
+          "position": 6,
+          "lap_duration": 71.664
+        },
+        {
+          "lap": 30,
+          "position": 7,
+          "lap_duration": 72.824
+        },
+        {
+          "lap": 31,
+          "position": 7,
+          "lap_duration": 72.244
+        },
+        {
+          "lap": 32,
+          "position": 7,
+          "lap_duration": 72.187
+        },
+        {
+          "lap": 33,
+          "position": 7,
+          "lap_duration": 72.202
+        },
+        {
+          "lap": 34,
+          "position": 7,
+          "lap_duration": 72.337
+        },
+        {
+          "lap": 35,
+          "position": 7,
+          "lap_duration": 72.292
+        },
+        {
+          "lap": 36,
+          "position": 7,
+          "lap_duration": 72.562
+        },
+        {
+          "lap": 37,
+          "position": 6,
+          "lap_duration": 72.699
+        },
+        {
+          "lap": 38,
+          "position": 6,
+          "lap_duration": 72.228
+        },
+        {
+          "lap": 39,
+          "position": 6,
+          "lap_duration": 72.443
+        },
+        {
+          "lap": 40,
+          "position": 7,
+          "lap_duration": 75.797
+        },
+        {
+          "lap": 41,
+          "position": 8,
+          "lap_duration": 87.758
+        },
+        {
+          "lap": 42,
+          "position": 8,
+          "lap_duration": 70.947
+        },
+        {
+          "lap": 43,
+          "position": 8,
+          "lap_duration": 71.227
+        },
+        {
+          "lap": 44,
+          "position": 8,
+          "lap_duration": 72.197
+        },
+        {
+          "lap": 45,
+          "position": 8,
+          "lap_duration": 71.002
+        },
+        {
+          "lap": 46,
+          "position": 8,
+          "lap_duration": 71.295
+        },
+        {
+          "lap": 47,
+          "position": 8,
+          "lap_duration": 71.498
+        },
+        {
+          "lap": 48,
+          "position": 7,
+          "lap_duration": 71.364
+        },
+        {
+          "lap": 49,
+          "position": 7,
+          "lap_duration": 71.383
+        },
+        {
+          "lap": 50,
+          "position": 7,
+          "lap_duration": 71.663
+        },
+        {
+          "lap": 51,
+          "position": 7,
+          "lap_duration": 71.462
+        },
+        {
+          "lap": 52,
+          "position": 7,
+          "lap_duration": 81.799
+        },
+        {
+          "lap": 53,
+          "position": 7,
+          "lap_duration": 73.021
+        },
+        {
+          "lap": 54,
+          "position": 7,
+          "lap_duration": 71.285
+        },
+        {
+          "lap": 55,
+          "position": 7,
+          "lap_duration": 71.464
+        },
+        {
+          "lap": 56,
+          "position": 6,
+          "lap_duration": 72.413
+        },
+        {
+          "lap": 57,
+          "position": 6,
+          "lap_duration": 71.518
+        },
+        {
+          "lap": 58,
+          "position": 6,
+          "lap_duration": 71.647
+        },
+        {
+          "lap": 59,
+          "position": 6,
+          "lap_duration": 71.559
+        },
+        {
+          "lap": 60,
+          "position": 6,
+          "lap_duration": 71.567
+        },
+        {
+          "lap": 61,
+          "position": 6,
+          "lap_duration": 71.835
+        },
+        {
+          "lap": 62,
+          "position": 6,
+          "lap_duration": 71.455
+        },
+        {
+          "lap": 63,
+          "position": 6,
+          "lap_duration": 71.492
+        },
+        {
+          "lap": 64,
+          "position": 6,
+          "lap_duration": 71.641
+        },
+        {
+          "lap": 65,
+          "position": 6,
+          "lap_duration": 71.799
+        },
+        {
+          "lap": 66,
+          "position": 6,
+          "lap_duration": 71.728
+        },
+        {
+          "lap": 67,
+          "position": 6,
+          "lap_duration": 71.861
+        },
+        {
+          "lap": 68,
+          "position": 6,
+          "lap_duration": 71.91
+        },
+        {
+          "lap": 69,
+          "position": 6,
+          "lap_duration": 71.647
+        },
+        {
+          "lap": 70,
+          "position": 6,
+          "lap_duration": 72.384
+        },
+        {
+          "lap": 71,
+          "position": 6,
+          "lap_duration": 72.638
+        }
+      ]
+    },
+    "gasly": {
+      "driver_number": 10,
+      "result_position": 13,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 13,
+          "duration": 21.6
+        },
+        {
+          "lap": 38,
+          "duration": 21.2
+        },
+        {
+          "lap": 51,
+          "duration": 21.5
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 13,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 14,
+          "lap_end": 38,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 39,
+          "lap_end": 51,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        },
+        {
+          "compound": "SOFT",
+          "lap_start": 52,
+          "lap_end": 70,
+          "tyre_age_start": 0,
+          "stint_number": 4
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 13,
+          "lap_duration": 81.238
+        },
+        {
+          "lap": 2,
+          "position": 13,
+          "lap_duration": 74.455
+        },
+        {
+          "lap": 3,
+          "position": 13,
+          "lap_duration": 73.713
+        },
+        {
+          "lap": 4,
+          "position": 13,
+          "lap_duration": 74.015
+        },
+        {
+          "lap": 5,
+          "position": 13,
+          "lap_duration": 74.023
+        },
+        {
+          "lap": 6,
+          "position": 13,
+          "lap_duration": 74.065
+        },
+        {
+          "lap": 7,
+          "position": 13,
+          "lap_duration": 74.705
+        },
+        {
+          "lap": 8,
+          "position": 13,
+          "lap_duration": 74.513
+        },
+        {
+          "lap": 9,
+          "position": 13,
+          "lap_duration": 74.864
+        },
+        {
+          "lap": 10,
+          "position": 13,
+          "lap_duration": 75.154
+        },
+        {
+          "lap": 11,
+          "position": 13,
+          "lap_duration": 75.588
+        },
+        {
+          "lap": 12,
+          "position": 13,
+          "lap_duration": 74.943
+        },
+        {
+          "lap": 13,
+          "position": 16,
+          "lap_duration": 79.306
+        },
+        {
+          "lap": 14,
+          "position": 20,
+          "lap_duration": 90.469
+        },
+        {
+          "lap": 15,
+          "position": 19,
+          "lap_duration": 72.983
+        },
+        {
+          "lap": 16,
+          "position": 18,
+          "lap_duration": 73.349
+        },
+        {
+          "lap": 17,
+          "position": 17,
+          "lap_duration": 73.244
+        },
+        {
+          "lap": 18,
+          "position": 17,
+          "lap_duration": 73.04
+        },
+        {
+          "lap": 19,
+          "position": 15,
+          "lap_duration": 72.932
+        },
+        {
+          "lap": 20,
+          "position": 14,
+          "lap_duration": 72.916
+        },
+        {
+          "lap": 21,
+          "position": 14,
+          "lap_duration": 72.772
+        },
+        {
+          "lap": 22,
+          "position": 13,
+          "lap_duration": 72.985
+        },
+        {
+          "lap": 23,
+          "position": 12,
+          "lap_duration": 73.89
+        },
+        {
+          "lap": 24,
+          "position": 12,
+          "lap_duration": 83.514
+        },
+        {
+          "lap": 25,
+          "position": 12,
+          "lap_duration": 96.491
+        },
+        {
+          "lap": 26,
+          "position": 12,
+          "lap_duration": 82.551
+        },
+        {
+          "lap": 27,
+          "position": 12,
+          "lap_duration": 73.061
+        },
+        {
+          "lap": 28,
+          "position": 12,
+          "lap_duration": 72.923
+        },
+        {
+          "lap": 29,
+          "position": 12,
+          "lap_duration": 73.094
+        },
+        {
+          "lap": 30,
+          "position": 12,
+          "lap_duration": 73.146
+        },
+        {
+          "lap": 31,
+          "position": 12,
+          "lap_duration": 73.156
+        },
+        {
+          "lap": 32,
+          "position": 12,
+          "lap_duration": 73.184
+        },
+        {
+          "lap": 33,
+          "position": 12,
+          "lap_duration": 73.464
+        },
+        {
+          "lap": 34,
+          "position": 12,
+          "lap_duration": 73.591
+        },
+        {
+          "lap": 35,
+          "position": 12,
+          "lap_duration": 73.749
+        },
+        {
+          "lap": 36,
+          "position": 12,
+          "lap_duration": 73.927
+        },
+        {
+          "lap": 37,
+          "position": 12,
+          "lap_duration": 73.947
+        },
+        {
+          "lap": 38,
+          "position": 13,
+          "lap_duration": 78.051
+        },
+        {
+          "lap": 39,
+          "position": 14,
+          "lap_duration": 89.337
+        },
+        {
+          "lap": 40,
+          "position": 14,
+          "lap_duration": 72.259
+        },
+        {
+          "lap": 41,
+          "position": 14,
+          "lap_duration": 72.291
+        },
+        {
+          "lap": 42,
+          "position": 14,
+          "lap_duration": 72.583
+        },
+        {
+          "lap": 43,
+          "position": 13,
+          "lap_duration": 72.471
+        },
+        {
+          "lap": 44,
+          "position": 13,
+          "lap_duration": 72.371
+        },
+        {
+          "lap": 45,
+          "position": 13,
+          "lap_duration": 72.718
+        },
+        {
+          "lap": 46,
+          "position": 12,
+          "lap_duration": 72.366
+        },
+        {
+          "lap": 47,
+          "position": 12,
+          "lap_duration": 72.967
+        },
+        {
+          "lap": 48,
+          "position": 12,
+          "lap_duration": 73.261
+        },
+        {
+          "lap": 49,
+          "position": 12,
+          "lap_duration": 72.557
+        },
+        {
+          "lap": 50,
+          "position": 12,
+          "lap_duration": 72.686
+        },
+        {
+          "lap": 51,
+          "position": 12,
+          "lap_duration": 78.808
+        },
+        {
+          "lap": 52,
+          "position": 13,
+          "lap_duration": 91.156
+        },
+        {
+          "lap": 53,
+          "position": 13,
+          "lap_duration": 73.63
+        },
+        {
+          "lap": 54,
+          "position": 13,
+          "lap_duration": 71.466
+        },
+        {
+          "lap": 55,
+          "position": 13,
+          "lap_duration": 72.805
+        },
+        {
+          "lap": 56,
+          "position": 13,
+          "lap_duration": 72.053
+        },
+        {
+          "lap": 57,
+          "position": 13,
+          "lap_duration": 73.102
+        },
+        {
+          "lap": 58,
+          "position": 13,
+          "lap_duration": 73.762
+        },
+        {
+          "lap": 59,
+          "position": 13,
+          "lap_duration": 71.953
+        },
+        {
+          "lap": 60,
+          "position": 13,
+          "lap_duration": 71.581
+        },
+        {
+          "lap": 61,
+          "position": 13,
+          "lap_duration": 71.651
+        },
+        {
+          "lap": 62,
+          "position": 13,
+          "lap_duration": 71.625
+        },
+        {
+          "lap": 63,
+          "position": 13,
+          "lap_duration": 71.779
+        },
+        {
+          "lap": 64,
+          "position": 13,
+          "lap_duration": 73.001
+        },
+        {
+          "lap": 65,
+          "position": 13,
+          "lap_duration": 72.076
+        },
+        {
+          "lap": 66,
+          "position": 13,
+          "lap_duration": 72.223
+        },
+        {
+          "lap": 67,
+          "position": 13,
+          "lap_duration": 72.562
+        },
+        {
+          "lap": 68,
+          "position": 13,
+          "lap_duration": 71.986
+        },
+        {
+          "lap": 69,
+          "position": 13,
+          "lap_duration": 72.97
+        },
+        {
+          "lap": 70,
+          "position": 13,
+          "lap_duration": 72.673
+        }
+      ]
+    },
+    "perez": {
+      "driver_number": 11,
+      "result_position": 21,
+      "dnf": true,
+      "pits": [],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 4,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 18,
+          "lap_duration": 83.162
+        },
+        {
+          "lap": 2,
+          "position": 18,
+          "lap_duration": 75.275
+        },
+        {
+          "lap": 3,
+          "position": 18,
+          "lap_duration": 74.448
+        },
+        {
+          "lap": 4,
+          "position": 21,
+          "lap_duration": 84.857
+        },
+        {
+          "lap": 5,
+          "position": 21,
+          "lap_duration": null
+        }
+      ]
+    },
+    "antonelli": {
+      "driver_number": 12,
+      "result_position": 3,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 24,
+          "duration": 21.4
+        },
+        {
+          "lap": 51,
+          "duration": 21.5
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 24,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 25,
+          "lap_end": 51,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 52,
+          "lap_end": 71,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 4,
+          "lap_duration": 77.311
+        },
+        {
+          "lap": 2,
+          "position": 5,
+          "lap_duration": 74.216
+        },
+        {
+          "lap": 3,
+          "position": 5,
+          "lap_duration": 72.568
+        },
+        {
+          "lap": 4,
+          "position": 5,
+          "lap_duration": 72.114
+        },
+        {
+          "lap": 5,
+          "position": 5,
+          "lap_duration": 72.168
+        },
+        {
+          "lap": 6,
+          "position": 5,
+          "lap_duration": 72.285
+        },
+        {
+          "lap": 7,
+          "position": 4,
+          "lap_duration": 72.607
+        },
+        {
+          "lap": 8,
+          "position": 4,
+          "lap_duration": 72.163
+        },
+        {
+          "lap": 9,
+          "position": 4,
+          "lap_duration": 72.268
+        },
+        {
+          "lap": 10,
+          "position": 4,
+          "lap_duration": 72.586
+        },
+        {
+          "lap": 11,
+          "position": 4,
+          "lap_duration": 73.147
+        },
+        {
+          "lap": 12,
+          "position": 3,
+          "lap_duration": 73.221
+        },
+        {
+          "lap": 13,
+          "position": 3,
+          "lap_duration": 72.782
+        },
+        {
+          "lap": 14,
+          "position": 3,
+          "lap_duration": 72.696
+        },
+        {
+          "lap": 15,
+          "position": 3,
+          "lap_duration": 72.993
+        },
+        {
+          "lap": 16,
+          "position": 3,
+          "lap_duration": 72.883
+        },
+        {
+          "lap": 17,
+          "position": 3,
+          "lap_duration": 72.474
+        },
+        {
+          "lap": 18,
+          "position": 2,
+          "lap_duration": 72.816
+        },
+        {
+          "lap": 19,
+          "position": 2,
+          "lap_duration": 72.476
+        },
+        {
+          "lap": 20,
+          "position": 1,
+          "lap_duration": 73.419
+        },
+        {
+          "lap": 21,
+          "position": 1,
+          "lap_duration": 72.804
+        },
+        {
+          "lap": 22,
+          "position": 1,
+          "lap_duration": 73.952
+        },
+        {
+          "lap": 23,
+          "position": 1,
+          "lap_duration": 73.136
+        },
+        {
+          "lap": 24,
+          "position": 1,
+          "lap_duration": 78.234
+        },
+        {
+          "lap": 25,
+          "position": 5,
+          "lap_duration": 113.381
+        },
+        {
+          "lap": 26,
+          "position": 4,
+          "lap_duration": 90.081
+        },
+        {
+          "lap": 27,
+          "position": 4,
+          "lap_duration": 71.342
+        },
+        {
+          "lap": 28,
+          "position": 4,
+          "lap_duration": 71.395
+        },
+        {
+          "lap": 29,
+          "position": 4,
+          "lap_duration": 72.092
+        },
+        {
+          "lap": 30,
+          "position": 3,
+          "lap_duration": 71.297
+        },
+        {
+          "lap": 31,
+          "position": 3,
+          "lap_duration": 71.43
+        },
+        {
+          "lap": 32,
+          "position": 3,
+          "lap_duration": 71.23
+        },
+        {
+          "lap": 33,
+          "position": 3,
+          "lap_duration": 71.368
+        },
+        {
+          "lap": 34,
+          "position": 3,
+          "lap_duration": 71.356
+        },
+        {
+          "lap": 35,
+          "position": 3,
+          "lap_duration": 71.363
+        },
+        {
+          "lap": 36,
+          "position": 3,
+          "lap_duration": 71.26
+        },
+        {
+          "lap": 37,
+          "position": 3,
+          "lap_duration": 71.327
+        },
+        {
+          "lap": 38,
+          "position": 3,
+          "lap_duration": 71.595
+        },
+        {
+          "lap": 39,
+          "position": 3,
+          "lap_duration": 71.644
+        },
+        {
+          "lap": 40,
+          "position": 3,
+          "lap_duration": 72.599
+        },
+        {
+          "lap": 41,
+          "position": 3,
+          "lap_duration": 72.131
+        },
+        {
+          "lap": 42,
+          "position": 3,
+          "lap_duration": 71.507
+        },
+        {
+          "lap": 43,
+          "position": 3,
+          "lap_duration": 71.691
+        },
+        {
+          "lap": 44,
+          "position": 2,
+          "lap_duration": 71.723
+        },
+        {
+          "lap": 45,
+          "position": 2,
+          "lap_duration": 71.825
+        },
+        {
+          "lap": 46,
+          "position": 2,
+          "lap_duration": 71.748
+        },
+        {
+          "lap": 47,
+          "position": 2,
+          "lap_duration": 71.785
+        },
+        {
+          "lap": 48,
+          "position": 2,
+          "lap_duration": 71.746
+        },
+        {
+          "lap": 49,
+          "position": 1,
+          "lap_duration": 72.214
+        },
+        {
+          "lap": 50,
+          "position": 1,
+          "lap_duration": 72.121
+        },
+        {
+          "lap": 51,
+          "position": 1,
+          "lap_duration": 76.579
+        },
+        {
+          "lap": 52,
+          "position": 3,
+          "lap_duration": 96.107
+        },
+        {
+          "lap": 53,
+          "position": 3,
+          "lap_duration": 75.677
+        },
+        {
+          "lap": 54,
+          "position": 3,
+          "lap_duration": 70.424
+        },
+        {
+          "lap": 55,
+          "position": 3,
+          "lap_duration": 70.444
+        },
+        {
+          "lap": 56,
+          "position": 3,
+          "lap_duration": 70.43
+        },
+        {
+          "lap": 57,
+          "position": 3,
+          "lap_duration": 70.47
+        },
+        {
+          "lap": 58,
+          "position": 3,
+          "lap_duration": 70.632
+        },
+        {
+          "lap": 59,
+          "position": 3,
+          "lap_duration": 70.374
+        },
+        {
+          "lap": 60,
+          "position": 3,
+          "lap_duration": 70.391
+        },
+        {
+          "lap": 61,
+          "position": 3,
+          "lap_duration": 70.442
+        },
+        {
+          "lap": 62,
+          "position": 3,
+          "lap_duration": 70.892
+        },
+        {
+          "lap": 63,
+          "position": 3,
+          "lap_duration": 71.051
+        },
+        {
+          "lap": 64,
+          "position": 3,
+          "lap_duration": 70.895
+        },
+        {
+          "lap": 65,
+          "position": 3,
+          "lap_duration": 70.64
+        },
+        {
+          "lap": 66,
+          "position": 3,
+          "lap_duration": 70.732
+        },
+        {
+          "lap": 67,
+          "position": 3,
+          "lap_duration": 71.031
+        },
+        {
+          "lap": 68,
+          "position": 3,
+          "lap_duration": 70.549
+        },
+        {
+          "lap": 69,
+          "position": 3,
+          "lap_duration": 70.407
+        },
+        {
+          "lap": 70,
+          "position": 3,
+          "lap_duration": 70.675
+        },
+        {
+          "lap": 71,
+          "position": 3,
+          "lap_duration": 70.933
+        }
+      ]
+    },
+    "alonso": {
+      "driver_number": 14,
+      "result_position": 18,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 24,
+          "duration": 22.3
+        },
+        {
+          "lap": 49,
+          "duration": 28.7
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 24,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "SOFT",
+          "lap_start": 25,
+          "lap_end": 49,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "SOFT",
+          "lap_start": 50,
+          "lap_end": 68,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 19,
+          "lap_duration": 83.861
+        },
+        {
+          "lap": 2,
+          "position": 20,
+          "lap_duration": 75.948
+        },
+        {
+          "lap": 3,
+          "position": 20,
+          "lap_duration": 74.905
+        },
+        {
+          "lap": 4,
+          "position": 19,
+          "lap_duration": 75.429
+        },
+        {
+          "lap": 5,
+          "position": 19,
+          "lap_duration": 74.923
+        },
+        {
+          "lap": 6,
+          "position": 19,
+          "lap_duration": 75.018
+        },
+        {
+          "lap": 7,
+          "position": 19,
+          "lap_duration": 75.227
+        },
+        {
+          "lap": 8,
+          "position": 19,
+          "lap_duration": 75.257
+        },
+        {
+          "lap": 9,
+          "position": 19,
+          "lap_duration": 75.554
+        },
+        {
+          "lap": 10,
+          "position": 19,
+          "lap_duration": 75.756
+        },
+        {
+          "lap": 11,
+          "position": 19,
+          "lap_duration": 75.881
+        },
+        {
+          "lap": 12,
+          "position": 19,
+          "lap_duration": 75.723
+        },
+        {
+          "lap": 13,
+          "position": 19,
+          "lap_duration": 75.941
+        },
+        {
+          "lap": 14,
+          "position": 18,
+          "lap_duration": 75.946
+        },
+        {
+          "lap": 15,
+          "position": 17,
+          "lap_duration": 75.804
+        },
+        {
+          "lap": 16,
+          "position": 17,
+          "lap_duration": 75.789
+        },
+        {
+          "lap": 17,
+          "position": 18,
+          "lap_duration": 76.338
+        },
+        {
+          "lap": 18,
+          "position": 18,
+          "lap_duration": 75.715
+        },
+        {
+          "lap": 19,
+          "position": 16,
+          "lap_duration": 75.875
+        },
+        {
+          "lap": 20,
+          "position": 17,
+          "lap_duration": 76.185
+        },
+        {
+          "lap": 21,
+          "position": 16,
+          "lap_duration": 75.818
+        },
+        {
+          "lap": 22,
+          "position": 17,
+          "lap_duration": 76.694
+        },
+        {
+          "lap": 23,
+          "position": 19,
+          "lap_duration": 77.438
+        },
+        {
+          "lap": 24,
+          "position": 18,
+          "lap_duration": 92.536
+        },
+        {
+          "lap": 25,
+          "position": 18,
+          "lap_duration": 109.372
+        },
+        {
+          "lap": 26,
+          "position": 18,
+          "lap_duration": 74.944
+        },
+        {
+          "lap": 27,
+          "position": 18,
+          "lap_duration": 74.776
+        },
+        {
+          "lap": 28,
+          "position": 18,
+          "lap_duration": 75.591
+        },
+        {
+          "lap": 29,
+          "position": 18,
+          "lap_duration": 75.61
+        },
+        {
+          "lap": 30,
+          "position": 18,
+          "lap_duration": 73.997
+        },
+        {
+          "lap": 31,
+          "position": 18,
+          "lap_duration": 75.128
+        },
+        {
+          "lap": 32,
+          "position": 18,
+          "lap_duration": 74.869
+        },
+        {
+          "lap": 33,
+          "position": 18,
+          "lap_duration": 75.24
+        },
+        {
+          "lap": 34,
+          "position": 18,
+          "lap_duration": 75.439
+        },
+        {
+          "lap": 35,
+          "position": 18,
+          "lap_duration": 75.632
+        },
+        {
+          "lap": 36,
+          "position": 18,
+          "lap_duration": 75.213
+        },
+        {
+          "lap": 37,
+          "position": 19,
+          "lap_duration": 76.781
+        },
+        {
+          "lap": 38,
+          "position": 19,
+          "lap_duration": 76.961
+        },
+        {
+          "lap": 39,
+          "position": 19,
+          "lap_duration": 74.707
+        },
+        {
+          "lap": 40,
+          "position": 19,
+          "lap_duration": 75.383
+        },
+        {
+          "lap": 41,
+          "position": 19,
+          "lap_duration": 74.996
+        },
+        {
+          "lap": 42,
+          "position": 19,
+          "lap_duration": 74.917
+        },
+        {
+          "lap": 43,
+          "position": 19,
+          "lap_duration": 74.576
+        },
+        {
+          "lap": 44,
+          "position": 19,
+          "lap_duration": 74.541
+        },
+        {
+          "lap": 45,
+          "position": 18,
+          "lap_duration": 74.743
+        },
+        {
+          "lap": 46,
+          "position": 18,
+          "lap_duration": 74.929
+        },
+        {
+          "lap": 47,
+          "position": 18,
+          "lap_duration": 75.133
+        },
+        {
+          "lap": 48,
+          "position": 18,
+          "lap_duration": 77.095
+        },
+        {
+          "lap": 49,
+          "position": 18,
+          "lap_duration": 80.214
+        },
+        {
+          "lap": 50,
+          "position": 18,
+          "lap_duration": 108.485
+        },
+        {
+          "lap": 51,
+          "position": 18,
+          "lap_duration": 74.353
+        },
+        {
+          "lap": 52,
+          "position": 18,
+          "lap_duration": 72.501
+        },
+        {
+          "lap": 53,
+          "position": 18,
+          "lap_duration": 72.938
+        },
+        {
+          "lap": 54,
+          "position": 18,
+          "lap_duration": 73.384
+        },
+        {
+          "lap": 55,
+          "position": 18,
+          "lap_duration": 73.479
+        },
+        {
+          "lap": 56,
+          "position": 18,
+          "lap_duration": 73.439
+        },
+        {
+          "lap": 57,
+          "position": 18,
+          "lap_duration": 73.645
+        },
+        {
+          "lap": 58,
+          "position": 18,
+          "lap_duration": 73.449
+        },
+        {
+          "lap": 59,
+          "position": 18,
+          "lap_duration": 73.643
+        },
+        {
+          "lap": 60,
+          "position": 18,
+          "lap_duration": 74.801
+        },
+        {
+          "lap": 61,
+          "position": 18,
+          "lap_duration": 74.322
+        },
+        {
+          "lap": 62,
+          "position": 18,
+          "lap_duration": 73.519
+        },
+        {
+          "lap": 63,
+          "position": 18,
+          "lap_duration": 74.181
+        },
+        {
+          "lap": 64,
+          "position": 18,
+          "lap_duration": 73.986
+        },
+        {
+          "lap": 65,
+          "position": 18,
+          "lap_duration": 74.483
+        },
+        {
+          "lap": 66,
+          "position": 18,
+          "lap_duration": 73.84
+        },
+        {
+          "lap": 67,
+          "position": 18,
+          "lap_duration": 74.742
+        },
+        {
+          "lap": 68,
+          "position": 18,
+          "lap_duration": 75.637
+        }
+      ]
+    },
+    "leclerc": {
+      "driver_number": 16,
+      "result_position": 8,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 13,
+          "duration": 21.7
+        },
+        {
+          "lap": 37,
+          "duration": 21.0
+        },
+        {
+          "lap": 59,
+          "duration": 22.7
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 13,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 14,
+          "lap_end": 37,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 38,
+          "lap_end": 59,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        },
+        {
+          "compound": "SOFT",
+          "lap_start": 60,
+          "lap_end": 71,
+          "tyre_age_start": 3,
+          "stint_number": 4
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 3,
+          "lap_duration": 77.07
+        },
+        {
+          "lap": 2,
+          "position": 4,
+          "lap_duration": 74.142
+        },
+        {
+          "lap": 3,
+          "position": 4,
+          "lap_duration": 72.446
+        },
+        {
+          "lap": 4,
+          "position": 4,
+          "lap_duration": 71.971
+        },
+        {
+          "lap": 5,
+          "position": 4,
+          "lap_duration": 72.252
+        },
+        {
+          "lap": 6,
+          "position": 4,
+          "lap_duration": 72.216
+        },
+        {
+          "lap": 7,
+          "position": 5,
+          "lap_duration": 73.951
+        },
+        {
+          "lap": 8,
+          "position": 5,
+          "lap_duration": 72.717
+        },
+        {
+          "lap": 9,
+          "position": 5,
+          "lap_duration": 72.895
+        },
+        {
+          "lap": 10,
+          "position": 5,
+          "lap_duration": 73.061
+        },
+        {
+          "lap": 11,
+          "position": 5,
+          "lap_duration": 73.493
+        },
+        {
+          "lap": 12,
+          "position": 5,
+          "lap_duration": 73.433
+        },
+        {
+          "lap": 13,
+          "position": 7,
+          "lap_duration": 77.722
+        },
+        {
+          "lap": 14,
+          "position": 11,
+          "lap_duration": 89.806
+        },
+        {
+          "lap": 15,
+          "position": 11,
+          "lap_duration": 72.788
+        },
+        {
+          "lap": 16,
+          "position": 11,
+          "lap_duration": 72.567
+        },
+        {
+          "lap": 17,
+          "position": 10,
+          "lap_duration": 72.975
+        },
+        {
+          "lap": 18,
+          "position": 9,
+          "lap_duration": 72.591
+        },
+        {
+          "lap": 19,
+          "position": 7,
+          "lap_duration": 72.245
+        },
+        {
+          "lap": 20,
+          "position": 6,
+          "lap_duration": 72.066
+        },
+        {
+          "lap": 21,
+          "position": 6,
+          "lap_duration": 71.661
+        },
+        {
+          "lap": 22,
+          "position": 5,
+          "lap_duration": 71.932
+        },
+        {
+          "lap": 23,
+          "position": 5,
+          "lap_duration": 71.83
+        },
+        {
+          "lap": 24,
+          "position": 5,
+          "lap_duration": 72.699
+        },
+        {
+          "lap": 25,
+          "position": 4,
+          "lap_duration": 98.068
+        },
+        {
+          "lap": 26,
+          "position": 3,
+          "lap_duration": 90.934
+        },
+        {
+          "lap": 27,
+          "position": 3,
+          "lap_duration": 71.905
+        },
+        {
+          "lap": 28,
+          "position": 3,
+          "lap_duration": 71.737
+        },
+        {
+          "lap": 29,
+          "position": 3,
+          "lap_duration": 71.995
+        },
+        {
+          "lap": 30,
+          "position": 4,
+          "lap_duration": 72.682
+        },
+        {
+          "lap": 31,
+          "position": 4,
+          "lap_duration": 71.859
+        },
+        {
+          "lap": 32,
+          "position": 4,
+          "lap_duration": 72.044
+        },
+        {
+          "lap": 33,
+          "position": 4,
+          "lap_duration": 72.345
+        },
+        {
+          "lap": 34,
+          "position": 4,
+          "lap_duration": 72.316
+        },
+        {
+          "lap": 35,
+          "position": 4,
+          "lap_duration": 72.19
+        },
+        {
+          "lap": 36,
+          "position": 4,
+          "lap_duration": 72.588
+        },
+        {
+          "lap": 37,
+          "position": 7,
+          "lap_duration": 78.434
+        },
+        {
+          "lap": 38,
+          "position": 8,
+          "lap_duration": 88.302
+        },
+        {
+          "lap": 39,
+          "position": 8,
+          "lap_duration": 71.611
+        },
+        {
+          "lap": 40,
+          "position": 8,
+          "lap_duration": 71.701
+        },
+        {
+          "lap": 41,
+          "position": 7,
+          "lap_duration": 71.055
+        },
+        {
+          "lap": 42,
+          "position": 7,
+          "lap_duration": 70.916
+        },
+        {
+          "lap": 43,
+          "position": 5,
+          "lap_duration": 71.184
+        },
+        {
+          "lap": 44,
+          "position": 5,
+          "lap_duration": 71.165
+        },
+        {
+          "lap": 45,
+          "position": 5,
+          "lap_duration": 71.251
+        },
+        {
+          "lap": 46,
+          "position": 5,
+          "lap_duration": 71.718
+        },
+        {
+          "lap": 47,
+          "position": 5,
+          "lap_duration": 71.665
+        },
+        {
+          "lap": 48,
+          "position": 5,
+          "lap_duration": 72.597
+        },
+        {
+          "lap": 49,
+          "position": 5,
+          "lap_duration": 71.607
+        },
+        {
+          "lap": 50,
+          "position": 5,
+          "lap_duration": 71.537
+        },
+        {
+          "lap": 51,
+          "position": 5,
+          "lap_duration": 71.582
+        },
+        {
+          "lap": 52,
+          "position": 6,
+          "lap_duration": 81.968
+        },
+        {
+          "lap": 53,
+          "position": 6,
+          "lap_duration": 74.572
+        },
+        {
+          "lap": 54,
+          "position": 6,
+          "lap_duration": 72.063
+        },
+        {
+          "lap": 55,
+          "position": 6,
+          "lap_duration": 72.011
+        },
+        {
+          "lap": 56,
+          "position": 7,
+          "lap_duration": 74.03
+        },
+        {
+          "lap": 57,
+          "position": 7,
+          "lap_duration": 72.075
+        },
+        {
+          "lap": 58,
+          "position": 7,
+          "lap_duration": 72.651
+        },
+        {
+          "lap": 59,
+          "position": 8,
+          "lap_duration": 78.286
+        },
+        {
+          "lap": 60,
+          "position": 8,
+          "lap_duration": 89.606
+        },
+        {
+          "lap": 61,
+          "position": 8,
+          "lap_duration": 70.87
+        },
+        {
+          "lap": 62,
+          "position": 8,
+          "lap_duration": 71.098
+        },
+        {
+          "lap": 63,
+          "position": 8,
+          "lap_duration": 70.936
+        },
+        {
+          "lap": 64,
+          "position": 8,
+          "lap_duration": 70.878
+        },
+        {
+          "lap": 65,
+          "position": 8,
+          "lap_duration": 71.021
+        },
+        {
+          "lap": 66,
+          "position": 8,
+          "lap_duration": 70.684
+        },
+        {
+          "lap": 67,
+          "position": 8,
+          "lap_duration": 70.606
+        },
+        {
+          "lap": 68,
+          "position": 8,
+          "lap_duration": 70.713
+        },
+        {
+          "lap": 69,
+          "position": 8,
+          "lap_duration": 70.803
+        },
+        {
+          "lap": 70,
+          "position": 8,
+          "lap_duration": 70.998
+        },
+        {
+          "lap": 71,
+          "position": 8,
+          "lap_duration": 70.796
+        }
+      ]
+    },
+    "stroll": {
+      "driver_number": 18,
+      "result_position": 19,
+      "dnf": true,
+      "pits": [
+        {
+          "lap": 24,
+          "duration": 23.5
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 24,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "SOFT",
+          "lap_start": 25,
+          "lap_end": 45,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 22,
+          "lap_duration": 85.211
+        },
+        {
+          "lap": 2,
+          "position": 21,
+          "lap_duration": 76.042
+        },
+        {
+          "lap": 3,
+          "position": 21,
+          "lap_duration": 75.015
+        },
+        {
+          "lap": 4,
+          "position": 20,
+          "lap_duration": 75.217
+        },
+        {
+          "lap": 5,
+          "position": 20,
+          "lap_duration": 74.987
+        },
+        {
+          "lap": 6,
+          "position": 20,
+          "lap_duration": 74.995
+        },
+        {
+          "lap": 7,
+          "position": 20,
+          "lap_duration": 75.59
+        },
+        {
+          "lap": 8,
+          "position": 20,
+          "lap_duration": 75.485
+        },
+        {
+          "lap": 9,
+          "position": 20,
+          "lap_duration": 75.455
+        },
+        {
+          "lap": 10,
+          "position": 20,
+          "lap_duration": 75.64
+        },
+        {
+          "lap": 11,
+          "position": 20,
+          "lap_duration": 75.956
+        },
+        {
+          "lap": 12,
+          "position": 20,
+          "lap_duration": 75.835
+        },
+        {
+          "lap": 13,
+          "position": 20,
+          "lap_duration": 75.717
+        },
+        {
+          "lap": 14,
+          "position": 19,
+          "lap_duration": 75.964
+        },
+        {
+          "lap": 15,
+          "position": 18,
+          "lap_duration": 75.826
+        },
+        {
+          "lap": 16,
+          "position": 19,
+          "lap_duration": 76.64
+        },
+        {
+          "lap": 17,
+          "position": 19,
+          "lap_duration": 75.683
+        },
+        {
+          "lap": 18,
+          "position": 19,
+          "lap_duration": 75.879
+        },
+        {
+          "lap": 19,
+          "position": 18,
+          "lap_duration": 76.515
+        },
+        {
+          "lap": 20,
+          "position": 19,
+          "lap_duration": 76.451
+        },
+        {
+          "lap": 21,
+          "position": 19,
+          "lap_duration": 77.047
+        },
+        {
+          "lap": 22,
+          "position": 20,
+          "lap_duration": 76.336
+        },
+        {
+          "lap": 23,
+          "position": 20,
+          "lap_duration": 77.269
+        },
+        {
+          "lap": 24,
+          "position": 19,
+          "lap_duration": 97.078
+        },
+        {
+          "lap": 25,
+          "position": 19,
+          "lap_duration": 108.627
+        },
+        {
+          "lap": 26,
+          "position": 19,
+          "lap_duration": 74.671
+        },
+        {
+          "lap": 27,
+          "position": 19,
+          "lap_duration": 76.193
+        },
+        {
+          "lap": 28,
+          "position": 19,
+          "lap_duration": 74.161
+        },
+        {
+          "lap": 29,
+          "position": 19,
+          "lap_duration": 75.246
+        },
+        {
+          "lap": 30,
+          "position": 19,
+          "lap_duration": 73.796
+        },
+        {
+          "lap": 31,
+          "position": 19,
+          "lap_duration": 74.006
+        },
+        {
+          "lap": 32,
+          "position": 19,
+          "lap_duration": 74.101
+        },
+        {
+          "lap": 33,
+          "position": 19,
+          "lap_duration": 74.416
+        },
+        {
+          "lap": 34,
+          "position": 19,
+          "lap_duration": 74.224
+        },
+        {
+          "lap": 35,
+          "position": 19,
+          "lap_duration": 74.355
+        },
+        {
+          "lap": 36,
+          "position": 19,
+          "lap_duration": 74.615
+        },
+        {
+          "lap": 37,
+          "position": 18,
+          "lap_duration": 74.863
+        },
+        {
+          "lap": 38,
+          "position": 18,
+          "lap_duration": 77.36
+        },
+        {
+          "lap": 39,
+          "position": 18,
+          "lap_duration": 74.619
+        },
+        {
+          "lap": 40,
+          "position": 18,
+          "lap_duration": 74.584
+        },
+        {
+          "lap": 41,
+          "position": 18,
+          "lap_duration": 76.04
+        },
+        {
+          "lap": 42,
+          "position": 18,
+          "lap_duration": 74.654
+        },
+        {
+          "lap": 43,
+          "position": 18,
+          "lap_duration": 74.641
+        },
+        {
+          "lap": 44,
+          "position": 18,
+          "lap_duration": 74.53
+        },
+        {
+          "lap": 45,
+          "position": 19,
+          "lap_duration": 107.427
+        },
+        {
+          "lap": 46,
+          "position": 19,
+          "lap_duration": null
+        }
+      ]
+    },
+    "albon": {
+      "driver_number": 23,
+      "result_position": 17,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 18,
+          "duration": 21.2
+        },
+        {
+          "lap": 37,
+          "duration": 21.2
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 18,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 19,
+          "lap_end": 37,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 38,
+          "lap_end": 69,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 17,
+          "lap_duration": 82.949
+        },
+        {
+          "lap": 2,
+          "position": 17,
+          "lap_duration": 74.956
+        },
+        {
+          "lap": 3,
+          "position": 17,
+          "lap_duration": 74.318
+        },
+        {
+          "lap": 4,
+          "position": 17,
+          "lap_duration": 74.27
+        },
+        {
+          "lap": 5,
+          "position": 17,
+          "lap_duration": 74.288
+        },
+        {
+          "lap": 6,
+          "position": 17,
+          "lap_duration": 74.684
+        },
+        {
+          "lap": 7,
+          "position": 17,
+          "lap_duration": 74.463
+        },
+        {
+          "lap": 8,
+          "position": 17,
+          "lap_duration": 74.716
+        },
+        {
+          "lap": 9,
+          "position": 17,
+          "lap_duration": 75.298
+        },
+        {
+          "lap": 10,
+          "position": 17,
+          "lap_duration": 75.141
+        },
+        {
+          "lap": 11,
+          "position": 17,
+          "lap_duration": 75.982
+        },
+        {
+          "lap": 12,
+          "position": 17,
+          "lap_duration": 75.281
+        },
+        {
+          "lap": 13,
+          "position": 17,
+          "lap_duration": 75.112
+        },
+        {
+          "lap": 14,
+          "position": 15,
+          "lap_duration": 74.921
+        },
+        {
+          "lap": 15,
+          "position": 15,
+          "lap_duration": 74.858
+        },
+        {
+          "lap": 16,
+          "position": 15,
+          "lap_duration": 74.979
+        },
+        {
+          "lap": 17,
+          "position": 15,
+          "lap_duration": 75.072
+        },
+        {
+          "lap": 18,
+          "position": 16,
+          "lap_duration": 78.858
+        },
+        {
+          "lap": 19,
+          "position": 20,
+          "lap_duration": 91.904
+        },
+        {
+          "lap": 20,
+          "position": 20,
+          "lap_duration": 73.642
+        },
+        {
+          "lap": 21,
+          "position": 18,
+          "lap_duration": 73.823
+        },
+        {
+          "lap": 22,
+          "position": 18,
+          "lap_duration": 74.202
+        },
+        {
+          "lap": 23,
+          "position": 17,
+          "lap_duration": 73.794
+        },
+        {
+          "lap": 24,
+          "position": 16,
+          "lap_duration": 92.19
+        },
+        {
+          "lap": 25,
+          "position": 16,
+          "lap_duration": 94.459
+        },
+        {
+          "lap": 26,
+          "position": 16,
+          "lap_duration": 75.348
+        },
+        {
+          "lap": 27,
+          "position": 16,
+          "lap_duration": 73.344
+        },
+        {
+          "lap": 28,
+          "position": 16,
+          "lap_duration": 73.531
+        },
+        {
+          "lap": 29,
+          "position": 16,
+          "lap_duration": 73.404
+        },
+        {
+          "lap": 30,
+          "position": 17,
+          "lap_duration": 74.285
+        },
+        {
+          "lap": 31,
+          "position": 17,
+          "lap_duration": 74.701
+        },
+        {
+          "lap": 32,
+          "position": 17,
+          "lap_duration": 74.764
+        },
+        {
+          "lap": 33,
+          "position": 17,
+          "lap_duration": 74.294
+        },
+        {
+          "lap": 34,
+          "position": 16,
+          "lap_duration": 74.002
+        },
+        {
+          "lap": 35,
+          "position": 16,
+          "lap_duration": 75.013
+        },
+        {
+          "lap": 36,
+          "position": 16,
+          "lap_duration": 74.131
+        },
+        {
+          "lap": 37,
+          "position": 16,
+          "lap_duration": 78.04
+        },
+        {
+          "lap": 38,
+          "position": 17,
+          "lap_duration": 91.91
+        },
+        {
+          "lap": 39,
+          "position": 17,
+          "lap_duration": 73.202
+        },
+        {
+          "lap": 40,
+          "position": 17,
+          "lap_duration": 73.974
+        },
+        {
+          "lap": 41,
+          "position": 17,
+          "lap_duration": 73.163
+        },
+        {
+          "lap": 42,
+          "position": 17,
+          "lap_duration": 73.526
+        },
+        {
+          "lap": 43,
+          "position": 17,
+          "lap_duration": 73.137
+        },
+        {
+          "lap": 44,
+          "position": 17,
+          "lap_duration": 73.181
+        },
+        {
+          "lap": 45,
+          "position": 17,
+          "lap_duration": 73.39
+        },
+        {
+          "lap": 46,
+          "position": 17,
+          "lap_duration": 73.426
+        },
+        {
+          "lap": 47,
+          "position": 16,
+          "lap_duration": 73.635
+        },
+        {
+          "lap": 48,
+          "position": 16,
+          "lap_duration": 73.344
+        },
+        {
+          "lap": 49,
+          "position": 17,
+          "lap_duration": 74.02
+        },
+        {
+          "lap": 50,
+          "position": 17,
+          "lap_duration": 73.711
+        },
+        {
+          "lap": 51,
+          "position": 17,
+          "lap_duration": 84.164
+        },
+        {
+          "lap": 52,
+          "position": 17,
+          "lap_duration": 73.575
+        },
+        {
+          "lap": 53,
+          "position": 17,
+          "lap_duration": 73.197
+        },
+        {
+          "lap": 54,
+          "position": 17,
+          "lap_duration": 73.197
+        },
+        {
+          "lap": 55,
+          "position": 17,
+          "lap_duration": 73.301
+        },
+        {
+          "lap": 56,
+          "position": 17,
+          "lap_duration": 73.484
+        },
+        {
+          "lap": 57,
+          "position": 17,
+          "lap_duration": 73.664
+        },
+        {
+          "lap": 58,
+          "position": 17,
+          "lap_duration": 73.538
+        },
+        {
+          "lap": 59,
+          "position": 17,
+          "lap_duration": 73.351
+        },
+        {
+          "lap": 60,
+          "position": 17,
+          "lap_duration": 73.735
+        },
+        {
+          "lap": 61,
+          "position": 17,
+          "lap_duration": 74.077
+        },
+        {
+          "lap": 62,
+          "position": 17,
+          "lap_duration": 73.893
+        },
+        {
+          "lap": 63,
+          "position": 17,
+          "lap_duration": 76.208
+        },
+        {
+          "lap": 64,
+          "position": 17,
+          "lap_duration": 76.311
+        },
+        {
+          "lap": 65,
+          "position": 17,
+          "lap_duration": 74.656
+        },
+        {
+          "lap": 66,
+          "position": 17,
+          "lap_duration": 76.007
+        },
+        {
+          "lap": 67,
+          "position": 17,
+          "lap_duration": 75.416
+        },
+        {
+          "lap": 68,
+          "position": 17,
+          "lap_duration": 75.609
+        },
+        {
+          "lap": 69,
+          "position": 17,
+          "lap_duration": 76.469
+        }
+      ]
+    },
+    "hulkenberg": {
+      "driver_number": 27,
+      "result_position": 12,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 21,
+          "duration": 21.5
+        },
+        {
+          "lap": 45,
+          "duration": 22.5
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 21,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 22,
+          "lap_end": 45,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 46,
+          "lap_end": 70,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 14,
+          "lap_duration": 81.697
+        },
+        {
+          "lap": 2,
+          "position": 14,
+          "lap_duration": 74.302
+        },
+        {
+          "lap": 3,
+          "position": 14,
+          "lap_duration": 73.988
+        },
+        {
+          "lap": 4,
+          "position": 14,
+          "lap_duration": 73.905
+        },
+        {
+          "lap": 5,
+          "position": 14,
+          "lap_duration": 74.026
+        },
+        {
+          "lap": 6,
+          "position": 14,
+          "lap_duration": 74.391
+        },
+        {
+          "lap": 7,
+          "position": 14,
+          "lap_duration": 74.418
+        },
+        {
+          "lap": 8,
+          "position": 14,
+          "lap_duration": 74.675
+        },
+        {
+          "lap": 9,
+          "position": 14,
+          "lap_duration": 74.506
+        },
+        {
+          "lap": 10,
+          "position": 14,
+          "lap_duration": 75.271
+        },
+        {
+          "lap": 11,
+          "position": 14,
+          "lap_duration": 75.626
+        },
+        {
+          "lap": 12,
+          "position": 14,
+          "lap_duration": 75.137
+        },
+        {
+          "lap": 13,
+          "position": 13,
+          "lap_duration": 75.169
+        },
+        {
+          "lap": 14,
+          "position": 13,
+          "lap_duration": 74.773
+        },
+        {
+          "lap": 15,
+          "position": 13,
+          "lap_duration": 74.945
+        },
+        {
+          "lap": 16,
+          "position": 12,
+          "lap_duration": 74.474
+        },
+        {
+          "lap": 17,
+          "position": 12,
+          "lap_duration": 75.244
+        },
+        {
+          "lap": 18,
+          "position": 11,
+          "lap_duration": 74.765
+        },
+        {
+          "lap": 19,
+          "position": 10,
+          "lap_duration": 74.434
+        },
+        {
+          "lap": 20,
+          "position": 9,
+          "lap_duration": 74.408
+        },
+        {
+          "lap": 21,
+          "position": 12,
+          "lap_duration": 78.389
+        },
+        {
+          "lap": 22,
+          "position": 15,
+          "lap_duration": 90.115
+        },
+        {
+          "lap": 23,
+          "position": 14,
+          "lap_duration": 73.21
+        },
+        {
+          "lap": 24,
+          "position": 14,
+          "lap_duration": 88.537
+        },
+        {
+          "lap": 25,
+          "position": 13,
+          "lap_duration": 94.121
+        },
+        {
+          "lap": 26,
+          "position": 13,
+          "lap_duration": 78.893
+        },
+        {
+          "lap": 27,
+          "position": 13,
+          "lap_duration": 72.63
+        },
+        {
+          "lap": 28,
+          "position": 13,
+          "lap_duration": 72.965
+        },
+        {
+          "lap": 29,
+          "position": 13,
+          "lap_duration": 72.755
+        },
+        {
+          "lap": 30,
+          "position": 13,
+          "lap_duration": 72.673
+        },
+        {
+          "lap": 31,
+          "position": 13,
+          "lap_duration": 72.629
+        },
+        {
+          "lap": 32,
+          "position": 13,
+          "lap_duration": 72.47
+        },
+        {
+          "lap": 33,
+          "position": 13,
+          "lap_duration": 72.863
+        },
+        {
+          "lap": 34,
+          "position": 13,
+          "lap_duration": 72.65
+        },
+        {
+          "lap": 35,
+          "position": 13,
+          "lap_duration": 72.663
+        },
+        {
+          "lap": 36,
+          "position": 13,
+          "lap_duration": 72.792
+        },
+        {
+          "lap": 37,
+          "position": 13,
+          "lap_duration": 72.747
+        },
+        {
+          "lap": 38,
+          "position": 12,
+          "lap_duration": 72.959
+        },
+        {
+          "lap": 39,
+          "position": 12,
+          "lap_duration": 72.988
+        },
+        {
+          "lap": 40,
+          "position": 12,
+          "lap_duration": 72.757
+        },
+        {
+          "lap": 41,
+          "position": 12,
+          "lap_duration": 73.096
+        },
+        {
+          "lap": 42,
+          "position": 12,
+          "lap_duration": 72.891
+        },
+        {
+          "lap": 43,
+          "position": 12,
+          "lap_duration": 73.058
+        },
+        {
+          "lap": 44,
+          "position": 12,
+          "lap_duration": 73.105
+        },
+        {
+          "lap": 45,
+          "position": 11,
+          "lap_duration": 77.06
+        },
+        {
+          "lap": 46,
+          "position": 13,
+          "lap_duration": 89.611
+        },
+        {
+          "lap": 47,
+          "position": 13,
+          "lap_duration": 72.534
+        },
+        {
+          "lap": 48,
+          "position": 13,
+          "lap_duration": 72.446
+        },
+        {
+          "lap": 49,
+          "position": 13,
+          "lap_duration": 72.255
+        },
+        {
+          "lap": 50,
+          "position": 13,
+          "lap_duration": 73.623
+        },
+        {
+          "lap": 51,
+          "position": 13,
+          "lap_duration": 80.193
+        },
+        {
+          "lap": 52,
+          "position": 12,
+          "lap_duration": 76.548
+        },
+        {
+          "lap": 53,
+          "position": 12,
+          "lap_duration": 73.956
+        },
+        {
+          "lap": 54,
+          "position": 12,
+          "lap_duration": 71.722
+        },
+        {
+          "lap": 55,
+          "position": 12,
+          "lap_duration": 71.634
+        },
+        {
+          "lap": 56,
+          "position": 12,
+          "lap_duration": 71.772
+        },
+        {
+          "lap": 57,
+          "position": 12,
+          "lap_duration": 73.683
+        },
+        {
+          "lap": 58,
+          "position": 12,
+          "lap_duration": 72.082
+        },
+        {
+          "lap": 59,
+          "position": 12,
+          "lap_duration": 72.413
+        },
+        {
+          "lap": 60,
+          "position": 12,
+          "lap_duration": 72.796
+        },
+        {
+          "lap": 61,
+          "position": 12,
+          "lap_duration": 75.042
+        },
+        {
+          "lap": 62,
+          "position": 12,
+          "lap_duration": 72.449
+        },
+        {
+          "lap": 63,
+          "position": 12,
+          "lap_duration": 73.081
+        },
+        {
+          "lap": 64,
+          "position": 12,
+          "lap_duration": 72.846
+        },
+        {
+          "lap": 65,
+          "position": 12,
+          "lap_duration": 72.344
+        },
+        {
+          "lap": 66,
+          "position": 12,
+          "lap_duration": 72.492
+        },
+        {
+          "lap": 67,
+          "position": 12,
+          "lap_duration": 72.301
+        },
+        {
+          "lap": 68,
+          "position": 12,
+          "lap_duration": 72.371
+        },
+        {
+          "lap": 69,
+          "position": 12,
+          "lap_duration": 73.022
+        },
+        {
+          "lap": 70,
+          "position": 12,
+          "lap_duration": 72.56
+        }
+      ]
+    },
+    "lawson": {
+      "driver_number": 30,
+      "result_position": 9,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 19,
+          "duration": 22.0
+        },
+        {
+          "lap": 45,
+          "duration": 21.5
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 19,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 20,
+          "lap_end": 45,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 46,
+          "lap_end": 70,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 8,
+          "lap_duration": 79.361
+        },
+        {
+          "lap": 2,
+          "position": 8,
+          "lap_duration": 73.546
+        },
+        {
+          "lap": 3,
+          "position": 8,
+          "lap_duration": 73.61
+        },
+        {
+          "lap": 4,
+          "position": 9,
+          "lap_duration": 74.368
+        },
+        {
+          "lap": 5,
+          "position": 9,
+          "lap_duration": 73.224
+        },
+        {
+          "lap": 6,
+          "position": 9,
+          "lap_duration": 73.108
+        },
+        {
+          "lap": 7,
+          "position": 9,
+          "lap_duration": 73.265
+        },
+        {
+          "lap": 8,
+          "position": 9,
+          "lap_duration": 73.244
+        },
+        {
+          "lap": 9,
+          "position": 9,
+          "lap_duration": 73.428
+        },
+        {
+          "lap": 10,
+          "position": 9,
+          "lap_duration": 73.576
+        },
+        {
+          "lap": 11,
+          "position": 9,
+          "lap_duration": 73.714
+        },
+        {
+          "lap": 12,
+          "position": 9,
+          "lap_duration": 73.624
+        },
+        {
+          "lap": 13,
+          "position": 8,
+          "lap_duration": 73.823
+        },
+        {
+          "lap": 14,
+          "position": 7,
+          "lap_duration": 73.824
+        },
+        {
+          "lap": 15,
+          "position": 7,
+          "lap_duration": 73.988
+        },
+        {
+          "lap": 16,
+          "position": 7,
+          "lap_duration": 73.857
+        },
+        {
+          "lap": 17,
+          "position": 7,
+          "lap_duration": 74.092
+        },
+        {
+          "lap": 18,
+          "position": 8,
+          "lap_duration": 75.098
+        },
+        {
+          "lap": 19,
+          "position": 8,
+          "lap_duration": 78.467
+        },
+        {
+          "lap": 20,
+          "position": 10,
+          "lap_duration": 91.043
+        },
+        {
+          "lap": 21,
+          "position": 10,
+          "lap_duration": 73.679
+        },
+        {
+          "lap": 22,
+          "position": 10,
+          "lap_duration": 73.088
+        },
+        {
+          "lap": 23,
+          "position": 10,
+          "lap_duration": 72.637
+        },
+        {
+          "lap": 24,
+          "position": 10,
+          "lap_duration": 81.637
+        },
+        {
+          "lap": 25,
+          "position": 10,
+          "lap_duration": 98.072
+        },
+        {
+          "lap": 26,
+          "position": 10,
+          "lap_duration": 81.479
+        },
+        {
+          "lap": 27,
+          "position": 10,
+          "lap_duration": 72.726
+        },
+        {
+          "lap": 28,
+          "position": 10,
+          "lap_duration": 72.416
+        },
+        {
+          "lap": 29,
+          "position": 10,
+          "lap_duration": 72.214
+        },
+        {
+          "lap": 30,
+          "position": 10,
+          "lap_duration": 72.544
+        },
+        {
+          "lap": 31,
+          "position": 10,
+          "lap_duration": 72.577
+        },
+        {
+          "lap": 32,
+          "position": 10,
+          "lap_duration": 72.468
+        },
+        {
+          "lap": 33,
+          "position": 10,
+          "lap_duration": 72.671
+        },
+        {
+          "lap": 34,
+          "position": 10,
+          "lap_duration": 72.784
+        },
+        {
+          "lap": 35,
+          "position": 10,
+          "lap_duration": 73.035
+        },
+        {
+          "lap": 36,
+          "position": 10,
+          "lap_duration": 72.96
+        },
+        {
+          "lap": 37,
+          "position": 10,
+          "lap_duration": 73.211
+        },
+        {
+          "lap": 38,
+          "position": 10,
+          "lap_duration": 74.115
+        },
+        {
+          "lap": 39,
+          "position": 10,
+          "lap_duration": 74.467
+        },
+        {
+          "lap": 40,
+          "position": 10,
+          "lap_duration": 73.118
+        },
+        {
+          "lap": 41,
+          "position": 10,
+          "lap_duration": 73.068
+        },
+        {
+          "lap": 42,
+          "position": 10,
+          "lap_duration": 73.279
+        },
+        {
+          "lap": 43,
+          "position": 10,
+          "lap_duration": 73.635
+        },
+        {
+          "lap": 44,
+          "position": 10,
+          "lap_duration": 73.993
+        },
+        {
+          "lap": 45,
+          "position": 10,
+          "lap_duration": 78.081
+        },
+        {
+          "lap": 46,
+          "position": 10,
+          "lap_duration": 89.493
+        },
+        {
+          "lap": 47,
+          "position": 9,
+          "lap_duration": 72.099
+        },
+        {
+          "lap": 48,
+          "position": 9,
+          "lap_duration": 72.149
+        },
+        {
+          "lap": 49,
+          "position": 9,
+          "lap_duration": 72.133
+        },
+        {
+          "lap": 50,
+          "position": 9,
+          "lap_duration": 71.946
+        },
+        {
+          "lap": 51,
+          "position": 9,
+          "lap_duration": 72.537
+        },
+        {
+          "lap": 52,
+          "position": 9,
+          "lap_duration": 84.063
+        },
+        {
+          "lap": 53,
+          "position": 9,
+          "lap_duration": 71.774
+        },
+        {
+          "lap": 54,
+          "position": 9,
+          "lap_duration": 71.75
+        },
+        {
+          "lap": 55,
+          "position": 9,
+          "lap_duration": 71.547
+        },
+        {
+          "lap": 56,
+          "position": 9,
+          "lap_duration": 71.809
+        },
+        {
+          "lap": 57,
+          "position": 9,
+          "lap_duration": 73.698
+        },
+        {
+          "lap": 58,
+          "position": 9,
+          "lap_duration": 71.944
+        },
+        {
+          "lap": 59,
+          "position": 9,
+          "lap_duration": 71.81
+        },
+        {
+          "lap": 60,
+          "position": 9,
+          "lap_duration": 71.875
+        },
+        {
+          "lap": 61,
+          "position": 9,
+          "lap_duration": 72.118
+        },
+        {
+          "lap": 62,
+          "position": 9,
+          "lap_duration": 74.159
+        },
+        {
+          "lap": 63,
+          "position": 9,
+          "lap_duration": 74.033
+        },
+        {
+          "lap": 64,
+          "position": 9,
+          "lap_duration": 72.046
+        },
+        {
+          "lap": 65,
+          "position": 9,
+          "lap_duration": 72.274
+        },
+        {
+          "lap": 66,
+          "position": 9,
+          "lap_duration": 72.701
+        },
+        {
+          "lap": 67,
+          "position": 9,
+          "lap_duration": 72.619
+        },
+        {
+          "lap": 68,
+          "position": 9,
+          "lap_duration": 72.352
+        },
+        {
+          "lap": 69,
+          "position": 9,
+          "lap_duration": 72.278
+        },
+        {
+          "lap": 70,
+          "position": 9,
+          "lap_duration": 72.286
+        }
+      ]
+    },
+    "ocon": {
+      "driver_number": 31,
+      "result_position": 16,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 18,
+          "duration": 21.8
+        },
+        {
+          "lap": 33,
+          "duration": 25.4
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 18,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 19,
+          "lap_end": 33,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 34,
+          "lap_end": 69,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 12,
+          "lap_duration": 80.91
+        },
+        {
+          "lap": 2,
+          "position": 11,
+          "lap_duration": 73.849
+        },
+        {
+          "lap": 3,
+          "position": 11,
+          "lap_duration": 73.645
+        },
+        {
+          "lap": 4,
+          "position": 11,
+          "lap_duration": 74.103
+        },
+        {
+          "lap": 5,
+          "position": 11,
+          "lap_duration": 73.793
+        },
+        {
+          "lap": 6,
+          "position": 11,
+          "lap_duration": 74.125
+        },
+        {
+          "lap": 7,
+          "position": 12,
+          "lap_duration": 75.075
+        },
+        {
+          "lap": 8,
+          "position": 12,
+          "lap_duration": 74.546
+        },
+        {
+          "lap": 9,
+          "position": 12,
+          "lap_duration": 74.897
+        },
+        {
+          "lap": 10,
+          "position": 12,
+          "lap_duration": 75.155
+        },
+        {
+          "lap": 11,
+          "position": 12,
+          "lap_duration": 75.543
+        },
+        {
+          "lap": 12,
+          "position": 12,
+          "lap_duration": 74.927
+        },
+        {
+          "lap": 13,
+          "position": 12,
+          "lap_duration": 75.144
+        },
+        {
+          "lap": 14,
+          "position": 12,
+          "lap_duration": 75.494
+        },
+        {
+          "lap": 15,
+          "position": 12,
+          "lap_duration": 75.154
+        },
+        {
+          "lap": 16,
+          "position": 13,
+          "lap_duration": 75.691
+        },
+        {
+          "lap": 17,
+          "position": 13,
+          "lap_duration": 75.477
+        },
+        {
+          "lap": 18,
+          "position": 13,
+          "lap_duration": 79.724
+        },
+        {
+          "lap": 19,
+          "position": 19,
+          "lap_duration": 91.801
+        },
+        {
+          "lap": 20,
+          "position": 18,
+          "lap_duration": 74.42
+        },
+        {
+          "lap": 21,
+          "position": 17,
+          "lap_duration": 74.195
+        },
+        {
+          "lap": 22,
+          "position": 16,
+          "lap_duration": 73.867
+        },
+        {
+          "lap": 23,
+          "position": 16,
+          "lap_duration": 73.699
+        },
+        {
+          "lap": 24,
+          "position": 15,
+          "lap_duration": 89.351
+        },
+        {
+          "lap": 25,
+          "position": 15,
+          "lap_duration": 96.309
+        },
+        {
+          "lap": 26,
+          "position": 15,
+          "lap_duration": 75.839
+        },
+        {
+          "lap": 27,
+          "position": 15,
+          "lap_duration": 73.308
+        },
+        {
+          "lap": 28,
+          "position": 15,
+          "lap_duration": 73.207
+        },
+        {
+          "lap": 29,
+          "position": 15,
+          "lap_duration": 73.117
+        },
+        {
+          "lap": 30,
+          "position": 15,
+          "lap_duration": 73.428
+        },
+        {
+          "lap": 31,
+          "position": 15,
+          "lap_duration": 73.201
+        },
+        {
+          "lap": 32,
+          "position": 15,
+          "lap_duration": 73.406
+        },
+        {
+          "lap": 33,
+          "position": 16,
+          "lap_duration": 78.946
+        },
+        {
+          "lap": 34,
+          "position": 17,
+          "lap_duration": 94.072
+        },
+        {
+          "lap": 35,
+          "position": 17,
+          "lap_duration": 73.061
+        },
+        {
+          "lap": 36,
+          "position": 17,
+          "lap_duration": 73.17
+        },
+        {
+          "lap": 37,
+          "position": 17,
+          "lap_duration": 72.979
+        },
+        {
+          "lap": 38,
+          "position": 16,
+          "lap_duration": 73.275
+        },
+        {
+          "lap": 39,
+          "position": 16,
+          "lap_duration": 73.094
+        },
+        {
+          "lap": 40,
+          "position": 16,
+          "lap_duration": 73.149
+        },
+        {
+          "lap": 41,
+          "position": 16,
+          "lap_duration": 73.565
+        },
+        {
+          "lap": 42,
+          "position": 16,
+          "lap_duration": 74.782
+        },
+        {
+          "lap": 43,
+          "position": 16,
+          "lap_duration": 75.862
+        },
+        {
+          "lap": 44,
+          "position": 16,
+          "lap_duration": 73.412
+        },
+        {
+          "lap": 45,
+          "position": 16,
+          "lap_duration": 73.662
+        },
+        {
+          "lap": 46,
+          "position": 16,
+          "lap_duration": 73.402
+        },
+        {
+          "lap": 47,
+          "position": 15,
+          "lap_duration": 74.927
+        },
+        {
+          "lap": 48,
+          "position": 15,
+          "lap_duration": 73.239
+        },
+        {
+          "lap": 49,
+          "position": 15,
+          "lap_duration": 73.31
+        },
+        {
+          "lap": 50,
+          "position": 15,
+          "lap_duration": 73.463
+        },
+        {
+          "lap": 51,
+          "position": 15,
+          "lap_duration": 84.785
+        },
+        {
+          "lap": 52,
+          "position": 15,
+          "lap_duration": 73.187
+        },
+        {
+          "lap": 53,
+          "position": 15,
+          "lap_duration": 73.217
+        },
+        {
+          "lap": 54,
+          "position": 16,
+          "lap_duration": 73.866
+        },
+        {
+          "lap": 55,
+          "position": 16,
+          "lap_duration": 73.346
+        },
+        {
+          "lap": 56,
+          "position": 16,
+          "lap_duration": 73.606
+        },
+        {
+          "lap": 57,
+          "position": 16,
+          "lap_duration": 73.59
+        },
+        {
+          "lap": 58,
+          "position": 16,
+          "lap_duration": 73.824
+        },
+        {
+          "lap": 59,
+          "position": 16,
+          "lap_duration": 73.929
+        },
+        {
+          "lap": 60,
+          "position": 16,
+          "lap_duration": 73.744
+        },
+        {
+          "lap": 61,
+          "position": 16,
+          "lap_duration": 74.012
+        },
+        {
+          "lap": 62,
+          "position": 16,
+          "lap_duration": 73.932
+        },
+        {
+          "lap": 63,
+          "position": 16,
+          "lap_duration": 74.39
+        },
+        {
+          "lap": 64,
+          "position": 16,
+          "lap_duration": 77.875
+        },
+        {
+          "lap": 65,
+          "position": 16,
+          "lap_duration": 76.05
+        },
+        {
+          "lap": 66,
+          "position": 16,
+          "lap_duration": 74.5
+        },
+        {
+          "lap": 67,
+          "position": 16,
+          "lap_duration": 75.967
+        },
+        {
+          "lap": 68,
+          "position": 16,
+          "lap_duration": 77.006
+        },
+        {
+          "lap": 69,
+          "position": 16,
+          "lap_duration": 75.684
+        }
+      ]
+    },
+    "lindblad": {
+      "driver_number": 41,
+      "result_position": 10,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 18,
+          "duration": 21.4
+        },
+        {
+          "lap": 46,
+          "duration": 21.5
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 18,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 19,
+          "lap_end": 46,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 47,
+          "lap_end": 70,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 10,
+          "lap_duration": 80.362
+        },
+        {
+          "lap": 2,
+          "position": 10,
+          "lap_duration": 73.697
+        },
+        {
+          "lap": 3,
+          "position": 10,
+          "lap_duration": 73.483
+        },
+        {
+          "lap": 4,
+          "position": 10,
+          "lap_duration": 73.913
+        },
+        {
+          "lap": 5,
+          "position": 10,
+          "lap_duration": 73.52
+        },
+        {
+          "lap": 6,
+          "position": 10,
+          "lap_duration": 73.177
+        },
+        {
+          "lap": 7,
+          "position": 10,
+          "lap_duration": 73.614
+        },
+        {
+          "lap": 8,
+          "position": 10,
+          "lap_duration": 74.051
+        },
+        {
+          "lap": 9,
+          "position": 10,
+          "lap_duration": 73.564
+        },
+        {
+          "lap": 10,
+          "position": 10,
+          "lap_duration": 73.686
+        },
+        {
+          "lap": 11,
+          "position": 10,
+          "lap_duration": 73.999
+        },
+        {
+          "lap": 12,
+          "position": 10,
+          "lap_duration": 73.698
+        },
+        {
+          "lap": 13,
+          "position": 9,
+          "lap_duration": 73.839
+        },
+        {
+          "lap": 14,
+          "position": 8,
+          "lap_duration": 73.975
+        },
+        {
+          "lap": 15,
+          "position": 8,
+          "lap_duration": 74.394
+        },
+        {
+          "lap": 16,
+          "position": 9,
+          "lap_duration": 74.92
+        },
+        {
+          "lap": 17,
+          "position": 9,
+          "lap_duration": 74.016
+        },
+        {
+          "lap": 18,
+          "position": 10,
+          "lap_duration": 77.791
+        },
+        {
+          "lap": 19,
+          "position": 12,
+          "lap_duration": 89.66
+        },
+        {
+          "lap": 20,
+          "position": 11,
+          "lap_duration": 73.512
+        },
+        {
+          "lap": 21,
+          "position": 9,
+          "lap_duration": 72.455
+        },
+        {
+          "lap": 22,
+          "position": 9,
+          "lap_duration": 72.72
+        },
+        {
+          "lap": 23,
+          "position": 9,
+          "lap_duration": 72.602
+        },
+        {
+          "lap": 24,
+          "position": 9,
+          "lap_duration": 81.056
+        },
+        {
+          "lap": 25,
+          "position": 9,
+          "lap_duration": 97.419
+        },
+        {
+          "lap": 26,
+          "position": 9,
+          "lap_duration": 82.407
+        },
+        {
+          "lap": 27,
+          "position": 9,
+          "lap_duration": 72.707
+        },
+        {
+          "lap": 28,
+          "position": 9,
+          "lap_duration": 72.367
+        },
+        {
+          "lap": 29,
+          "position": 9,
+          "lap_duration": 72.227
+        },
+        {
+          "lap": 30,
+          "position": 9,
+          "lap_duration": 72.746
+        },
+        {
+          "lap": 31,
+          "position": 9,
+          "lap_duration": 72.593
+        },
+        {
+          "lap": 32,
+          "position": 9,
+          "lap_duration": 72.525
+        },
+        {
+          "lap": 33,
+          "position": 9,
+          "lap_duration": 72.78
+        },
+        {
+          "lap": 34,
+          "position": 9,
+          "lap_duration": 72.81
+        },
+        {
+          "lap": 35,
+          "position": 9,
+          "lap_duration": 72.963
+        },
+        {
+          "lap": 36,
+          "position": 9,
+          "lap_duration": 72.861
+        },
+        {
+          "lap": 37,
+          "position": 9,
+          "lap_duration": 73.281
+        },
+        {
+          "lap": 38,
+          "position": 9,
+          "lap_duration": 74.404
+        },
+        {
+          "lap": 39,
+          "position": 9,
+          "lap_duration": 73.357
+        },
+        {
+          "lap": 40,
+          "position": 9,
+          "lap_duration": 73.197
+        },
+        {
+          "lap": 41,
+          "position": 9,
+          "lap_duration": 73.377
+        },
+        {
+          "lap": 42,
+          "position": 9,
+          "lap_duration": 73.601
+        },
+        {
+          "lap": 43,
+          "position": 9,
+          "lap_duration": 73.901
+        },
+        {
+          "lap": 44,
+          "position": 9,
+          "lap_duration": 74.0
+        },
+        {
+          "lap": 45,
+          "position": 9,
+          "lap_duration": 73.962
+        },
+        {
+          "lap": 46,
+          "position": 9,
+          "lap_duration": 77.63
+        },
+        {
+          "lap": 47,
+          "position": 10,
+          "lap_duration": 90.286
+        },
+        {
+          "lap": 48,
+          "position": 10,
+          "lap_duration": 72.142
+        },
+        {
+          "lap": 49,
+          "position": 10,
+          "lap_duration": 71.994
+        },
+        {
+          "lap": 50,
+          "position": 10,
+          "lap_duration": 72.007
+        },
+        {
+          "lap": 51,
+          "position": 10,
+          "lap_duration": 74.698
+        },
+        {
+          "lap": 52,
+          "position": 10,
+          "lap_duration": 82.431
+        },
+        {
+          "lap": 53,
+          "position": 10,
+          "lap_duration": 71.881
+        },
+        {
+          "lap": 54,
+          "position": 10,
+          "lap_duration": 71.661
+        },
+        {
+          "lap": 55,
+          "position": 10,
+          "lap_duration": 73.614
+        },
+        {
+          "lap": 56,
+          "position": 10,
+          "lap_duration": 71.587
+        },
+        {
+          "lap": 57,
+          "position": 10,
+          "lap_duration": 71.919
+        },
+        {
+          "lap": 58,
+          "position": 10,
+          "lap_duration": 71.76
+        },
+        {
+          "lap": 59,
+          "position": 10,
+          "lap_duration": 71.918
+        },
+        {
+          "lap": 60,
+          "position": 10,
+          "lap_duration": 73.502
+        },
+        {
+          "lap": 61,
+          "position": 10,
+          "lap_duration": 72.065
+        },
+        {
+          "lap": 62,
+          "position": 10,
+          "lap_duration": 74.045
+        },
+        {
+          "lap": 63,
+          "position": 10,
+          "lap_duration": 72.347
+        },
+        {
+          "lap": 64,
+          "position": 10,
+          "lap_duration": 72.215
+        },
+        {
+          "lap": 65,
+          "position": 10,
+          "lap_duration": 72.609
+        },
+        {
+          "lap": 66,
+          "position": 10,
+          "lap_duration": 72.861
+        },
+        {
+          "lap": 67,
+          "position": 10,
+          "lap_duration": 72.869
+        },
+        {
+          "lap": 68,
+          "position": 10,
+          "lap_duration": 72.804
+        },
+        {
+          "lap": 69,
+          "position": 10,
+          "lap_duration": 72.781
+        },
+        {
+          "lap": 70,
+          "position": 10,
+          "lap_duration": 72.662
+        }
+      ]
+    },
+    "colapinto": {
+      "driver_number": 43,
+      "result_position": 15,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 20,
+          "duration": 21.5
+        },
+        {
+          "lap": 46,
+          "duration": 21.4
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 20,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 21,
+          "lap_end": 46,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 47,
+          "lap_end": 70,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 20,
+          "lap_duration": 83.998
+        },
+        {
+          "lap": 2,
+          "position": 19,
+          "lap_duration": 74.754
+        },
+        {
+          "lap": 3,
+          "position": 19,
+          "lap_duration": 74.423
+        },
+        {
+          "lap": 4,
+          "position": 18,
+          "lap_duration": 73.852
+        },
+        {
+          "lap": 5,
+          "position": 18,
+          "lap_duration": 75.1
+        },
+        {
+          "lap": 6,
+          "position": 18,
+          "lap_duration": 74.183
+        },
+        {
+          "lap": 7,
+          "position": 18,
+          "lap_duration": 74.111
+        },
+        {
+          "lap": 8,
+          "position": 18,
+          "lap_duration": 74.651
+        },
+        {
+          "lap": 9,
+          "position": 18,
+          "lap_duration": 75.262
+        },
+        {
+          "lap": 10,
+          "position": 18,
+          "lap_duration": 75.314
+        },
+        {
+          "lap": 11,
+          "position": 18,
+          "lap_duration": 75.729
+        },
+        {
+          "lap": 12,
+          "position": 18,
+          "lap_duration": 75.488
+        },
+        {
+          "lap": 13,
+          "position": 18,
+          "lap_duration": 75.387
+        },
+        {
+          "lap": 14,
+          "position": 17,
+          "lap_duration": 76.335
+        },
+        {
+          "lap": 15,
+          "position": 16,
+          "lap_duration": 75.24
+        },
+        {
+          "lap": 16,
+          "position": 16,
+          "lap_duration": 74.61
+        },
+        {
+          "lap": 17,
+          "position": 16,
+          "lap_duration": 74.417
+        },
+        {
+          "lap": 18,
+          "position": 14,
+          "lap_duration": 74.47
+        },
+        {
+          "lap": 19,
+          "position": 13,
+          "lap_duration": 74.775
+        },
+        {
+          "lap": 20,
+          "position": 15,
+          "lap_duration": 79.177
+        },
+        {
+          "lap": 21,
+          "position": 20,
+          "lap_duration": 92.123
+        },
+        {
+          "lap": 22,
+          "position": 19,
+          "lap_duration": 73.301
+        },
+        {
+          "lap": 23,
+          "position": 18,
+          "lap_duration": 73.444
+        },
+        {
+          "lap": 24,
+          "position": 17,
+          "lap_duration": 92.991
+        },
+        {
+          "lap": 25,
+          "position": 17,
+          "lap_duration": 93.53
+        },
+        {
+          "lap": 26,
+          "position": 17,
+          "lap_duration": 74.927
+        },
+        {
+          "lap": 27,
+          "position": 17,
+          "lap_duration": 72.963
+        },
+        {
+          "lap": 28,
+          "position": 17,
+          "lap_duration": 72.673
+        },
+        {
+          "lap": 29,
+          "position": 17,
+          "lap_duration": 73.104
+        },
+        {
+          "lap": 30,
+          "position": 16,
+          "lap_duration": 72.578
+        },
+        {
+          "lap": 31,
+          "position": 16,
+          "lap_duration": 74.472
+        },
+        {
+          "lap": 32,
+          "position": 16,
+          "lap_duration": 73.166
+        },
+        {
+          "lap": 33,
+          "position": 15,
+          "lap_duration": 74.5
+        },
+        {
+          "lap": 34,
+          "position": 15,
+          "lap_duration": 73.108
+        },
+        {
+          "lap": 35,
+          "position": 15,
+          "lap_duration": 73.265
+        },
+        {
+          "lap": 36,
+          "position": 15,
+          "lap_duration": 73.574
+        },
+        {
+          "lap": 37,
+          "position": 15,
+          "lap_duration": 75.029
+        },
+        {
+          "lap": 38,
+          "position": 15,
+          "lap_duration": 73.642
+        },
+        {
+          "lap": 39,
+          "position": 15,
+          "lap_duration": 74.048
+        },
+        {
+          "lap": 40,
+          "position": 15,
+          "lap_duration": 73.611
+        },
+        {
+          "lap": 41,
+          "position": 15,
+          "lap_duration": 76.339
+        },
+        {
+          "lap": 42,
+          "position": 15,
+          "lap_duration": 73.599
+        },
+        {
+          "lap": 43,
+          "position": 15,
+          "lap_duration": 75.108
+        },
+        {
+          "lap": 44,
+          "position": 15,
+          "lap_duration": 73.696
+        },
+        {
+          "lap": 45,
+          "position": 15,
+          "lap_duration": 74.111
+        },
+        {
+          "lap": 46,
+          "position": 14,
+          "lap_duration": 77.878
+        },
+        {
+          "lap": 47,
+          "position": 17,
+          "lap_duration": 90.778
+        },
+        {
+          "lap": 48,
+          "position": 17,
+          "lap_duration": 72.326
+        },
+        {
+          "lap": 49,
+          "position": 16,
+          "lap_duration": 71.795
+        },
+        {
+          "lap": 50,
+          "position": 16,
+          "lap_duration": 72.494
+        },
+        {
+          "lap": 51,
+          "position": 16,
+          "lap_duration": 84.212
+        },
+        {
+          "lap": 52,
+          "position": 16,
+          "lap_duration": 72.496
+        },
+        {
+          "lap": 53,
+          "position": 16,
+          "lap_duration": 73.164
+        },
+        {
+          "lap": 54,
+          "position": 15,
+          "lap_duration": 72.385
+        },
+        {
+          "lap": 55,
+          "position": 15,
+          "lap_duration": 72.361
+        },
+        {
+          "lap": 56,
+          "position": 15,
+          "lap_duration": 71.981
+        },
+        {
+          "lap": 57,
+          "position": 15,
+          "lap_duration": 72.287
+        },
+        {
+          "lap": 58,
+          "position": 15,
+          "lap_duration": 72.149
+        },
+        {
+          "lap": 59,
+          "position": 15,
+          "lap_duration": 72.273
+        },
+        {
+          "lap": 60,
+          "position": 15,
+          "lap_duration": 73.572
+        },
+        {
+          "lap": 61,
+          "position": 15,
+          "lap_duration": 72.822
+        },
+        {
+          "lap": 62,
+          "position": 15,
+          "lap_duration": 72.734
+        },
+        {
+          "lap": 63,
+          "position": 15,
+          "lap_duration": 72.726
+        },
+        {
+          "lap": 64,
+          "position": 15,
+          "lap_duration": 72.544
+        },
+        {
+          "lap": 65,
+          "position": 15,
+          "lap_duration": 72.536
+        },
+        {
+          "lap": 66,
+          "position": 15,
+          "lap_duration": 72.718
+        },
+        {
+          "lap": 67,
+          "position": 15,
+          "lap_duration": 72.729
+        },
+        {
+          "lap": 68,
+          "position": 15,
+          "lap_duration": 72.798
+        },
+        {
+          "lap": 69,
+          "position": 15,
+          "lap_duration": 73.361
+        },
+        {
+          "lap": 70,
+          "position": 15,
+          "lap_duration": 72.677
+        }
+      ]
+    },
+    "hamilton": {
+      "driver_number": 44,
+      "result_position": 5,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 12,
+          "duration": 21.3
+        },
+        {
+          "lap": 25,
+          "duration": 21.2
+        },
+        {
+          "lap": 42,
+          "duration": 21.2
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 12,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 13,
+          "lap_end": 25,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "SOFT",
+          "lap_start": 26,
+          "lap_end": 42,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 43,
+          "lap_end": 71,
+          "tyre_age_start": 0,
+          "stint_number": 4
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 2,
+          "lap_duration": 76.178
+        },
+        {
+          "lap": 2,
+          "position": 2,
+          "lap_duration": 72.028
+        },
+        {
+          "lap": 3,
+          "position": 2,
+          "lap_duration": 71.974
+        },
+        {
+          "lap": 4,
+          "position": 2,
+          "lap_duration": 71.937
+        },
+        {
+          "lap": 5,
+          "position": 2,
+          "lap_duration": 71.881
+        },
+        {
+          "lap": 6,
+          "position": 2,
+          "lap_duration": 72.446
+        },
+        {
+          "lap": 7,
+          "position": 2,
+          "lap_duration": 72.43
+        },
+        {
+          "lap": 8,
+          "position": 2,
+          "lap_duration": 72.541
+        },
+        {
+          "lap": 9,
+          "position": 2,
+          "lap_duration": 72.645
+        },
+        {
+          "lap": 10,
+          "position": 2,
+          "lap_duration": 72.836
+        },
+        {
+          "lap": 11,
+          "position": 2,
+          "lap_duration": 74.52
+        },
+        {
+          "lap": 12,
+          "position": 4,
+          "lap_duration": 77.539
+        },
+        {
+          "lap": 13,
+          "position": 11,
+          "lap_duration": 89.201
+        },
+        {
+          "lap": 14,
+          "position": 9,
+          "lap_duration": 72.317
+        },
+        {
+          "lap": 15,
+          "position": 9,
+          "lap_duration": 72.784
+        },
+        {
+          "lap": 16,
+          "position": 8,
+          "lap_duration": 72.318
+        },
+        {
+          "lap": 17,
+          "position": 8,
+          "lap_duration": 72.491
+        },
+        {
+          "lap": 18,
+          "position": 7,
+          "lap_duration": 72.303
+        },
+        {
+          "lap": 19,
+          "position": 5,
+          "lap_duration": 72.252
+        },
+        {
+          "lap": 20,
+          "position": 4,
+          "lap_duration": 71.887
+        },
+        {
+          "lap": 21,
+          "position": 3,
+          "lap_duration": 71.927
+        },
+        {
+          "lap": 22,
+          "position": 4,
+          "lap_duration": 74.016
+        },
+        {
+          "lap": 23,
+          "position": 4,
+          "lap_duration": 72.323
+        },
+        {
+          "lap": 24,
+          "position": 4,
+          "lap_duration": 72.517
+        },
+        {
+          "lap": 25,
+          "position": 3,
+          "lap_duration": 98.849
+        },
+        {
+          "lap": 26,
+          "position": 7,
+          "lap_duration": 101.949
+        },
+        {
+          "lap": 27,
+          "position": 7,
+          "lap_duration": 71.284
+        },
+        {
+          "lap": 28,
+          "position": 7,
+          "lap_duration": 71.079
+        },
+        {
+          "lap": 29,
+          "position": 7,
+          "lap_duration": 71.397
+        },
+        {
+          "lap": 30,
+          "position": 6,
+          "lap_duration": 71.85
+        },
+        {
+          "lap": 31,
+          "position": 6,
+          "lap_duration": 71.704
+        },
+        {
+          "lap": 32,
+          "position": 6,
+          "lap_duration": 71.59
+        },
+        {
+          "lap": 33,
+          "position": 6,
+          "lap_duration": 71.749
+        },
+        {
+          "lap": 34,
+          "position": 6,
+          "lap_duration": 71.496
+        },
+        {
+          "lap": 35,
+          "position": 6,
+          "lap_duration": 71.727
+        },
+        {
+          "lap": 36,
+          "position": 6,
+          "lap_duration": 72.13
+        },
+        {
+          "lap": 37,
+          "position": 5,
+          "lap_duration": 72.552
+        },
+        {
+          "lap": 38,
+          "position": 5,
+          "lap_duration": 72.247
+        },
+        {
+          "lap": 39,
+          "position": 5,
+          "lap_duration": 72.506
+        },
+        {
+          "lap": 40,
+          "position": 5,
+          "lap_duration": 72.159
+        },
+        {
+          "lap": 41,
+          "position": 5,
+          "lap_duration": 72.183
+        },
+        {
+          "lap": 42,
+          "position": 5,
+          "lap_duration": 76.494
+        },
+        {
+          "lap": 43,
+          "position": 7,
+          "lap_duration": 88.003
+        },
+        {
+          "lap": 44,
+          "position": 7,
+          "lap_duration": 71.219
+        },
+        {
+          "lap": 45,
+          "position": 7,
+          "lap_duration": 70.946
+        },
+        {
+          "lap": 46,
+          "position": 7,
+          "lap_duration": 71.442
+        },
+        {
+          "lap": 47,
+          "position": 7,
+          "lap_duration": 71.292
+        },
+        {
+          "lap": 48,
+          "position": 6,
+          "lap_duration": 71.263
+        },
+        {
+          "lap": 49,
+          "position": 6,
+          "lap_duration": 70.999
+        },
+        {
+          "lap": 50,
+          "position": 6,
+          "lap_duration": 70.983
+        },
+        {
+          "lap": 51,
+          "position": 6,
+          "lap_duration": 71.513
+        },
+        {
+          "lap": 52,
+          "position": 5,
+          "lap_duration": 80.477
+        },
+        {
+          "lap": 53,
+          "position": 5,
+          "lap_duration": 74.374
+        },
+        {
+          "lap": 54,
+          "position": 5,
+          "lap_duration": 71.692
+        },
+        {
+          "lap": 55,
+          "position": 5,
+          "lap_duration": 71.579
+        },
+        {
+          "lap": 56,
+          "position": 5,
+          "lap_duration": 71.317
+        },
+        {
+          "lap": 57,
+          "position": 5,
+          "lap_duration": 71.231
+        },
+        {
+          "lap": 58,
+          "position": 5,
+          "lap_duration": 71.306
+        },
+        {
+          "lap": 59,
+          "position": 5,
+          "lap_duration": 71.384
+        },
+        {
+          "lap": 60,
+          "position": 5,
+          "lap_duration": 71.398
+        },
+        {
+          "lap": 61,
+          "position": 5,
+          "lap_duration": 71.469
+        },
+        {
+          "lap": 62,
+          "position": 5,
+          "lap_duration": 71.8
+        },
+        {
+          "lap": 63,
+          "position": 5,
+          "lap_duration": 71.505
+        },
+        {
+          "lap": 64,
+          "position": 5,
+          "lap_duration": 71.493
+        },
+        {
+          "lap": 65,
+          "position": 5,
+          "lap_duration": 71.658
+        },
+        {
+          "lap": 66,
+          "position": 5,
+          "lap_duration": 72.059
+        },
+        {
+          "lap": 67,
+          "position": 5,
+          "lap_duration": 72.08
+        },
+        {
+          "lap": 68,
+          "position": 5,
+          "lap_duration": 72.246
+        },
+        {
+          "lap": 69,
+          "position": 5,
+          "lap_duration": 72.173
+        },
+        {
+          "lap": 70,
+          "position": 5,
+          "lap_duration": 72.702
+        },
+        {
+          "lap": 71,
+          "position": 5,
+          "lap_duration": 72.909
+        }
+      ]
+    },
+    "sainz": {
+      "driver_number": 55,
+      "result_position": 20,
+      "dnf": true,
+      "pits": [
+        {
+          "lap": 14,
+          "duration": 21.3
+        }
+      ],
+      "stints": [
+        {
+          "compound": "SOFT",
+          "lap_start": 1,
+          "lap_end": 14,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 15,
+          "lap_end": 23,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 16,
+          "lap_duration": 82.519
+        },
+        {
+          "lap": 2,
+          "position": 16,
+          "lap_duration": 74.69
+        },
+        {
+          "lap": 3,
+          "position": 16,
+          "lap_duration": 74.166
+        },
+        {
+          "lap": 4,
+          "position": 16,
+          "lap_duration": 74.249
+        },
+        {
+          "lap": 5,
+          "position": 16,
+          "lap_duration": 74.144
+        },
+        {
+          "lap": 6,
+          "position": 16,
+          "lap_duration": 74.257
+        },
+        {
+          "lap": 7,
+          "position": 16,
+          "lap_duration": 74.62
+        },
+        {
+          "lap": 8,
+          "position": 16,
+          "lap_duration": 74.621
+        },
+        {
+          "lap": 9,
+          "position": 16,
+          "lap_duration": 74.899
+        },
+        {
+          "lap": 10,
+          "position": 16,
+          "lap_duration": 75.616
+        },
+        {
+          "lap": 11,
+          "position": 16,
+          "lap_duration": 75.455
+        },
+        {
+          "lap": 12,
+          "position": 16,
+          "lap_duration": 75.338
+        },
+        {
+          "lap": 13,
+          "position": 15,
+          "lap_duration": 75.069
+        },
+        {
+          "lap": 14,
+          "position": 16,
+          "lap_duration": 78.818
+        },
+        {
+          "lap": 15,
+          "position": 20,
+          "lap_duration": 91.666
+        },
+        {
+          "lap": 16,
+          "position": 20,
+          "lap_duration": 74.303
+        },
+        {
+          "lap": 17,
+          "position": 20,
+          "lap_duration": 74.143
+        },
+        {
+          "lap": 18,
+          "position": 20,
+          "lap_duration": 73.865
+        },
+        {
+          "lap": 19,
+          "position": 17,
+          "lap_duration": 73.878
+        },
+        {
+          "lap": 20,
+          "position": 16,
+          "lap_duration": 73.759
+        },
+        {
+          "lap": 21,
+          "position": 15,
+          "lap_duration": 73.799
+        },
+        {
+          "lap": 22,
+          "position": 14,
+          "lap_duration": 73.694
+        },
+        {
+          "lap": 23,
+          "position": 15,
+          "lap_duration": 76.44
+        },
+        {
+          "lap": 24,
+          "position": 20,
+          "lap_duration": null
+        }
+      ]
+    },
+    "russell": {
+      "driver_number": 63,
+      "result_position": 1,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 19,
+          "duration": 21.2
+        },
+        {
+          "lap": 43,
+          "duration": 21.2
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 19,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 20,
+          "lap_end": 43,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 44,
+          "lap_end": 71,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 1,
+          "lap_duration": 75.451
+        },
+        {
+          "lap": 2,
+          "position": 1,
+          "lap_duration": 72.037
+        },
+        {
+          "lap": 3,
+          "position": 1,
+          "lap_duration": 71.818
+        },
+        {
+          "lap": 4,
+          "position": 1,
+          "lap_duration": 71.779
+        },
+        {
+          "lap": 5,
+          "position": 1,
+          "lap_duration": 71.686
+        },
+        {
+          "lap": 6,
+          "position": 1,
+          "lap_duration": 71.947
+        },
+        {
+          "lap": 7,
+          "position": 1,
+          "lap_duration": 71.975
+        },
+        {
+          "lap": 8,
+          "position": 1,
+          "lap_duration": 72.069
+        },
+        {
+          "lap": 9,
+          "position": 1,
+          "lap_duration": 72.403
+        },
+        {
+          "lap": 10,
+          "position": 1,
+          "lap_duration": 72.516
+        },
+        {
+          "lap": 11,
+          "position": 1,
+          "lap_duration": 72.652
+        },
+        {
+          "lap": 12,
+          "position": 1,
+          "lap_duration": 72.912
+        },
+        {
+          "lap": 13,
+          "position": 1,
+          "lap_duration": 73.164
+        },
+        {
+          "lap": 14,
+          "position": 1,
+          "lap_duration": 72.965
+        },
+        {
+          "lap": 15,
+          "position": 1,
+          "lap_duration": 72.786
+        },
+        {
+          "lap": 16,
+          "position": 1,
+          "lap_duration": 72.78
+        },
+        {
+          "lap": 17,
+          "position": 1,
+          "lap_duration": 72.911
+        },
+        {
+          "lap": 18,
+          "position": 1,
+          "lap_duration": 72.904
+        },
+        {
+          "lap": 19,
+          "position": 1,
+          "lap_duration": 77.085
+        },
+        {
+          "lap": 20,
+          "position": 3,
+          "lap_duration": 89.073
+        },
+        {
+          "lap": 21,
+          "position": 2,
+          "lap_duration": 71.93
+        },
+        {
+          "lap": 22,
+          "position": 2,
+          "lap_duration": 71.458
+        },
+        {
+          "lap": 23,
+          "position": 2,
+          "lap_duration": 71.226
+        },
+        {
+          "lap": 24,
+          "position": 2,
+          "lap_duration": 71.88
+        },
+        {
+          "lap": 25,
+          "position": 1,
+          "lap_duration": 96.896
+        },
+        {
+          "lap": 26,
+          "position": 1,
+          "lap_duration": 91.266
+        },
+        {
+          "lap": 27,
+          "position": 1,
+          "lap_duration": 71.926
+        },
+        {
+          "lap": 28,
+          "position": 1,
+          "lap_duration": 71.263
+        },
+        {
+          "lap": 29,
+          "position": 1,
+          "lap_duration": 71.253
+        },
+        {
+          "lap": 30,
+          "position": 1,
+          "lap_duration": 71.274
+        },
+        {
+          "lap": 31,
+          "position": 1,
+          "lap_duration": 71.554
+        },
+        {
+          "lap": 32,
+          "position": 1,
+          "lap_duration": 71.706
+        },
+        {
+          "lap": 33,
+          "position": 1,
+          "lap_duration": 71.546
+        },
+        {
+          "lap": 34,
+          "position": 1,
+          "lap_duration": 72.066
+        },
+        {
+          "lap": 35,
+          "position": 1,
+          "lap_duration": 72.074
+        },
+        {
+          "lap": 36,
+          "position": 1,
+          "lap_duration": 72.715
+        },
+        {
+          "lap": 37,
+          "position": 1,
+          "lap_duration": 72.143
+        },
+        {
+          "lap": 38,
+          "position": 1,
+          "lap_duration": 72.365
+        },
+        {
+          "lap": 39,
+          "position": 1,
+          "lap_duration": 72.616
+        },
+        {
+          "lap": 40,
+          "position": 1,
+          "lap_duration": 72.234
+        },
+        {
+          "lap": 41,
+          "position": 1,
+          "lap_duration": 71.935
+        },
+        {
+          "lap": 42,
+          "position": 1,
+          "lap_duration": 72.225
+        },
+        {
+          "lap": 43,
+          "position": 2,
+          "lap_duration": 76.208
+        },
+        {
+          "lap": 44,
+          "position": 3,
+          "lap_duration": 87.853
+        },
+        {
+          "lap": 45,
+          "position": 3,
+          "lap_duration": 70.86
+        },
+        {
+          "lap": 46,
+          "position": 3,
+          "lap_duration": 71.045
+        },
+        {
+          "lap": 47,
+          "position": 3,
+          "lap_duration": 70.904
+        },
+        {
+          "lap": 48,
+          "position": 3,
+          "lap_duration": 71.215
+        },
+        {
+          "lap": 49,
+          "position": 3,
+          "lap_duration": 70.683
+        },
+        {
+          "lap": 50,
+          "position": 2,
+          "lap_duration": 70.952
+        },
+        {
+          "lap": 51,
+          "position": 2,
+          "lap_duration": 71.171
+        },
+        {
+          "lap": 52,
+          "position": 1,
+          "lap_duration": 75.641
+        },
+        {
+          "lap": 53,
+          "position": 1,
+          "lap_duration": 80.031
+        },
+        {
+          "lap": 54,
+          "position": 1,
+          "lap_duration": 70.937
+        },
+        {
+          "lap": 55,
+          "position": 1,
+          "lap_duration": 70.896
+        },
+        {
+          "lap": 56,
+          "position": 1,
+          "lap_duration": 70.78
+        },
+        {
+          "lap": 57,
+          "position": 1,
+          "lap_duration": 71.503
+        },
+        {
+          "lap": 58,
+          "position": 1,
+          "lap_duration": 71.01
+        },
+        {
+          "lap": 59,
+          "position": 1,
+          "lap_duration": 71.143
+        },
+        {
+          "lap": 60,
+          "position": 1,
+          "lap_duration": 71.361
+        },
+        {
+          "lap": 61,
+          "position": 1,
+          "lap_duration": 71.113
+        },
+        {
+          "lap": 62,
+          "position": 1,
+          "lap_duration": 71.162
+        },
+        {
+          "lap": 63,
+          "position": 1,
+          "lap_duration": 71.068
+        },
+        {
+          "lap": 64,
+          "position": 1,
+          "lap_duration": 71.291
+        },
+        {
+          "lap": 65,
+          "position": 1,
+          "lap_duration": 71.581
+        },
+        {
+          "lap": 66,
+          "position": 1,
+          "lap_duration": 71.615
+        },
+        {
+          "lap": 67,
+          "position": 1,
+          "lap_duration": 71.557
+        },
+        {
+          "lap": 68,
+          "position": 1,
+          "lap_duration": 71.489
+        },
+        {
+          "lap": 69,
+          "position": 1,
+          "lap_duration": 71.425
+        },
+        {
+          "lap": 70,
+          "position": 1,
+          "lap_duration": 71.638
+        },
+        {
+          "lap": 71,
+          "position": 1,
+          "lap_duration": 71.832
+        }
+      ]
+    },
+    "bottas": {
+      "driver_number": 77,
+      "result_position": 22,
+      "dnf": true,
+      "pits": [],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 2,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 21,
+          "lap_duration": 84.462
+        },
+        {
+          "lap": 2,
+          "position": 22,
+          "lap_duration": 87.748
+        },
+        {
+          "lap": 3,
+          "position": 22,
+          "lap_duration": null
+        }
+      ]
+    },
+    "piastri": {
+      "driver_number": 81,
+      "result_position": 4,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 19,
+          "duration": 22.0
+        },
+        {
+          "lap": 42,
+          "duration": 21.2
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 19,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 20,
+          "lap_end": 42,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 43,
+          "lap_end": 71,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 6,
+          "lap_duration": 78.416
+        },
+        {
+          "lap": 2,
+          "position": 6,
+          "lap_duration": 73.5
+        },
+        {
+          "lap": 3,
+          "position": 6,
+          "lap_duration": 72.701
+        },
+        {
+          "lap": 4,
+          "position": 6,
+          "lap_duration": 72.36
+        },
+        {
+          "lap": 5,
+          "position": 6,
+          "lap_duration": 72.234
+        },
+        {
+          "lap": 6,
+          "position": 6,
+          "lap_duration": 72.39
+        },
+        {
+          "lap": 7,
+          "position": 6,
+          "lap_duration": 72.773
+        },
+        {
+          "lap": 8,
+          "position": 6,
+          "lap_duration": 73.221
+        },
+        {
+          "lap": 9,
+          "position": 6,
+          "lap_duration": 73.118
+        },
+        {
+          "lap": 10,
+          "position": 6,
+          "lap_duration": 73.22
+        },
+        {
+          "lap": 11,
+          "position": 6,
+          "lap_duration": 73.384
+        },
+        {
+          "lap": 12,
+          "position": 6,
+          "lap_duration": 73.426
+        },
+        {
+          "lap": 13,
+          "position": 4,
+          "lap_duration": 73.675
+        },
+        {
+          "lap": 14,
+          "position": 4,
+          "lap_duration": 73.418
+        },
+        {
+          "lap": 15,
+          "position": 4,
+          "lap_duration": 73.235
+        },
+        {
+          "lap": 16,
+          "position": 4,
+          "lap_duration": 73.179
+        },
+        {
+          "lap": 17,
+          "position": 4,
+          "lap_duration": 73.101
+        },
+        {
+          "lap": 18,
+          "position": 4,
+          "lap_duration": 73.451
+        },
+        {
+          "lap": 19,
+          "position": 4,
+          "lap_duration": 78.254
+        },
+        {
+          "lap": 20,
+          "position": 7,
+          "lap_duration": 89.535
+        },
+        {
+          "lap": 21,
+          "position": 7,
+          "lap_duration": 71.464
+        },
+        {
+          "lap": 22,
+          "position": 6,
+          "lap_duration": 71.578
+        },
+        {
+          "lap": 23,
+          "position": 6,
+          "lap_duration": 71.427
+        },
+        {
+          "lap": 24,
+          "position": 6,
+          "lap_duration": 72.21
+        },
+        {
+          "lap": 25,
+          "position": 6,
+          "lap_duration": 98.314
+        },
+        {
+          "lap": 26,
+          "position": 5,
+          "lap_duration": 90.128
+        },
+        {
+          "lap": 27,
+          "position": 5,
+          "lap_duration": 71.658
+        },
+        {
+          "lap": 28,
+          "position": 5,
+          "lap_duration": 71.227
+        },
+        {
+          "lap": 29,
+          "position": 5,
+          "lap_duration": 71.918
+        },
+        {
+          "lap": 30,
+          "position": 5,
+          "lap_duration": 71.149
+        },
+        {
+          "lap": 31,
+          "position": 5,
+          "lap_duration": 71.768
+        },
+        {
+          "lap": 32,
+          "position": 5,
+          "lap_duration": 71.854
+        },
+        {
+          "lap": 33,
+          "position": 5,
+          "lap_duration": 71.78
+        },
+        {
+          "lap": 34,
+          "position": 5,
+          "lap_duration": 72.048
+        },
+        {
+          "lap": 35,
+          "position": 5,
+          "lap_duration": 71.941
+        },
+        {
+          "lap": 36,
+          "position": 5,
+          "lap_duration": 72.318
+        },
+        {
+          "lap": 37,
+          "position": 4,
+          "lap_duration": 72.544
+        },
+        {
+          "lap": 38,
+          "position": 4,
+          "lap_duration": 72.385
+        },
+        {
+          "lap": 39,
+          "position": 4,
+          "lap_duration": 72.024
+        },
+        {
+          "lap": 40,
+          "position": 4,
+          "lap_duration": 72.017
+        },
+        {
+          "lap": 41,
+          "position": 4,
+          "lap_duration": 72.116
+        },
+        {
+          "lap": 42,
+          "position": 4,
+          "lap_duration": 76.481
+        },
+        {
+          "lap": 43,
+          "position": 6,
+          "lap_duration": 88.093
+        },
+        {
+          "lap": 44,
+          "position": 6,
+          "lap_duration": 70.753
+        },
+        {
+          "lap": 45,
+          "position": 6,
+          "lap_duration": 70.595
+        },
+        {
+          "lap": 46,
+          "position": 6,
+          "lap_duration": 70.844
+        },
+        {
+          "lap": 47,
+          "position": 6,
+          "lap_duration": 71.102
+        },
+        {
+          "lap": 48,
+          "position": 4,
+          "lap_duration": 71.389
+        },
+        {
+          "lap": 49,
+          "position": 4,
+          "lap_duration": 71.275
+        },
+        {
+          "lap": 50,
+          "position": 4,
+          "lap_duration": 71.247
+        },
+        {
+          "lap": 51,
+          "position": 4,
+          "lap_duration": 71.101
+        },
+        {
+          "lap": 52,
+          "position": 4,
+          "lap_duration": 79.815
+        },
+        {
+          "lap": 53,
+          "position": 4,
+          "lap_duration": 75.298
+        },
+        {
+          "lap": 54,
+          "position": 4,
+          "lap_duration": 70.999
+        },
+        {
+          "lap": 55,
+          "position": 4,
+          "lap_duration": 71.056
+        },
+        {
+          "lap": 56,
+          "position": 4,
+          "lap_duration": 71.067
+        },
+        {
+          "lap": 57,
+          "position": 4,
+          "lap_duration": 71.335
+        },
+        {
+          "lap": 58,
+          "position": 4,
+          "lap_duration": 71.219
+        },
+        {
+          "lap": 59,
+          "position": 4,
+          "lap_duration": 71.332
+        },
+        {
+          "lap": 60,
+          "position": 4,
+          "lap_duration": 71.132
+        },
+        {
+          "lap": 61,
+          "position": 4,
+          "lap_duration": 71.363
+        },
+        {
+          "lap": 62,
+          "position": 4,
+          "lap_duration": 71.525
+        },
+        {
+          "lap": 63,
+          "position": 4,
+          "lap_duration": 71.883
+        },
+        {
+          "lap": 64,
+          "position": 4,
+          "lap_duration": 71.318
+        },
+        {
+          "lap": 65,
+          "position": 4,
+          "lap_duration": 71.479
+        },
+        {
+          "lap": 66,
+          "position": 4,
+          "lap_duration": 72.133
+        },
+        {
+          "lap": 67,
+          "position": 4,
+          "lap_duration": 71.937
+        },
+        {
+          "lap": 68,
+          "position": 4,
+          "lap_duration": 71.774
+        },
+        {
+          "lap": 69,
+          "position": 4,
+          "lap_duration": 72.509
+        },
+        {
+          "lap": 70,
+          "position": 4,
+          "lap_duration": 73.065
+        },
+        {
+          "lap": 71,
+          "position": 4,
+          "lap_duration": 72.503
+        }
+      ]
+    },
+    "bearman": {
+      "driver_number": 87,
+      "result_position": 14,
+      "dnf": false,
+      "pits": [
+        {
+          "lap": 24,
+          "duration": 21.5
+        },
+        {
+          "lap": 45,
+          "duration": 22.0
+        }
+      ],
+      "stints": [
+        {
+          "compound": "MEDIUM",
+          "lap_start": 1,
+          "lap_end": 24,
+          "tyre_age_start": 0,
+          "stint_number": 1
+        },
+        {
+          "compound": "HARD",
+          "lap_start": 25,
+          "lap_end": 45,
+          "tyre_age_start": 0,
+          "stint_number": 2
+        },
+        {
+          "compound": "MEDIUM",
+          "lap_start": 46,
+          "lap_end": 70,
+          "tyre_age_start": 0,
+          "stint_number": 3
+        }
+      ],
+      "laps": [
+        {
+          "lap": 1,
+          "position": 15,
+          "lap_duration": 82.034
+        },
+        {
+          "lap": 2,
+          "position": 15,
+          "lap_duration": 74.398
+        },
+        {
+          "lap": 3,
+          "position": 15,
+          "lap_duration": 74.107
+        },
+        {
+          "lap": 4,
+          "position": 15,
+          "lap_duration": 74.103
+        },
+        {
+          "lap": 5,
+          "position": 15,
+          "lap_duration": 74.17
+        },
+        {
+          "lap": 6,
+          "position": 15,
+          "lap_duration": 74.329
+        },
+        {
+          "lap": 7,
+          "position": 15,
+          "lap_duration": 74.492
+        },
+        {
+          "lap": 8,
+          "position": 15,
+          "lap_duration": 74.79
+        },
+        {
+          "lap": 9,
+          "position": 15,
+          "lap_duration": 74.971
+        },
+        {
+          "lap": 10,
+          "position": 15,
+          "lap_duration": 75.771
+        },
+        {
+          "lap": 11,
+          "position": 15,
+          "lap_duration": 75.198
+        },
+        {
+          "lap": 12,
+          "position": 15,
+          "lap_duration": 75.35
+        },
+        {
+          "lap": 13,
+          "position": 14,
+          "lap_duration": 75.003
+        },
+        {
+          "lap": 14,
+          "position": 14,
+          "lap_duration": 75.366
+        },
+        {
+          "lap": 15,
+          "position": 14,
+          "lap_duration": 75.041
+        },
+        {
+          "lap": 16,
+          "position": 14,
+          "lap_duration": 74.751
+        },
+        {
+          "lap": 17,
+          "position": 14,
+          "lap_duration": 74.709
+        },
+        {
+          "lap": 18,
+          "position": 12,
+          "lap_duration": 75.344
+        },
+        {
+          "lap": 19,
+          "position": 11,
+          "lap_duration": 74.827
+        },
+        {
+          "lap": 20,
+          "position": 12,
+          "lap_duration": 75.908
+        },
+        {
+          "lap": 21,
+          "position": 13,
+          "lap_duration": 74.936
+        },
+        {
+          "lap": 22,
+          "position": 12,
+          "lap_duration": 74.645
+        },
+        {
+          "lap": 23,
+          "position": 13,
+          "lap_duration": 75.472
+        },
+        {
+          "lap": 24,
+          "position": 13,
+          "lap_duration": 86.766
+        },
+        {
+          "lap": 25,
+          "position": 14,
+          "lap_duration": 109.866
+        },
+        {
+          "lap": 26,
+          "position": 14,
+          "lap_duration": 78.057
+        },
+        {
+          "lap": 27,
+          "position": 14,
+          "lap_duration": 73.101
+        },
+        {
+          "lap": 28,
+          "position": 14,
+          "lap_duration": 73.102
+        },
+        {
+          "lap": 29,
+          "position": 14,
+          "lap_duration": 73.025
+        },
+        {
+          "lap": 30,
+          "position": 14,
+          "lap_duration": 73.063
+        },
+        {
+          "lap": 31,
+          "position": 14,
+          "lap_duration": 73.147
+        },
+        {
+          "lap": 32,
+          "position": 14,
+          "lap_duration": 73.075
+        },
+        {
+          "lap": 33,
+          "position": 14,
+          "lap_duration": 73.27
+        },
+        {
+          "lap": 34,
+          "position": 14,
+          "lap_duration": 73.138
+        },
+        {
+          "lap": 35,
+          "position": 14,
+          "lap_duration": 73.161
+        },
+        {
+          "lap": 36,
+          "position": 14,
+          "lap_duration": 73.403
+        },
+        {
+          "lap": 37,
+          "position": 14,
+          "lap_duration": 76.268
+        },
+        {
+          "lap": 38,
+          "position": 14,
+          "lap_duration": 74.08
+        },
+        {
+          "lap": 39,
+          "position": 13,
+          "lap_duration": 74.004
+        },
+        {
+          "lap": 40,
+          "position": 13,
+          "lap_duration": 75.228
+        },
+        {
+          "lap": 41,
+          "position": 13,
+          "lap_duration": 73.839
+        },
+        {
+          "lap": 42,
+          "position": 13,
+          "lap_duration": 73.708
+        },
+        {
+          "lap": 43,
+          "position": 14,
+          "lap_duration": 74.806
+        },
+        {
+          "lap": 44,
+          "position": 14,
+          "lap_duration": 73.877
+        },
+        {
+          "lap": 45,
+          "position": 14,
+          "lap_duration": 78.343
+        },
+        {
+          "lap": 46,
+          "position": 15,
+          "lap_duration": 89.486
+        },
+        {
+          "lap": 47,
+          "position": 14,
+          "lap_duration": 72.405
+        },
+        {
+          "lap": 48,
+          "position": 14,
+          "lap_duration": 72.626
+        },
+        {
+          "lap": 49,
+          "position": 14,
+          "lap_duration": 73.475
+        },
+        {
+          "lap": 50,
+          "position": 14,
+          "lap_duration": 72.579
+        },
+        {
+          "lap": 51,
+          "position": 14,
+          "lap_duration": 83.153
+        },
+        {
+          "lap": 52,
+          "position": 14,
+          "lap_duration": 72.808
+        },
+        {
+          "lap": 53,
+          "position": 14,
+          "lap_duration": 72.266
+        },
+        {
+          "lap": 54,
+          "position": 14,
+          "lap_duration": 72.207
+        },
+        {
+          "lap": 55,
+          "position": 14,
+          "lap_duration": 72.506
+        },
+        {
+          "lap": 56,
+          "position": 14,
+          "lap_duration": 72.764
+        },
+        {
+          "lap": 57,
+          "position": 14,
+          "lap_duration": 72.952
+        },
+        {
+          "lap": 58,
+          "position": 14,
+          "lap_duration": 72.989
+        },
+        {
+          "lap": 59,
+          "position": 14,
+          "lap_duration": 73.054
+        },
+        {
+          "lap": 60,
+          "position": 14,
+          "lap_duration": 73.01
+        },
+        {
+          "lap": 61,
+          "position": 14,
+          "lap_duration": 73.132
+        },
+        {
+          "lap": 62,
+          "position": 14,
+          "lap_duration": 73.325
+        },
+        {
+          "lap": 63,
+          "position": 14,
+          "lap_duration": 74.962
+        },
+        {
+          "lap": 64,
+          "position": 14,
+          "lap_duration": 73.241
+        },
+        {
+          "lap": 65,
+          "position": 14,
+          "lap_duration": 73.191
+        },
+        {
+          "lap": 66,
+          "position": 14,
+          "lap_duration": 73.044
+        },
+        {
+          "lap": 67,
+          "position": 14,
+          "lap_duration": 73.032
+        },
+        {
+          "lap": 68,
+          "position": 14,
+          "lap_duration": 72.895
+        },
+        {
+          "lap": 69,
+          "position": 14,
+          "lap_duration": 73.35
+        },
+        {
+          "lap": 70,
+          "position": 14,
+          "lap_duration": 72.654
+        }
+      ]
+    }
+  }
+}
