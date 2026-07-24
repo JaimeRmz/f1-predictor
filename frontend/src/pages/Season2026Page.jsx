@@ -3,6 +3,7 @@ import axios from "axios";
 import { Spinner, StatCard, SectionHeader, BackendPanel } from "../shared.jsx";
 import { API, card, UPCOMING_RACES_2026, COMPLETED_2026 } from "../constants.js";
 import { useHealth } from "../health.jsx";
+import { RaceStrategySection } from "../components/RaceStrategy.jsx";
 
 // ── 2026 SEASON PAGE ───────────────────────────────────────────
 const CALENDAR_FLAGS = { 9:"🇬🇧",10:"🇧🇪",11:"🇭🇺",12:"🇳🇱",13:"🇮🇹",14:"🇪🇸",15:"🇦🇿",16:"🇸🇬",17:"🇺🇸",18:"🇲🇽",19:"🇧🇷",20:"🇺🇸",21:"🇶🇦",22:"🇦🇪" };
@@ -12,6 +13,18 @@ const Season2026Page = () => {
   const [loadingAcc, setLoadingAcc] = useState(true);
   const [accFailed, setAccFailed] = useState(false);
   const { wakeEpoch } = useHealth();
+
+  // Race-strategy expand state, local to this page (independent of My Picks).
+  // The latest completed race (last COMPLETED_2026 entry) starts expanded so the
+  // feature is visible on first visit; it advances automatically each round.
+  const [openRaces, setOpenRaces] = useState(
+    () => new Set([COMPLETED_2026[COMPLETED_2026.length - 1].raceId])
+  );
+  const toggleRace = (rid) => setOpenRaces(s => {
+    const n = new Set(s);
+    n.has(rid) ? n.delete(rid) : n.add(rid);
+    return n;
+  });
 
   // Post-Belgian GP (round 10) standings
   const standings = [
@@ -177,6 +190,22 @@ const Season2026Page = () => {
             ))}
           </>
         )}
+      </div>
+
+      {/* Race strategy & telemetry (OpenF1) — one collapsible row per completed round */}
+      <div className="chart-enter" style={{ ...card }}>
+        <div style={{ padding: "0.75rem 1rem" }}>
+          <span className="section-label">Race Strategy &amp; Telemetry — completed rounds</span>
+        </div>
+        {COMPLETED_2026.map((r) => (
+          <RaceStrategySection
+            key={r.raceId}
+            raceId={r.raceId}
+            open={openRaces.has(r.raceId)}
+            onToggle={() => toggleRace(r.raceId)}
+            label={<><span style={{ color: "var(--muted)", marginRight: "0.5rem" }}>RD {r.round}</span>{r.flag} {r.name}</>}
+          />
+        ))}
       </div>
 
       {/* Remaining calendar */}

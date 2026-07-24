@@ -9,7 +9,7 @@ import { useHealth } from "../health.jsx";
 import { useAuth } from "../auth.jsx";
 import { supabase } from "../lib/supabaseClient.js";
 import SharePredictionCard from "../components/SharePredictionCard.jsx";
-import RaceStrategy from "../components/RaceStrategy.jsx";
+import { RaceStrategySection } from "../components/RaceStrategy.jsx";
 import { useShareCard } from "../useShareCard.js";
 
 // ── MY PICKS PAGE ────────────────────────────────────────────────
@@ -357,7 +357,12 @@ const History = () => {
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
   const [snapshotsMissing, setSnapshotsMissing] = useState(false);
-  const [openRaces, setOpenRaces] = useState(() => new Set());
+  // Surface the feature on first visit: the most recent completed race starts
+  // expanded (derived as the last COMPLETED_2026 entry, so it advances on its
+  // own as new races land); everything older stays collapsed.
+  const [openRaces, setOpenRaces] = useState(
+    () => new Set([COMPLETED_2026[COMPLETED_2026.length - 1].raceId])
+  );
   const toggleRace = (rid) => setOpenRaces(s => {
     const n = new Set(s);
     n.has(rid) ? n.delete(rid) : n.add(rid);
@@ -473,25 +478,11 @@ const History = () => {
 
           {/* On-demand strategy & telemetry (OpenF1) */}
           {r.resultKnown && (
-            <>
-              <button
-                onClick={() => toggleRace(r.raceId)}
-                className="data-row"
-                style={{
-                  width: "100%", border: "none", borderTop: "1px solid var(--border)", background: "transparent",
-                  color: "var(--muted)", cursor: "pointer", textAlign: "left",
-                  padding: "0.6rem 1rem", fontFamily: "var(--mono)", fontSize: "0.62rem",
-                  fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase",
-                }}
-              >
-                {openRaces.has(r.raceId) ? "▾" : "▸"} Race Strategy &amp; Telemetry
-              </button>
-              {openRaces.has(r.raceId) && (
-                <div style={{ borderTop: "1px solid var(--border)", padding: "0.75rem 0.85rem 0.9rem" }}>
-                  <RaceStrategy raceId={r.raceId} />
-                </div>
-              )}
-            </>
+            <RaceStrategySection
+              raceId={r.raceId}
+              open={openRaces.has(r.raceId)}
+              onToggle={() => toggleRace(r.raceId)}
+            />
           )}
         </div>
       ))}

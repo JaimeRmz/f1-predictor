@@ -215,4 +215,44 @@ const RaceStrategy = ({ raceId }) => {
   );
 };
 
+// ── Shared expand/collapse section (toggle + lazy body) ──────────
+// One styled entry point used by both MyPicksPage and Season2026Page so the
+// feature reads identically in both. Expand state is owned by each page (passed
+// in via `open`/`onToggle`) — the two pages don't share state. `label` lets the
+// season page put the race identity on the row itself; My Picks keeps the
+// default (the race name already sits in that card's header).
+export const RaceStrategySection = ({ raceId, open, onToggle, label = "Race Strategy & Telemetry" }) => (
+  <>
+    <button
+      onClick={onToggle}
+      className="data-row"
+      style={{
+        width: "100%", display: "flex", alignItems: "stretch", gap: "0.55rem",
+        border: "none", borderTop: "1px solid var(--border)",
+        background: open ? "rgba(225,6,0,0.08)" : "rgba(225,6,0,0.04)",
+        cursor: "pointer", textAlign: "left", padding: "0.6rem 0.85rem",
+      }}
+    >
+      {/* Red accent bar — signals a real feature, not secondary metadata */}
+      <span style={{ width: "3px", background: "var(--red)", flexShrink: 0, opacity: open ? 1 : 0.55, borderRadius: "2px" }} />
+      <span style={{ display: "flex", alignItems: "center", gap: "0.5rem", flex: 1, minWidth: 0 }}>
+        <span style={{ fontSize: "0.82rem", lineHeight: 1, flexShrink: 0 }}>🏁</span>
+        <span style={{
+          fontFamily: "var(--mono)", fontSize: "0.64rem", fontWeight: "700",
+          letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--red)",
+          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+        }}>{label}</span>
+      </span>
+      <span style={{ display: "flex", alignItems: "center", color: "var(--red)", fontSize: "0.66rem", flexShrink: 0, opacity: 0.85 }}>
+        {open ? "▾" : "▸"}
+      </span>
+    </button>
+    {open && (
+      <div style={{ borderTop: "1px solid var(--border)", padding: "0.75rem 0.85rem 0.9rem" }}>
+        <RaceStrategy raceId={raceId} />
+      </div>
+    )}
+  </>
+);
+
 export default RaceStrategy;
