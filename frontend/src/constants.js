@@ -50,7 +50,6 @@ export const TEAM_COLORS = {
 
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
-  { raceId: 1179, round: 11, name: "Hungarian Grand Prix",       circuit: "Hungaroring", circuitRef: "hungaroring",  date: "Jul 26" },
   { raceId: 1180, round: 12, name: "Dutch Grand Prix",           circuit: "Zandvoort",   circuitRef: "zandvoort",    date: "Aug 23" },
   { raceId: 1181, round: 13, name: "Italian Grand Prix",         circuit: "Monza",       circuitRef: "monza",        date: "Sep 6"  },
   { raceId: 1182, round: 14, name: "Spanish Grand Prix",         circuit: "Madrid",      circuitRef: "madrid",       date: "Sep 13" },
@@ -88,19 +87,22 @@ export const flagUrl = (circuitRef) => {
 };
 
 // The current upcoming race, as the single source of truth for the countdown,
-// the What-If/Next-Race pages, and the prediction picker's lock. `qualiCutoffISO`
-// is the machine-readable version of NextRacePage's "Qualifying · Sat Jul 25 ·
-// 9:00 AM CDT" schedule row (09:00 CDT = 14:00 UTC): once qualifying starts, the
-// picker locks. `raceISO` matches RaceCountdown's target (15:00 CEST = 13:00 UTC).
+// the What-If/Next-Race pages, and the prediction picker's lock. The Dutch GP is
+// a SPRINT weekend, so `qualiCutoffISO` closes the pick window before Friday's
+// first on-track session (FP1 10:30 UTC / Sprint Qualifying): Sprint Qualifying
+// sets Saturday's sprint grid and the sprint result would otherwise be visible
+// before a pick locks. For fairness — parity with the model snapshot, which
+// freezes pre-weekend — the window shuts before any running, not at GP qualifying.
+// `raceISO` matches RaceCountdown's target (15:00 CEST = 13:00 UTC).
 export const NEXT_RACE = {
-  raceId: 1179,
-  round: 11,
-  name: "Hungarian Grand Prix",
-  circuit: "Hungaroring",
-  circuitRef: "hungaroring",
-  flag: "🇭🇺",
-  raceISO: "2026-07-26T13:00:00Z",
-  qualiCutoffISO: "2026-07-25T14:00:00Z",
+  raceId: 1180,
+  round: 12,
+  name: "Dutch Grand Prix",
+  circuit: "Zandvoort",
+  circuitRef: "zandvoort",
+  flag: "🇳🇱",
+  raceISO: "2026-08-23T13:00:00Z",
+  qualiCutoffISO: "2026-08-21T10:00:00Z",
 };
 
 // Completed 2026 rounds, shared by the 2026 Season page and the My Picks
@@ -116,20 +118,21 @@ export const COMPLETED_2026 = [
   { raceId: 1176, round: 8,  name: "Austrian GP",           flag: "🇦🇹" },
   { raceId: 1177, round: 9,  name: "British GP",            flag: "🇬🇧" },
   { raceId: 1178, round: 10, name: "Belgian GP",            flag: "🇧🇪" },
+  { raceId: 1179, round: 11, name: "Hungarian GP",          flag: "🇭🇺" },
 ];
 
-// Roster ordered by post-Belgium (round 10) championship standings.
+// Roster ordered by post-Hungary (round 11) championship standings.
 export const STANDINGS_GRID_2026 = [
   { driverRef: "antonelli",  driver_name: "Kimi Antonelli",    team: "Mercedes",      grid: 1  },
   { driverRef: "hamilton",   driver_name: "Lewis Hamilton",     team: "Ferrari",       grid: 2  },
   { driverRef: "russell",    driver_name: "George Russell",     team: "Mercedes",      grid: 3  },
   { driverRef: "leclerc",    driver_name: "Charles Leclerc",    team: "Ferrari",       grid: 4  },
   { driverRef: "norris",     driver_name: "Lando Norris",       team: "McLaren",       grid: 5  },
-  { driverRef: "piastri",    driver_name: "Oscar Piastri",      team: "McLaren",       grid: 6  },
-  { driverRef: "max_verstappen", driver_name: "Max Verstappen",  team: "Red Bull",      grid: 7  },
+  { driverRef: "max_verstappen", driver_name: "Max Verstappen",  team: "Red Bull",      grid: 6  },
+  { driverRef: "piastri",    driver_name: "Oscar Piastri",      team: "McLaren",       grid: 7  },
   { driverRef: "hadjar",     driver_name: "Isack Hadjar",       team: "Red Bull",      grid: 8  },
-  { driverRef: "gasly",      driver_name: "Pierre Gasly",       team: "Alpine",        grid: 9  },
-  { driverRef: "lawson",     driver_name: "Liam Lawson",        team: "Racing Bulls",  grid: 10 },
+  { driverRef: "lawson",     driver_name: "Liam Lawson",        team: "Racing Bulls",  grid: 9  },
+  { driverRef: "gasly",      driver_name: "Pierre Gasly",       team: "Alpine",        grid: 10 },
   { driverRef: "lindblad",   driver_name: "Arvid Lindblad",     team: "Racing Bulls",  grid: 11 },
   { driverRef: "colapinto",  driver_name: "Franco Colapinto",   team: "Alpine",        grid: 12 },
   { driverRef: "bearman",    driver_name: "Oliver Bearman",     team: "Haas",          grid: 13 },
@@ -137,10 +140,10 @@ export const STANDINGS_GRID_2026 = [
   { driverRef: "sainz",      driver_name: "Carlos Sainz",       team: "Williams",      grid: 15 },
   { driverRef: "albon",      driver_name: "Alex Albon",         team: "Williams",      grid: 16 },
   { driverRef: "ocon",       driver_name: "Esteban Ocon",       team: "Haas",          grid: 17 },
-  { driverRef: "alonso",     driver_name: "Fernando Alonso",    team: "Aston Martin",  grid: 18 },
-  { driverRef: "hulkenberg", driver_name: "Nico Hulkenberg",    team: "Audi",          grid: 19 },
-  { driverRef: "bottas",     driver_name: "Valtteri Bottas",    team: "Cadillac",      grid: 20 },
-  { driverRef: "perez",      driver_name: "Sergio Perez",       team: "Cadillac",      grid: 21 },
-  { driverRef: "stroll",     driver_name: "Lance Stroll",       team: "Aston Martin",  grid: 22 },
+  { driverRef: "hulkenberg", driver_name: "Nico Hulkenberg",    team: "Audi",          grid: 18 },
+  { driverRef: "alonso",     driver_name: "Fernando Alonso",    team: "Aston Martin",  grid: 19 },
+  { driverRef: "stroll",     driver_name: "Lance Stroll",       team: "Aston Martin",  grid: 20 },
+  { driverRef: "bottas",     driver_name: "Valtteri Bottas",    team: "Cadillac",      grid: 21 },
+  { driverRef: "perez",      driver_name: "Sergio Perez",       team: "Cadillac",      grid: 22 },
 ];
 

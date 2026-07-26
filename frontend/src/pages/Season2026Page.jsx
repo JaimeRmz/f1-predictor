@@ -26,18 +26,18 @@ const Season2026Page = () => {
     return n;
   });
 
-  // Post-Belgian GP (round 10) standings
+  // Post-Hungarian GP (round 11) standings
   const standings = [
-    { driver: "Kimi Antonelli",  team: "Mercedes",     pts: 204, wins: 6, color: "#00d2be" },
-    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 159, wins: 1, color: "#e10600" },
-    { driver: "George Russell",  team: "Mercedes",      pts: 154, wins: 2, color: "#00d2be" },
-    { driver: "Charles Leclerc", team: "Ferrari",       pts: 126, wins: 1, color: "#e10600" },
-    { driver: "Lando Norris",    team: "McLaren",       pts: 103, wins: 0, color: "#ff8000" },
+    { driver: "Kimi Antonelli",  team: "Mercedes",     pts: 219, wins: 6, color: "#00d2be" },
+    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 169, wins: 1, color: "#e10600" },
+    { driver: "George Russell",  team: "Mercedes",      pts: 160, wins: 2, color: "#00d2be" },
+    { driver: "Charles Leclerc", team: "Ferrari",       pts: 138, wins: 1, color: "#e10600" },
+    { driver: "Lando Norris",    team: "McLaren",       pts: 128, wins: 1, color: "#ff8000" },
+    { driver: "Max Verstappen",  team: "Red Bull",      pts: 109, wins: 0, color: "#3671c6" },
     { driver: "Oscar Piastri",   team: "McLaren",       pts: 92,  wins: 0, color: "#ff8000" },
-    { driver: "Max Verstappen",  team: "Red Bull",      pts: 91,  wins: 0, color: "#3671c6" },
-    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 60,  wins: 0, color: "#3671c6" },
+    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 68,  wins: 0, color: "#3671c6" },
+    { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 43,  wins: 0, color: "#6692ff" },
     { driver: "Pierre Gasly",    team: "Alpine",        pts: 42,  wins: 0, color: "#0093cc" },
-    { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 39,  wins: 0, color: "#6692ff" },
   ];
   // Leader's points, so the top bar is full-width and the rest scale relative
   // to it — no manual update needed when the leader's total changes each race.
@@ -99,21 +99,21 @@ const Season2026Page = () => {
       <SectionHeader
         eyebrow="Live Test Set · Post-Training Data"
         title="2026 Formula One Season"
-        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>10 RACES COMPLETE</div></div>}
+        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>11 RACES COMPLETE</div></div>}
       />
 
       {/* Season summary bar */}
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <StatCard label="Completed"  value="10 / 22"      sub="races"             />
-        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+45 pts gap" />
-        <StatCard label="Remaining"  value="12"            sub="races to go"       />
-        <StatCard label="Next Race"  value="Hungarian GP"  sub="Jul 26 · Hungaroring" />
+        <StatCard label="Completed"  value="11 / 22"      sub="races"             />
+        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+50 pts gap" />
+        <StatCard label="Remaining"  value="11"            sub="races to go"       />
+        <StatCard label="Next Race"  value="Dutch GP"      sub="Aug 23 · Zandvoort" />
       </div>
 
       {/* Championship standings */}
       <div className="chart-enter" style={{ ...card }}>
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Driver Championship — after 10 rounds</span>
+          <span className="section-label">Driver Championship — after 11 rounds</span>
         </div>
         {standings.map((s, i) => (
           <div key={i} className="data-row stagger-item row-gap-tight" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.75rem 1rem", borderBottom: i < standings.length - 1 ? "1px solid var(--border)" : "none" }}>
@@ -211,7 +211,7 @@ const Season2026Page = () => {
       {/* Remaining calendar */}
       <div className="chart-enter" style={{ ...card }}>
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Remaining 2026 Calendar — 12 rounds</span>
+          <span className="section-label">Remaining 2026 Calendar — 11 rounds</span>
         </div>
         {UPCOMING_RACES_2026.map((r, i) => (
           <div key={i} className="data-row stagger-item" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 1rem", borderBottom: i < UPCOMING_RACES_2026.length - 1 ? "1px solid var(--border)" : "none" }}>
