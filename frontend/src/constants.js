@@ -106,19 +106,23 @@ export const NEXT_RACE = {
 };
 
 // Completed 2026 rounds, shared by the 2026 Season page and the My Picks
-// history/results view. Ordered by round.
+// history/results view. Ordered by round. `qualiISO` is each round's GP
+// qualifying start (UTC, from races.csv) — the Accuracy Tracker uses it to tell
+// a genuine pre-race model_snapshots row (snapshotted_at < qualiISO) apart from
+// a post-qualifying backfill (rounds 1-10 were backfilled on 2026-07-23 via the
+// /predict real-grid path, i.e. AFTER their quali).
 export const COMPLETED_2026 = [
-  { raceId: 1169, round: 1,  name: "Australian GP",         flag: "🇦🇺" },
-  { raceId: 1170, round: 2,  name: "Chinese GP",            flag: "🇨🇳" },
-  { raceId: 1171, round: 3,  name: "Japanese GP",           flag: "🇯🇵" },
-  { raceId: 1172, round: 4,  name: "Miami GP",              flag: "🇺🇸" },
-  { raceId: 1173, round: 5,  name: "Canadian GP",           flag: "🇨🇦" },
-  { raceId: 1174, round: 6,  name: "Monaco GP",             flag: "🇲🇨" },
-  { raceId: 1175, round: 7,  name: "Spanish GP (Barcelona)", flag: "🇪🇸" },
-  { raceId: 1176, round: 8,  name: "Austrian GP",           flag: "🇦🇹" },
-  { raceId: 1177, round: 9,  name: "British GP",            flag: "🇬🇧" },
-  { raceId: 1178, round: 10, name: "Belgian GP",            flag: "🇧🇪" },
-  { raceId: 1179, round: 11, name: "Hungarian GP",          flag: "🇭🇺" },
+  { raceId: 1169, round: 1,  name: "Australian GP",         flag: "🇦🇺", qualiISO: "2026-03-07T05:00:00Z" },
+  { raceId: 1170, round: 2,  name: "Chinese GP",            flag: "🇨🇳", qualiISO: "2026-03-14T07:00:00Z" },
+  { raceId: 1171, round: 3,  name: "Japanese GP",           flag: "🇯🇵", qualiISO: "2026-03-28T06:00:00Z" },
+  { raceId: 1172, round: 4,  name: "Miami GP",              flag: "🇺🇸", qualiISO: "2026-05-02T20:00:00Z" },
+  { raceId: 1173, round: 5,  name: "Canadian GP",           flag: "🇨🇦", qualiISO: "2026-05-23T20:00:00Z" },
+  { raceId: 1174, round: 6,  name: "Monaco GP",             flag: "🇲🇨", qualiISO: "2026-06-06T14:00:00Z" },
+  { raceId: 1175, round: 7,  name: "Spanish GP (Barcelona)", flag: "🇪🇸", qualiISO: "2026-06-13T14:00:00Z" },
+  { raceId: 1176, round: 8,  name: "Austrian GP",           flag: "🇦🇹", qualiISO: "2026-06-27T14:00:00Z" },
+  { raceId: 1177, round: 9,  name: "British GP",            flag: "🇬🇧", qualiISO: "2026-07-04T15:00:00Z" },
+  { raceId: 1178, round: 10, name: "Belgian GP",            flag: "🇧🇪", qualiISO: "2026-07-18T14:00:00Z" },
+  { raceId: 1179, round: 11, name: "Hungarian GP",          flag: "🇭🇺", qualiISO: "2026-07-25T14:00:00Z" },
 ];
 
 // Roster ordered by post-Hungary (round 11) championship standings.

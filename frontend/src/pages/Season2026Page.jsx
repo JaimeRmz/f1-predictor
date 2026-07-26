@@ -4,6 +4,7 @@ import { Spinner, StatCard, SectionHeader, BackendPanel } from "../shared.jsx";
 import { API, card, UPCOMING_RACES_2026, COMPLETED_2026 } from "../constants.js";
 import { useHealth } from "../health.jsx";
 import { RaceStrategySection } from "../components/RaceStrategy.jsx";
+import { supabase } from "../lib/supabaseClient.js";
 
 // ── 2026 SEASON PAGE ───────────────────────────────────────────
 const CALENDAR_FLAGS = { 9:"🇬🇧",10:"🇧🇪",11:"🇭🇺",12:"🇳🇱",13:"🇮🇹",14:"🇪🇸",15:"🇦🇿",16:"🇸🇬",17:"🇺🇸",18:"🇲🇽",19:"🇧🇷",20:"🇺🇸",21:"🇶🇦",22:"🇦🇪" };
@@ -43,46 +44,107 @@ const Season2026Page = () => {
   // to it — no manual update needed when the leader's total changes each race.
   const maxPts = Math.max(...standings.map(s => s.pts));
 
+  // Two evaluation methodologies live in one table:
+  //  • "snapshot"  — a model_snapshots row frozen BEFORE that round's qualifying
+  //                  (snapshotted_at < qualiISO): genuine foresight. Predicted
+  //                  winner/top-3 come from the frozen refs, NOT recomputed.
+  //  • "live"      — no pre-quali snapshot (either none at all, or a post-quali
+  //                  backfill — rounds 1-10 were backfilled 2026-07-23 via the
+  //                  /predict real-grid path, AFTER their quali). We show the live
+  //                  /predict/{raceId} ranking, which uses the REAL grid (the
+  //                  model's strongest feature): valid test-set accuracy, NOT
+  //                  foresight. Merely having a snapshot row is NOT enough.
+  // The ACTUAL result always comes from /predict (positionOrder/podium), for both.
   const loadAccuracy = () => {
     setLoadingAcc(true);
-    Promise.all(COMPLETED_2026.map(r =>
+    const ids = COMPLETED_2026.map(r => r.raceId);
+
+    const snapsP = supabase.from("model_snapshots")
+      .select("race_id, predicted_p1, predicted_p2, predicted_p3, snapshotted_at")
+      .in("race_id", ids);
+
+    const actualsP = Promise.all(COMPLETED_2026.map(r =>
       axios.get(`${API}/predict/${r.raceId}`)
-        .then(res => {
-          const byProb = [...res.data].sort((a, b) => b.podium_probability - a.podium_probability);
-          const predSet = new Set(byProb.slice(0, 3).map(d => d.driverRef));
-          const actualSet = new Set(res.data.filter(d => d.podium === 1).map(d => d.driverRef));
-          const podiumCorrect = predSet.size === actualSet.size && [...predSet].every(d => actualSet.has(d));
+        .then(res => ({ meta: r, data: res.data }))
+        .catch(() => ({ meta: r, __failed: true }))
+    ));
 
-          const byWin = [...res.data].sort((a, b) => (b.win_probability ?? 0) - (a.win_probability ?? 0));
-          const predictedWinner = byWin[0];
-          const actualWinner = res.data.find(d => d.positionOrder === 1);
-          const winnerCorrect = !!predictedWinner && !!actualWinner && predictedWinner.driverRef === actualWinner.driverRef;
+    Promise.all([snapsP, actualsP]).then(([snapsRes, actuals]) => {
+      // Snapshot read failing just means every row falls back to "live" — not fatal.
+      const snapByRace = {};
+      if (!snapsRes.error) (snapsRes.data || []).forEach(s => {
+        if (s.predicted_p1) snapByRace[s.race_id] = s;
+      });
 
-          return {
-            ...r,
-            predictedNames: byProb.slice(0, 3).map(d => d.driver_name.split(" ").pop()),
-            actualNames: res.data.filter(d => d.podium === 1)
-              .sort((a, b) => a.positionOrder - b.positionOrder)
-              .map(d => d.driver_name.split(" ").pop()),
-            predictedWinnerName: predictedWinner?.driver_name.split(" ").pop() ?? "—",
-            actualWinnerName: actualWinner?.driver_name.split(" ").pop() ?? "—",
-            podiumCorrect,
-            winnerCorrect,
-          };
-        })
-        .catch(() => ({ ...r, __failed: true, predictedNames: ["—", "—", "—"], actualNames: ["—", "—", "—"], predictedWinnerName: "—", actualWinnerName: "—", podiumCorrect: false, winnerCorrect: false }))
-    )).then(results => {
-      // Every race failing means the backend is down/warming, not a real 0%
-      // accuracy — surface that as WAKING/OFFLINE instead of bogus stats.
-      if (results.every(r => r.__failed)) { setAccFailed(true); setLoadingAcc(false); return; }
+      // Every /predict failing means the backend is down/warming, not real 0%.
+      if (actuals.every(a => a.__failed)) { setAccFailed(true); setLoadingAcc(false); return; }
       setAccFailed(false);
-      const podiumCorrectCount = results.filter(r => r.podiumCorrect).length;
-      const winnerCorrectCount = results.filter(r => r.winnerCorrect).length;
+
+      const results = actuals.map(a => {
+        const r = a.meta;
+        const snap = snapByRace[r.raceId];
+        // Genuine foresight only if the snapshot was frozen before quali started.
+        const isPreRace = !!snap && !!r.qualiISO && new Date(snap.snapshotted_at) < new Date(r.qualiISO);
+        const source = isPreRace ? "snapshot" : "live";
+        if (a.__failed) {
+          return { ...r, source, __failed: true, predictedNames: ["—", "—", "—"],
+            actualNames: ["—", "—", "—"], predictedWinnerName: "—", actualWinnerName: "—",
+            podiumCorrect: false, winnerCorrect: false };
+        }
+        const rows = a.data;
+        const lastName = (full) => (full ? full.split(" ").pop() : full);
+        const nameOf = (ref) => { const h = rows.find(d => d.driverRef === ref); return h ? lastName(h.driver_name) : ref; };
+
+        // Actual result — always from /predict, for both methodologies.
+        const actualSet = new Set(rows.filter(d => d.podium === 1).map(d => d.driverRef));
+        const actualWinner = rows.find(d => d.positionOrder === 1);
+        const actualNames = rows.filter(d => d.podium === 1)
+          .sort((x, y) => x.positionOrder - y.positionOrder).map(d => lastName(d.driver_name));
+
+        // Predicted — frozen pre-quali snapshot if genuine foresight, else live
+        // /predict ranking (covers no-snapshot AND post-quali-backfill rows).
+        let predRefs, predWinnerRef;
+        if (isPreRace) {
+          predRefs = [snap.predicted_p1, snap.predicted_p2, snap.predicted_p3];
+          predWinnerRef = snap.predicted_p1;
+        } else {
+          const byProb = [...rows].sort((x, y) => y.podium_probability - x.podium_probability);
+          const byWin = [...rows].sort((x, y) => (y.win_probability ?? 0) - (x.win_probability ?? 0));
+          predRefs = byProb.slice(0, 3).map(d => d.driverRef);
+          predWinnerRef = byWin[0]?.driverRef ?? null;
+        }
+        const predSet = new Set(predRefs);
+        const podiumCorrect = predSet.size === actualSet.size && [...predSet].every(d => actualSet.has(d));
+        const winnerCorrect = !!predWinnerRef && !!actualWinner && predWinnerRef === actualWinner.driverRef;
+
+        return {
+          ...r,
+          source,
+          predictedNames: predRefs.map(nameOf),
+          actualNames,
+          predictedWinnerName: predWinnerRef ? nameOf(predWinnerRef) : "—",
+          actualWinnerName: actualWinner ? lastName(actualWinner.driver_name) : "—",
+          podiumCorrect,
+          winnerCorrect,
+        };
+      });
+
+      // Split the tally: pre-race (snapshot) vs test-set (live) are different measures.
+      const summarize = (subset) => {
+        const scored = subset.filter(r => !r.__failed);
+        const w = scored.filter(r => r.winnerCorrect).length;
+        const p = scored.filter(r => r.podiumCorrect).length;
+        return {
+          n: scored.length, winnerCorrect: w, podiumCorrect: p,
+          winnerPct: scored.length ? Math.round(w / scored.length * 100) : 0,
+          podiumPct: scored.length ? Math.round(p / scored.length * 100) : 0,
+        };
+      };
+
       setAccuracy({
         races: results,
-        podiumCorrectCount, winnerCorrectCount,
-        podiumPct: Math.round(podiumCorrectCount / results.length * 100),
-        winnerPct: Math.round(winnerCorrectCount / results.length * 100),
+        preRace: summarize(results.filter(r => r.source === "snapshot")),
+        testSet: summarize(results.filter(r => r.source === "live")),
       });
       setLoadingAcc(false);
     });
@@ -138,12 +200,16 @@ const Season2026Page = () => {
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
           <span className="section-label">Model Accuracy Tracker — 2026</span>
           {!loadingAcc && accuracy && (
-            <div style={{ display: "flex", gap: "1rem" }}>
-              <span style={{ fontFamily: "var(--mono)", fontSize: "0.72rem", fontWeight: "700", color: accuracy.winnerPct >= 50 ? "var(--gold)" : "var(--red)" }}>
-                WINNER {accuracy.winnerCorrectCount}/{accuracy.races.length} · {accuracy.winnerPct}%
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end" }}>
+              {/* Pre-race (snapshot) cohort — small sample so far, counts only. */}
+              <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", fontWeight: "700" }}>
+                <span style={{ color: "var(--gold)", letterSpacing: "0.08em" }}>PRE-RACE</span>
+                <span style={{ color: "var(--text)" }}> · WIN {accuracy.preRace.winnerCorrect}/{accuracy.preRace.n} · POD {accuracy.preRace.podiumCorrect}/{accuracy.preRace.n}</span>
               </span>
-              <span style={{ fontFamily: "var(--mono)", fontSize: "0.72rem", fontWeight: "700", color: accuracy.podiumPct >= 50 ? "var(--green)" : "var(--red)" }}>
-                PODIUM {accuracy.podiumCorrectCount}/{accuracy.races.length} · {accuracy.podiumPct}%
+              {/* Test-set (live, post-qualifying) cohort — larger sample, show %. */}
+              <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", fontWeight: "700" }}>
+                <span style={{ color: "var(--muted)", letterSpacing: "0.08em" }}>TEST-SET</span>
+                <span style={{ color: "var(--text)", opacity: 0.8 }}> · WIN {accuracy.testSet.winnerCorrect}/{accuracy.testSet.n} · {accuracy.testSet.winnerPct}% · POD {accuracy.testSet.podiumCorrect}/{accuracy.testSet.n} · {accuracy.testSet.podiumPct}%</span>
               </span>
             </div>
           )}
@@ -154,6 +220,11 @@ const Season2026Page = () => {
           </div>
         ) : loadingAcc ? <Spinner text="LOADING ACCURACY DATA..." /> : accuracy && (
           <>
+            {/* Methodology legend — the table mixes two kinds of evaluation. */}
+            <div style={{ padding: "0.5rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", gap: "1.25rem", flexWrap: "wrap", fontFamily: "var(--mono)", fontSize: "0.56rem", color: "var(--muted)", lineHeight: 1.5 }}>
+              <span><span style={{ color: "var(--gold)", fontWeight: 700 }}>● PRE-RACE</span> — frozen pre-qualifying snapshot (genuine foresight)</span>
+              <span><span style={{ fontWeight: 700 }}>● POST-QUALI</span> — live model on the real grid (test-set accuracy, not foresight)</span>
+            </div>
             <div className="accuracy-grid" style={{ display: "grid", gridTemplateColumns: "100px 1fr 1fr 44px 1fr 1fr 44px", borderBottom: "1px solid var(--border)" }}>
               {[
                 { h: "RACE" }, { h: "PRED. WINNER" }, { h: "ACTUAL WINNER" }, { h: "WIN" },
@@ -167,6 +238,13 @@ const Season2026Page = () => {
                 <div style={{ padding: "0.6rem 0.75rem" }}>
                   <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", fontWeight: "700" }}>RD {r.round} {r.flag}</div>
                   <div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "var(--text)", marginTop: "2px", fontWeight: "600" }}>{r.name}</div>
+                  <span style={{
+                    display: "inline-block", marginTop: "4px", fontFamily: "var(--mono)", fontSize: "0.5rem",
+                    fontWeight: "700", letterSpacing: "0.06em", padding: "1px 5px", borderRadius: "3px",
+                    color: r.source === "snapshot" ? "var(--gold)" : "var(--muted)",
+                    background: r.source === "snapshot" ? "rgba(255,199,0,0.12)" : "rgba(255,255,255,0.05)",
+                    border: "1px solid " + (r.source === "snapshot" ? "rgba(255,199,0,0.4)" : "rgba(255,255,255,0.15)"),
+                  }}>{r.source === "snapshot" ? "PRE-RACE" : "POST-QUALI"}</span>
                 </div>
                 <div style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--gold)", display: "flex", alignItems: "center" }}>
                   {r.predictedWinnerName}
