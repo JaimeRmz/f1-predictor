@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { card, prefersReducedMotion } from "./constants.js";
+import { card, glassStyle, prefersReducedMotion } from "./constants.js";
+import { GlassPanel } from "./components/GlassPanel.jsx";
 import { useHealth } from "./health.jsx";
 
 // ── Shared components ──────────────────────────────────────────
@@ -38,7 +39,7 @@ export const CountUp = ({ value, decimals = 1, suffix = "" }) => {
 
 // Backend-unreachable state, styled after the header's SYS STATUS readout.
 export const OfflinePanel = ({ detail = "The prediction engine isn't responding.", onRetry }) => (
-  <div style={{ ...card, borderColor: "var(--border-red)", padding: "3rem 2rem", textAlign: "center" }}>
+  <GlassPanel style={{ borderColor: "var(--border-red)", padding: "3rem 2rem", textAlign: "center" }}>
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
       <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--red)", animation: "pulse 1.2s infinite" }} />
       <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "700", color: "var(--red)", letterSpacing: "0.2em" }}>SYS STATUS · OFFLINE</span>
@@ -54,14 +55,14 @@ export const OfflinePanel = ({ detail = "The prediction engine isn't responding.
         textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)",
       }}>↺ Retry</button>
     )}
-  </div>
+  </GlassPanel>
 );
 
 // Backend cold-start state, styled after the header's SYS STATUS readout but
 // in amber (calm/expected, not the red alarm of a true failure). Shown while
 // the free-tier instance is spinning up.
 export const WakingPanel = () => (
-  <div style={{ ...card, borderColor: "rgba(255,176,32,0.35)", padding: "3rem 2rem", textAlign: "center" }}>
+  <GlassPanel style={{ borderColor: "rgba(255,176,32,0.35)", padding: "3rem 2rem", textAlign: "center" }}>
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
       <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--amber)", animation: "pulse 1.2s infinite" }} />
       <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "700", color: "var(--amber)", letterSpacing: "0.2em" }}>SYS STATUS · WAKING</span>
@@ -71,7 +72,7 @@ export const WakingPanel = () => (
       Free-tier instance is spinning up — this takes about 30–50 seconds on first visit. Predictions will load automatically.
     </p>
     <div className="loading-bar amber" style={{ maxWidth: "440px", margin: "0 auto" }} />
-  </div>
+  </GlassPanel>
 );
 
 // Single entry point for the "data couldn't load" state on a page. Reads the
@@ -119,7 +120,7 @@ export const SkeletonList = ({ rows = 8, metrics = 2 }) => (
   <div style={{ display: "flex", flexDirection: "column", gap: "8px" }} aria-hidden="true">
     {Array.from({ length: rows }, (_, i) => (
       <div key={i} className="stagger-item" style={{
-        ...card, "--i": i, padding: "16px", display: "flex", alignItems: "center", gap: "1rem",
+        ...glassStyle(null), "--i": i, padding: "16px", display: "flex", alignItems: "center", gap: "1rem",
         borderLeft: "3px solid var(--dimmed)",
       }}>
         <div className="skeleton-block" style={{ width: "22px", height: "12px", flexShrink: 0 }} />
@@ -145,10 +146,15 @@ export const Spinner = ({ text = "COMPUTING..." }) => (
 // Value swaps tween (fade + slight rise/fall) whenever `value` changes —
 // e.g. switching races on the Predictor. `initial={false}` keeps first
 // mount driven by the CSS .stat-card entrance instead of double-animating.
-export const StatCard = ({ label, value, sub, accent }) => (
-  <div className="stat-card card-lift" style={{ ...card, padding: "1.25rem", flex: 1, minWidth: "130px" }}>
+// `tint` (a team hex) makes this a team-identity tile: the panel gets the
+// team-tint glass treatment (overlay + glow + brackets) and, unless an explicit
+// `accent` overrides it, the value renders in the team color — so a driver's
+// card looks the same here as their rows elsewhere. Leave `tint` unset for
+// non-identity stats (they stay neutral glass; `accent` still applies).
+export const StatCard = ({ label, value, sub, accent, tint }) => (
+  <GlassPanel tint={tint} className="stat-card card-lift" style={{ padding: "1.25rem", flex: 1, minWidth: "130px" }}>
     <div className="section-label" style={{ marginBottom: "0.6rem" }}>{label}</div>
-    <div className="telemetry" style={{ color: accent || "var(--text)", overflow: "hidden" }}>
+    <div className="telemetry" style={{ color: accent || tint || "var(--text)", overflow: "hidden" }}>
       <AnimatePresence mode="popLayout" initial={false}>
         <motion.span
           key={String(value)}
@@ -161,7 +167,7 @@ export const StatCard = ({ label, value, sub, accent }) => (
       </AnimatePresence>
     </div>
     {sub && <div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "var(--muted)", marginTop: "6px", fontWeight: "500" }}>{sub}</div>}
-  </div>
+  </GlassPanel>
 );
 
 export const Pill = ({ children, active, onClick }) => (
@@ -190,15 +196,36 @@ export const CustomTooltip = ({ active, payload }) => {
   );
 };
 
-export const SectionHeader = ({ eyebrow, title, right }) => (
-  <div className="accent-strip scanline-overlay" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem", marginBottom: "24px" }}>
-    <div>
-      {eyebrow && <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.75, marginBottom: "0.2rem" }}>{eyebrow}</div>}
-      <div style={{ fontSize: "1.15rem", fontWeight: "900", fontStyle: "italic", letterSpacing: "0.04em" }}>{title}</div>
+// Page/section header. `variant="red"` (default) keeps the solid red accent
+// strip — used on action pages (My Picks form, Next Race) where clarity/urgency
+// matters. `variant="glass"` swaps in the full-width HUD GlassPanel treatment so
+// the ambient background shows through — used on data-heavy pages (Championship,
+// Model, 2026 Season / Accuracy Tracker). The title uses the Rajdhani headline
+// face (.hud-title) in both variants; the eyebrow stays mono.
+export const SectionHeader = ({ eyebrow, title, right, variant = "red" }) => {
+  const inner = (
+    <>
+      <div>
+        {eyebrow && <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.75, marginBottom: "0.2rem", color: variant === "glass" ? "var(--muted)" : undefined }}>{eyebrow}</div>}
+        <div className="hud-title" style={{ fontSize: "1.25rem", letterSpacing: "0.05em" }}>{title}</div>
+      </div>
+      {right}
+    </>
+  );
+  const layout = { display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem", marginBottom: "24px" };
+  if (variant === "glass") {
+    return (
+      <GlassPanel className="scanline-overlay" style={{ ...layout, padding: "1rem 1.5rem" }}>
+        {inner}
+      </GlassPanel>
+    );
+  }
+  return (
+    <div className="accent-strip scanline-overlay" style={layout}>
+      {inner}
     </div>
-    {right}
-  </div>
-);
+  );
+};
 
 
 // ── RACE SELECTOR (custom searchable dropdown) ─────────────────

@@ -5,7 +5,8 @@ import {
   ResponsiveContainer, Legend
 } from "recharts";
 import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
-import { API, card } from "../constants.js";
+import { GlassPanel } from "../components/GlassPanel.jsx";
+import { API } from "../constants.js";
 
 // ── CHAMPIONSHIP PAGE ──────────────────────────────────────────
 const ChampionshipPage = () => {
@@ -30,6 +31,7 @@ const ChampionshipPage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <SectionHeader
+        variant="glass"
         eyebrow="ML Simulation · Historical Win Rates"
         title="2026 Championship Predictor"
         right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>13 RACES REMAINING</div></div>}
@@ -41,7 +43,7 @@ const ChampionshipPage = () => {
 
       {!loading && data && (
         <>
-          <div className="chart-enter" style={{ ...card }}>
+          <GlassPanel className="chart-enter">
             <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
               <span className="section-label">Title Probability</span>
             </div>
@@ -57,9 +59,9 @@ const ChampionshipPage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </GlassPanel>
 
-          <div className="chart-enter" style={{ ...card, padding: "20px" }}>
+          <GlassPanel className="chart-enter" style={{ padding: "20px" }}>
             <div className="section-label" style={{ marginBottom: "1rem" }}>Current vs Projected Final Points</div>
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={pointsData} margin={{ left: 8, right: 16 }}>
@@ -72,9 +74,9 @@ const ChampionshipPage = () => {
                 <Bar dataKey="projected" name="Projected" fill="#e10600" radius={0} opacity={0.75} />
               </BarChart>
             </ResponsiveContainer>
-          </div>
+          </GlassPanel>
 
-          <div className="chart-enter" style={{ ...card }}>
+          <GlassPanel className="chart-enter">
             <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
               <span className="section-label">Full Simulation Breakdown</span>
             </div>
@@ -92,14 +94,14 @@ const ChampionshipPage = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </GlassPanel>
 
-          <div style={{ ...card, padding: "20px", display: "flex", gap: "0.75rem" }}>
+          <GlassPanel style={{ padding: "20px", display: "flex", gap: "0.75rem" }}>
             <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>METHOD</span>
             <p style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
               Projected points = historical win rate × remaining races × avg points. Baseline simulation — 2026 reg changes mean actual results may vary significantly.
             </p>
-          </div>
+          </GlassPanel>
         </>
       )}
     </div>

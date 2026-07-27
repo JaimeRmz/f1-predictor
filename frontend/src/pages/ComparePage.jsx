@@ -4,10 +4,17 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend
 } from "recharts";
-import { Spinner, DriverSelector, BackendPanel } from "../shared.jsx";
-import { API, card } from "../constants.js";
+import { Spinner, DriverSelector, BackendPanel, SectionHeader } from "../shared.jsx";
+import { GlassPanel } from "../components/GlassPanel.jsx";
+import { API, TEAM_COLORS, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026 } from "../constants.js";
 
 // ── COMPARE PAGE ───────────────────────────────────────────────
+// driverRef → team accent color, via the constructor-override map + the 2026
+// grid. Historical drivers outside the current grid fall back to null, which
+// GlassPanel renders as neutral (untinted) glass.
+const teamColorForRef = (ref) =>
+  TEAM_COLORS[CONSTRUCTOR_OVERRIDES[ref] || STANDINGS_GRID_2026.find(d => d.driverRef === ref)?.team] || null;
+
 const ComparePage = () => {
   const [drivers, setDrivers] = useState([]);
   const [d1, setD1] = useState(""); const [d2, setD2] = useState("");
@@ -37,8 +44,9 @@ const ComparePage = () => {
   };
 
   return (
-    <div>
-      <div style={{ ...card, padding: "1.25rem", marginBottom: "1rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <SectionHeader variant="glass" eyebrow="Career Stats · Head to Head" title="Compare Drivers" />
+      <GlassPanel style={{ padding: "1.25rem" }}>
         <div className="compare-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
           {[["Driver 1", d1, setD1], ["Driver 2", d2, setD2]].map(([label, val, set]) => (
             <div key={label}>
@@ -50,7 +58,7 @@ const ComparePage = () => {
         <button onClick={compare} className="btn-primary" style={{ width: "100%", padding: "0.85rem", background: "var(--red)", color: "#fff", border: "none", fontSize: "0.78rem", fontWeight: "700", letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>
           COMPARE →
         </button>
-      </div>
+      </GlassPanel>
 
       {offline && <BackendPanel detail="The driver comparison request failed." onRetry={retry} />}
 
@@ -59,21 +67,24 @@ const ComparePage = () => {
       {data && !loading && (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           <div className="compare-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            {[data.driver1, data.driver2].map((d, i) => (
-              <div key={i} className="stat-card-enter" style={i === 0 ? { background: "var(--red)", padding: "1.25rem" } : { ...card, padding: "1.25rem" }}>
-                <h3 style={{ fontSize: "1rem", fontWeight: "900", fontStyle: "italic", margin: "0 0 1rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>{d.name}</h3>
+            {[data.driver1, data.driver2].map((d, i) => {
+              const tint = teamColorForRef(i === 0 ? d1 : d2);
+              return (
+              <GlassPanel key={i} tint={tint} className="stat-card-enter" style={{ padding: "1.25rem" }}>
+                <h3 className="hud-title" style={{ fontSize: "1.15rem", margin: "0 0 1rem", textTransform: "uppercase", letterSpacing: "0.04em", color: tint || "var(--text)" }}>{d.name}</h3>
                 {[["Wins", "wins"], ["Podiums", "podiums"], ["Podium Rate", "podium_rate", "%"], ["Avg Grid", "avg_grid"], ["Avg Finish", "avg_finish"], ["DNF Rate", "dnf_rate", "%"]].map(([label, key, suf]) => (
                   <div key={key} style={{ display: "flex", justifyContent: "space-between", padding: "0.4rem 0", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-                    <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: i === 0 ? "rgba(255,255,255,0.65)" : "var(--muted)", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</span>
+                    <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "var(--muted)", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</span>
                     <span style={{ fontFamily: "var(--mono)", fontSize: "0.78rem", fontWeight: "700" }}>{d[key]}{suf || ""}</span>
                   </div>
                 ))}
-              </div>
-            ))}
+              </GlassPanel>
+              );
+            })}
           </div>
 
           {data.head_to_head.length > 0 && (
-            <div className="chart-enter" style={{ ...card, padding: "20px" }}>
+            <GlassPanel className="chart-enter" style={{ padding: "20px" }}>
               <div className="section-label" style={{ marginBottom: "1rem" }}>Head to Head · Podium % by Circuit</div>
               <ResponsiveContainer width="100%" height={240}>
                 <BarChart data={data.head_to_head}>
@@ -86,7 +97,7 @@ const ComparePage = () => {
                   <Bar dataKey="driver2_podium_rate" name={data.driver2.name.split(" ").pop()} fill="var(--dimmed)" radius={0} />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
+            </GlassPanel>
           )}
         </div>
       )}

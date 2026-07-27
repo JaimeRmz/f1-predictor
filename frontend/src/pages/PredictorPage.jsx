@@ -5,9 +5,15 @@ import {
   ResponsiveContainer, Cell, LineChart, Line, Legend
 } from "recharts";
 import { StatCard, Pill, CustomTooltip, SectionHeader, CountUp, RaceSelector, BackendPanel, SkeletonList } from "../shared.jsx";
-import { API, card, CONSTRUCTOR_OVERRIDES, UPCOMING_RACES_2026, UPCOMING_IDS, STANDINGS_GRID_2026 } from "../constants.js";
+import { GlassPanel } from "../components/GlassPanel.jsx";
+import { TelemetryTraces } from "../components/TelemetryTraces.jsx";
+import { API, CONSTRUCTOR_OVERRIDES, TEAM_COLORS, UPCOMING_RACES_2026, UPCOMING_IDS, STANDINGS_GRID_2026 } from "../constants.js";
 
 // ── PREDICTOR PAGE ─────────────────────────────────────────────
+// A prediction record → its team's accent color (via the constructor override
+// map), for team-tinted GlassPanels and driver-identity stat cards. Null when
+// the team isn't mapped, which GlassPanel treats as neutral (untinted) glass.
+const teamColorOf = (p) => (p ? TEAM_COLORS[CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team] || null : null);
 const PredictorPage = () => {
   const [races, setRaces] = useState([]);
   const [predictions, setPredictions] = useState([]);
@@ -85,10 +91,10 @@ const PredictorPage = () => {
 
   return (
     <div>
-      <div className="card-lift" style={{ ...card, padding: "1.25rem", marginBottom: "1rem" }}>
+      <GlassPanel className="card-lift" style={{ padding: "1.25rem", marginBottom: "1rem" }}>
         <div className="section-label" style={{ marginBottom: "0.6rem" }}>Select Grand Prix</div>
         <RaceSelector upcoming={UPCOMING_RACES_2026} completed={races} value={selectedRaceId} onSelect={predict} />
-      </div>
+      </GlassPanel>
 
       {offline && <BackendPanel detail="The race list or prediction request failed." onRetry={retry} />}
 
@@ -108,25 +114,28 @@ const PredictorPage = () => {
             <>
               {/* ── SECTION 1: PREDICTED QUALIFYING — order only, no probabilities ── */}
               <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying" />
-              <div className="chart-enter" style={{ ...card, marginBottom: "0.75rem" }}>
-                {gridPredictions.map((p, i) => (
-                  <div key={p.driverRef} className="data-row stagger-item" style={{
-                    "--i": i,
-                    display: "flex", alignItems: "center", gap: "0.85rem", padding: "0.6rem 1rem",
-                    borderBottom: i < gridPredictions.length - 1 ? "1px solid var(--border)" : "none",
-                  }}>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.72rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", width: "26px", flexShrink: 0 }}>P{p.grid}</div>
-                    <div style={{ flex: 1, fontWeight: "700", fontSize: "0.78rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>{p.driver_name}</div>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--muted)" }}>{CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team}</div>
-                  </div>
-                ))}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "0.75rem" }}>
+                {gridPredictions.map((p, i) => {
+                  const team = CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team;
+                  const color = teamColorOf(p);
+                  return (
+                    <GlassPanel key={p.driverRef} tint={color} className="data-row stagger-item" style={{
+                      "--i": i,
+                      display: "flex", alignItems: "center", gap: "0.85rem", padding: "0.6rem 1rem",
+                    }}>
+                      <div style={{ fontFamily: "var(--mono)", fontSize: "0.72rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", width: "26px", flexShrink: 0 }}>P{p.grid}</div>
+                      <div style={{ flex: 1, fontWeight: "700", fontSize: "0.78rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>{p.driver_name}</div>
+                      <div style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: color || "var(--muted)", opacity: 0.7 }}>{team}</div>
+                    </GlassPanel>
+                  );
+                })}
               </div>
-              <div style={{ ...card, padding: "14px 20px", marginBottom: "2rem", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
+              <GlassPanel style={{ padding: "14px 20px", marginBottom: "2rem", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
                 <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--gold)", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
                 <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6 }}>
                   Grid auto-predicted by qualifying model · updates after real qualifying
                 </span>
-              </div>
+              </GlassPanel>
 
               {/* ── divider between the two sections ── */}
               <div style={{ height: "1px", background: "var(--border)", margin: "0 0 1.5rem" }} />
@@ -140,12 +149,12 @@ const PredictorPage = () => {
             <StatCard
               label="Predicted Winner"
               value={predictedWinner ? `${predictedWinner.driver_name.split(" ").pop()} · ${((predictedWinner.win_probability ?? 0) * 100).toFixed(1)}%` : "—"}
-              accent="var(--gold)"
+              tint={teamColorOf(predictedWinner)}
             />
             {isUpcoming ? (
               <>
                 <StatCard label="Podium Favorites" value={`${podiumFavorites} drivers`} sub="podium % > 60" />
-                <StatCard label="Predicted Pole" value={predictedPole?.driver_name.split(" ").pop() ?? "—"} accent="var(--red)" />
+                <StatCard label="Predicted Pole" value={predictedPole?.driver_name.split(" ").pop() ?? "—"} tint={teamColorOf(predictedPole)} />
               </>
             ) : (
               <>
@@ -170,13 +179,9 @@ const PredictorPage = () => {
                 <div style={{ width: "70px", flexShrink: 0 }} />
               </div>
               {predictions.map((p, i) => (
-                <div key={i} onClick={() => { setExplainDriver(p); setTab("explainer"); }}
+                <GlassPanel key={i} tint={teamColorOf(p)} onClick={() => { setExplainDriver(p); setTab("explainer"); }}
                   className="data-row clickable stagger-item row-gap-tight"
-                  style={{
-                    ...card, "--i": i, padding: "16px", display: "flex", alignItems: "center", gap: "1rem",
-                    borderLeft: p.podium === 1 ? "3px solid var(--green)" : i === 0 ? "3px solid var(--red)" : "3px solid var(--dimmed)",
-                    background: i % 2 === 0 ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
-                  }}>
+                  style={{ "--i": i, padding: "16px", display: "flex", alignItems: "center", gap: "1rem" }}>
                   <div style={{ fontFamily: "var(--mono)", width: "22px", fontSize: "0.75rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", flexShrink: 0 }}>P{i+1}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: "700", fontSize: "0.88rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>{p.driver_name}</div>
@@ -189,23 +194,23 @@ const PredictorPage = () => {
                     <div style={{ height: "2px", background: "var(--dimmed)", marginBottom: "4px", overflow: "hidden" }}>
                       <div className="prob-bar" style={{ height: "100%", width: `${((p.win_probability ?? 0) * 100).toFixed(0)}%`, background: "var(--gold)" }} />
                     </div>
-                    <div style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.win_probability > 0.3 ? "var(--gold)" : "var(--muted)" }}><CountUp value={(p.win_probability ?? 0) * 100} suffix="%" /></div>
+                    <div className={p.win_probability > 0.3 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.win_probability > 0.3 ? "var(--gold)" : "var(--muted)" }}><CountUp value={(p.win_probability ?? 0) * 100} suffix="%" /></div>
                   </div>
                   <div className="pred-metric" style={{ width: "90px", flexShrink: 0 }}>
                     <div style={{ height: "2px", background: "var(--dimmed)", marginBottom: "4px", overflow: "hidden" }}>
                       <div className="prob-bar" style={{ height: "100%", width: `${(p.podium_probability * 100).toFixed(0)}%`, background: p.podium === 1 ? "var(--green)" : "var(--red)" }} />
                     </div>
-                    <div style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.podium_probability > 0.5 ? "var(--red)" : "var(--muted)" }}><CountUp value={p.podium_probability * 100} suffix="%" /></div>
+                    <div className={p.podium_probability > 0.5 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.podium_probability > 0.5 ? "var(--red)" : "var(--muted)" }}><CountUp value={p.podium_probability * 100} suffix="%" /></div>
                   </div>
                   <div className="hide-mobile" style={{ width: "70px", flexShrink: 0, fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--dimmed)", letterSpacing: "0.06em" }}>EXPLAIN →</div>
-                </div>
+                </GlassPanel>
               ))}
             </div>
           )}
 
           {tab === "chart" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <div className="chart-enter" style={{ ...card, padding: "20px" }}>
+              <GlassPanel className="chart-enter" style={{ padding: "20px" }}>
                 <div className="section-label" style={{ marginBottom: "1rem" }}>Podium Probability by Driver</div>
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={predictions} layout="vertical" margin={{ left: 8, right: 24 }}>
@@ -218,8 +223,8 @@ const PredictorPage = () => {
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
-              </div>
-              <div className="chart-enter" style={{ ...card, padding: "20px" }}>
+              </GlassPanel>
+              <GlassPanel className="chart-enter" style={{ padding: "20px" }}>
                 <div className="section-label" style={{ marginBottom: "1rem" }}>Predicted Rank vs Actual Finish</div>
                 <ResponsiveContainer width="100%" height={220}>
                   <LineChart data={predictions.map((p, i) => ({ name: p.driver_name.split(" ").pop(), predicted: i + 1, actual: p.positionOrder }))}>
@@ -232,24 +237,24 @@ const PredictorPage = () => {
                     <Line type="monotone" dataKey="actual" stroke="#00c853" strokeWidth={2} dot={{ r: 3, fill: "#00c853" }} name="Actual" strokeDasharray="4 2" />
                   </LineChart>
                 </ResponsiveContainer>
-              </div>
+              </GlassPanel>
             </div>
           )}
 
           {tab === "explainer" && (
             <div>
               {!explainDriver ? (
-                <div style={{ ...card, padding: "3rem", textAlign: "center" }}>
+                <GlassPanel style={{ padding: "3rem", textAlign: "center" }}>
                   <p style={{ fontFamily: "var(--mono)", color: "var(--muted)", fontSize: "0.75rem", letterSpacing: "0.1em" }}>SELECT A DRIVER IN THE DRIVERS TAB</p>
-                </div>
+                </GlassPanel>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                  <div className="accent-strip">
-                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.75, marginBottom: "0.25rem" }}>PREDICTION BREAKDOWN</div>
-                    <div style={{ fontSize: "1.5rem", fontWeight: "900", fontStyle: "italic", letterSpacing: "0.02em" }}>{explainDriver.driver_name.toUpperCase()}</div>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.78rem", opacity: 0.9, marginTop: "3px" }}>{(explainDriver.podium_probability * 100).toFixed(1)}% PODIUM PROBABILITY</div>
-                  </div>
-                  <div className="chart-enter" style={{ ...card }}>
+                  <GlassPanel tint={teamColorOf(explainDriver)} style={{ padding: "1rem 1.5rem" }}>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", color: "var(--muted)", marginBottom: "0.25rem" }}>PREDICTION BREAKDOWN</div>
+                    <div className="hud-title" style={{ fontSize: "1.5rem", letterSpacing: "0.04em", color: teamColorOf(explainDriver) || "var(--text)" }}>{explainDriver.driver_name.toUpperCase()}</div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.78rem", color: "var(--muted)", marginTop: "3px" }}>{(explainDriver.podium_probability * 100).toFixed(1)}% PODIUM PROBABILITY</div>
+                  </GlassPanel>
+                  <GlassPanel className="chart-enter">
                     <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
                       <span className="section-label">Feature Breakdown</span>
                     </div>
@@ -274,8 +279,8 @@ const PredictorPage = () => {
                         );
                       })}
                     </div>
-                  </div>
-                  <div className="chart-enter" style={{ ...card, padding: "1.25rem" }}>
+                  </GlassPanel>
+                  <GlassPanel className="chart-enter" style={{ padding: "1.25rem" }}>
                     <div className="section-label" style={{ marginBottom: "0.6rem" }}>Plain English Summary</div>
                     <p style={{ fontFamily: "var(--mono)", fontSize: "0.72rem", color: "var(--muted)", lineHeight: 1.9, margin: 0 }}>
                       <span style={{ color: "var(--text)" }}>{explainDriver.driver_name}</span> started from grid <span style={{ color: "var(--text)" }}>P{explainDriver.grid ?? "N/A"}</span>, entered with <span style={{ color: "var(--text)" }}>{Number.isFinite(explainDriver.driver_season_points) ? explainDriver.driver_season_points.toFixed(0) : "N/A"} pts</span>, and has {Number.isFinite(explainDriver.driver_circuit_podium_rate)
@@ -283,7 +288,7 @@ const PredictorPage = () => {
                         : "no podium history"} at this circuit. Recent avg finish: <span style={{ color: "var(--text)" }}>{Number.isFinite(explainDriver.driver_recent_form) ? `P${explainDriver.driver_recent_form.toFixed(1)}` : "N/A"}</span>. Model output: <span style={{ color: "var(--red)" }}>{(explainDriver.podium_probability * 100).toFixed(1)}%</span> podium probability.
                       {isUpcoming ? null : explainDriver.podium === 1 ? <span style={{ color: "var(--green)" }}> ✓ Podiumed.</span> : <span style={{ color: "var(--muted)" }}> Did not podium.</span>}
                     </p>
-                  </div>
+                  </GlassPanel>
                 </div>
               )}
             </div>
@@ -292,8 +297,10 @@ const PredictorPage = () => {
       )}
 
       {!loading && !offline && predictions.length === 0 && (
-        <div style={{ textAlign: "center", padding: "5rem 0" }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.7rem", color: "var(--muted)", letterSpacing: "0.2em" }}>SELECT A RACE TO RUN THE MODEL</div>
+        <div style={{ position: "relative", overflow: "hidden", textAlign: "center", padding: "6rem 0", minHeight: "280px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+          <TelemetryTraces opacity={0.2} />
+          <span style={{ position: "relative", zIndex: 1, width: "8px", height: "8px", borderRadius: "50%", background: "var(--red)", animation: "pulse 1.6s ease-in-out infinite" }} />
+          <div style={{ position: "relative", zIndex: 1, fontFamily: "var(--mono)", fontSize: "0.7rem", color: "var(--muted)", letterSpacing: "0.2em" }}>SELECT A RACE TO RUN THE MODEL</div>
         </div>
       )}
     </div>

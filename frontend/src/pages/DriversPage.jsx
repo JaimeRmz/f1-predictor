@@ -3,10 +3,17 @@ import axios from "axios";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
-import { StatCard, BackendPanel, SkeletonList } from "../shared.jsx";
-import { API, card } from "../constants.js";
+import { StatCard, BackendPanel, SkeletonList, SectionHeader } from "../shared.jsx";
+import { GlassPanel } from "../components/GlassPanel.jsx";
+import { TelemetryTraces } from "../components/TelemetryTraces.jsx";
+import { API, TEAM_COLORS, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026 } from "../constants.js";
 
 // ── DRIVERS PAGE ───────────────────────────────────────────────
+// driverRef → team accent color (2026 grid + overrides); null → neutral glass
+// for historical drivers outside the current grid.
+const teamColorForRef = (ref) =>
+  TEAM_COLORS[CONSTRUCTOR_OVERRIDES[ref] || STANDINGS_GRID_2026.find(d => d.driverRef === ref)?.team] || null;
+
 const DriversPage = () => {
   const [drivers, setDrivers] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -43,8 +50,10 @@ const DriversPage = () => {
   const lastYear  = stats?.by_year?.[stats.by_year.length - 1]?.year;
 
   return (
-    <div className="drivers-grid" style={{ display: "grid", gridTemplateColumns: "190px 1fr", gap: "1rem" }}>
-      <div style={{ ...card, padding: "0.5rem", maxHeight: "640px", overflowY: "auto" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <SectionHeader variant="glass" eyebrow="Career Explorer · 2010–2026" title="Drivers" />
+      <div className="drivers-grid" style={{ display: "grid", gridTemplateColumns: "190px 1fr", gap: "1rem" }}>
+      <GlassPanel tilt={false} style={{ padding: "0.5rem", maxHeight: "640px", overflowY: "auto" }}>
         <div style={{ padding: "0.5rem 0.5rem 0.4rem", borderBottom: "1px solid var(--border)", marginBottom: "0.25rem" }}>
           <span className="section-label">All Drivers</span>
         </div>
@@ -68,17 +77,23 @@ const DriversPage = () => {
               fontFamily: "var(--sans)",
             }}>{d.driver_name}</button>
         ))}
-      </div>
+      </GlassPanel>
       <div>
         {offline && <BackendPanel detail="The driver data request failed." onRetry={retry} />}
-        {!selected && !offline && <div style={{ ...card, padding: "3rem", textAlign: "center" }}><p style={{ fontFamily: "var(--mono)", color: "var(--muted)", fontSize: "0.72rem", letterSpacing: "0.12em" }}>SELECT A DRIVER</p></div>}
+        {!selected && !offline && (
+          <GlassPanel style={{ padding: "4rem 3rem", minHeight: "260px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", textAlign: "center" }}>
+            <span style={{ position: "absolute", inset: 0, overflow: "hidden", borderRadius: "inherit", zIndex: 0 }}><TelemetryTraces opacity={0.2} /></span>
+            <span style={{ position: "relative", zIndex: 2, width: "8px", height: "8px", borderRadius: "50%", background: "var(--red)", animation: "pulse 1.6s ease-in-out infinite" }} />
+            <p style={{ position: "relative", zIndex: 2, fontFamily: "var(--mono)", color: "var(--muted)", fontSize: "0.72rem", letterSpacing: "0.12em", margin: 0 }}>SELECT A DRIVER</p>
+          </GlassPanel>
+        )}
         {loading && <SkeletonList rows={5} metrics={1} />}
         {stats && !loading && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <div className="accent-strip">
-              <h2 style={{ fontSize: "1.5rem", fontWeight: "900", fontStyle: "italic", margin: "0 0 0.2rem", letterSpacing: "0.02em" }}>{stats.career.name.toUpperCase()}</h2>
-              <p style={{ fontFamily: "var(--mono)", color: "rgba(255,255,255,0.7)", fontSize: "0.65rem", letterSpacing: "0.1em", margin: 0 }}>{stats.career.races} RACES · {firstYear}–{lastYear}</p>
-            </div>
+            <GlassPanel tint={teamColorForRef(selected)} style={{ padding: "1.1rem 1.5rem" }}>
+              <h2 className="hud-title" style={{ fontSize: "1.6rem", margin: "0 0 0.2rem", letterSpacing: "0.03em", color: teamColorForRef(selected) || "var(--text)" }}>{stats.career.name.toUpperCase()}</h2>
+              <p style={{ fontFamily: "var(--mono)", color: "var(--muted)", fontSize: "0.65rem", letterSpacing: "0.1em", margin: 0 }}>{stats.career.races} RACES · {firstYear}–{lastYear}</p>
+            </GlassPanel>
             <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
               <StatCard label="Wins" value={stats.career.wins} accent="var(--red)" />
               <StatCard label="Podiums" value={stats.career.podiums} />
@@ -86,7 +101,7 @@ const DriversPage = () => {
               <StatCard label="Avg Grid" value={stats.career.avg_grid} />
               <StatCard label="Avg Finish" value={stats.career.avg_finish} />
             </div>
-            <div className="chart-enter" style={{ ...card, padding: "20px" }}>
+            <GlassPanel className="chart-enter" style={{ padding: "20px" }}>
               <div className="section-label" style={{ marginBottom: "1rem" }}>Wins & Podiums Per Season</div>
               <ResponsiveContainer width="100%" height={180}>
                 <BarChart data={stats.by_year}>
@@ -98,8 +113,8 @@ const DriversPage = () => {
                   <Bar dataKey="podiums" name="Podiums" fill="var(--dimmed)" radius={0} />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
-            <div className="chart-enter" style={{ ...card }}>
+            </GlassPanel>
+            <GlassPanel className="chart-enter">
               <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
                 <span className="section-label">Best Circuits by Podium Rate</span>
               </div>
@@ -114,9 +129,10 @@ const DriversPage = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </GlassPanel>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

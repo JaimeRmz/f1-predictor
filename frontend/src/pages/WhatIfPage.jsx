@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
-import { API, card, cardRed, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
+import { GlassPanel, HudBrackets } from "../components/GlassPanel.jsx";
+import { API, cardRed, glassStyle, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
 
 // ── WHAT IF SIMULATOR (next race: Dutch GP · Zandvoort) ────────────
 const NEXT_RACE_CIRCUIT = "zandvoort";
@@ -231,12 +232,12 @@ const WhatIfPage = () => {
         }
       />
 
-      <div style={{ ...card, padding: "14px 20px", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
+      <GlassPanel style={{ padding: "14px 20px", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--gold)", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6 }}>
           Grid pre-loaded with predicted qualifying order for Zandvoort · Drag to simulate alternative scenarios
         </span>
-      </div>
+      </GlassPanel>
 
       <p style={{ fontFamily: "var(--mono)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.7 }}>
         Drag drivers to reorder the starting grid. Each change triggers a live XGBoost prediction — watch probabilities update in real time.
@@ -250,7 +251,9 @@ const WhatIfPage = () => {
             {drivers.map((d, i) => {
               const team = CONSTRUCTOR_OVERRIDES[d.driverRef] || d.team;
               return (
-              <div key={d.driverRef} className="data-row"
+              <GlassPanel key={d.driverRef} className="data-row"
+                tint={teamColors[team] || null}
+                tilt={false}
                 data-index={i}
                 ref={el => { rowRefs.current[i] = el; }}
                 onPointerDown={e => handlePointerDown(e, i)}
@@ -258,9 +261,7 @@ const WhatIfPage = () => {
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerCancel}
                 style={{
-                  ...card,
                   display: "flex", alignItems: "center", gap: "0.85rem", padding: "16px",
-                  borderLeft: `4px solid ${teamColors[team] || "#2a2a38"}`,
                   cursor: "default", userSelect: "none",
                 }}>
                 <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", width: "20px", flexShrink: 0 }}>P{i + 1}</div>
@@ -271,7 +272,7 @@ const WhatIfPage = () => {
                 <div style={{ display: "flex", flexDirection: "column", gap: "2px", opacity: 0.25, flexShrink: 0 }}>
                   {[0,1,2].map(n => <div key={n} style={{ display: "flex", gap: "2px" }}><div style={{ width: "3px", height: "3px", borderRadius: "50%", background: "var(--text)" }} /><div style={{ width: "3px", height: "3px", borderRadius: "50%", background: "var(--text)" }} /></div>)}
                 </div>
-              </div>
+              </GlassPanel>
               );
             })}
           </div>
@@ -293,13 +294,11 @@ const WhatIfPage = () => {
                 <motion.div key={r.driverRef} layout
                   animate={{ opacity: loading ? 0.6 : 1 }}
                   transition={{ opacity: { duration: 0.15 }, layout: { type: "spring", stiffness: 350, damping: 32 } }}
-                  className="data-row" style={{
-                  ...card,
+                  className="data-row glass-panel" style={{
+                  ...glassStyle(i === 0 ? "#e10600" : tc),
                   padding: "16px",
-                  background: i === 0 ? "rgba(225,6,0,0.08)" : card.background,
-                  border: i === 0 ? "1px solid var(--border-red)" : card.border,
-                  borderLeft: `4px solid ${i === 0 ? "#e10600" : i < 3 ? "rgba(225,6,0,0.3)" : "#2a2a38"}`,
                 }}>
+                  <HudBrackets tint={i === 0 ? "#e10600" : tc} />
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
                     <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", width: "20px", flexShrink: 0 }}>P{i + 1}</div>
                     <div style={{ flex: 1 }}>
@@ -330,12 +329,12 @@ const WhatIfPage = () => {
         </div>
       </div>
 
-      <div style={{ ...card, padding: "20px", display: "flex", gap: "0.75rem" }}>
+      <GlassPanel style={{ padding: "20px", display: "flex", gap: "0.75rem" }}>
         <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>INFO</span>
         <p style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
           Each reorder triggers a live POST to the XGBoost model. Only grid position changes — championship points, recent form, and circuit history stay fixed. This isolates the pure qualifying effect on race outcome probability.
         </p>
-      </div>
+      </GlassPanel>
     </div>
   );
 };

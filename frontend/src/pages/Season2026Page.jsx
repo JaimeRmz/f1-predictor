@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Spinner, StatCard, SectionHeader, BackendPanel } from "../shared.jsx";
-import { API, card, UPCOMING_RACES_2026, COMPLETED_2026 } from "../constants.js";
+import { GlassPanel } from "../components/GlassPanel.jsx";
+import { API, UPCOMING_RACES_2026, COMPLETED_2026 } from "../constants.js";
 import { useHealth } from "../health.jsx";
 import { RaceStrategySection } from "../components/RaceStrategy.jsx";
 import { supabase } from "../lib/supabaseClient.js";
@@ -159,6 +160,7 @@ const Season2026Page = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <SectionHeader
+        variant="glass"
         eyebrow="Live Test Set · Post-Training Data"
         title="2026 Formula One Season"
         right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>11 RACES COMPLETE</div></div>}
@@ -173,7 +175,7 @@ const Season2026Page = () => {
       </div>
 
       {/* Championship standings */}
-      <div className="chart-enter" style={{ ...card }}>
+      <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
           <span className="section-label">Driver Championship — after 11 rounds</span>
         </div>
@@ -193,17 +195,17 @@ const Season2026Page = () => {
             <span style={{ fontFamily: "var(--mono)", fontSize: "0.88rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--text)", width: "40px", textAlign: "right", flexShrink: 0 }}>{s.pts}</span>
           </div>
         ))}
-      </div>
+      </GlassPanel>
 
       {/* Model accuracy tracker */}
-      <div className="chart-enter" style={{ ...card }}>
+      <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
           <span className="section-label">Model Accuracy Tracker — 2026</span>
           {!loadingAcc && accuracy && (
             <div style={{ display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end" }}>
               {/* Pre-race (snapshot) cohort — small sample so far, counts only. */}
               <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", fontWeight: "700" }}>
-                <span style={{ color: "var(--gold)", letterSpacing: "0.08em" }}>PRE-RACE</span>
+                <span className="live-pulse" style={{ color: "var(--gold)", letterSpacing: "0.08em", display: "inline-block" }}>PRE-RACE</span>
                 <span style={{ color: "var(--text)" }}> · WIN {accuracy.preRace.winnerCorrect}/{accuracy.preRace.n} · POD {accuracy.preRace.podiumCorrect}/{accuracy.preRace.n}</span>
               </span>
               {/* Test-set (live, post-qualifying) cohort — larger sample, show %. */}
@@ -238,7 +240,7 @@ const Season2026Page = () => {
                 <div style={{ padding: "0.6rem 0.75rem" }}>
                   <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", fontWeight: "700" }}>RD {r.round} {r.flag}</div>
                   <div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "var(--text)", marginTop: "2px", fontWeight: "600" }}>{r.name}</div>
-                  <span style={{
+                  <span className={r.source === "snapshot" ? "live-pulse" : undefined} style={{
                     display: "inline-block", marginTop: "4px", fontFamily: "var(--mono)", fontSize: "0.5rem",
                     fontWeight: "700", letterSpacing: "0.06em", padding: "1px 5px", borderRadius: "3px",
                     color: r.source === "snapshot" ? "var(--gold)" : "var(--muted)",
@@ -268,10 +270,10 @@ const Season2026Page = () => {
             ))}
           </>
         )}
-      </div>
+      </GlassPanel>
 
       {/* Race strategy & telemetry (OpenF1) — one collapsible row per completed round */}
-      <div className="chart-enter" style={{ ...card }}>
+      <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem" }}>
           <span className="section-label">Race Strategy &amp; Telemetry — completed rounds</span>
         </div>
@@ -284,10 +286,10 @@ const Season2026Page = () => {
             label={<><span style={{ color: "var(--muted)", marginRight: "0.5rem" }}>RD {r.round}</span>{r.flag} {r.name}</>}
           />
         ))}
-      </div>
+      </GlassPanel>
 
       {/* Remaining calendar */}
-      <div className="chart-enter" style={{ ...card }}>
+      <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
           <span className="section-label">Remaining 2026 Calendar — 11 rounds</span>
         </div>
@@ -302,7 +304,7 @@ const Season2026Page = () => {
             <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", flexShrink: 0 }}>{r.date}</span>
           </div>
         ))}
-      </div>
+      </GlassPanel>
     </div>
   );
 };

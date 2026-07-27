@@ -3,7 +3,10 @@
 :root {
   --red: #e10600;
   --red-dim: rgba(225,6,0,0.15);
-  --bg: #080812;
+  /* --void is the Pit Wall base background; --bg points at it so the darker
+     value flows everywhere the old #080812 was referenced via the token. */
+  --void: #08090C;
+  --bg: var(--void);
   --surface: #0e0e14;
   --surface2: #16161f;
   --surface3: #1e1e2a;
@@ -14,11 +17,27 @@
   --dimmed: #2a2a38;
   --mono: 'JetBrains Mono', monospace;
   --sans: 'Titillium Web', sans-serif;
+  /* Rajdhani is the headline face — page titles + section headers only.
+     Data/numbers stay --mono, body copy stays --sans. */
+  --display: 'Rajdhani', 'Titillium Web', sans-serif;
   --green: #00c853;
   --amber: #ffb020;
   --gold: #FFD700;
   --silver: #C0C0C0;
   --bronze: #CD7F32;
+  /* ── HUD glass panel tokens ── */
+  --glass-base: rgba(18, 20, 26, 0.55);   /* neutral frosted panel fill */
+  --hud-line: rgba(255, 255, 255, 0.08);  /* hairline borders + brackets */
+  --signal-red: #e10600;                  /* the F1 red, aliased for HUD use */
+  --glass-blur: 18px;                     /* backdrop-filter radius (Phase 2: mobile dials this down) */
+}
+
+/* Mobile / touch: cut the backdrop-filter radius. Full 18px blur under the
+   transform + pulse animations of Phase 2 is the known mobile-Safari perf
+   cliff, and cursor tilt (the transform) is disabled on coarse pointers anyway,
+   so a lighter blur here costs almost nothing visually and buys frame rate. */
+@media (hover: none), (pointer: coarse) {
+  :root { --glass-blur: 10px; }
 }
 
 html { scroll-behavior: smooth; background: var(--bg); }
@@ -210,6 +229,87 @@ body {
 }
 .data-row.clickable { cursor: pointer; }
 .data-row.clickable:hover { border-left-color: var(--red) !important; }
+
+/* ── HUD glass panel — corner brackets ──
+   4 broadcast-camera reticle corners (┌ ┐ └ ┘). Rendered as 4 absolutely
+   positioned <span>s by <HudBrackets>; each shows only its two relevant
+   borders. Border color is set inline (team tint, or neutral hairline). */
+.glass-panel { position: relative; }
+.hud-bracket {
+  position: absolute; width: 9px; height: 9px; pointer-events: none;
+  border: 0 solid transparent; z-index: 1;
+}
+.hud-bracket.tl { top: 5px;    left: 5px;    border-top-width: 1px; border-left-width: 1px; }
+.hud-bracket.tr { top: 5px;    right: 5px;   border-top-width: 1px; border-right-width: 1px; }
+.hud-bracket.bl { bottom: 5px; left: 5px;    border-bottom-width: 1px; border-left-width: 1px; }
+.hud-bracket.br { bottom: 5px; right: 5px;   border-bottom-width: 1px; border-right-width: 1px; }
+/* Panel content sits above the brackets' corner marks. */
+.glass-panel > *:not(.hud-bracket) { position: relative; z-index: 2; }
+
+/* ── Headline face (Rajdhani) ──
+   Page titles + section headers only. Data/labels stay mono, body stays sans. */
+.hud-title {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ═══════════════ PHASE 2 — MOTION LAYER ═══════════════
+   Cursor tilt (JS-set inline transform) is gated in GlassPanel on
+   prefers-reduced-motion + fine pointer. The CSS-driven pieces below all sit
+   under the global reduced-motion rule near the top of this file, which
+   collapses their animations to a single static frame — so reduced-motion users
+   get the Phase-1 static look automatically. */
+
+/* Light-sweep: a soft diagonal reflection clipped to the panel's rounded rect.
+   The band is translated across by GlassPanel via the Web Animations API on
+   mount (staggered) and on pointer-enter — NOT a looping shimmer. */
+.glass-sweep-wrap {
+  position: absolute; inset: 0; z-index: 3;
+  border-radius: inherit; overflow: hidden; pointer-events: none;
+}
+.glass-sweep-band {
+  position: absolute; top: -25%; left: 0; height: 150%; width: 55%;
+  opacity: 0; transform: translateX(-140%);
+  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+}
+/* A slight transition so the cursor tilt eases rather than snaps. Kept tiny so
+   it still tracks the pointer closely; scoped to transform only. */
+.glass-panel { transition: transform 0.12s ease-out; }
+
+/* Live-data breathing glow — a slow, subtle pulse that says "current/live",
+   not a blinking alert. currentColor makes it glow in the element's own color
+   (gold win%, red podium%, white countdown, gold PRE-RACE badge). */
+.live-pulse { animation: livePulse 3s ease-in-out infinite; }
+@keyframes livePulse {
+  0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+  50%      { filter: drop-shadow(0 0 5px currentColor); }
+}
+/* Bar variant: glow the fill via box-shadow instead of drop-shadow. */
+.live-pulse-bar { animation: livePulseBar 3s ease-in-out infinite; }
+@keyframes livePulseBar {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50%      { box-shadow: 0 0 7px 0 currentColor; }
+}
+
+/* Ambient telemetry traces — thin oscilloscope lines whose dash flows along the
+   path forever (draws itself in, loops seamlessly). Low opacity = texture, not
+   content. non-scaling-stroke keeps them hair-thin when the SVG is stretched. */
+.telemetry-traces {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+}
+.telemetry-traces .trace {
+  fill: none; stroke-width: 1.1; vector-effect: non-scaling-stroke;
+  stroke-dasharray: 260 1400;
+  animation: traceFlow 7s linear infinite;
+}
+.telemetry-traces .trace-2 { animation-duration: 9.5s;  animation-delay: -2s; opacity: 0.7; }
+.telemetry-traces .trace-3 { animation-duration: 12s;   animation-delay: -5s; opacity: 0.45; }
+@keyframes traceFlow {
+  from { stroke-dashoffset: 1660; }
+  to   { stroke-dashoffset: 0; }
+}
 
 /* ── Cards ── */
 .card-lift {

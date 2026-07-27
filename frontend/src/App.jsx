@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, Fragment, lazy, Suspense } from "react";
 import { MotionConfig } from "framer-motion";
 import { StatCard } from "./shared.jsx";
+import { TelemetryTraces } from "./components/TelemetryTraces.jsx";
 import { prefersReducedMotion } from "./constants.js";
 import { HealthProvider, useHealth } from "./health.jsx";
 import { AuthProvider } from "./auth.jsx";
@@ -53,7 +54,7 @@ const HealthIndicator = () => {
 const Nav = ({ page, setPage, onNavigate }) => {
   const links = ["Home", "Predictor", "Next Race 🇳🇱", "What-If 🎮", "My Picks 🎯", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
   return (
-    <nav style={{ background: "#080812", position: "sticky", top: 0, zIndex: 100 }}>
+    <nav style={{ background: "var(--void)", position: "sticky", top: 0, zIndex: 100 }}>
       <div className="nav-scroll" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem", display: "flex", overflowX: "auto" }}>
         {links.map(l => (
           <button key={l} onClick={() => { setPage(l); onNavigate(); }} className="nav-tab" style={{
@@ -431,13 +432,17 @@ const updateParticles = (particles, elapsed, { width, height }, dt = 0, mouse = 
         try {
           const dx = targetX - p.x, dy = targetY - p.y;
           const speed = Math.sqrt(dx * dx + dy * dy);
-          const trailLength = Math.min(speed * 3, 30);
+          // Phase 3: shorter, fainter streaks. The long/bright trails made the
+          // mid-assembly read as a tangled streak-field before the car
+          // resolved; halving the length and dimming keeps the sense of motion
+          // without the noise.
+          const trailLength = Math.min(speed * 2, 14);
           if (speed > 0.001 && trailLength > 0.5) {
             const dirX = dx / speed, dirY = dy / speed;
             p.trailActive = true;
             p.trailX = p.x - dirX * trailLength;
             p.trailY = p.y - dirY * trailLength;
-            p.trailOpacity = 0.4 * (1 - e);
+            p.trailOpacity = 0.22 * (1 - e);
           } else {
             p.trailActive = false;
           }
@@ -631,17 +636,23 @@ const drawParticles = (ctx, particles, elapsed, dims, gridPoints) => {
     }
   }
 
+  // Phase 3: during ASSEMBLE the per-particle velocity line + the motion-blur
+  // trail together read as a tangled web before the car resolves, so the
+  // velocity line is suppressed here — the (shortened) trails carry the motion.
+  // It stays on for scatter / disintegrate / circuit, where it's sparse.
+  const assembling = elapsed >= STAGE1_END && elapsed < STAGE2_END;
+
   for (const p of particles) {
     const vx = p.x - p.prevX;
     const vy = p.y - p.prevY;
     const speed = Math.sqrt(vx * vx + vy * vy);
     const drawY = p.y + idleOffset;
 
-    if (!holding) {
+    if (!holding && !assembling) {
       ctx.beginPath();
       ctx.moveTo(p.prevX, p.prevY);
       ctx.lineTo(p.x, drawY);
-      ctx.strokeStyle = `rgba(${p.color[0]},${p.color[1]},${p.color[2]},0.15)`;
+      ctx.strokeStyle = `rgba(${p.color[0]},${p.color[1]},${p.color[2]},0.08)`;
       ctx.lineWidth = 0.5;
       ctx.stroke();
     }
@@ -844,6 +855,57 @@ const drawCarMesh = (ctx, particles, elapsed, dt, { width }) => {
   for (const [bucketKey, path] of buckets) {
     ctx.strokeStyle = `rgba(255,255,255,${bucketKey / 50})`;
     ctx.stroke(path);
+  }
+  ctx.restore();
+};
+
+// Hero light treatment for the SETTLED car (STAGE2_END..STAGE3_END). Two parts,
+// echoing the Phase-1/2 GlassPanel language scaled up to a hero moment:
+//   • a soft bloom that fades in behind the silhouette (depth / presence), and
+//   • a single diagonal light-sweep that crosses the car once, glinting each
+//     particle as it passes — the panel light-sweep, hero-sized.
+// Drawn with 'lighter' over the particles so it reads as light catching the car,
+// never as a wash over the empty background. Reduced motion never reaches here
+// (that path renders a static circuit and returns before the loop).
+const CAR_SWEEP_START_OFFSET = 450;   // ms after the car settles
+const CAR_SWEEP_DURATION = 1500;      // ms for one pass
+const drawCarSettleLight = (ctx, particles, elapsed, { width, height }) => {
+  if (elapsed < STAGE2_END || elapsed >= STAGE3_END) return;
+  const hold = elapsed - STAGE2_END;
+  const holdSpan = STAGE3_END - STAGE2_END;
+
+  // Settle bloom: fades in over 500ms, breathes gently, fades before disintegrate.
+  const bloom = Math.min(1, hold / 500) * Math.min(1, (holdSpan - hold) / 400) * (0.85 + 0.15 * Math.sin(hold / 700));
+  if (bloom > 0.01) {
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    const g = ctx.createRadialGradient(width * 0.52, height * 0.46, 0, width * 0.52, height * 0.46, width * 0.34);
+    g.addColorStop(0, `rgba(255,95,72,${0.05 * bloom})`);
+    g.addColorStop(1, "rgba(255,95,72,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, width, height);
+    ctx.restore();
+  }
+
+  // Diagonal light-sweep across the car (in carX fraction space), once.
+  const st = hold - CAR_SWEEP_START_OFFSET;
+  if (st < 0 || st > CAR_SWEEP_DURATION) return;
+  const t = st / CAR_SWEEP_DURATION;
+  const bandCenter = -0.18 + t * 1.36;
+  const bandW = 0.15;
+  const peak = Math.sin(Math.PI * t);
+  if (peak <= 0.01) return;
+  ctx.save();
+  ctx.globalCompositeOperation = "lighter";
+  for (const p of particles) {
+    const d = Math.abs(p.carX - bandCenter);
+    if (d > bandW) continue;
+    const glint = (1 - d / bandW) * peak;
+    if (glint <= 0.02) continue;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.radius + 0.9, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${0.55 * glint})`;
+    ctx.fill();
   }
   ctx.restore();
 };
@@ -1159,6 +1221,7 @@ const AnimatedCanvas = () => {
           updateParticles(particlesRef.current, elapsed, dimsRef.current, dt, mouseRef.current);
           drawParticles(ctx, particlesRef.current, elapsed, dimsRef.current, gridPointsRef.current);
           drawCarMesh(ctx, particlesRef.current, elapsed, dt, dimsRef.current);
+          try { drawCarSettleLight(ctx, particlesRef.current, elapsed, dimsRef.current); } catch (err) { console.error("[AnimatedCanvas] drawCarSettleLight failed:", err); }
           drawCircuitMesh(ctx, particlesRef.current, elapsed, dt);
           drawGroundReflection(ctx, particlesRef.current, elapsed, dimsRef.current);
           try { drawGroundShadow(ctx, elapsed, dimsRef.current); } catch (err) { console.error("[AnimatedCanvas] drawGroundShadow failed:", err); }
@@ -1176,6 +1239,22 @@ const AnimatedCanvas = () => {
       clearTimeout(fallbackTimeout);
       ro.disconnect();
     };
+  }, []);
+
+  // Subtle scroll parallax: the hero canvas drifts down slightly slower than
+  // the page (depth cue), consistent with the Phase-2 "visor catching light"
+  // feel. Restrained (0.18×) so it never fights the headline. rAF-throttled,
+  // passive listener, and skipped entirely under reduced motion.
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    let raf = 0;
+    const apply = () => { raf = 0; canvas.style.transform = `translate3d(0, ${(window.scrollY || 0) * 0.18}px, 0)`; };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    apply();
+    return () => { window.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
   }, []);
 
   // Cursor/touch position for the repulsion effect in updateParticles, kept
@@ -1246,6 +1325,9 @@ const HomePage = () => (
       maxWidth: "800px", width: "100%", margin: "0 auto", padding: "32px 24px",
       textAlign: "center", position: "relative", zIndex: 1, background: "#080812",
     }}>
+      {/* Ambient telemetry texture behind the hero copy (z-index -1 keeps it
+          above the section fill but below the headline/stat cards). */}
+      <TelemetryTraces color="var(--red)" opacity={0.13} style={{ zIndex: -1 }} />
       <div style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "1.5rem" }}>
         3-Model Pipeline · XGBoost · 2010–2026
       </div>
@@ -1326,10 +1408,10 @@ export default function App() {
     <HealthProvider>
     <AuthProvider>
     <MotionConfig reducedMotion="user">
-    <div style={{ background: "#080812", minHeight: "100vh", color: "var(--text)", fontFamily: "var(--sans)" }}>
+    <div style={{ background: "var(--void)", minHeight: "100vh", color: "var(--text)", fontFamily: "var(--sans)" }}>
       <div style={{ height: "3px", background: "rgba(225,6,0,0.35)" }} />
 
-      <header style={{ background: "#080812", borderBottom: "1px solid var(--border)" }} className="scanline-overlay">
+      <header style={{ background: "var(--void)", borderBottom: "1px solid var(--border)" }} className="scanline-overlay">
         <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0.85rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
             <img src="/f1-logo.png" alt="F1" style={{ height: "30px", width: "auto" }} />
@@ -1347,7 +1429,7 @@ export default function App() {
 
       <Nav page={page} setPage={setPage} onNavigate={handleNavigate} />
 
-      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.5rem 2rem 4rem", background: "#080812" }}>
+      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.5rem 2rem 4rem", background: "var(--void)" }}>
         {showSweep && <div className="sweep-line" />}
         <div key={pageKey} className="page-enter">
           <Suspense fallback={<PageLoader />}>

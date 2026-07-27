@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { StatCard, SectionHeader } from "../shared.jsx";
-import { card } from "../constants.js";
+import { GlassPanel } from "../components/GlassPanel.jsx";
 
 // ── MODEL PAGE ─────────────────────────────────────────────────
 const ModelPage = () => {
@@ -24,19 +24,19 @@ const ModelPage = () => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <SectionHeader eyebrow="Machine Learning · 3-Model Pipeline" title="The Prediction Pipeline" />
+      <SectionHeader variant="glass" eyebrow="Machine Learning · 3-Model Pipeline" title="The Prediction Pipeline" />
 
       <div style={{ display: "flex", alignItems: "stretch", gap: "0.4rem", flexWrap: "wrap" }}>
         {pipeline.map((m, i, arr) => (
           <Fragment key={m.stage}>
-            <div className="card-lift stagger-item" style={{ ...card, "--i": i, padding: "1.25rem", flex: "1 1 220px", minWidth: "200px" }}>
+            <GlassPanel className="card-lift stagger-item" style={{ "--i": i, padding: "1.25rem", flex: "1 1 220px", minWidth: "200px" }}>
               <div style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--red)", fontWeight: "700", letterSpacing: "0.15em" }}>STAGE {m.stage}</div>
               <div style={{ fontSize: "1rem", fontWeight: "900", fontStyle: "italic", textTransform: "uppercase", marginTop: "0.4rem" }}>{m.name}</div>
               <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", marginTop: "0.15rem" }}>{m.type}</div>
               <p style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6, margin: "0.75rem 0" }}>{m.desc}</p>
               <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--gold)", letterSpacing: "0.1em", fontWeight: "700" }}>{m.metricLabel}</div>
               <div style={{ fontFamily: "var(--mono)", fontSize: "1.15rem", color: "var(--text)", fontWeight: "700" }}>{m.metricValue}</div>
-            </div>
+            </GlassPanel>
             {i < arr.length - 1 && (
               <div className="hide-mobile" style={{ display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", color: "var(--red)", flex: "0 0 auto", padding: "0 0.25rem" }}>→</div>
             )}
@@ -47,7 +47,7 @@ const ModelPage = () => {
         For upcoming races, the qualifying model's predicted grid feeds directly into the winner and podium models.
       </div>
 
-      <SectionHeader eyebrow="Machine Learning · XGBoost Classifier" title="Podium Model Documentation" />
+      <SectionHeader variant="glass" eyebrow="Machine Learning · XGBoost Classifier" title="Podium Model Documentation" />
 
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
         <StatCard label="Algorithm" value="XGBoost" accent="var(--red)" sub="gradient boosted trees" />
@@ -56,7 +56,7 @@ const ModelPage = () => {
         <StatCard label="Training" value="6,436" sub="race entries 2010–2024" />
       </div>
 
-      <div className="chart-enter" style={{ ...card }}>
+      <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: "2px" }}>
           <span className="section-label">Podium Model Features</span>
           <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--muted)" }}>The qualifying and winner models draw on a similar feature set.</span>
@@ -75,9 +75,9 @@ const ModelPage = () => {
             </div>
           ))}
         </div>
-      </div>
+      </GlassPanel>
 
-      <div className="chart-enter" style={{ ...card }}>
+      <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
           <span className="section-label">How It Works</span>
         </div>
@@ -95,7 +95,7 @@ const ModelPage = () => {
             </div>
           ))}
         </div>
-      </div>
+      </GlassPanel>
     </div>
   );
 };

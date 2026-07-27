@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { SectionHeader, StatCard, Spinner, BackendPanel, DriverSelector } from "../shared.jsx";
+import { GlassPanel } from "../components/GlassPanel.jsx";
 import {
-  API, card, NEXT_RACE, COMPLETED_2026, STANDINGS_GRID_2026,
+  API, NEXT_RACE, COMPLETED_2026, STANDINGS_GRID_2026,
   TEAM_COLORS, CONSTRUCTOR_OVERRIDES, SITE_URL, flagUrl,
 } from "../constants.js";
 import { useHealth } from "../health.jsx";
@@ -178,7 +179,7 @@ const Picker = () => {
   }[snapState];
 
   return (
-    <div className="chart-enter" style={{ ...card }}>
+    <GlassPanel className="chart-enter">
       <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
         <span className="section-label">{NEXT_RACE.flag} {NEXT_RACE.name} · Your Podium Pick</span>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.1em", color: locked ? "var(--red)" : "var(--green)" }}>
@@ -293,7 +294,7 @@ const Picker = () => {
           </div>
         )}
       </div>
-    </div>
+    </GlassPanel>
   );
 };
 
@@ -455,15 +456,15 @@ const History = () => {
       </div>
 
       {snapshotsMissing && (
-        <div style={{ ...card, padding: "0.85rem 1rem", borderColor: "rgba(255,176,32,0.35)" }}>
+        <GlassPanel style={{ padding: "0.85rem 1rem", borderColor: "rgba(255,176,32,0.35)" }}>
           <span style={{ fontFamily: "var(--mono)", fontSize: "0.64rem", color: "var(--amber)" }}>
             Model snapshots couldn't be read — the Model column will be empty. (Check `model_snapshots` read access / columns.)
           </span>
-        </div>
+        </GlassPanel>
       )}
 
       {rows.map((r) => (
-        <div key={r.raceId} className="chart-enter" style={{ ...card }}>
+        <GlassPanel key={r.raceId} className="chart-enter">
           <div style={{ padding: "0.6rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", alignItems: "center", gap: "0.6rem" }}>
             <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", fontWeight: "700", color: "var(--muted)" }}>RD {r.round}</span>
             <span style={{ fontSize: "0.95rem" }}>{r.flag}</span>
@@ -484,7 +485,7 @@ const History = () => {
               onToggle={() => toggleRace(r.raceId)}
             />
           )}
-        </div>
+        </GlassPanel>
       ))}
     </div>
   );

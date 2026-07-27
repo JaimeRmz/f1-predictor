@@ -48,6 +48,41 @@ export const TEAM_COLORS = {
   "Aston Martin": "#358c75", "Cadillac": "#c8102e",
 };
 
+// #RRGGBB (or #RGB) + alpha → an rgba() string. Used by the HUD GlassPanel to
+// derive team-tint overlays, glows and corner-bracket colors from the hex team
+// colors above. Passes non-hex values (e.g. CSS vars) straight through.
+export const hexA = (hex, a) => {
+  if (typeof hex !== "string" || hex[0] !== "#") return hex;
+  let h = hex.slice(1);
+  if (h.length === 3) h = h.split("").map(c => c + c).join("");
+  const n = parseInt(h, 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+};
+
+// The HUD glass treatment as a bare style object, for callers that can't use
+// the <GlassPanel> element itself — e.g. a framer-motion node that must stay a
+// motion.div to keep its existing layout animation. Lives here (not in the
+// GlassPanel component file) so that file exports only components (React Fast
+// Refresh requirement). A tint hex adds a translucent team-color overlay layer
+// plus a matching outer glow; untinted is neutral frosted glass.
+export const glassStyle = (tint, { glow = true } = {}) => ({
+  position: "relative",
+  background: tint
+    ? `linear-gradient(0deg, ${hexA(tint, 0.09)}, ${hexA(tint, 0.09)}), var(--glass-base)`
+    : "var(--glass-base)",
+  // Blur radius is a CSS var so a mobile media query can dial it down —
+  // backdrop-filter blur is the main perf cost on mobile Safari.
+  backdropFilter: "blur(var(--glass-blur, 18px)) saturate(150%)",
+  WebkitBackdropFilter: "blur(var(--glass-blur, 18px)) saturate(150%)",
+  border: "1px solid var(--hud-line)",
+  borderRadius: "10px",
+  boxShadow: glow
+    ? (tint
+        ? `0 0 22px -8px ${hexA(tint, 0.55)}, inset 0 1px 0 rgba(255,255,255,0.05)`
+        : "0 8px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)")
+    : "inset 0 1px 0 rgba(255,255,255,0.05)",
+});
+
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
   { raceId: 1180, round: 12, name: "Dutch Grand Prix",           circuit: "Zandvoort",   circuitRef: "zandvoort",    date: "Aug 23" },
