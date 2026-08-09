@@ -7,18 +7,23 @@
 export const API = import.meta.env.VITE_API_URL || `http://${window.location.hostname}:8000`;
 
 export const card = {
-  background: "rgba(255, 255, 255, 0.04)",
-  backdropFilter: "blur(16px) saturate(180%)",
-  WebkitBackdropFilter: "blur(16px) saturate(180%)",
-  border: "1px solid rgba(255, 255, 255, 0.08)",
-  borderRadius: "12px",
-  boxShadow: "0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06)",
+  background: "linear-gradient(155deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015) 60%), var(--glass-base)",
+  backdropFilter: "blur(20px) saturate(170%)",
+  WebkitBackdropFilter: "blur(20px) saturate(170%)",
+  border: "1px solid var(--hud-line)",
+  borderRadius: "14px",
+  boxShadow: "var(--rim-top), var(--rim-bottom), 0 18px 44px -24px rgba(0, 0, 0, 0.75)",
 };
 
+// Red-tinted callout (What-If "Model Insight"). Frosted with a color tint
+// rather than a flat fill, matching the banner treatment.
 export const cardRed = {
-  background: "rgba(225,6,0,0.06)",
+  background: "linear-gradient(155deg, rgba(225,6,0,0.16), rgba(225,6,0,0.05) 70%), var(--glass-base)",
+  backdropFilter: "blur(18px) saturate(160%)",
+  WebkitBackdropFilter: "blur(18px) saturate(160%)",
   border: "1px solid var(--border-red)",
-  borderRadius: "0px",
+  borderRadius: "16px",
+  boxShadow: "var(--rim-top), var(--rim-bottom), 0 18px 44px -26px rgba(225,6,0,0.45)",
 };
 
 // Live media query (not a one-time snapshot) so toggling the OS setting
@@ -59,28 +64,52 @@ export const hexA = (hex, a) => {
   return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 };
 
+// #RRGGBB → "r, g, b" (bare channels, for composing into rgba() inside CSS).
+// Published as the --tone-rgb custom property by glassStyle so stylesheet rules
+// — notably .card-lift:hover — can brighten a panel's border in its OWN tint
+// instead of washing a team-colored card back to neutral white on hover.
+// Returns null for non-hex input so the CSS fallback takes over.
+export const hexChannels = (hex) => {
+  if (typeof hex !== "string" || hex[0] !== "#") return null;
+  let h = hex.slice(1);
+  if (h.length === 3) h = h.split("").map(c => c + c).join("");
+  const n = parseInt(h, 16);
+  if (Number.isNaN(n)) return null;
+  return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
+};
+
 // The HUD glass treatment as a bare style object, for callers that can't use
 // the <GlassPanel> element itself — e.g. a framer-motion node that must stay a
 // motion.div to keep its existing layout animation. Lives here (not in the
 // GlassPanel component file) so that file exports only components (React Fast
 // Refresh requirement). A tint hex adds a translucent team-color overlay layer
 // plus a matching outer glow; untinted is neutral frosted glass.
+// A low-opacity white diagonal gradient over the dark frosted base is what
+// makes the surface read as a lit sheet of glass rather than a grey box. When a
+// team tint is supplied, that same diagonal is cast in the team color instead —
+// so the panel picks up the team identity without the accent system touching
+// the (semantically fixed) team hex itself.
+const glassGradient = (tint) => tint
+  ? `linear-gradient(155deg, ${hexA(tint, 0.14)}, ${hexA(tint, 0.035)} 60%), var(--glass-base)`
+  : "linear-gradient(155deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015) 60%), var(--glass-base)";
+
 export const glassStyle = (tint, { glow = true } = {}) => ({
   position: "relative",
-  background: tint
-    ? `linear-gradient(0deg, ${hexA(tint, 0.09)}, ${hexA(tint, 0.09)}), var(--glass-base)`
-    : "var(--glass-base)",
-  // Blur radius is a CSS var so a mobile media query can dial it down —
-  // backdrop-filter blur is the main perf cost on mobile Safari.
-  backdropFilter: "blur(var(--glass-blur, 18px)) saturate(150%)",
-  WebkitBackdropFilter: "blur(var(--glass-blur, 18px)) saturate(150%)",
-  border: "1px solid var(--hud-line)",
-  borderRadius: "10px",
+  "--tone-rgb": hexChannels(tint) || "236, 236, 236",
+  background: glassGradient(tint),
+  // Blur radius and saturation are CSS vars so a mobile media query can dial
+  // them down — backdrop-filter blur is the main perf cost on mobile Safari.
+  backdropFilter: "blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 170%))",
+  WebkitBackdropFilter: "blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 170%))",
+  border: `1px solid ${tint ? hexA(tint, 0.28) : "var(--hud-line)"}`,
+  borderRadius: "var(--glass-radius, 20px)",
+  // Rim light first (bright hairline on the top edge, dark on the bottom — the
+  // sense of physical thickness), then the cast shadow underneath.
   boxShadow: glow
     ? (tint
-        ? `0 0 22px -8px ${hexA(tint, 0.55)}, inset 0 1px 0 rgba(255,255,255,0.05)`
-        : "0 8px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)")
-    : "inset 0 1px 0 rgba(255,255,255,0.05)",
+        ? `var(--rim-top), var(--rim-bottom), 0 24px 60px -28px ${hexA(tint, 0.5)}`
+        : "var(--rim-top), var(--rim-bottom), 0 24px 60px -28px rgba(0,0,0,0.7)")
+    : "var(--rim-top), var(--rim-bottom)",
 });
 
 // ── Constants shared by Predictor + Season2026 pages ───────────

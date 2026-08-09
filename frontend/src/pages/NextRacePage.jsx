@@ -30,7 +30,10 @@ const RaceCountdown = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return <div className="live-pulse" style={{ fontFamily: "var(--mono)", fontSize: "1.6rem", fontWeight: "700", letterSpacing: "0.05em", fontVariantNumeric: "tabular-nums" }}>{countdown}</div>;
+  // .hud-countdown keeps the digits crisp: the surrounding hero is frosted, but
+  // backdrop-filter only blurs what sits behind an element — never its own text —
+  // and the class blocks any inherited filter from softening these glyphs.
+  return <div className="live-pulse hud-countdown" style={{ fontSize: "1.6rem", fontWeight: "700", letterSpacing: "0.04em", color: "#fff" }}>{countdown}</div>;
 };
 
 const NextRacePage = () => {
@@ -89,7 +92,7 @@ const NextRacePage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       {/* Hero */}
-      <div className="canada-hero scanline-overlay" style={{ background: "var(--red)", padding: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
+      <div className="canada-hero scanline-overlay accent-strip glass-sheen" style={{ padding: "1.6rem 1.75rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
         <TelemetryTraces color="#ffffff" opacity={0.12} />
         <div style={{ position: "relative", zIndex: 1 }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND 12 · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
@@ -187,13 +190,11 @@ const NextRacePage = () => {
           <button
             onClick={share}
             disabled={shareState === "working"}
-            className="btn-ghost"
+            className={`glass-button${shareState === "working" ? "" : " is-armed"}`}
             style={{
               display: "inline-flex", alignItems: "center", gap: "0.5rem",
-              background: shareState === "working" ? "rgba(255,255,255,0.06)" : "var(--red)",
-              border: "1px solid " + (shareState === "working" ? "rgba(255,255,255,0.15)" : "var(--red)"),
               color: shareState === "working" ? "var(--muted)" : "#fff",
-              padding: "0.6rem 1.5rem", fontSize: "0.72rem", fontWeight: "700", letterSpacing: "0.12em",
+              padding: "0.7rem 1.6rem", fontSize: "0.72rem", fontWeight: "700", letterSpacing: "0.12em",
               textTransform: "uppercase", cursor: shareState === "working" ? "wait" : "pointer",
               fontFamily: "var(--mono)",
             }}

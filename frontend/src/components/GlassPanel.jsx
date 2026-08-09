@@ -34,10 +34,12 @@ function playSweep(band, delay) {
   band.animate(
     [
       { transform: "translateX(-140%)", opacity: 0 },
-      { opacity: 0.5, offset: 0.5 },
+      { opacity: 0.95, offset: 0.5 },
       { transform: "translateX(160%)", opacity: 0 },
     ],
-    { duration: 1000, delay, easing: "cubic-bezier(0.25,0.46,0.45,0.94)" }
+    // Slower than the old 1000ms: the band is now much softer and wider, so it
+    // needs the extra travel time to read as a sweep rather than a flicker.
+    { duration: 1300, delay, easing: "cubic-bezier(0.25,0.46,0.45,0.94)" }
   );
 }
 

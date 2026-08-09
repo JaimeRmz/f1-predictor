@@ -31,7 +31,7 @@ const ModelPage = () => {
           <Fragment key={m.stage}>
             <GlassPanel className="card-lift stagger-item" style={{ "--i": i, padding: "1.25rem", flex: "1 1 220px", minWidth: "200px" }}>
               <div style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--red)", fontWeight: "700", letterSpacing: "0.15em" }}>STAGE {m.stage}</div>
-              <div style={{ fontSize: "1rem", fontWeight: "900", fontStyle: "italic", textTransform: "uppercase", marginTop: "0.4rem" }}>{m.name}</div>
+              <div className="hud-title" style={{ fontSize: "1.05rem", textTransform: "uppercase", marginTop: "0.4rem" }}>{m.name}</div>
               <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", marginTop: "0.15rem" }}>{m.type}</div>
               <p style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6, margin: "0.75rem 0" }}>{m.desc}</p>
               <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--gold)", letterSpacing: "0.1em", fontWeight: "700" }}>{m.metricLabel}</div>

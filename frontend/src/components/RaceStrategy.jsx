@@ -64,7 +64,7 @@ const TyreTable = ({ data }) => {
                 return (
                   <div key={i} title={`${s.compound} · L${s.lap_start}–${s.lap_end}`} style={{
                     width: `${(len / maxLap) * 100}%`, background: tyreColor(s.compound),
-                    borderRight: i < d.stints.length - 1 ? "1px solid #080812" : "none",
+                    borderRight: i < d.stints.length - 1 ? "1px solid #0a0a0c" : "none",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     fontFamily: "var(--mono)", fontSize: "0.52rem", fontWeight: "700",
                     color: dark ? "#111" : "#fff", overflow: "hidden",
@@ -152,7 +152,7 @@ const PositionChart = ({ data }) => {
               {dashed && <path d={dashed} fill="none" stroke={c} strokeWidth="1.4" strokeOpacity="0.4" strokeDasharray="3 3" strokeLinejoin="round" />}
               {/* Final point: always a definitive solid dot (anchored to results.csv) */}
               <circle cx={end.x} cy={end.y} r={finisher ? 2.7 : 2.4}
-                fill={finisher ? c : "#080812"} stroke={c} strokeWidth={finisher ? 0 : 1.3} />
+                fill={finisher ? c : "#0a0a0c"} stroke={c} strokeWidth={finisher ? 0 : 1.3} />
               <text x={end.x + 6} y={end.y + 3} fontFamily="var(--mono)" fontSize="8.5"
                 fontWeight={finisher ? "700" : "500"} fill={finisher ? c : "var(--muted)"}>
                 {lastName(ref)}{d.dnf ? " ×" : ""}

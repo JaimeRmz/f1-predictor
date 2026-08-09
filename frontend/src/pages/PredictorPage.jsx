@@ -102,8 +102,8 @@ const PredictorPage = () => {
 
       {!loading && predictions.length > 0 && (
         <>
-          <div className="accent-strip scanline-overlay" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
-            <span style={{ fontSize: "0.85rem", fontWeight: "900", letterSpacing: "0.08em", textTransform: "uppercase", fontStyle: "italic" }}>{selectedRaceName}</span>
+          <div className="accent-strip scanline-overlay glass-sheen" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+            <span className="hud-title" style={{ fontSize: "0.95rem", letterSpacing: "0.02em", textTransform: "uppercase" }}>{selectedRaceName}</span>
             {isUpcoming
               ? <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "700", color: "var(--gold)", letterSpacing: "0.1em" }}>UPCOMING RACE</span>
               : accuracy !== null && <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "700", opacity: 0.85 }}>ACCURACY: {accuracy}%</span>
@@ -146,15 +146,19 @@ const PredictorPage = () => {
           )}
 
           <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "1rem" }}>
+            {/* `tint` stays the driver's team color — that's fixed, semantic
+                identity. `accent` is the predictor's own highlight color (teal),
+                which is what marks a value as "this is the model's pick". */}
             <StatCard
               label="Predicted Winner"
               value={predictedWinner ? `${predictedWinner.driver_name.split(" ").pop()} · ${((predictedWinner.win_probability ?? 0) * 100).toFixed(1)}%` : "—"}
               tint={teamColorOf(predictedWinner)}
+              accent="var(--teal)"
             />
             {isUpcoming ? (
               <>
                 <StatCard label="Podium Favorites" value={`${podiumFavorites} drivers`} sub="podium % > 60" />
-                <StatCard label="Predicted Pole" value={predictedPole?.driver_name.split(" ").pop() ?? "—"} tint={teamColorOf(predictedPole)} />
+                <StatCard label="Predicted Pole" value={predictedPole?.driver_name.split(" ").pop() ?? "—"} tint={teamColorOf(predictedPole)} accent="var(--teal)" />
               </>
             ) : (
               <>

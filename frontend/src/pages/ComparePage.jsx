@@ -55,7 +55,7 @@ const ComparePage = () => {
             </div>
           ))}
         </div>
-        <button onClick={compare} className="btn-primary" style={{ width: "100%", padding: "0.85rem", background: "var(--red)", color: "#fff", border: "none", fontSize: "0.78rem", fontWeight: "700", letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>
+        <button onClick={compare} className="glass-button is-armed" style={{ width: "100%", padding: "0.95rem", color: "#fff", fontSize: "0.78rem", fontWeight: "700", letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>
           COMPARE →
         </button>
       </GlassPanel>

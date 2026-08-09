@@ -239,12 +239,10 @@ const Picker = () => {
               <button
                 onClick={submit}
                 disabled={!complete || !distinct || saving}
-                className="btn-ghost"
+                className={`glass-button${complete && distinct ? " is-armed" : ""}`}
                 style={{
-                  background: complete && distinct ? "var(--red)" : "rgba(255,255,255,0.06)",
-                  border: "1px solid " + (complete && distinct ? "var(--red)" : "rgba(255,255,255,0.15)"),
                   color: complete && distinct ? "#fff" : "var(--muted)",
-                  padding: "0.55rem 1.5rem", fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.12em",
+                  padding: "0.65rem 1.6rem", fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.12em",
                   textTransform: "uppercase", cursor: complete && distinct && !saving ? "pointer" : "not-allowed",
                   fontFamily: "var(--mono)",
                 }}
@@ -264,13 +262,11 @@ const Picker = () => {
             <button
               onClick={share}
               disabled={!shareReady || shareState === "working"}
-              className="btn-ghost"
+              className={`glass-button${shareReady && shareState !== "working" ? " is-armed" : ""}`}
               style={{
                 display: "inline-flex", alignItems: "center", gap: "0.5rem",
-                background: shareReady && shareState !== "working" ? "var(--red)" : "rgba(255,255,255,0.06)",
-                border: "1px solid " + (shareReady && shareState !== "working" ? "var(--red)" : "rgba(255,255,255,0.15)"),
                 color: shareReady && shareState !== "working" ? "#fff" : "var(--muted)",
-                padding: "0.55rem 1.4rem", fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.12em",
+                padding: "0.65rem 1.5rem", fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.12em",
                 textTransform: "uppercase", cursor: shareReady && shareState !== "working" ? "pointer" : "not-allowed",
                 fontFamily: "var(--mono)",
               }}
@@ -306,7 +302,15 @@ const PickColumn = ({ title, refs, actualSet, actualWinnerRef, accent }) => {
   const winnerRight = refs && actualWinnerRef && refs[0] === actualWinnerRef;
   const hits = podiumHits(refs, actualSet);
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "0.75rem", background: "rgba(255,255,255,0.02)", borderRadius: "8px" }}>
+    // Nested inside a GlassPanel that has already blurred the backdrop, so this
+    // sub-panel takes the gradient + rim light of the glass system WITHOUT a
+    // second backdrop-filter — stacking blurs costs frames and muddies the fill.
+    <div style={{
+      display: "flex", flexDirection: "column", gap: "8px", padding: "0.8rem",
+      background: "linear-gradient(155deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 60%)",
+      border: "1px solid var(--hud-line)", borderRadius: "13px",
+      boxShadow: "var(--rim-top), var(--rim-bottom)",
+    }}>
       <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.12em", color: accent || "var(--muted)", textTransform: "uppercase" }}>{title}</div>
       {refs ? (
         <>
@@ -339,7 +343,12 @@ const PickColumn = ({ title, refs, actualSet, actualWinnerRef, accent }) => {
 };
 
 const ActualColumn = ({ orderedRefs }) => (
-  <div style={{ display: "flex", flexDirection: "column", gap: "8px", padding: "0.75rem", background: "rgba(225,6,0,0.05)", borderRadius: "8px" }}>
+  <div style={{
+    display: "flex", flexDirection: "column", gap: "8px", padding: "0.8rem",
+    background: "linear-gradient(155deg, rgba(225,6,0,0.16), rgba(225,6,0,0.04) 65%)",
+    border: "1px solid var(--border-red)", borderRadius: "13px",
+    boxShadow: "var(--rim-top), var(--rim-bottom)",
+  }}>
     <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.12em", color: "var(--red)", textTransform: "uppercase" }}>Actual</div>
     {orderedRefs.length ? orderedRefs.map((ref, i) => (
       <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>

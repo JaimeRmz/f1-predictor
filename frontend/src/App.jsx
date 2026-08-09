@@ -53,17 +53,20 @@ const HealthIndicator = () => {
 // ── NAV ────────────────────────────────────────────────────────
 const Nav = ({ page, setPage, onNavigate }) => {
   const links = ["Home", "Predictor", "Next Race 🇳🇱", "What-If 🎮", "My Picks 🎯", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
+  // Stickiness lives on the shared .chrome-sticky wrapper in App() below, so the
+  // nav pins directly under the topbar without either needing to hardcode the
+  // other's height. This element only owns the frosted fill.
   return (
-    <nav style={{ background: "var(--void)", position: "sticky", top: 0, zIndex: 100 }}>
+    <nav className="nav-glass">
       <div className="nav-scroll" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 2rem", display: "flex", overflowX: "auto" }}>
         {links.map(l => (
           <button key={l} onClick={() => { setPage(l); onNavigate(); }} className="nav-tab" style={{
             background: "none", border: "none", cursor: "pointer",
-            padding: "0.9rem 1rem", fontSize: "0.7rem", fontWeight: "700",
+            padding: "0.95rem 1rem", fontSize: "0.68rem", fontWeight: "500",
             letterSpacing: "0.1em", textTransform: "uppercase",
             color: page === l ? "var(--text)" : "var(--muted)",
             borderBottom: page === l ? "2px solid var(--red)" : "2px solid transparent",
-            whiteSpace: "nowrap", fontFamily: "var(--sans)",
+            whiteSpace: "nowrap", fontFamily: "var(--mono)",
           }}>{l}</button>
         ))}
       </div>
@@ -587,9 +590,9 @@ const drawBackgroundGrid = (ctx, grid, elapsed, { width, height }) => {
 // stage (fading out as it disintegrates), and a faint overhead track-light
 // radial highlight.
 const drawAtmosphere = (ctx, elapsed, { width, height }) => {
-  // Flat fill, no gradient — matches the page background (#080812) exactly
-  // so there's no seam between the canvas and the surrounding page chrome.
-  ctx.fillStyle = "#080812";
+  // Flat fill, no gradient — matches the void page background exactly so
+  // there's no seam between the canvas and the surrounding page chrome.
+  ctx.fillStyle = "#0a0a0c";
   ctx.fillRect(0, 0, width, height);
 
   let groundAlpha = 0;
@@ -1293,10 +1296,11 @@ const AnimatedCanvas = () => {
 // ── HOME PAGE (hero entry screen) ──────────────────────────────
 const HomePage = () => (
   <div style={{
-    // Single flat color shared by every layer of the page — html, body,
-    // #root, main, nav/header, and the canvas's own drawAtmosphere fill —
-    // so there is no seam anywhere regardless of element boundaries.
-    width: "100%", background: "#080812", color: "var(--text)",
+    // Transparent so the page's ambient layers (red glow, grain, vignette)
+    // read through the hero copy. Only the canvas section below stays opaque —
+    // the canvas paints its own ground in drawAtmosphere, using the same void
+    // value, so there is no seam at its edges.
+    width: "100%", color: "var(--text)",
     display: "flex", flexDirection: "column", position: "relative",
   }}>
     {/* TOP — full-width animation canvas, edge to edge, no card container.
@@ -1309,7 +1313,7 @@ const HomePage = () => (
     <div className="home-canvas-section" style={{
       position: "relative", width: "100vw", left: "50%", right: "50%",
       marginLeft: "-50vw", marginRight: "-50vw", height: "50vh", overflow: "hidden",
-      background: "#080812",
+      background: "var(--void)",
     }}>
       {/* Subtle red glow behind the canvas */}
       <div style={{
@@ -1323,7 +1327,7 @@ const HomePage = () => (
     {/* BOTTOM — centered text content */}
     <div className="home-text-section" style={{
       maxWidth: "800px", width: "100%", margin: "0 auto", padding: "32px 24px",
-      textAlign: "center", position: "relative", zIndex: 1, background: "#080812",
+      textAlign: "center", position: "relative", zIndex: 1,
     }}>
       {/* Ambient telemetry texture behind the hero copy (z-index -1 keeps it
           above the section fill but below the headline/stat cards). */}
@@ -1331,10 +1335,10 @@ const HomePage = () => (
       <div style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.25em", textTransform: "uppercase", marginBottom: "1.5rem" }}>
         3-Model Pipeline · XGBoost · 2010–2026
       </div>
-      <h1 className="landing-headline" style={{ fontFamily: "var(--sans)", fontSize: "3.2rem", fontWeight: "900", lineHeight: 1.05, margin: "0 0 1.25rem", color: "#fff" }}>
+      <h1 className="landing-headline" style={{ fontFamily: "var(--display)", fontSize: "3.2rem", fontWeight: "800", letterSpacing: "-0.025em", lineHeight: 1.05, margin: "0 0 1.25rem", color: "var(--ink)" }}>
         Race outcomes, predicted.
       </h1>
-      <p style={{ fontFamily: "var(--sans)", fontSize: "1.05rem", color: "rgba(255,255,255,0.55)", lineHeight: 1.6, margin: "0 auto 2.5rem", maxWidth: "600px" }}>
+      <p style={{ fontFamily: "var(--sans)", fontSize: "1.05rem", color: "rgba(236,236,236,0.6)", lineHeight: 1.65, margin: "0 auto 2.5rem", maxWidth: "600px" }}>
         Three ML models predict qualifying, race winners, and podium finishers for every Grand Prix.
       </p>
       <div className="stat-cards-row home-stats" style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center" }}>
@@ -1351,7 +1355,7 @@ const HomePage = () => (
         section competing with it. */}
     <div style={{
       maxWidth: "900px", width: "100%", margin: "48px auto 0", padding: "0 24px",
-      position: "relative", zIndex: 1, background: "#080812",
+      position: "relative", zIndex: 1,
     }}>
       <div className="how-it-works-steps" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "32px" }}>
         {[
@@ -1361,9 +1365,9 @@ const HomePage = () => (
         ].map((s, i, arr) => (
           <Fragment key={s.num}>
             <div style={{ flex: "1 1 0", minWidth: 0, textAlign: "center" }}>
-              <div style={{ fontFamily: "var(--mono)", fontSize: "10px", letterSpacing: "0.15em", color: "var(--red)", opacity: 0.8, marginBottom: "6px" }}>{s.num}</div>
-              <div style={{ fontSize: "14px", fontWeight: "700", color: "#fff", marginBottom: "4px" }}>{s.title}</div>
-              <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.45)", lineHeight: 1.5 }}>{s.desc}</div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: "10px", letterSpacing: "0.15em", color: "var(--red)", opacity: 0.85, marginBottom: "6px" }}>{s.num}</div>
+              <div className="hud-title" style={{ fontSize: "14px", color: "var(--ink)", marginBottom: "5px" }}>{s.title}</div>
+              <div style={{ fontSize: "12px", color: "var(--muted)", lineHeight: 1.6 }}>{s.desc}</div>
             </div>
             {i < arr.length - 1 && (
               <div className="how-it-works-connector hide-mobile" style={{ width: "24px", height: "1px", background: "rgba(255,255,255,0.1)", flexShrink: 0 }} />
@@ -1373,7 +1377,7 @@ const HomePage = () => (
       </div>
     </div>
 
-    <div style={{ textAlign: "center", padding: "1.5rem", fontFamily: "var(--mono)", fontSize: "11px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.2em", position: "relative", zIndex: 1, background: "#080812" }}>
+    <div style={{ textAlign: "center", padding: "1.5rem", fontFamily: "var(--mono)", fontSize: "11px", color: "var(--faint)", letterSpacing: "0.2em", position: "relative", zIndex: 1 }}>
       Live predictions. Every race.
     </div>
   </div>
@@ -1408,28 +1412,33 @@ export default function App() {
     <HealthProvider>
     <AuthProvider>
     <MotionConfig reducedMotion="user">
-    <div style={{ background: "var(--void)", minHeight: "100vh", color: "var(--text)", fontFamily: "var(--sans)" }}>
-      <div style={{ height: "3px", background: "rgba(225,6,0,0.35)" }} />
+    {/* Transparent: the void, the ambient red glow, the grain/scanline/vignette
+        layers all live on body/#root, and every surface above them is glass. */}
+    <div style={{ minHeight: "100vh", color: "var(--text)", fontFamily: "var(--sans)" }}>
+      {/* Topbar + nav pin together as one frosted block. */}
+      <div className="chrome-sticky">
+        <div style={{ height: "3px", background: "rgba(225,6,0,0.35)" }} />
 
-      <header style={{ background: "var(--void)", borderBottom: "1px solid var(--border)" }} className="scanline-overlay">
-        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0.85rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <img src="/f1-logo.png" alt="F1" style={{ height: "30px", width: "auto" }} />
-            <div>
-              <div style={{ fontSize: "1rem", fontWeight: "900", fontStyle: "italic", letterSpacing: "0.06em", textTransform: "uppercase", lineHeight: 1, marginRight: "124px" }}>Race Predictor</div>
-              <div style={{ fontFamily: "var(--mono)", fontSize: "0.55rem", color: "var(--muted)", fontWeight: "500", letterSpacing: "0.08em", marginTop: "3px" }}>3-MODEL PIPELINE · XGBOOST · jaimecodes</div>
+        <header className="scanline-overlay topbar-glass">
+          <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0.85rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <img src="/f1-logo.png" alt="F1" style={{ height: "30px", width: "auto" }} />
+              <div>
+                <div className="hud-title" style={{ fontSize: "1rem", letterSpacing: "0.02em", textTransform: "uppercase", lineHeight: 1, marginRight: "124px" }}>Race Predictor</div>
+                <div style={{ fontFamily: "var(--mono)", fontSize: "0.55rem", color: "var(--muted)", fontWeight: "400", letterSpacing: "0.12em", marginTop: "4px" }}>3-MODEL PIPELINE · XGBOOST · jaimecodes</div>
+              </div>
+            </div>
+            <div className="header-right" style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", letterSpacing: "0.15em" }}>SYS STATUS</div>
+              <HealthIndicator />
             </div>
           </div>
-          <div className="header-right" style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", letterSpacing: "0.1em" }}>SYS STATUS</div>
-            <HealthIndicator />
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <Nav page={page} setPage={setPage} onNavigate={handleNavigate} />
+        <Nav page={page} setPage={setPage} onNavigate={handleNavigate} />
+      </div>
 
-      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.5rem 2rem 4rem", background: "var(--void)" }}>
+      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.5rem 2rem 4rem", position: "relative" }}>
         {showSweep && <div className="sweep-line" />}
         <div key={pageKey} className="page-enter">
           <Suspense fallback={<PageLoader />}>

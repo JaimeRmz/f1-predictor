@@ -44,7 +44,7 @@ export const OfflinePanel = ({ detail = "The prediction engine isn't responding.
       <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--red)", animation: "pulse 1.2s infinite" }} />
       <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "700", color: "var(--red)", letterSpacing: "0.2em" }}>SYS STATUS · OFFLINE</span>
     </div>
-    <div style={{ fontSize: "1rem", fontWeight: "900", fontStyle: "italic", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.5rem" }}>Model server unreachable</div>
+    <div className="hud-title" style={{ fontSize: "1.05rem", textTransform: "uppercase", letterSpacing: "0.01em", marginBottom: "0.5rem" }}>Model server unreachable</div>
     <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.8, margin: "0 auto 1.25rem", maxWidth: "420px" }}>
       {detail} Check that the FastAPI backend is running on port 8000, then retry.
     </p>
@@ -67,7 +67,7 @@ export const WakingPanel = () => (
       <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--amber)", animation: "pulse 1.2s infinite" }} />
       <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "700", color: "var(--amber)", letterSpacing: "0.2em" }}>SYS STATUS · WAKING</span>
     </div>
-    <div style={{ fontSize: "1rem", fontWeight: "900", fontStyle: "italic", textTransform: "uppercase", letterSpacing: "0.04em", marginBottom: "0.5rem" }}>Waking model server</div>
+    <div className="hud-title" style={{ fontSize: "1.05rem", textTransform: "uppercase", letterSpacing: "0.01em", marginBottom: "0.5rem" }}>Waking model server</div>
     <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.8, margin: "0 auto 1.5rem", maxWidth: "440px" }}>
       Free-tier instance is spinning up — this takes about 30–50 seconds on first visit. Predictions will load automatically.
     </p>
@@ -122,6 +122,8 @@ export const SkeletonList = ({ rows = 8, metrics = 2 }) => (
       <div key={i} className="stagger-item" style={{
         ...glassStyle(null), "--i": i, padding: "16px", display: "flex", alignItems: "center", gap: "1rem",
         borderLeft: "3px solid var(--dimmed)",
+        // Match the driver rows these stand in for, not the card radius.
+        borderRadius: "var(--glass-radius-row)",
       }}>
         <div className="skeleton-block" style={{ width: "22px", height: "12px", flexShrink: 0 }} />
         <div style={{ flex: 1, minWidth: 0 }}>
@@ -170,14 +172,15 @@ export const StatCard = ({ label, value, sub, accent, tint }) => (
   </GlassPanel>
 );
 
+// Tab control. The active state is a frosted red glass pill (fill, border, glow
+// and blur all owned by .pill-tab in index.css) rather than the old flat red
+// block — so it sits in the same material as the panels around it.
 export const Pill = ({ children, active, onClick }) => (
   <button onClick={onClick} className={`pill-tab${active ? " pill-active" : ""}`} style={{
-    padding: "0.4rem 1rem", border: "none", cursor: "pointer",
-    fontSize: "0.7rem", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase",
-    background: active ? "var(--red)" : "transparent",
-    color: active ? "#fff" : "var(--muted)",
-    borderBottom: active ? "2px solid var(--red)" : "2px solid transparent",
-    fontFamily: "var(--sans)",
+    padding: "0.55rem 1.1rem", cursor: "pointer",
+    fontSize: "0.68rem", fontWeight: active ? "600" : "500", letterSpacing: "0.1em",
+    textTransform: "uppercase", color: "var(--muted)",
+    fontFamily: "var(--mono)",
   }}>{children}</button>
 );
 
@@ -196,12 +199,13 @@ export const CustomTooltip = ({ active, payload }) => {
   );
 };
 
-// Page/section header. `variant="red"` (default) keeps the solid red accent
-// strip — used on action pages (My Picks form, Next Race) where clarity/urgency
-// matters. `variant="glass"` swaps in the full-width HUD GlassPanel treatment so
-// the ambient background shows through — used on data-heavy pages (Championship,
-// Model, 2026 Season / Accuracy Tracker). The title uses the Rajdhani headline
-// face (.hud-title) in both variants; the eyebrow stays mono.
+// Page/section header. `variant="red"` (default) is the red banner — now
+// frosted red glass rather than a flat solid fill (see .accent-strip) — used on
+// action pages (My Picks form, Next Race) where clarity/urgency matters.
+// `variant="glass"` swaps in the neutral full-width glass panel so the ambient
+// background shows through — used on data-heavy pages (Championship, Model,
+// 2026 Season / Accuracy Tracker). The title uses the Syne display face
+// (.hud-title) in both variants; the eyebrow stays mono.
 export const SectionHeader = ({ eyebrow, title, right, variant = "red" }) => {
   const inner = (
     <>
@@ -221,7 +225,7 @@ export const SectionHeader = ({ eyebrow, title, right, variant = "red" }) => {
     );
   }
   return (
-    <div className="accent-strip scanline-overlay" style={layout}>
+    <div className="accent-strip scanline-overlay glass-sheen" style={layout}>
       {inner}
     </div>
   );
@@ -300,9 +304,16 @@ const DropdownPanel = ({ anchorRef, panelRef, open, children }) => {
           bottom: rect.bottom !== undefined ? `${rect.bottom}px` : undefined,
           left: `${rect.left}px`, width: `${rect.width}px`,
           maxHeight: `${rect.maxHeight}px`, display: "flex", flexDirection: "column",
-          zIndex: 1000, background: "rgba(15,15,15,0.98)",
-          border: "1px solid rgba(255,255,255,0.12)", borderRadius: "12px",
-          boxShadow: "0 16px 48px rgba(0,0,0,0.6)", overflow: "hidden",
+          zIndex: 1000,
+          // Frosted like every other surface, but deliberately much less
+          // transparent than a card: this floats over live page content and
+          // option labels have to stay unambiguously legible.
+          background: "linear-gradient(155deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01) 60%), rgba(10,10,12,0.94)",
+          backdropFilter: "blur(24px) saturate(170%)",
+          WebkitBackdropFilter: "blur(24px) saturate(170%)",
+          border: "1px solid var(--hud-line)", borderRadius: "16px",
+          boxShadow: "var(--rim-top), var(--rim-bottom), 0 28px 64px -20px rgba(0,0,0,0.85)",
+          overflow: "hidden",
         }}
       >
         {children}
@@ -409,13 +420,12 @@ export const RaceSelector = ({ upcoming, completed, value, onSelect }) => {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label="Select Grand Prix"
+        className={`glass-control${open ? " is-open" : ""}`}
         style={{
           width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: "rgba(255,255,255,0.06)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-          border: `1px solid ${open ? "var(--red)" : "rgba(255,255,255,0.12)"}`,
-          borderRadius: "10px", padding: "14px 16px", color: "var(--text)",
-          fontFamily: "var(--mono)", fontSize: "0.85rem", fontWeight: "600",
-          cursor: "pointer", textAlign: "left", transition: "all 0.15s ease",
+          padding: "14px 16px", color: "var(--text)",
+          fontFamily: "var(--mono)", fontSize: "0.85rem", fontWeight: "500",
+          cursor: "pointer", textAlign: "left",
         }}
       >
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: selectedOption ? "var(--text)" : "var(--muted)" }}>
@@ -436,9 +446,9 @@ export const RaceSelector = ({ upcoming, completed, value, onSelect }) => {
             onKeyDown={handleSearchKeyDown}
             placeholder="Search races..."
             style={{
-              width: "100%", display: "block", background: "rgba(255,255,255,0.06)", border: "none",
-              borderBottom: "1px solid rgba(255,255,255,0.08)", borderRadius: 0,
-              padding: "12px 16px", color: "var(--text)", fontFamily: "var(--mono)",
+              width: "100%", display: "block", background: "rgba(255,255,255,0.05)", border: "none",
+              borderBottom: "1px solid var(--hud-line)", borderRadius: 0,
+              padding: "13px 16px", color: "var(--text)", fontFamily: "var(--mono)",
               fontSize: "0.8rem", outline: "none",
             }}
           />
@@ -529,13 +539,12 @@ export const DriverSelector = ({ drivers, value, onSelect, placeholder = "Select
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label="Select driver"
+        className={`glass-control${open ? " is-open" : ""}`}
         style={{
           width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-          background: "rgba(255,255,255,0.06)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-          border: `1px solid ${open ? "var(--red)" : "rgba(255,255,255,0.12)"}`,
-          borderRadius: "10px", padding: "14px 16px", color: "var(--text)",
-          fontFamily: "var(--mono)", fontSize: "0.85rem", fontWeight: "600",
-          cursor: "pointer", textAlign: "left", transition: "all 0.15s ease",
+          padding: "14px 16px", color: "var(--text)",
+          fontFamily: "var(--mono)", fontSize: "0.85rem", fontWeight: "500",
+          cursor: "pointer", textAlign: "left",
         }}
       >
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: selectedDriver ? "var(--text)" : "var(--muted)" }}>
@@ -556,9 +565,9 @@ export const DriverSelector = ({ drivers, value, onSelect, placeholder = "Select
             onKeyDown={handleSearchKeyDown}
             placeholder="Search drivers..."
             style={{
-              width: "100%", display: "block", background: "rgba(255,255,255,0.06)", border: "none",
-              borderBottom: "1px solid rgba(255,255,255,0.08)", borderRadius: 0,
-              padding: "12px 16px", color: "var(--text)", fontFamily: "var(--mono)",
+              width: "100%", display: "block", background: "rgba(255,255,255,0.05)", border: "none",
+              borderBottom: "1px solid var(--hud-line)", borderRadius: 0,
+              padding: "13px 16px", color: "var(--text)", fontFamily: "var(--mono)",
               fontSize: "0.8rem", outline: "none",
             }}
           />

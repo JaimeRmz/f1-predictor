@@ -30,7 +30,10 @@ const CardShell = forwardRef(({ children }, ref) => (
     ref={ref}
     style={{
       width: "1200px", height: "630px", boxSizing: "border-box",
-      background: "radial-gradient(1100px 620px at 82% -12%, rgba(225,6,0,0.20), transparent 58%), #080812",
+      // Opaque by design: html-to-image rasterizes this node to a PNG and cannot
+      // render backdrop-filter, so the share card stays flat-painted rather than
+      // adopting the site's glass treatment. Only the void value is synced.
+      background: "radial-gradient(1100px 620px at 82% -12%, rgba(225,6,0,0.20), transparent 58%), #0a0a0c",
       color: "var(--text)", fontFamily: "var(--sans)",
       position: "relative", overflow: "hidden",
       padding: "54px 64px", display: "flex", flexDirection: "column", justifyContent: "space-between",

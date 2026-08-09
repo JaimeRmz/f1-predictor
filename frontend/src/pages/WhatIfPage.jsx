@@ -94,13 +94,20 @@ const WhatIfPage = () => {
   const MOVE_CANCEL_PX = 8;
   const ROW_NUDGE_PX = 4;
 
+  // `background` and `box-shadow` are the two properties glassStyle() writes
+  // inline to build the glass surface, so the drag visuals must NOT go through
+  // el.style for those — setting them destroys the panel's fill and rim light,
+  // and clearing them here would leave the row blank until React's next render.
+  // They ride on classes instead (.wf-drag-active / .wf-drop-target, index.css),
+  // which layer over the inline glass and lift off cleanly. transform /
+  // transition / z-index / pointer-events / cursor / touch-action are not part
+  // of the glass, so those stay direct style writes.
   const clearRowVisuals = () => {
     Object.values(rowRefs.current).forEach(el => {
       if (!el) return;
+      el.classList.remove("wf-drag-active", "wf-drop-target");
       el.style.transform = "";
       el.style.transition = "";
-      el.style.boxShadow = "";
-      el.style.background = "";
       el.style.zIndex = "";
       el.style.pointerEvents = "";
       el.style.cursor = "";
@@ -117,7 +124,7 @@ const WhatIfPage = () => {
       const el = rowRefs.current[i];
       if (!el) return;
       el.style.transition = "transform 120ms ease";
-      el.style.boxShadow = i === targetIndex ? "inset 3px 0 0 0 rgba(225,6,0,0.8)" : "";
+      el.classList.toggle("wf-drop-target", i === targetIndex);
       if (i < targetIndex) el.style.transform = `translateY(-${ROW_NUDGE_PX}px)`;
       else if (i > targetIndex) el.style.transform = `translateY(${ROW_NUDGE_PX}px)`;
       else el.style.transform = "";
@@ -141,8 +148,8 @@ const WhatIfPage = () => {
     if (el) {
       el.style.transition = "none";
       el.style.transform = "scale(1.03)";
-      el.style.boxShadow = "0 12px 32px rgba(0,0,0,0.6), 0 0 0 1px rgba(225,6,0,0.3)";
-      el.style.background = "rgba(255,255,255,0.08)";
+      // Lifted-glass fill + shadow come from the class (see clearRowVisuals).
+      el.classList.add("wf-drag-active");
       el.style.zIndex = "100";
       el.style.cursor = "grabbing";
       // Let elementFromPoint see the row underneath instead of this one.

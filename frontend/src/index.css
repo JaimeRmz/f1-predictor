@@ -1,67 +1,174 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --red: #e10600;
-  --red-dim: rgba(225,6,0,0.15);
-  /* --void is the Pit Wall base background; --bg points at it so the darker
-     value flows everywhere the old #080812 was referenced via the token. */
-  --void: #08090C;
+  /* ═══════════ BASE ═══════════
+     Void black is the single ground the whole site sits on. Every surface above
+     it is glass — translucent, blurred, letting the ambient layer show through —
+     so nothing else should paint an opaque background except the hero canvas. */
+  --void: #0a0a0c;
   --bg: var(--void);
-  --surface: #0e0e14;
-  --surface2: #16161f;
-  --surface3: #1e1e2a;
-  --border: rgba(255,255,255,0.07);
-  --border-red: rgba(225,6,0,0.35);
-  --text: #f0f0f5;
-  --muted: #5a5a6e;
-  --dimmed: #2a2a38;
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'Titillium Web', sans-serif;
-  /* Rajdhani is the headline face — page titles + section headers only.
-     Data/numbers stay --mono, body copy stays --sans. */
-  --display: 'Rajdhani', 'Titillium Web', sans-serif;
+  --panel: #0a0f0f;
+  --surface: #0b0b0e;
+  --surface2: #121218;
+  --surface3: #1a1a22;
+
+  /* ═══════════ TEXT HIERARCHY (ink → dim → faint) ═══════════
+     One grey, three opacities. `--text` / `--muted` / `--dimmed` are the names
+     the app already uses everywhere; ink/dim/faint are the design-system names
+     from the concept, aliased onto them so both spellings resolve the same. */
+  --ink:   #ececec;
+  --dim:   rgba(236, 236, 236, 0.45);
+  --faint: rgba(236, 236, 236, 0.14);
+  --text:   var(--ink);
+  --muted:  var(--dim);
+  --dimmed: var(--faint);
+  --border: rgba(236, 236, 236, 0.10);
+  --border-red: rgba(225, 6, 0, 0.35);
+
+  /* ═══════════ ACCENTS — scoped, NOT interchangeable ═══════════
+     --red    brand/primary: nav active state, section headers, banners,
+              podium probability, "leader" markers.
+     --teal   the predictor's own highlight: predicted winner / predicted pole.
+     --yellow win probability, specifically. Aliased as --gold, which is the
+              name the win% call-sites already use (WIN %, WIN ✓, PRE-RACE badge).
+     Team and driver colors are NOT part of this system — they live as fixed hex
+     values in constants.js (TEAM_COLORS) and must never be themed to an accent. */
+  --red: #E10600;
+  --red-rgb: 225, 6, 0;
+  --teal: #2ee6c8;
+  --teal-rgb: 46, 230, 200;
+  --yellow: #f5d033;
+  --gold: var(--yellow);
+  --red-dim: rgba(225, 6, 0, 0.15);
+  --signal-red: var(--red);
+
+  /* Status colors — outcome semantics, independent of the accent system.
+     --green is "this actually happened / correct", which is a different claim
+     from --teal ("the model predicts this"), so the two stay distinct. */
   --green: #00c853;
   --amber: #ffb020;
-  --gold: #FFD700;
   --silver: #C0C0C0;
   --bronze: #CD7F32;
-  /* ── HUD glass panel tokens ── */
-  --glass-base: rgba(18, 20, 26, 0.55);   /* neutral frosted panel fill */
-  --hud-line: rgba(255, 255, 255, 0.08);  /* hairline borders + brackets */
-  --signal-red: #e10600;                  /* the F1 red, aliased for HUD use */
-  --glass-blur: 18px;                     /* backdrop-filter radius (Phase 2: mobile dials this down) */
+
+  /* ═══════════ TYPE ═══════════
+     Syne  — display/headings (600/700/800)
+     Space Grotesk — body copy
+     JetBrains Mono — labels, stats, nav, and all data/numeric text */
+  --display: 'Syne', sans-serif;
+  --sans: 'Space Grotesk', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+
+  /* ═══════════ GLASS ═══════════
+     One set of knobs for every frosted surface in the app. glassStyle() in
+     constants.js composes these into the inline style object that <GlassPanel>
+     and its non-component callers share. */
+  --glass-base: rgba(10, 12, 16, 0.42);   /* the frosted fill under the gradient */
+  --glass-blur: 22px;                     /* backdrop-filter radius (mobile dials down) */
+  --glass-sat: 170%;                      /* backdrop-filter saturation */
+  --glass-radius: 20px;                   /* cards */
+  --glass-radius-row: 13px;               /* dense list rows — 20px reads bubbly at row height */
+  --hud-line: rgba(236, 236, 236, 0.16);  /* hairline borders + corner brackets */
+
+  /* Rim light: the bright hairline on the top edge and the dark one on the
+     bottom, which is what sells the glass as having physical thickness. */
+  --rim-top: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  --rim-bottom: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+
+  /* Sticky chrome sits below the ambient overlays (vignette 60 / grain 80 /
+     scanlines 81) so the atmosphere reads over the whole page, chrome included —
+     matching the concept, where the topbar is z-20 and the grain is z-80. */
+  --z-chrome: 40;
 }
 
-/* Mobile / touch: cut the backdrop-filter radius. Full 18px blur under the
-   transform + pulse animations of Phase 2 is the known mobile-Safari perf
-   cliff, and cursor tilt (the transform) is disabled on coarse pointers anyway,
-   so a lighter blur here costs almost nothing visually and buys frame rate. */
+/* Mobile / touch: cut the backdrop-filter radius. A 22px blur under the
+   transform + pulse animations is the known mobile-Safari perf cliff, and
+   cursor tilt (the transform) is disabled on coarse pointers anyway, so a
+   lighter blur here costs almost nothing visually and buys frame rate. */
 @media (hover: none), (pointer: coarse) {
-  :root { --glass-blur: 10px; }
+  :root { --glass-blur: 12px; --glass-sat: 150%; }
 }
 
 html { scroll-behavior: smooth; background: var(--bg); }
 
-#root { background: var(--bg); }
+/* Everything above the void is transparent so the ambient layer (grain,
+   vignette, red glow) shows through the whole stack rather than being
+   painted over by an opaque page or main element. */
+#root { background: transparent; }
 
 body {
-  background: var(--bg);
   color: var(--text);
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   overflow-x: hidden;
-  /* Noise texture + scanline texture + subtle center glow, back to front */
-  background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.03) 0px,
-      rgba(255,255,255,0.03) 1px,
-      transparent 1px,
-      transparent 2px
-    ),
-    radial-gradient(circle at 50% 20%, rgba(180,0,0,0.04), transparent 60%);
+  -webkit-font-smoothing: antialiased;
+  /* Soft red ambient glow behind the hero/header. Painted as the body's own
+     fixed background rather than an overlay element so it can never sit above
+     content — it is genuinely the backmost layer. */
+  background-color: var(--void);
+  background-image: radial-gradient(ellipse 75vw 62vh at 50% -8vh, rgba(var(--red-rgb), 0.14), transparent 70%);
+  background-repeat: no-repeat;
   background-attachment: fixed;
+}
+
+/* ══════════════ AMBIENT OVERLAY LAYERS ══════════════
+   Four fixed, pointer-events:none layers that give the flat void some
+   atmosphere. Built as pseudo-elements on body/#root so no page markup has to
+   carry them. Back to front: vignette (60) → grain (80) → scanlines (81). */
+
+/* Grain — an inline SVG fractal-noise tile, nudged around on a steps() timing
+   function so it flickers like film grain instead of sliding smoothly. Oversized
+   and inset negatively so the shifting never exposes an edge. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -60%;
+  width: 220%;
+  height: 220%;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.030;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  animation: grainShift 0.9s steps(10) infinite;
+}
+@keyframes grainShift {
+  0%   { transform: translate(0, 0); }
+  10%  { transform: translate(-3%, -6%); }
+  20%  { transform: translate(-8%, 3%); }
+  30%  { transform: translate(5%, -9%); }
+  40%  { transform: translate(-3%, 8%); }
+  50%  { transform: translate(-9%, -4%); }
+  60%  { transform: translate(4%, 0%); }
+  70%  { transform: translate(0%, 7%); }
+  80%  { transform: translate(2%, 11%); }
+  90%  { transform: translate(-7%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Scanlines — 1px darkening every 4px, multiplied so it deepens what's under
+   it rather than washing a grey film over it. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 81;
+  pointer-events: none;
+  opacity: 0.25;
+  mix-blend-mode: multiply;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 3px,
+    rgba(0, 0, 0, 0.14) 3px, rgba(0, 0, 0, 0.14) 4px
+  );
+}
+
+/* Vignette — radial darkening at the edges, keeping attention centre-stage. */
+#root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: radial-gradient(ellipse 130% 90% at 50% 15%, transparent 50%, rgba(0, 0, 0, 0.70) 100%);
 }
 
 /* ── Scrollbar ── */
@@ -85,8 +192,9 @@ body {
 }
 
 /* ── Reduced motion ──
-   Collapses every CSS animation/transition to a single instant frame.
-   The HOME canvas gets its own static-circuit fallback in AnimatedCanvas. */
+   Collapses every CSS animation/transition to a single instant frame — which
+   also freezes the grain shift above. The HOME canvas gets its own
+   static-circuit fallback in AnimatedCanvas. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -162,6 +270,7 @@ body {
   height: 2px;
   background: rgba(255,255,255,0.08);
   overflow: hidden;
+  border-radius: 2px;
 }
 .loading-bar::after {
   content: '';
@@ -210,6 +319,9 @@ body {
   animation-delay: min(calc(var(--i, 0) * 0.03s + 0.1s), 0.52s);
 }
 
+/* Bar tracks and fills pick up the rounded language of the glass. */
+.prob-bar { border-radius: 2px; }
+
 /* ── Stat cards ── */
 .stat-card { animation: countUp 0.4s ease backwards; }
 .stat-card:nth-child(1) { animation-delay: 0.05s; }
@@ -217,69 +329,144 @@ body {
 .stat-card:nth-child(3) { animation-delay: 0.15s; }
 .stat-card:nth-child(4) { animation-delay: 0.20s; }
 
-/* ── Data rows ── */
-.data-row {
-  transition: all 0.15s ease;
-  position: relative;
-}
-.data-row:hover {
-  background: rgba(255,255,255,0.06) !important;
-  transform: translateX(2px);
-  filter: brightness(1.15);
-}
-.data-row.clickable { cursor: pointer; }
-.data-row.clickable:hover { border-left-color: var(--red) !important; }
+/* ══════════════ THE GLASS SYSTEM ══════════════
+   The frosted surface itself (fill, blur, border, rim light, radius) is
+   composed by glassStyle() in constants.js and applied inline, because most
+   callers need to pass a team tint through it. Everything here is the part
+   that CSS owns: the sheen sweep, the hover lift, and the shape variants. */
 
-/* ── HUD glass panel — corner brackets ──
-   4 broadcast-camera reticle corners (┌ ┐ └ ┘). Rendered as 4 absolutely
-   positioned <span>s by <HudBrackets>; each shows only its two relevant
-   borders. Border color is set inline (team tint, or neutral hairline). */
-.glass-panel { position: relative; }
+/* overflow:hidden matters more at a 20px radius than it did at 10px: most
+   panels wrap full-bleed children (list rows, header strips, the strategy
+   toggle) whose own square corners would otherwise poke out past the panel's
+   rounded ones. Panels that set overflow-y inline (the Drivers sidebar) keep
+   their scroll — the inline longhand still wins on that axis. */
+.glass-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Corner brackets — 4 broadcast-camera reticle marks (┌ ┐ └ ┘). Rendered as 4
+   absolutely positioned <span>s by <HudBrackets>; each shows only its two
+   relevant borders. Border color is set inline (team tint, or neutral). */
 .hud-bracket {
   position: absolute; width: 9px; height: 9px; pointer-events: none;
   border: 0 solid transparent; z-index: 1;
 }
-.hud-bracket.tl { top: 5px;    left: 5px;    border-top-width: 1px; border-left-width: 1px; }
-.hud-bracket.tr { top: 5px;    right: 5px;   border-top-width: 1px; border-right-width: 1px; }
-.hud-bracket.bl { bottom: 5px; left: 5px;    border-bottom-width: 1px; border-left-width: 1px; }
-.hud-bracket.br { bottom: 5px; right: 5px;   border-bottom-width: 1px; border-right-width: 1px; }
-/* Panel content sits above the brackets' corner marks. */
-.glass-panel > *:not(.hud-bracket) { position: relative; z-index: 2; }
+.hud-bracket.tl { top: 7px;    left: 7px;    border-top-width: 1px; border-left-width: 1px; border-top-left-radius: 4px; }
+.hud-bracket.tr { top: 7px;    right: 7px;   border-top-width: 1px; border-right-width: 1px; border-top-right-radius: 4px; }
+.hud-bracket.bl { bottom: 7px; left: 7px;    border-bottom-width: 1px; border-left-width: 1px; border-bottom-left-radius: 4px; }
+.hud-bracket.br { bottom: 7px; right: 7px;   border-bottom-width: 1px; border-right-width: 1px; border-bottom-right-radius: 4px; }
+/* Panel content sits above the brackets' corner marks.
+   The sheen wrapper must be excluded as well, not just the brackets: this
+   selector is (0,2,0) and .glass-sweep-wrap is only (0,1,0), so without the
+   second :not() it wins and forces the wrapper to position:relative. That
+   collapsed it to a 0x0 in-flow box — which both killed the sheen sweep
+   (nothing to clip the band to) and left a phantom flex item that pushed
+   space-between panel headers off to the right. */
+.glass-panel > *:not(.hud-bracket):not(.glass-sweep-wrap) { position: relative; z-index: 2; }
 
-/* ── Headline face (Rajdhani) ──
-   Page titles + section headers only. Data/labels stay mono, body stays sans. */
-.hud-title {
-  font-family: var(--display);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-/* ═══════════════ PHASE 2 — MOTION LAYER ═══════════════
-   Cursor tilt (JS-set inline transform) is gated in GlassPanel on
-   prefers-reduced-motion + fine pointer. The CSS-driven pieces below all sit
-   under the global reduced-motion rule near the top of this file, which
-   collapses their animations to a single static frame — so reduced-motion users
-   get the Phase-1 static look automatically. */
-
-/* Light-sweep: a soft diagonal reflection clipped to the panel's rounded rect.
-   The band is translated across by GlassPanel via the Web Animations API on
-   mount (staggered) and on pointer-enter — NOT a looping shimmer. */
+/* Diagonal sheen sweep. The band is translated across by GlassPanel via the
+   Web Animations API on mount (staggered) and again on pointer-enter — a single
+   pass each time, so it reads as a reflection catching the surface rather than
+   a looping shimmer. Soft and wide, per the concept's 115deg band. */
 .glass-sweep-wrap {
   position: absolute; inset: 0; z-index: 3;
   border-radius: inherit; overflow: hidden; pointer-events: none;
 }
 .glass-sweep-band {
-  position: absolute; top: -25%; left: 0; height: 150%; width: 55%;
+  position: absolute; top: -40%; left: 0; height: 180%; width: 65%;
   opacity: 0; transform: translateX(-140%);
-  background: linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  background: linear-gradient(115deg,
+    transparent 30%,
+    rgba(255,255,255,0.14) 46%,
+    rgba(255,255,255,0.05) 56%,
+    transparent 72%);
 }
-/* A slight transition so the cursor tilt eases rather than snaps. Kept tiny so
-   it still tracks the pointer closely; scoped to transform only. */
-.glass-panel { transition: transform 0.12s ease-out; }
+
+/* CSS-only sheen, for surfaces that aren't <GlassPanel> components (banners,
+   tab pills, form controls). Same diagonal band, driven by a hover transition
+   instead of the WAAPI pass. */
+.glass-sheen { position: relative; overflow: hidden; }
+.glass-sheen::before {
+  content: '';
+  position: absolute; inset: -40% -40%; z-index: 1; pointer-events: none;
+  background: linear-gradient(115deg,
+    transparent 40%,
+    rgba(255,255,255,0.10) 48%,
+    rgba(255,255,255,0.03) 52%,
+    transparent 60%);
+  transform: translateX(-60%);
+  transition: transform 0.8s ease;
+}
+.glass-sheen:hover::before { transform: translateX(60%); }
+.glass-sheen > * { position: relative; z-index: 2; }
+
+/* Hover lift.
+   Uses the `translate` property, NOT `transform` — GlassPanel writes an inline
+   `transform` for the cursor-parallax tilt, and an inline value always beats a
+   stylesheet one. `translate` is a separate property that composes with it, so
+   the lift and the tilt coexist instead of one silently cancelling the other. */
+.card-lift {
+  transition: translate 0.4s cubic-bezier(0.2,0.8,0.3,1),
+              box-shadow 0.4s ease,
+              border-color 0.4s ease;
+}
+.card-lift:hover {
+  translate: 0 -4px;
+  border-color: rgba(var(--tone-rgb, 236,236,236), 0.4) !important;
+  box-shadow:
+    var(--rim-top),
+    var(--rim-bottom),
+    0 32px 70px -26px rgba(0, 0, 0, 0.75) !important;
+}
+
+/* ── Data rows ──
+   List rows get a tighter radius and a background shift on hover, NOT the card
+   lift — 22 driver rows all rising on hover reads as noise, and the concept
+   treats its .drow the same way (background only). */
+.data-row {
+  transition: background 0.15s ease, transform 0.15s ease, filter 0.15s ease;
+  position: relative;
+}
+/* Only rows that are themselves a glass panel (Predictor / Next Race / What-If
+   driver rows — free-standing cards in a gapped column) take the tighter row
+   radius. Rows that are plain divs inside a parent panel (the standings list,
+   the accuracy grid, the strategy toggle) are full-bleed and divider-separated,
+   so they must stay square or they'd pull away from the panel's own edges.
+   !important because glassStyle() sets the card radius inline. */
+.data-row.glass-panel {
+  border-radius: var(--glass-radius-row) !important;
+}
+.data-row:hover {
+  transform: translateX(2px);
+  filter: brightness(1.12);
+}
+/* Rows that are plain divs inside a parent panel have no fill of their own, so
+   hover gives them one. */
+.data-row:not(.glass-panel):hover {
+  background: rgba(255,255,255,0.06) !important;
+}
+/* Rows that ARE glass panels already carry a fill — and, when tinted, the
+   team's color — in the inline gradient. A flat white wash would overwrite both,
+   so these brighten what's already there instead of painting over it. */
+.data-row.glass-panel:hover {
+  filter: brightness(1.22);
+}
+.data-row.clickable { cursor: pointer; }
+.data-row.clickable:hover { border-left-color: var(--red) !important; }
+
+/* ── Headline face (Syne) ──
+   Page titles + section headers only. Data/labels stay mono, body stays sans. */
+.hud-title {
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
 
 /* Live-data breathing glow — a slow, subtle pulse that says "current/live",
    not a blinking alert. currentColor makes it glow in the element's own color
-   (gold win%, red podium%, white countdown, gold PRE-RACE badge). */
+   (yellow win%, red podium%, white countdown, yellow PRE-RACE badge).
+   drop-shadow, never blur: the glyphs themselves stay sharp. */
 .live-pulse { animation: livePulse 3s ease-in-out infinite; }
 @keyframes livePulse {
   0%, 100% { filter: drop-shadow(0 0 0 transparent); }
@@ -292,9 +479,20 @@ body {
   50%      { box-shadow: 0 0 7px 0 currentColor; }
 }
 
-/* Ambient telemetry traces — thin oscilloscope lines whose dash flows along the
-   path forever (draws itself in, loops seamlessly). Low opacity = texture, not
-   content. non-scaling-stroke keeps them hair-thin when the SVG is stretched. */
+/* ── Countdown digits (Next Race) ──
+   The container is frosted, but backdrop-filter only blurs what sits BEHIND an
+   element, never its own text — so these glyphs are already sharp. This just
+   holds that guarantee explicitly: no inherited filter/blur is allowed to soften
+   them, and they get a hard shadow for contrast against the tinted glass. */
+.hud-countdown {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  filter: none;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Ambient telemetry traces ── */
 .telemetry-traces {
   position: absolute; inset: 0; width: 100%; height: 100%;
   pointer-events: none; z-index: 0;
@@ -311,14 +509,25 @@ body {
   to   { stroke-dashoffset: 0; }
 }
 
-/* ── Cards ── */
-.card-lift {
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+/* ══════════════ STICKY FROSTED CHROME ══════════════
+   Topbar + nav share one sticky wrapper (App.jsx), so the nav pins directly
+   under the topbar without either needing to know the other's height. */
+.chrome-sticky {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-chrome);
 }
-.card-lift:hover {
-  border-color: rgba(225,6,0,0.2) !important;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+.topbar-glass {
+  background: rgba(10, 10, 12, 0.55);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--faint);
+}
+.nav-glass {
+  background: rgba(10, 10, 12, 0.4);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  border-bottom: 1px solid var(--faint);
 }
 
 /* ── Buttons ── */
@@ -335,11 +544,26 @@ button:active { transform: scale(0.97); }
 }
 .nav-tab:active { transform: none; }
 
-/* ── Pill tabs (drivers / chart / explainer) ── */
-.pill-tab { transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
+/* ── Pill tabs (drivers / chart / explainer) ──
+   Active state is a frosted glass pill with a red tint and glow, replacing the
+   old flat red fill. Inactive pills are barely-there glass. */
+.pill-tab {
+  border-radius: 30px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid transparent;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
 .pill-tab:hover:not(.pill-active) {
   color: var(--text) !important;
-  background: rgba(255,255,255,0.05) !important;
+  background: rgba(255,255,255,0.06) !important;
+}
+.pill-tab.pill-active {
+  background: rgba(var(--red-rgb), 0.18) !important;
+  border-color: rgba(var(--red-rgb), 0.4) !important;
+  color: #fff !important;
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  box-shadow: 0 0 20px rgba(var(--red-rgb), 0.2), var(--rim-top);
 }
 
 /* ── Primary + ghost buttons ── */
@@ -354,13 +578,43 @@ button:active { transform: scale(0.97); }
   border-color: rgba(255,255,255,0.45) !important;
 }
 
-/* ── Driver list items (Drivers page sidebar) ── */
-.driver-list-item { transition: background 0.12s ease, color 0.12s ease, padding-left 0.12s ease; }
-.driver-list-item:hover:not(.driver-list-active) {
-  background: rgba(255,255,255,0.06) !important;
-  color: var(--text) !important;
-  padding-left: 0.8rem !important;
+/* ══════════════ FORM CONTROLS ══════════════
+   Selects, search inputs and submit buttons get the same frosted treatment as
+   the cards, so the My Picks / Compare forms sit in the same material as
+   everything around them instead of reading as raw browser chrome. */
+.glass-control {
+  background: linear-gradient(155deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015) 60%), var(--glass-base);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-sat));
+  border: 1px solid var(--hud-line);
+  border-radius: 14px;
+  box-shadow: var(--rim-top), var(--rim-bottom);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
+.glass-control:hover {
+  border-color: rgba(236,236,236,0.28);
+  box-shadow: var(--rim-top), var(--rim-bottom), 0 14px 34px -22px rgba(0,0,0,0.8);
+}
+.glass-control.is-open {
+  border-color: var(--red);
+  box-shadow: var(--rim-top), var(--rim-bottom), 0 0 22px -6px rgba(var(--red-rgb), 0.45);
+}
+/* Submit / action button in glass. `.is-armed` = the enabled, ready state. */
+.glass-button {
+  border-radius: 14px;
+  border: 1px solid var(--hud-line);
+  background: linear-gradient(155deg, rgba(255,255,255,0.06), rgba(255,255,255,0.012) 60%), var(--glass-base);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: var(--rim-top), var(--rim-bottom);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, filter 0.2s ease;
+}
+.glass-button.is-armed {
+  background: linear-gradient(155deg, rgba(var(--red-rgb), 0.55), rgba(var(--red-rgb), 0.3) 70%);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: var(--rim-top), 0 16px 40px -22px rgba(var(--red-rgb), 0.8);
+}
+.glass-button.is-armed:hover { filter: brightness(1.12); }
 
 /* ── Dropdown options: press feedback ── */
 .dropdown-option:active { background: rgba(225,6,0,0.2) !important; }
@@ -370,31 +624,46 @@ button:active { transform: scale(0.97); }
 
 /* ── Telemetry value ── */
 .telemetry {
-  font-family: var(--mono);
-  font-size: 1.8rem;
+  font-family: var(--display);
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
 /* ── Section label ── */
 .section-label {
+  font-family: var(--mono);
   font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
+  font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
 }
 .stat-card .section-label {
   letter-spacing: 0.15em;
-  font-size: 10px;
-  opacity: 0.65;
+  font-size: 9.5px;
+  opacity: 0.8;
 }
 
-/* ── Red accent strip ── */
+/* ══════════════ BANNERS / CALLOUTS ══════════════
+   The old flat solid-red strip becomes frosted red glass: a tinted gradient
+   over a blur, with the rim light and a red-cast drop shadow. Used by
+   SectionHeader (red variant), the Predictor's race banner, and the Next Race
+   hero. Content keeps full contrast — only the fill is translucent. */
 .accent-strip {
-  background: var(--red);
-  padding: 1rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  padding: 1.15rem 1.5rem;
+  border-radius: 18px;
+  background: linear-gradient(155deg, rgba(var(--red-rgb), 0.55), rgba(var(--red-rgb), 0.32));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 24px 60px -26px rgba(var(--red-rgb), 0.5);
+  color: #fff;
 }
 
 /* ── Searchable dropdown (RaceSelector / DriverSelector) ── */
@@ -430,12 +699,60 @@ button:active { transform: scale(0.97); }
   .dropdown-list { max-height: 60vh; }
 }
 
-/* ── What-If page pointer-drag reorder ── */
+/* ── Driver list items (Drivers page sidebar) ──
+   The sidebar is a list inside one glass panel, not a grid of cards, so its
+   items are flat rows that tint on hover — the panel carries the glass, the
+   rows carry the interaction. */
+.driver-list-item {
+  border-radius: 9px;
+  transition: background 0.12s ease, color 0.12s ease, padding-left 0.12s ease;
+}
+.driver-list-item:hover:not(.driver-list-active) {
+  background: rgba(255,255,255,0.07) !important;
+  color: var(--text) !important;
+  padding-left: 0.8rem !important;
+}
+
+/* ── What-If page pointer-drag reorder ──
+   The dragged row is promoted to its own compositor layer for the duration of
+   the gesture. Without this, a 22px backdrop-filter re-samples the blur against
+   freshly-painted pixels on every pointermove, which is the expensive path —
+   `will-change: transform` keeps the drag on the GPU and the blur cached. */
 body.wf-dragging, body.wf-dragging * {
   cursor: grabbing !important;
 }
+body.wf-dragging .data-row {
+  will-change: transform;
+}
+/* The row being dragged carries an inline transform; suppress the row hover
+   treatment so the two don't fight mid-gesture. */
+body.wf-dragging .data-row:hover {
+  transform: none;
+  filter: none;
+}
 
-/* ── Scanline overlay (decorative) ── */
+/* The row currently being dragged. Deliberately near-opaque: at the normal
+   panel transparency the row it is passing over reads straight through it, so
+   the two sets of driver names overlap and the card stops looking like a solid
+   object you're carrying. Still glass — just glass with a much denser base.
+   !important because it has to win over the inline background/box-shadow that
+   glassStyle() sets on the same element. */
+.data-row.wf-drag-active {
+  background:
+    linear-gradient(155deg, rgba(255,255,255,0.13), rgba(255,255,255,0.04) 60%),
+    rgba(14, 16, 22, 0.95) !important;
+  box-shadow:
+    var(--rim-top),
+    0 18px 44px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(var(--red-rgb), 0.35) !important;
+  filter: none !important;
+}
+/* The row the dragged card would drop into. */
+.data-row.wf-drop-target {
+  box-shadow: inset 3px 0 0 0 rgba(var(--red-rgb), 0.8) !important;
+}
+
+/* ── Scanline overlay (decorative, per-element) ── */
 .scanline-overlay {
   position: relative;
   overflow: hidden;
@@ -456,10 +773,11 @@ body.wf-dragging, body.wf-dragging * {
 }
 .home-stats .stat-card {
   min-width: 0 !important;
-  padding: 0.85rem 0.6rem !important;
+  padding: 0.95rem 0.7rem !important;
+  text-align: center;
 }
 .home-stats .telemetry {
-  font-size: 1.2rem !important;
+  font-size: 1.25rem !important;
 }
 
 /* ── Home canvas: fade its bottom edge into the text section below it ── */
@@ -468,7 +786,7 @@ body.wf-dragging, body.wf-dragging * {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 120px;
-  background: linear-gradient(to bottom, transparent, #080812);
+  background: linear-gradient(to bottom, transparent, var(--void));
   pointer-events: none;
   z-index: 2;
 }
@@ -495,7 +813,7 @@ body.wf-dragging, body.wf-dragging * {
   .drivers-grid { grid-template-columns: 1fr !important; }
   .compare-grid { grid-template-columns: 1fr !important; }
   .stat-cards-row { flex-direction: column !important; }
-  nav button { padding: 0.75rem 0.6rem !important; font-size: 0.68rem !important; }
+  nav button { padding: 0.75rem 0.6rem !important; font-size: 0.66rem !important; }
   main { padding: 1rem 1rem 4rem !important; }
   .whatif-grid { grid-template-columns: 1fr !important; }
 
@@ -529,5 +847,5 @@ body.wf-dragging, body.wf-dragging * {
 
 /* ── Nav (horizontal scroll strip on mobile) ── */
 .nav-scroll::-webkit-scrollbar { height: 3px; }
-.nav-scroll::-webkit-scrollbar-track { background: var(--surface); }
+.nav-scroll::-webkit-scrollbar-track { background: transparent; }
 .nav-scroll::-webkit-scrollbar-thumb { background: var(--red); }
