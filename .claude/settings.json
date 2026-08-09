@@ -40,5 +40,23 @@
       "Bash(PYTHONIOENCODING=utf-8 python proto.py)",
       "Bash(PYTHONIOENCODING=utf-8 python proto2.py)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/guard-main.js"
+            ],
+            "timeout": 10,
+            "statusMessage": "Checking branch policy"
+          }
+        ]
+      }
+    ]
   }
 }
