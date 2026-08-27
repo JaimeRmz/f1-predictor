@@ -39,8 +39,12 @@ export const CONSTRUCTOR_OVERRIDES = {
   bortoleto: "Audi", hulkenberg: "Audi",
   bottas: "Cadillac", perez: "Cadillac",
   colapinto: "Alpine", gasly: "Alpine",
-  lawson: "Racing Bulls", lindblad: "Racing Bulls",
+  lindblad: "Racing Bulls", tsunoda: "Racing Bulls",
   bearman: "Haas", ocon: "Haas",
+  // Hadjar left the grid at Zandvoort (round 12) and is no longer in
+  // STANDINGS_GRID_2026, so teamOf() has no roster row to fall back on --
+  // this keeps his historical My Picks entries correctly coloured.
+  hadjar: "Red Bull",
 };
 
 
@@ -189,29 +193,34 @@ export const COMPLETED_2026 = [
   { raceId: 1179, round: 11, name: "Hungarian GP",          flag: "🇭🇺", qualiISO: "2026-07-25T14:00:00Z" },
 ];
 
-// Roster ordered by post-Hungary (round 11) championship standings.
+// Roster ordered by post-Dutch GP (round 12) championship standings.
+// Zandvoort brought a mid-season lineup change: Hadjar out, Tsunoda in at
+// Racing Bulls, and Lawson promoted from Racing Bulls to Red Bull. Hadjar is
+// dropped from the roster (this list is the /whatif entry list for the NEXT
+// race, so it must be the 22 cars actually racing) but keeps a
+// CONSTRUCTOR_OVERRIDES entry below so his past My Picks rows still colour.
 export const STANDINGS_GRID_2026 = [
-  { driverRef: "antonelli",  driver_name: "Kimi Antonelli",    team: "Mercedes",      grid: 1  },
-  { driverRef: "hamilton",   driver_name: "Lewis Hamilton",     team: "Ferrari",       grid: 2  },
-  { driverRef: "russell",    driver_name: "George Russell",     team: "Mercedes",      grid: 3  },
-  { driverRef: "leclerc",    driver_name: "Charles Leclerc",    team: "Ferrari",       grid: 4  },
-  { driverRef: "norris",     driver_name: "Lando Norris",       team: "McLaren",       grid: 5  },
-  { driverRef: "max_verstappen", driver_name: "Max Verstappen",  team: "Red Bull",      grid: 6  },
-  { driverRef: "piastri",    driver_name: "Oscar Piastri",      team: "McLaren",       grid: 7  },
-  { driverRef: "hadjar",     driver_name: "Isack Hadjar",       team: "Red Bull",      grid: 8  },
-  { driverRef: "lawson",     driver_name: "Liam Lawson",        team: "Racing Bulls",  grid: 9  },
-  { driverRef: "gasly",      driver_name: "Pierre Gasly",       team: "Alpine",        grid: 10 },
-  { driverRef: "lindblad",   driver_name: "Arvid Lindblad",     team: "Racing Bulls",  grid: 11 },
-  { driverRef: "colapinto",  driver_name: "Franco Colapinto",   team: "Alpine",        grid: 12 },
-  { driverRef: "bearman",    driver_name: "Oliver Bearman",     team: "Haas",          grid: 13 },
-  { driverRef: "bortoleto",  driver_name: "Gabriel Bortoleto",  team: "Audi",          grid: 14 },
-  { driverRef: "sainz",      driver_name: "Carlos Sainz",       team: "Williams",      grid: 15 },
-  { driverRef: "albon",      driver_name: "Alex Albon",         team: "Williams",      grid: 16 },
-  { driverRef: "ocon",       driver_name: "Esteban Ocon",       team: "Haas",          grid: 17 },
-  { driverRef: "hulkenberg", driver_name: "Nico Hulkenberg",    team: "Audi",          grid: 18 },
-  { driverRef: "alonso",     driver_name: "Fernando Alonso",    team: "Aston Martin",  grid: 19 },
-  { driverRef: "stroll",     driver_name: "Lance Stroll",       team: "Aston Martin",  grid: 20 },
-  { driverRef: "bottas",     driver_name: "Valtteri Bottas",    team: "Cadillac",      grid: 21 },
-  { driverRef: "perez",      driver_name: "Sergio Perez",       team: "Cadillac",      grid: 22 },
+  { driverRef: "antonelli",       driver_name: "Kimi Antonelli",    team: "Mercedes",      grid: 1  },
+  { driverRef: "russell",         driver_name: "George Russell",    team: "Mercedes",      grid: 2  },
+  { driverRef: "hamilton",        driver_name: "Lewis Hamilton",    team: "Ferrari",       grid: 3  },
+  { driverRef: "norris",          driver_name: "Lando Norris",      team: "McLaren",       grid: 4  },
+  { driverRef: "leclerc",         driver_name: "Charles Leclerc",   team: "Ferrari",       grid: 5  },
+  { driverRef: "max_verstappen",  driver_name: "Max Verstappen",    team: "Red Bull",      grid: 6  },
+  { driverRef: "piastri",         driver_name: "Oscar Piastri",     team: "McLaren",       grid: 7  },
+  { driverRef: "lawson",          driver_name: "Liam Lawson",       team: "Red Bull",      grid: 8  },
+  { driverRef: "gasly",           driver_name: "Pierre Gasly",      team: "Alpine",        grid: 9  },
+  { driverRef: "lindblad",        driver_name: "Arvid Lindblad",    team: "Racing Bulls",  grid: 10 },
+  { driverRef: "colapinto",       driver_name: "Franco Colapinto",  team: "Alpine",        grid: 11 },
+  { driverRef: "bearman",         driver_name: "Oliver Bearman",    team: "Haas",          grid: 12 },
+  { driverRef: "bortoleto",       driver_name: "Gabriel Bortoleto", team: "Audi",          grid: 13 },
+  { driverRef: "hulkenberg",      driver_name: "Nico Hulkenberg",   team: "Audi",          grid: 14 },
+  { driverRef: "sainz",           driver_name: "Carlos Sainz",      team: "Williams",      grid: 15 },
+  { driverRef: "albon",           driver_name: "Alex Albon",        team: "Williams",      grid: 16 },
+  { driverRef: "ocon",            driver_name: "Esteban Ocon",      team: "Haas",          grid: 17 },
+  { driverRef: "alonso",          driver_name: "Fernando Alonso",   team: "Aston Martin",  grid: 18 },
+  { driverRef: "tsunoda",         driver_name: "Yuki Tsunoda",      team: "Racing Bulls",  grid: 19 },
+  { driverRef: "stroll",          driver_name: "Lance Stroll",      team: "Aston Martin",  grid: 20 },
+  { driverRef: "bottas",          driver_name: "Valtteri Bottas",   team: "Cadillac",      grid: 21 },
+  { driverRef: "perez",           driver_name: "Sergio Perez",      team: "Cadillac",      grid: 22 },
 ];
 

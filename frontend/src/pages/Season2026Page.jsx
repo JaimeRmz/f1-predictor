@@ -28,18 +28,22 @@ const Season2026Page = () => {
     return n;
   });
 
-  // Post-Hungarian GP (round 11) standings
+  // Post-Dutch GP (round 12) standings. These are the OFFICIAL championship
+  // totals from data/driver_standings.csv (raceId 1180), which include sprint
+  // points -- they intentionally differ from /season/2026, whose totals are
+  // summed from results.csv and so are race-only (sprint_results.csv has no
+  // 2026 rows). Russell takes P2 from Hamilton on countback at 183 apiece.
   const standings = [
-    { driver: "Kimi Antonelli",  team: "Mercedes",     pts: 219, wins: 6, color: "#00d2be" },
-    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 169, wins: 1, color: "#e10600" },
-    { driver: "George Russell",  team: "Mercedes",      pts: 160, wins: 2, color: "#00d2be" },
-    { driver: "Charles Leclerc", team: "Ferrari",       pts: 138, wins: 1, color: "#e10600" },
-    { driver: "Lando Norris",    team: "McLaren",       pts: 128, wins: 1, color: "#ff8000" },
-    { driver: "Max Verstappen",  team: "Red Bull",      pts: 109, wins: 0, color: "#3671c6" },
-    { driver: "Oscar Piastri",   team: "McLaren",       pts: 92,  wins: 0, color: "#ff8000" },
+    { driver: "Kimi Antonelli",  team: "Mercedes",      pts: 242, wins: 6, color: "#00d2be" },
+    { driver: "George Russell",  team: "Mercedes",      pts: 183, wins: 2, color: "#00d2be" },
+    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 183, wins: 1, color: "#e10600" },
+    { driver: "Lando Norris",    team: "McLaren",       pts: 159, wins: 2, color: "#ff8000" },
+    { driver: "Charles Leclerc", team: "Ferrari",       pts: 155, wins: 1, color: "#e10600" },
+    { driver: "Max Verstappen",  team: "Red Bull",      pts: 112, wins: 0, color: "#3671c6" },
+    { driver: "Oscar Piastri",   team: "McLaren",       pts: 104, wins: 0, color: "#ff8000" },
     { driver: "Isack Hadjar",    team: "Red Bull",      pts: 68,  wins: 0, color: "#3671c6" },
-    { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 43,  wins: 0, color: "#6692ff" },
-    { driver: "Pierre Gasly",    team: "Alpine",        pts: 42,  wins: 0, color: "#0093cc" },
+    { driver: "Liam Lawson",     team: "Red Bull",      pts: 49,  wins: 0, color: "#3671c6" },
+    { driver: "Pierre Gasly",    team: "Alpine",        pts: 44,  wins: 0, color: "#0093cc" },
   ];
   // Leader's points, so the top bar is full-width and the rest scale relative
   // to it — no manual update needed when the leader's total changes each race.
