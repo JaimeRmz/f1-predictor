@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "test:tally": "node src/lib/tally.test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

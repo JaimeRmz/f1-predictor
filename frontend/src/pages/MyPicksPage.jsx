@@ -6,6 +6,7 @@ import {
   API, NEXT_RACE, COMPLETED_2026, STANDINGS_GRID_2026,
   TEAM_COLORS, CONSTRUCTOR_OVERRIDES, SITE_URL, flagUrl,
 } from "../constants.js";
+import { computeTally } from "../lib/tally.js";
 import { useHealth } from "../health.jsx";
 import { useAuth } from "../auth.jsx";
 import { supabase } from "../lib/supabaseClient.js";
@@ -441,14 +442,7 @@ const History = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- load recreated each render; key on identity + wake only
   }, [userId, wakeEpoch]);
 
-  const tally = useMemo(() => {
-    if (!rows) return null;
-    const scored = rows.filter(r => r.resultKnown);
-    const userWins = scored.filter(r => r.userRefs && r.userRefs[0] === r.actualWinnerRef).length;
-    const modelWins = scored.filter(r => r.modelRefs && r.modelRefs[0] === r.actualWinnerRef).length;
-    const userPicked = scored.filter(r => r.userRefs).length;
-    return { userWins, modelWins, userPicked, scored: scored.length };
-  }, [rows]);
+  const tally = useMemo(() => computeTally(rows), [rows]);
 
   if (authStatus === "error")
     return <p style={{ fontFamily: "var(--mono)", fontSize: "0.7rem", color: "var(--red)" }}>Session unavailable — can't load your history.</p>;
@@ -460,7 +454,7 @@ const History = () => {
       {/* Season tally */}
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
         <StatCard label="Your Winners"  value={`${tally.userWins} / ${tally.scored}`}  accent="var(--gold)" sub={`from ${tally.userPicked} picked`} />
-        <StatCard label="Model Winners" value={`${tally.modelWins} / ${tally.scored}`} accent="var(--red)"  sub="snapshot picks" />
+        <StatCard label="Model Winners" value={`${tally.modelWins} / ${tally.modelScored}`} accent="var(--red)"  sub={tally.modelSkipped ? `snapshot picks · ${tally.modelSkipped} unsnapshotted skipped` : "snapshot picks"} />
         <StatCard label="Races Scored"  value={String(tally.scored)} sub="completed 2026" />
       </div>
 
