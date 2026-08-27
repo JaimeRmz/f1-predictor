@@ -167,21 +167,21 @@ const Season2026Page = () => {
         variant="glass"
         eyebrow="Live Test Set · Post-Training Data"
         title="2026 Formula One Season"
-        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>11 RACES COMPLETE</div></div>}
+        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>12 RACES COMPLETE</div></div>}
       />
 
       {/* Season summary bar */}
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <StatCard label="Completed"  value="11 / 22"      sub="races"             />
-        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+50 pts gap" />
-        <StatCard label="Remaining"  value="11"            sub="races to go"       />
-        <StatCard label="Next Race"  value="Dutch GP"      sub="Aug 23 · Zandvoort" />
+        <StatCard label="Completed"  value="12 / 22"      sub="races"             />
+        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+59 pts gap" />
+        <StatCard label="Remaining"  value="10"            sub="races to go"       />
+        <StatCard label="Next Race"  value="Italian GP"    sub="Sep 6 · Monza" />
       </div>
 
       {/* Championship standings */}
       <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Driver Championship — after 11 rounds</span>
+          <span className="section-label">Driver Championship — after 12 rounds</span>
         </div>
         {standings.map((s, i) => (
           <div key={i} className="data-row stagger-item row-gap-tight" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.75rem 1rem", borderBottom: i < standings.length - 1 ? "1px solid var(--border)" : "none" }}>
@@ -295,7 +295,7 @@ const Season2026Page = () => {
       {/* Remaining calendar */}
       <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Remaining 2026 Calendar — 11 rounds</span>
+          <span className="section-label">Remaining 2026 Calendar — 10 rounds</span>
         </div>
         {UPCOMING_RACES_2026.map((r, i) => (
           <div key={i} className="data-row stagger-item" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 1rem", borderBottom: i < UPCOMING_RACES_2026.length - 1 ? "1px solid var(--border)" : "none" }}>

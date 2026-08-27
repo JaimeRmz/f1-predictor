@@ -118,7 +118,6 @@ export const glassStyle = (tint, { glow = true } = {}) => ({
 
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
-  { raceId: 1180, round: 12, name: "Dutch Grand Prix",           circuit: "Zandvoort",   circuitRef: "zandvoort",    date: "Aug 23" },
   { raceId: 1181, round: 13, name: "Italian Grand Prix",         circuit: "Monza",       circuitRef: "monza",        date: "Sep 6"  },
   { raceId: 1182, round: 14, name: "Spanish Grand Prix",         circuit: "Madrid",      circuitRef: "madrid",       date: "Sep 13" },
   { raceId: 1183, round: 15, name: "Azerbaijan Grand Prix",      circuit: "Baku",        circuitRef: "baku",         date: "Sep 26" },
@@ -155,22 +154,21 @@ export const flagUrl = (circuitRef) => {
 };
 
 // The current upcoming race, as the single source of truth for the countdown,
-// the What-If/Next-Race pages, and the prediction picker's lock. The Dutch GP is
-// a SPRINT weekend, so `qualiCutoffISO` closes the pick window before Friday's
-// first on-track session (FP1 10:30 UTC / Sprint Qualifying): Sprint Qualifying
-// sets Saturday's sprint grid and the sprint result would otherwise be visible
-// before a pick locks. For fairness — parity with the model snapshot, which
-// freezes pre-weekend — the window shuts before any running, not at GP qualifying.
-// `raceISO` matches RaceCountdown's target (15:00 CEST = 13:00 UTC).
+// the What-If/Next-Race pages, and the prediction picker's lock. `qualiCutoffISO`
+// is the machine-readable version of NextRacePage's "Qualifying · Sat Sep 5 ·
+// 9:00 AM CDT" schedule row (09:00 CDT = 14:00 UTC): once qualifying starts, the
+// picker locks. `raceISO` matches RaceCountdown's target (15:00 CEST = 13:00 UTC).
+// Monza is a NORMAL weekend (races.csv row 1181 has no sprint_date), so the
+// pre-FP1 cutoff used for the Dutch GP sprint weekend is not needed here.
 export const NEXT_RACE = {
-  raceId: 1180,
-  round: 12,
-  name: "Dutch Grand Prix",
-  circuit: "Zandvoort",
-  circuitRef: "zandvoort",
-  flag: "🇳🇱",
-  raceISO: "2026-08-23T13:00:00Z",
-  qualiCutoffISO: "2026-08-21T10:00:00Z",
+  raceId: 1181,
+  round: 13,
+  name: "Italian Grand Prix",
+  circuit: "Monza",
+  circuitRef: "monza",
+  flag: "🇮🇹",
+  raceISO: "2026-09-06T13:00:00Z",
+  qualiCutoffISO: "2026-09-05T14:00:00Z",
 };
 
 // Completed 2026 rounds, shared by the 2026 Season page and the My Picks
@@ -191,6 +189,7 @@ export const COMPLETED_2026 = [
   { raceId: 1177, round: 9,  name: "British GP",            flag: "🇬🇧", qualiISO: "2026-07-04T15:00:00Z" },
   { raceId: 1178, round: 10, name: "Belgian GP",            flag: "🇧🇪", qualiISO: "2026-07-18T14:00:00Z" },
   { raceId: 1179, round: 11, name: "Hungarian GP",          flag: "🇭🇺", qualiISO: "2026-07-25T14:00:00Z" },
+  { raceId: 1180, round: 12, name: "Dutch GP",              flag: "🇳🇱", qualiISO: "2026-08-22T14:00:00Z" },
 ];
 
 // Roster ordered by post-Dutch GP (round 12) championship standings.

@@ -52,7 +52,7 @@ const HealthIndicator = () => {
 
 // ── NAV ────────────────────────────────────────────────────────
 const Nav = ({ page, setPage, onNavigate }) => {
-  const links = ["Home", "Predictor", "Next Race 🇳🇱", "What-If 🎮", "My Picks 🎯", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
+  const links = ["Home", "Predictor", "Next Race 🇮🇹", "What-If 🎮", "My Picks 🎯", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
   // Stickiness lives on the shared .chrome-sticky wrapper in App() below, so the
   // nav pins directly under the topbar without either needing to hardcode the
   // other's height. This element only owns the frosted fill.
@@ -1398,7 +1398,7 @@ export default function App() {
   const pages = {
     "Home": <HomePage />,
     "Predictor": <PredictorPage />,
-    "Next Race 🇳🇱": <NextRacePage />,
+    "Next Race 🇮🇹": <NextRacePage />,
     "What-If 🎮": <WhatIfPage />,
     "My Picks 🎯": <MyPicksPage />,
     "Championship": <ChampionshipPage />,

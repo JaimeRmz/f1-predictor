@@ -76,7 +76,7 @@ const Picker = () => {
   // (NOT a live /whatif, so the numbers can't drift after the fact).
   const [snap, setSnap] = useState(null);
   const [snapState, setSnapState] = useState("loading"); // loading | ready | stale | missing | error
-  const { cardRef, shareState, share } = useShareCard("dutch-gp-me-vs-model.png", "My podium pick vs the model.");
+  const { cardRef, shareState, share } = useShareCard("italian-gp-me-vs-model.png", "My podium pick vs the model.");
 
   // Load any existing pick for this race so re-visits/edits start from it.
   useEffect(() => {
@@ -184,7 +184,7 @@ const Picker = () => {
       <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.5rem" }}>
         <span className="section-label">{NEXT_RACE.flag} {NEXT_RACE.name} · Your Podium Pick</span>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.1em", color: locked ? "var(--red)" : "var(--green)" }}>
-          {locked ? "● LOCKED" : "● OPEN"} · {locked ? "weekend underway" : `closes ${cutoffLabel}`}
+          {locked ? "● LOCKED" : "● OPEN"} · {locked ? "quali underway" : `closes ${cutoffLabel}`}
         </span>
       </div>
 
@@ -200,7 +200,7 @@ const Picker = () => {
           saved ? (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <p style={{ fontFamily: "var(--mono)", fontSize: "0.66rem", color: "var(--muted)", margin: 0, lineHeight: 1.7 }}>
-                The race weekend has begun, so your pick is locked in. Results appear below once the race is complete.
+                Qualifying has begun, so your pick is locked in. Results appear below once the race is complete.
               </p>
               <PickTriplet refs={saved} />
             </div>

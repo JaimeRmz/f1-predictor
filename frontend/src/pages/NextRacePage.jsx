@@ -7,14 +7,14 @@ import { API, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS, NEXT_RACE
 import SharePredictionCard from "../components/SharePredictionCard.jsx";
 import { useShareCard } from "../useShareCard.js";
 
-// ── NEXT RACE PAGE (Dutch GP 2026) ───────────────────────────
+// ── NEXT RACE PAGE (Italian GP 2026) ───────────────────────────
 // Countdown owns its own 1-second interval state, so each tick re-renders
 // only this small component — not the whole page (3 lists × 22 rows).
 const RaceCountdown = () => {
   const [countdown, setCountdown] = useState("");
 
   useEffect(() => {
-    const raceDate = new Date("2026-08-23T13:00:00Z"); // 15:00 CEST / 8:00 AM CDT
+    const raceDate = new Date("2026-09-06T13:00:00Z"); // 15:00 CEST / 8:00 AM CDT
     const tick = () => {
       const now = new Date();
       const diff = raceDate - now;
@@ -44,7 +44,7 @@ const NextRacePage = () => {
   // setState only ever runs inside the async callbacks (or the retry click
   // handler below), never synchronously inside the mount effect.
   const fetchPredictions = () => {
-    axios.post(`${API}/whatif?circuitRef=zandvoort&auto_quali=true`, STANDINGS_GRID_2026)
+    axios.post(`${API}/whatif?circuitRef=monza&auto_quali=true`, STANDINGS_GRID_2026)
       .then(r => { setPredictions([...r.data].sort((a, b) => a.grid - b.grid)); setPredLoading(false); })
       .catch(() => { setPredLoading(false); setOffline(true); });
   };
@@ -59,7 +59,7 @@ const NextRacePage = () => {
   // The card wants the model's podium order (top-3 by podium_probability),
   // whereas `predictions` above is sorted by grid — so re-sort here. Capture
   // plumbing (toPng, flag decode, share/download) lives in the shared hook.
-  const { cardRef, shareState, share } = useShareCard("dutch-gp-prediction.png", "Model prediction before qualifying.");
+  const { cardRef, shareState, share } = useShareCard("italian-gp-prediction.png", "Model prediction before qualifying.");
 
   const podiumRanked = [...predictions].sort((a, b) => (b.podium_probability ?? 0) - (a.podium_probability ?? 0));
   const sharePicks = podiumRanked.slice(0, 3).map(p => {
@@ -80,13 +80,14 @@ const NextRacePage = () => {
   };
   const canShare = !predLoading && sharePicks.length === 3;
 
-  // Sprint weekend — races.csv row 1180: FP1 Fri Aug 21, Sprint + Qualifying Sat
-  // Aug 22 (no FP2/FP3). Times converted from UTC to Central Time / Houston (CDT, UTC-5).
+  // Normal weekend — races.csv row 1181: fp1/fp2 Sep 4, fp3/quali Sep 5, no sprint.
+  // Times converted from UTC to Central Time / Houston (CDT, UTC-5).
   const schedule = [
-    { session: "Practice 1", day: "Friday Aug 21",   time: "5:30 AM CDT",  emoji: "🔧" },
-    { session: "Sprint",     day: "Saturday Aug 22", time: "5:00 AM CDT",  emoji: "🏃" },
-    { session: "Qualifying", day: "Saturday Aug 22", time: "9:00 AM CDT",  emoji: "⚡" },
-    { session: "Race",       day: "Sunday Aug 23",   time: "8:00 AM CDT",  emoji: "🏁", featured: true },
+    { session: "Practice 1", day: "Friday Sep 4",   time: "5:30 AM CDT",  emoji: "🔧" },
+    { session: "Practice 2", day: "Friday Sep 4",   time: "9:00 AM CDT",  emoji: "🔧" },
+    { session: "Practice 3", day: "Saturday Sep 5", time: "5:30 AM CDT",  emoji: "🔧" },
+    { session: "Qualifying", day: "Saturday Sep 5", time: "9:00 AM CDT",  emoji: "⚡" },
+    { session: "Race",       day: "Sunday Sep 6",   time: "8:00 AM CDT",  emoji: "🏁", featured: true },
   ];
 
   return (
@@ -95,9 +96,9 @@ const NextRacePage = () => {
       <div className="canada-hero scanline-overlay accent-strip glass-sheen" style={{ padding: "1.6rem 1.75rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
         <TelemetryTraces color="#ffffff" opacity={0.12} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND 12 · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
-          <div className="hud-title" style={{ fontSize: "1.7rem", letterSpacing: "0.04em" }}>🇳🇱 DUTCH GRAND PRIX</div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "500", opacity: 0.8, marginTop: "0.3rem" }}>Circuit Zandvoort · Zandvoort, Netherlands · August 21–23, 2026</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND 13 · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
+          <div className="hud-title" style={{ fontSize: "1.7rem", letterSpacing: "0.04em" }}>🇮🇹 ITALIAN GRAND PRIX</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "500", opacity: 0.8, marginTop: "0.3rem" }}>Autodromo Nazionale Monza · Monza, Italy · September 4–6, 2026</div>
         </div>
         <div style={{ position: "relative", zIndex: 1, textAlign: "right" }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.75, marginBottom: "0.3rem" }}>RACE COUNTDOWN</div>
@@ -129,10 +130,10 @@ const NextRacePage = () => {
         ))}
       </GlassPanel>
 
-      {offline && <BackendPanel detail="The Zandvoort prediction request failed." onRetry={retry} />}
+      {offline && <BackendPanel detail="The Monza prediction request failed." onRetry={retry} />}
 
       {/* Predicted qualifying order */}
-      <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying Order — Zandvoort" />
+      <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying Order — Monza" />
       {predLoading && <SkeletonList rows={6} metrics={1} />}
       {!predLoading && predictions.length > 0 && (
         <div className="chart-enter" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -154,7 +155,7 @@ const NextRacePage = () => {
       )}
 
       {/* Pre-race prediction */}
-      <SectionHeader eyebrow="XGBoost · Zandvoort Circuit History · Uses Predicted Grid Above" title="Dutch GP Pre-Race Prediction" />
+      <SectionHeader eyebrow="XGBoost · Monza Circuit History · Uses Predicted Grid Above" title="Italian GP Pre-Race Prediction" />
       {predLoading && <SkeletonList rows={8} />}
       {!predLoading && predictions.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -218,7 +219,7 @@ const NextRacePage = () => {
       <GlassPanel style={{ padding: "20px", display: "flex", gap: "0.75rem" }}>
         <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
         <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
-          Sprint weekend — one practice session, with Sprint and Qualifying both on Saturday. Grid auto-predicted by qualifying model · updates after real qualifying. Circuit Podium Rate uses exponential decay (0.75^years) weighting recent Zandvoort history more heavily.
+          Standard race weekend — three practice sessions. Grid auto-predicted by qualifying model · updates after real qualifying. Circuit Podium Rate uses exponential decay (0.75^years) weighting recent Monza history more heavily.
         </p>
       </GlassPanel>
     </div>
