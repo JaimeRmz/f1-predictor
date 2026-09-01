@@ -1,0 +1,159 @@
+# Freezes the model's top-3 podium pick before each race's qualifying.
+#
+# Timing is NOT a "days before the race" heuristic. backend/scripts/due_snapshot.py
+# resolves each race's real qualifying slot from Jolpica and matches it to our
+# raceIds by circuit, so a calendar revision or a round renumbering cannot
+# silently shift the deadline. See the round note in that script.
+#
+# Why it writes without waiting for a human: the model's inputs only change when
+# a completed race is merged, so a preview taken now and the write taken later
+# would be byte-identical -- an approval gate would add no information while
+# reintroducing exactly the manual step that caused raceId 1180 to be missed.
+# The write is safe to repeat: snapshot_model_pick.py refuses to overwrite an
+# existing snapshot unless --force is passed.
+
+name: Snapshot model pick
+
+on:
+  schedule:
+    # Every 3 hours. GitHub's scheduler is best-effort and can run late or skip
+    # under load, so the 48h..2h window in due_snapshot.py gives ~15 chances to
+    # land each race rather than depending on any single firing.
+    - cron: "0 */3 * * *"
+  workflow_dispatch:
+    inputs:
+      race_id:
+        description: "Snapshot this raceId now, ignoring the schedule window"
+        required: false
+      dry_run:
+        description: "Compute and print the pick without writing"
+        type: boolean
+        default: false
+
+concurrency:
+  group: snapshot-model-pick
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  API_BASE: https://f1-predictor-api-m75n.onrender.com
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install --disable-pip-version-check requests
+
+      # The API is on Render's free plan and spins down when idle. Waking it
+      # here (rather than inside the write step) keeps the ~50s cold start off
+      # snapshot_model_pick.py's own 90s readiness budget.
+      - name: Wake the model API
+        run: |
+          for i in $(seq 1 12); do
+            if curl -sf -m 25 "$API_BASE/" | grep -q '"models_ready":true'; then
+              echo "API ready after ${i} attempt(s)"; exit 0
+            fi
+            sleep 15
+          done
+          echo "API did not become ready in time"; exit 1
+
+      - name: Decide what is due
+        id: due
+        if: github.event.inputs.race_id == ''
+        env:
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+        run: python backend/scripts/due_snapshot.py --season 2026
+
+      - name: Resolve target
+        id: target
+        run: |
+          if [ -n "${{ github.event.inputs.race_id }}" ]; then
+            echo "action=write"                                   >> "$GITHUB_OUTPUT"
+            echo "race_id=${{ github.event.inputs.race_id }}"      >> "$GITHUB_OUTPUT"
+            echo "name=manual dispatch"                            >> "$GITHUB_OUTPUT"
+            echo "cutoff=n/a"                                      >> "$GITHUB_OUTPUT"
+          else
+            echo "action=${{ steps.due.outputs.action }}"          >> "$GITHUB_OUTPUT"
+            echo "race_id=${{ steps.due.outputs.race_id }}"        >> "$GITHUB_OUTPUT"
+            echo "name=${{ steps.due.outputs.name }}"              >> "$GITHUB_OUTPUT"
+            echo "cutoff=${{ steps.due.outputs.cutoff }}"          >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Snapshot
+        id: snap
+        if: steps.target.outputs.action == 'write'
+        env:
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: |
+          set -o pipefail
+          DRY=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then DRY="--dry-run"; fi
+          python backend/scripts/snapshot_model_pick.py \
+            --race-id "${{ steps.target.outputs.race_id }}" \
+            --api-base "$API_BASE" $DRY 2>&1 | tee snap.log
+
+      - name: Job summary
+        if: always() && steps.target.outputs.action == 'write'
+        run: |
+          {
+            echo "## Snapshot — ${{ steps.target.outputs.name }} (raceId ${{ steps.target.outputs.race_id }})"
+            echo ""
+            echo "Real qualifying cutoff: \`${{ steps.target.outputs.cutoff }}\`"
+            echo ""
+            echo '```'
+            cat snap.log 2>/dev/null || echo "(no output — the step failed before producing any)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # Tells you what was frozen, so a pick you disagree with can still be
+      # replaced with --force while the cutoff is ahead of you.
+      - name: Report what was frozen
+        if: success() && steps.target.outputs.action == 'write' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "Model snapshot frozen: ${{ steps.target.outputs.name }} (raceId ${{ steps.target.outputs.race_id }})" \
+            --body "$(printf '%s\n' \
+              "Qualifying cutoff: \`${{ steps.target.outputs.cutoff }}\`" \
+              "" \
+              '```' \
+              "$(cat snap.log)" \
+              '```' \
+              "" \
+              "To replace this pick before the cutoff:" \
+              "" \
+              '```' \
+              "SUPABASE_SECRET_KEY=... python backend/scripts/snapshot_model_pick.py --race-id ${{ steps.target.outputs.race_id }} --api-base $API_BASE --force" \
+              '```')"
+
+      # The 1180 alarm: a cutoff went past with no snapshot. Unrecoverable by
+      # design -- a snapshot taken after qualifying would be a hindsight pick.
+      - name: Alarm on a missed cutoff
+        if: steps.target.outputs.action == 'missed'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="MISSED snapshot cutoff: ${{ steps.target.outputs.name }} (raceId ${{ steps.target.outputs.race_id }})"
+          if [ -z "$(gh issue list --search "$TITLE" --state all --json number --jq '.[0].number')" ]; then
+            gh issue create --title "$TITLE" --body "$(printf '%s\n' \
+              "Qualifying cutoff \`${{ steps.target.outputs.cutoff }}\` has passed and no snapshot exists for raceId ${{ steps.target.outputs.race_id }}." \
+              "" \
+              "Do not backfill this from /predict — after qualifying that endpoint sees the real grid, so the pick would be hindsight. This is the same situation as raceId 1180." \
+              "" \
+              "Leave the Model column empty for this race, as decided for the Dutch GP.")"
+          fi
+
+      - name: Nothing due
+        if: steps.target.outputs.action == 'none'
+        run: echo "No race inside the snapshot window. Nothing to do."
