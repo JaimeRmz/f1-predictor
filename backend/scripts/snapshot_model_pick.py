@@ -7,11 +7,12 @@ later with hindsight.
 Modes (exactly one required):
 
   --backfill        Snapshot every COMPLETED 2026 race listed in COMPLETED_2026
-                    (rounds 1-11, raceIds 1169-1179; see the note there on why
-                    round 12 is excluded) via the /predict/{race_id} endpoint — the same
-                    pre-race-feature source the 2026 Season accuracy tracker
-                    uses. Existing snapshot rows are left untouched (never
-                    overwritten silently).
+                    (rounds 1-11 and 13, raceIds 1169-1179 and 1181; see the
+                    note there on why round 12 is excluded) via the
+                    /predict/{race_id} endpoint — the same pre-race-feature
+                    source the 2026 Season accuracy tracker uses. Existing
+                    snapshot rows are left untouched (never overwritten
+                    silently).
 
   --race-id N       Snapshot a single race. If N has no result rows yet (an
                     UPCOMING race such as Hungary 1179), the model's current
@@ -63,6 +64,7 @@ COMPLETED_2026 = [
     # REAL grid -- i.e. a hindsight pick presented as the model's call. Jaime
     # decided on 2026-08-27 to leave that race's Model column empty instead.
     # Adding 1180 to this list would silently undo that decision.
+    (1181, 13, "Italian GP"),
 ]
 COMPLETED_IDS = {rid for rid, _, _ in COMPLETED_2026}
 RACE_NAME = {rid: name for rid, _, name in COMPLETED_2026}
@@ -70,12 +72,12 @@ RACE_ROUND = {rid: rnd for rid, rnd, _ in COMPLETED_2026}
 
 # Upcoming races → circuitRef, for the /whatif path (mirror of UPCOMING_RACES_2026).
 UPCOMING_CIRCUIT = {
-    1181: "monza", 1182: "madrid",
+    1182: "madrid",
     1183: "baku", 1184: "marina_bay", 1185: "americas", 1186: "rodriguez",
     1187: "interlagos", 1188: "las_vegas", 1189: "losail", 1190: "yas_marina",
 }
 UPCOMING_NAME = {
-    1181: "Italian GP", 1182: "Spanish GP (Madrid)",
+    1182: "Spanish GP (Madrid)",
     1183: "Azerbaijan GP", 1184: "Singapore GP", 1185: "United States GP", 1186: "Mexico City GP",
     1187: "Brazilian GP", 1188: "Las Vegas GP", 1189: "Qatar GP", 1190: "Abu Dhabi GP",
 }
