@@ -28,22 +28,23 @@ const Season2026Page = () => {
     return n;
   });
 
-  // Post-Dutch GP (round 12) standings. These are the OFFICIAL championship
-  // totals from data/driver_standings.csv (raceId 1180), which include sprint
+  // Post-Italian GP (round 13) standings. These are the OFFICIAL championship
+  // totals from data/driver_standings.csv (raceId 1181), which include sprint
   // points -- they intentionally differ from /season/2026, whose totals are
   // summed from results.csv and so are race-only (sprint_results.csv has no
-  // 2026 rows). Russell takes P2 from Hamilton on countback at 183 apiece.
+  // 2026 rows). Antonelli won Monza from grid 19; Russell takes outright P2
+  // from Hamilton this round instead of on countback.
   const standings = [
-    { driver: "Kimi Antonelli",  team: "Mercedes",      pts: 242, wins: 6, color: "#00d2be" },
-    { driver: "George Russell",  team: "Mercedes",      pts: 183, wins: 2, color: "#00d2be" },
-    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 183, wins: 1, color: "#e10600" },
-    { driver: "Lando Norris",    team: "McLaren",       pts: 159, wins: 2, color: "#ff8000" },
+    { driver: "Kimi Antonelli",  team: "Mercedes",      pts: 267, wins: 7, color: "#00d2be" },
+    { driver: "George Russell",  team: "Mercedes",      pts: 201, wins: 2, color: "#00d2be" },
+    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 191, wins: 1, color: "#e10600" },
+    { driver: "Lando Norris",    team: "McLaren",       pts: 171, wins: 2, color: "#ff8000" },
     { driver: "Charles Leclerc", team: "Ferrari",       pts: 155, wins: 1, color: "#e10600" },
-    { driver: "Max Verstappen",  team: "Red Bull",      pts: 112, wins: 0, color: "#3671c6" },
-    { driver: "Oscar Piastri",   team: "McLaren",       pts: 104, wins: 0, color: "#ff8000" },
-    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 68,  wins: 0, color: "#3671c6" },
-    { driver: "Liam Lawson",     team: "Red Bull",      pts: 49,  wins: 0, color: "#3671c6" },
-    { driver: "Pierre Gasly",    team: "Alpine",        pts: 44,  wins: 0, color: "#0093cc" },
+    { driver: "Max Verstappen",  team: "Red Bull",      pts: 127, wins: 0, color: "#3671c6" },
+    { driver: "Oscar Piastri",   team: "McLaren",       pts: 116, wins: 0, color: "#ff8000" },
+    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 71,  wins: 0, color: "#3671c6" },
+    { driver: "Liam Lawson",     team: "Red Bull",      pts: 51,  wins: 0, color: "#3671c6" },
+    { driver: "Pierre Gasly",    team: "Alpine",        pts: 41,  wins: 0, color: "#0093cc" },
   ];
   // Leader's points, so the top bar is full-width and the rest scale relative
   // to it — no manual update needed when the leader's total changes each race.
@@ -167,21 +168,21 @@ const Season2026Page = () => {
         variant="glass"
         eyebrow="Live Test Set · Post-Training Data"
         title="2026 Formula One Season"
-        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>12 RACES COMPLETE</div></div>}
+        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>13 RACES COMPLETE</div></div>}
       />
 
       {/* Season summary bar */}
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <StatCard label="Completed"  value="12 / 22"      sub="races"             />
-        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+59 pts gap" />
-        <StatCard label="Remaining"  value="10"            sub="races to go"       />
-        <StatCard label="Next Race"  value="Italian GP"    sub="Sep 6 · Monza" />
+        <StatCard label="Completed"  value="13 / 22"      sub="races"             />
+        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+66 pts gap" />
+        <StatCard label="Remaining"  value="9"             sub="races to go"       />
+        <StatCard label="Next Race"  value="Spanish GP"    sub="Sep 13 · Madrid" />
       </div>
 
       {/* Championship standings */}
       <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Driver Championship — after 12 rounds</span>
+          <span className="section-label">Driver Championship — after 13 rounds</span>
         </div>
         {standings.map((s, i) => (
           <div key={i} className="data-row stagger-item row-gap-tight" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.75rem 1rem", borderBottom: i < standings.length - 1 ? "1px solid var(--border)" : "none" }}>
@@ -295,7 +296,7 @@ const Season2026Page = () => {
       {/* Remaining calendar */}
       <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Remaining 2026 Calendar — 10 rounds</span>
+          <span className="section-label">Remaining 2026 Calendar — 9 rounds</span>
         </div>
         {UPCOMING_RACES_2026.map((r, i) => (
           <div key={i} className="data-row stagger-item" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 1rem", borderBottom: i < UPCOMING_RACES_2026.length - 1 ? "1px solid var(--border)" : "none" }}>
