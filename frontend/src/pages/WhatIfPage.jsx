@@ -5,14 +5,14 @@ import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.js
 import { GlassPanel, HudBrackets } from "../components/GlassPanel.jsx";
 import { API, cardRed, glassStyle, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
 
-// ── WHAT IF SIMULATOR (next race: Spanish GP · Madrid) ────────────
-const NEXT_RACE_CIRCUIT = "madrid";
-const NEXT_RACE_NAME = "Spanish GP";
+// ── WHAT IF SIMULATOR (next race: Azerbaijan GP · Baku) ────────────
+const NEXT_RACE_CIRCUIT = "baku";
+const NEXT_RACE_NAME = "Azerbaijan GP";
 
 // Fallback grid only — shown briefly on mount and used only if the
-// Madrid qualifying-order preload request fails. Ordered by
-// post-Italian GP (round 13) championship standings -- unchanged from
-// post-Dutch GP in relative order, only points totals moved.
+// Baku qualifying-order preload request fails. Ordered by
+// post-Spanish GP (round 14) championship standings -- unchanged from
+// post-Italian GP in relative order, only points totals moved.
 const WHATIF_FALLBACK_DRIVERS = [
   { driverRef: "antonelli", driver_name: "Kimi Antonelli", team: "Mercedes", grid: 1 },
   { driverRef: "russell", driver_name: "George Russell", team: "Mercedes", grid: 2 },
@@ -27,7 +27,7 @@ const WhatIfPage = () => {
   const teamColors = TEAM_COLORS;
 
   // The "default" to revert to on RESET - starts as the hardcoded fallback,
-  // replaced once the real Madrid predicted qualifying order loads.
+  // replaced once the real Baku predicted qualifying order loads.
   const [defaultDrivers, setDefaultDrivers] = useState(WHATIF_FALLBACK_DRIVERS);
   const [drivers, setDrivers] = useState(WHATIF_FALLBACK_DRIVERS);
   const [results, setResults] = useState([]);
@@ -74,7 +74,7 @@ const WhatIfPage = () => {
         setDrivers(preloaded);
         runPrediction(preloaded);
       } catch (e) {
-        console.error("Failed to preload Madrid qualifying order, using fallback grid:", e);
+        console.error("Failed to preload Baku qualifying order, using fallback grid:", e);
         runPrediction(WHATIF_FALLBACK_DRIVERS);
       }
     })();
@@ -231,8 +231,8 @@ const WhatIfPage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <SectionHeader
-        eyebrow="Interactive ML · Live Model Calls · Madrid"
-        title={`What-If Grid Simulator — ${NEXT_RACE_NAME} · Madrid`}
+        eyebrow="Interactive ML · Live Model Calls · Baku"
+        title={`What-If Grid Simulator — ${NEXT_RACE_NAME} · Baku`}
         right={
           <button onClick={reset} className="btn-ghost" style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff", padding: "0.45rem 1rem", fontSize: "0.68rem", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>
             ↺ RESET
@@ -243,7 +243,7 @@ const WhatIfPage = () => {
       <GlassPanel style={{ padding: "14px 20px", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--gold)", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6 }}>
-          Grid pre-loaded with predicted qualifying order for Madrid · Drag to simulate alternative scenarios
+          Grid pre-loaded with predicted qualifying order for Baku · Drag to simulate alternative scenarios
         </span>
       </GlassPanel>
 

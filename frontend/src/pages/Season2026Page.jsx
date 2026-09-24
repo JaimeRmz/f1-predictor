@@ -172,10 +172,10 @@ const Season2026Page = () => {
 
       {/* Season summary bar */}
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <StatCard label="Completed"  value="13 / 22"      sub="races"             />
-        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+66 pts gap" />
-        <StatCard label="Remaining"  value="9"             sub="races to go"       />
-        <StatCard label="Next Race"  value="Spanish GP"    sub="Sep 13 · Madrid" />
+        <StatCard label="Completed"  value="14 / 22"      sub="races"             />
+        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+81 pts gap" />
+        <StatCard label="Remaining"  value="8"             sub="races to go"       />
+        <StatCard label="Next Race"  value="Azerbaijan GP" sub="Sep 26 · Baku" />
       </div>
 
       {/* Championship standings */}
