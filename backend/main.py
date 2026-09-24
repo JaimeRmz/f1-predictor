@@ -351,20 +351,20 @@ def compare_drivers(driver1: str, driver2: str):
 @app.get("/championship/simulate")
 def simulate_championship():
     require_ready()
-    # Post-Italian GP (round 13) standings, from data/driver_standings.csv
-    # (raceId 1181) -- the official totals, sprint points included. This block
+    # Post-Spanish GP (round 14) standings, from data/driver_standings.csv
+    # (raceId 1182) -- the official totals, sprint points included. This block
     # is hand-maintained: update it with each race ingest, alongside the
     # matching array in frontend/src/pages/Season2026Page.jsx.
     current_standings = [
-        {"driver": "Kimi Antonelli",  "driverRef": "antonelli",      "team": "Mercedes",     "points": 267, "color": "#00d2be"},
-        {"driver": "George Russell",  "driverRef": "russell",         "team": "Mercedes",     "points": 201, "color": "#00d2be"},
+        {"driver": "Kimi Antonelli",  "driverRef": "antonelli",      "team": "Mercedes",     "points": 292, "color": "#00d2be"},
+        {"driver": "George Russell",  "driverRef": "russell",         "team": "Mercedes",     "points": 211, "color": "#00d2be"},
         {"driver": "Lewis Hamilton",  "driverRef": "hamilton",        "team": "Ferrari",      "points": 191, "color": "#e10600"},
-        {"driver": "Lando Norris",    "driverRef": "norris",          "team": "McLaren",      "points": 171, "color": "#ff8000"},
-        {"driver": "Charles Leclerc", "driverRef": "leclerc",         "team": "Ferrari",      "points": 155, "color": "#e10600"},
-        {"driver": "Max Verstappen",  "driverRef": "max_verstappen",  "team": "Red Bull",     "points": 127, "color": "#3671c6"},
-        {"driver": "Oscar Piastri",   "driverRef": "piastri",         "team": "McLaren",      "points": 116, "color": "#ff8000"},
+        {"driver": "Lando Norris",    "driverRef": "norris",          "team": "McLaren",      "points": 186, "color": "#ff8000"},
+        {"driver": "Charles Leclerc", "driverRef": "leclerc",         "team": "Ferrari",      "points": 167, "color": "#e10600"},
+        {"driver": "Max Verstappen",  "driverRef": "max_verstappen",  "team": "Red Bull",     "points": 145, "color": "#3671c6"},
+        {"driver": "Oscar Piastri",   "driverRef": "piastri",         "team": "McLaren",      "points": 120, "color": "#ff8000"},
     ]
-    remaining_races  = 9
+    remaining_races  = 8
     points_available = remaining_races * 26  # 26 = win (25) + fastest lap (1)
     leader_pts       = current_standings[0]["points"]
     simulated = []

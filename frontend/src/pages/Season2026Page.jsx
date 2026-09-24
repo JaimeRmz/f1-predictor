@@ -28,22 +28,21 @@ const Season2026Page = () => {
     return n;
   });
 
-  // Post-Italian GP (round 13) standings. These are the OFFICIAL championship
-  // totals from data/driver_standings.csv (raceId 1181), which include sprint
+  // Post-Spanish GP (round 14) standings. These are the OFFICIAL championship
+  // totals from data/driver_standings.csv (raceId 1182), which include sprint
   // points -- they intentionally differ from /season/2026, whose totals are
   // summed from results.csv and so are race-only (sprint_results.csv has no
-  // 2026 rows). Antonelli won Monza from grid 19; Russell takes outright P2
-  // from Hamilton this round instead of on countback.
+  // 2026 rows). Antonelli won the Spanish GP -- his 8th win of the season.
   const standings = [
-    { driver: "Kimi Antonelli",  team: "Mercedes",      pts: 267, wins: 7, color: "#00d2be" },
-    { driver: "George Russell",  team: "Mercedes",      pts: 201, wins: 2, color: "#00d2be" },
+    { driver: "Kimi Antonelli",  team: "Mercedes",      pts: 292, wins: 8, color: "#00d2be" },
+    { driver: "George Russell",  team: "Mercedes",      pts: 211, wins: 2, color: "#00d2be" },
     { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 191, wins: 1, color: "#e10600" },
-    { driver: "Lando Norris",    team: "McLaren",       pts: 171, wins: 2, color: "#ff8000" },
-    { driver: "Charles Leclerc", team: "Ferrari",       pts: 155, wins: 1, color: "#e10600" },
-    { driver: "Max Verstappen",  team: "Red Bull",      pts: 127, wins: 0, color: "#3671c6" },
-    { driver: "Oscar Piastri",   team: "McLaren",       pts: 116, wins: 0, color: "#ff8000" },
+    { driver: "Lando Norris",    team: "McLaren",       pts: 186, wins: 2, color: "#ff8000" },
+    { driver: "Charles Leclerc", team: "Ferrari",       pts: 167, wins: 1, color: "#e10600" },
+    { driver: "Max Verstappen",  team: "Red Bull",      pts: 145, wins: 0, color: "#3671c6" },
+    { driver: "Oscar Piastri",   team: "McLaren",       pts: 120, wins: 0, color: "#ff8000" },
     { driver: "Isack Hadjar",    team: "Red Bull",      pts: 71,  wins: 0, color: "#3671c6" },
-    { driver: "Liam Lawson",     team: "Red Bull",      pts: 51,  wins: 0, color: "#3671c6" },
+    { driver: "Liam Lawson",     team: "Red Bull",      pts: 59,  wins: 0, color: "#3671c6" },
     { driver: "Pierre Gasly",    team: "Alpine",        pts: 41,  wins: 0, color: "#0093cc" },
   ];
   // Leader's points, so the top bar is full-width and the rest scale relative
