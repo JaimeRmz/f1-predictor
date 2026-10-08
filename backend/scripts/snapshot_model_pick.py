@@ -80,12 +80,12 @@ RACE_ROUND = {rid: rnd for rid, rnd, _ in COMPLETED_2026}
 
 # Upcoming races → circuitRef, for the /whatif path (mirror of UPCOMING_RACES_2026).
 UPCOMING_CIRCUIT = {
-    1183: "baku", 1184: "marina_bay", 1185: "americas", 1186: "rodriguez",
-    1187: "interlagos", 1188: "las_vegas", 1189: "losail", 1190: "yas_marina",
+    1183: "baku", 1184: "sepang", 1185: "marina_bay", 1186: "americas", 1187: "rodriguez",
+    1188: "interlagos", 1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
 }
 UPCOMING_NAME = {
-    1183: "Azerbaijan GP", 1184: "Singapore GP", 1185: "United States GP", 1186: "Mexico City GP",
-    1187: "Brazilian GP", 1188: "Las Vegas GP", 1189: "Qatar GP", 1190: "Abu Dhabi GP",
+    1183: "Azerbaijan GP", 1184: "Bahrain GP (Malaysia)", 1185: "Singapore GP", 1186: "United States GP",
+    1187: "Mexico City GP", 1188: "Brazilian GP", 1189: "Las Vegas GP", 1190: "Qatar GP", 1191: "Abu Dhabi GP",
 }
 
 # Driver roster for /whatif (mirror of STANDINGS_GRID_2026): driverRef + a

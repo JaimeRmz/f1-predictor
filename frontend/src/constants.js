@@ -119,13 +119,14 @@ export const glassStyle = (tint, { glow = true } = {}) => ({
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
   { raceId: 1183, round: 15, name: "Azerbaijan Grand Prix",      circuit: "Baku",        circuitRef: "baku",         date: "Sep 26" },
-  { raceId: 1184, round: 16, name: "Singapore Grand Prix",       circuit: "Marina Bay",  circuitRef: "marina_bay",   date: "Oct 11" },
-  { raceId: 1185, round: 17, name: "United States Grand Prix",   circuit: "Austin",      circuitRef: "americas",     date: "Oct 25" },
-  { raceId: 1186, round: 18, name: "Mexico City Grand Prix",     circuit: "Mexico City", circuitRef: "rodriguez",    date: "Nov 1"  },
-  { raceId: 1187, round: 19, name: "Brazilian Grand Prix",       circuit: "São Paulo",   circuitRef: "interlagos",   date: "Nov 8"  },
-  { raceId: 1188, round: 20, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "las_vegas",    date: "Nov 22" },
-  { raceId: 1189, round: 21, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29" },
-  { raceId: 1190, round: 22, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina",  circuitRef: "yas_marina",   date: "Dec 6"  },
+  { raceId: 1184, round: 16, name: "Bahrain Grand Prix in Malaysia", circuit: "Sepang",  circuitRef: "sepang",       date: "Oct 4"  },
+  { raceId: 1185, round: 17, name: "Singapore Grand Prix",       circuit: "Marina Bay",  circuitRef: "marina_bay",   date: "Oct 11" },
+  { raceId: 1186, round: 18, name: "United States Grand Prix",   circuit: "Austin",      circuitRef: "americas",     date: "Oct 25" },
+  { raceId: 1187, round: 19, name: "Mexico City Grand Prix",     circuit: "Mexico City", circuitRef: "rodriguez",    date: "Nov 1"  },
+  { raceId: 1188, round: 20, name: "Brazilian Grand Prix",       circuit: "São Paulo",   circuitRef: "interlagos",   date: "Nov 8"  },
+  { raceId: 1189, round: 21, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "las_vegas",    date: "Nov 22" },
+  { raceId: 1190, round: 22, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29" },
+  { raceId: 1191, round: 23, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina",  circuitRef: "yas_marina",   date: "Dec 6"  },
 ];
 export const UPCOMING_IDS = new Set(UPCOMING_RACES_2026.map(r => String(r.raceId)));
 
@@ -137,7 +138,7 @@ export const SITE_URL = "https://f1predictor.app";
 // glyphs). Keyed by the same circuitRef used across the race constants.
 export const CIRCUIT_COUNTRY = {
   hungaroring: "hu", zandvoort: "nl", monza: "it", madrid: "es", baku: "az",
-  marina_bay: "sg", americas: "us", rodriguez: "mx", interlagos: "br",
+  sepang: "my", marina_bay: "sg", americas: "us", rodriguez: "mx", interlagos: "br",
   las_vegas: "us", losail: "qa", yas_marina: "ae",
 };
 

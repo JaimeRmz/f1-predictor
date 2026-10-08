@@ -35,9 +35,9 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ykpkieabxvipkyyynypr.supa
 # here the same way they were dropped from snapshot_model_pick.py's copy of
 # this dict.
 UPCOMING_CIRCUIT = {
-    1183: "baku", 1184: "marina_bay",
-    1185: "americas", 1186: "rodriguez", 1187: "interlagos",
-    1188: "las_vegas", 1189: "losail", 1190: "yas_marina",
+    1183: "baku", 1184: "sepang", 1185: "marina_bay",
+    1186: "americas", 1187: "rodriguez", 1188: "interlagos",
+    1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
 }
 
 # Our circuitRef -> Jolpica circuitId, where the two disagree. Verified against
@@ -47,13 +47,12 @@ CIRCUIT_ALIAS = {
     "las_vegas": "vegas",
 }
 
-# NOTE ON ROUND NUMBERS -- do not "simplify" this to raceId - 1168.
-# Jolpica's 2026 calendar has 23 rounds; our constants track 22. Round 16
-# ("Bahrain Grand Prix in Malaysia", Sepang) is absent from ours, so from
-# Singapore onward every official round number is one higher than our index.
-# Mapping by round would attach Sepang's cutoff to Singapore, Singapore's to
-# Austin, and so on -- seven races snapshotted roughly a week early, silently.
-# Matching on circuit is immune to that, and to any further calendar revision.
+# Round numbers: as of the raceId 1184 renumbering (2026-10-08), Bahrain
+# Grand Prix in Malaysia (Sepang) was inserted as raceId 1184/round 16, with
+# Singapore and every later 2026 race shifted up by one raceId and one round.
+# Our round numbers now match Jolpica's official round numbers again.
+# Matching is still done by CIRCUIT, not round -- see CIRCUIT_ALIAS above --
+# so this stays immune to any further calendar revision, same as before.
 
 
 def die(msg, code=1):
