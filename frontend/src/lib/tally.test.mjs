@@ -80,5 +80,17 @@ t("null rows return null (loading state)", () => {
   assert.equal(computeTally(null), null);
 });
 
+t("CONSECUTIVE snapshot-less races (e.g. Bahrain 1184 + Singapore 1185) both drop out", () => {
+  const r = computeTally([
+    race({ modelRefs: ["norris", "a", "b"] }),  // Azerbaijan 1183 -- has a snapshot
+    race({ modelRefs: null }),                   // Bahrain 1184 -- no snapshot
+    race({ modelRefs: null }),                   // Singapore 1185 -- no snapshot
+  ]);
+  assert.equal(r.scored, 3, "all three completed races still count toward Races Scored");
+  assert.equal(r.modelScored, 1, "only the snapshotted race counts toward the model denominator");
+  assert.equal(r.modelWins, 1);
+  assert.equal(r.modelSkipped, 2, "both snapshot-less races are skipped, not just one");
+});
+
 console.log(`\n  ${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

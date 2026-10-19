@@ -39,12 +39,15 @@ export const CONSTRUCTOR_OVERRIDES = {
   bortoleto: "Audi", hulkenberg: "Audi",
   bottas: "Cadillac", perez: "Cadillac",
   colapinto: "Alpine", gasly: "Alpine",
-  lindblad: "Racing Bulls", tsunoda: "Racing Bulls",
+  lindblad: "Racing Bulls",
   bearman: "Haas", ocon: "Haas",
-  // Hadjar left the grid at Zandvoort (round 12) and is no longer in
-  // STANDINGS_GRID_2026, so teamOf() has no roster row to fall back on --
-  // this keeps his historical My Picks entries correctly coloured.
-  hadjar: "Red Bull",
+  // Tsunoda was in the grid (Racing Bulls) from Zandvoort (round 12) through
+  // the Spanish GP (Madrid, round 14), then left it again from Baku (round
+  // 15) onward -- he's no longer in STANDINGS_GRID_2026, so teamOf() has no
+  // roster row to fall back on. This keeps his historical My Picks entries
+  // correctly coloured, the same mechanism Hadjar used while he was the one
+  // off the grid (round 12-14).
+  tsunoda: "Racing Bulls",
 };
 
 
@@ -118,14 +121,12 @@ export const glassStyle = (tint, { glow = true } = {}) => ({
 
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
-  { raceId: 1183, round: 15, name: "Azerbaijan Grand Prix",      circuit: "Baku",        circuitRef: "baku",         date: "Sep 26" },
-  { raceId: 1184, round: 16, name: "Singapore Grand Prix",       circuit: "Marina Bay",  circuitRef: "marina_bay",   date: "Oct 11" },
-  { raceId: 1185, round: 17, name: "United States Grand Prix",   circuit: "Austin",      circuitRef: "americas",     date: "Oct 25" },
-  { raceId: 1186, round: 18, name: "Mexico City Grand Prix",     circuit: "Mexico City", circuitRef: "rodriguez",    date: "Nov 1"  },
-  { raceId: 1187, round: 19, name: "Brazilian Grand Prix",       circuit: "São Paulo",   circuitRef: "interlagos",   date: "Nov 8"  },
-  { raceId: 1188, round: 20, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "las_vegas",    date: "Nov 22" },
-  { raceId: 1189, round: 21, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29" },
-  { raceId: 1190, round: 22, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina",  circuitRef: "yas_marina",   date: "Dec 6"  },
+  { raceId: 1186, round: 18, name: "United States Grand Prix",   circuit: "Austin",      circuitRef: "americas",     date: "Oct 25" },
+  { raceId: 1187, round: 19, name: "Mexico City Grand Prix",     circuit: "Mexico City", circuitRef: "rodriguez",    date: "Nov 1"  },
+  { raceId: 1188, round: 20, name: "Brazilian Grand Prix",       circuit: "São Paulo",   circuitRef: "interlagos",   date: "Nov 8"  },
+  { raceId: 1189, round: 21, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "las_vegas",    date: "Nov 22" },
+  { raceId: 1190, round: 22, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29" },
+  { raceId: 1191, round: 23, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina",  circuitRef: "yas_marina",   date: "Dec 6"  },
 ];
 export const UPCOMING_IDS = new Set(UPCOMING_RACES_2026.map(r => String(r.raceId)));
 
@@ -137,7 +138,7 @@ export const SITE_URL = "https://f1predictor.app";
 // glyphs). Keyed by the same circuitRef used across the race constants.
 export const CIRCUIT_COUNTRY = {
   hungaroring: "hu", zandvoort: "nl", monza: "it", madrid: "es", baku: "az",
-  marina_bay: "sg", americas: "us", rodriguez: "mx", interlagos: "br",
+  sepang: "my", marina_bay: "sg", americas: "us", rodriguez: "mx", interlagos: "br",
   las_vegas: "us", losail: "qa", yas_marina: "ae",
 };
 
@@ -153,20 +154,20 @@ export const flagUrl = (circuitRef) => {
 
 // The current upcoming race, as the single source of truth for the countdown,
 // the What-If/Next-Race pages, and the prediction picker's lock. `qualiCutoffISO`
-// is the machine-readable version of NextRacePage's "Qualifying · Fri Sep 25 ·
-// 7:00 AM CDT" schedule row (12:00 UTC quali start, from races.csv row 1183):
-// once qualifying starts, the picker locks. `raceISO` matches RaceCountdown's
-// target (2026-09-26T11:00:00Z race start). Baku is a NORMAL weekend
-// (races.csv row 1183 has no sprint_date).
+// is the machine-readable version of NextRacePage's qualifying schedule row
+// (21:00 UTC quali start, from races.csv row 1186 / Jolpica 2026 round 18,
+// cross-checked 2026-10-19): once qualifying starts, the picker locks.
+// `raceISO` matches RaceCountdown's target (2026-10-25T20:00:00Z race start).
+// Austin is a NORMAL weekend (races.csv row 1186 has no sprint_date).
 export const NEXT_RACE = {
-  raceId: 1183,
-  round: 15,
-  name: "Azerbaijan Grand Prix",
-  circuit: "Baku",
-  circuitRef: "baku",
-  flag: "🇦🇿",
-  raceISO: "2026-09-26T11:00:00Z",
-  qualiCutoffISO: "2026-09-25T12:00:00Z",
+  raceId: 1186,
+  round: 18,
+  name: "United States Grand Prix",
+  circuit: "Austin",
+  circuitRef: "americas",
+  flag: "🇺🇸",
+  raceISO: "2026-10-25T20:00:00Z",
+  qualiCutoffISO: "2026-10-24T21:00:00Z",
 };
 
 // Completed 2026 rounds, shared by the 2026 Season page and the My Picks
@@ -194,34 +195,50 @@ export const COMPLETED_2026 = [
   // check correctly sorts it as a post-qualifying pick, not genuine foresight,
   // even though it predates the NEXT_RACE migration that made it official.
   { raceId: 1182, round: 14, name: "Spanish GP (Madrid)",   flag: "🇪🇸", qualiISO: "2026-09-12T14:00:00Z" },
+  { raceId: 1183, round: 15, name: "Azerbaijan GP",         flag: "🇦🇿", qualiISO: "2026-09-25T12:00:00Z" },
+  // Bahrain GP in Malaysia (1184) and the Singapore GP (1185) are completed
+  // but have NO model_snapshots row -- the snapshot-model-pick Action has
+  // never run successfully (missing secret, confirmed 2026-10-18), so no
+  // pre-race pick was ever frozen for either. Same situation as the Dutch GP
+  // (1180) above: do not backfill from /predict's real grid, and tally.js's
+  // modelRefs-presence check already excludes a race with no snapshot from
+  // both sides of the Model ratio, so no extra handling is needed here
+  // beyond listing them as completed (for the User side of the tally and the
+  // results view).
+  { raceId: 1184, round: 16, name: "Bahrain GP in Malaysia", flag: "🇧🇭", qualiISO: "2026-10-03T08:00:00Z" },
+  { raceId: 1185, round: 17, name: "Singapore GP",          flag: "🇸🇬", qualiISO: "2026-10-10T13:00:00Z" },
 ];
 
-// Roster ordered by post-Dutch GP (round 12) championship standings.
-// Zandvoort brought a mid-season lineup change: Hadjar out, Tsunoda in at
-// Racing Bulls, and Lawson promoted from Racing Bulls to Red Bull. Hadjar is
-// dropped from the roster (this list is the /whatif entry list for the NEXT
-// race, so it must be the 22 cars actually racing) but keeps a
-// CONSTRUCTOR_OVERRIDES entry below so his past My Picks rows still colour.
+// Roster ordered by post-Singapore GP (round 17) championship standings.
+// Zandvoort (round 12) had swapped Hadjar out, Tsunoda in at Racing Bulls,
+// and Lawson up to Red Bull. By Baku (round 15) that swap reversed: Hadjar
+// is back at Red Bull, Lawson is back at Racing Bulls, and Tsunoda is out of
+// the grid entirely (confirmed against Jolpica results for raceIds
+// 1183/1184/1185 -- no Tsunoda row in any of the three). Tsunoda is dropped
+// from the roster (this list is the /whatif entry list for the NEXT race, so
+// it must be the 22 cars actually racing) but keeps the CONSTRUCTOR_OVERRIDES
+// entry below so his past My Picks rows still colour -- same mechanism
+// Hadjar used while he was the one off the grid.
 export const STANDINGS_GRID_2026 = [
   { driverRef: "antonelli",       driver_name: "Kimi Antonelli",    team: "Mercedes",      grid: 1  },
   { driverRef: "russell",         driver_name: "George Russell",    team: "Mercedes",      grid: 2  },
   { driverRef: "hamilton",        driver_name: "Lewis Hamilton",    team: "Ferrari",       grid: 3  },
-  { driverRef: "norris",          driver_name: "Lando Norris",      team: "McLaren",       grid: 4  },
+  { driverRef: "max_verstappen",  driver_name: "Max Verstappen",    team: "Red Bull",      grid: 4  },
   { driverRef: "leclerc",         driver_name: "Charles Leclerc",   team: "Ferrari",       grid: 5  },
-  { driverRef: "max_verstappen",  driver_name: "Max Verstappen",    team: "Red Bull",      grid: 6  },
+  { driverRef: "norris",          driver_name: "Lando Norris",      team: "McLaren",       grid: 6  },
   { driverRef: "piastri",         driver_name: "Oscar Piastri",     team: "McLaren",       grid: 7  },
-  { driverRef: "lawson",          driver_name: "Liam Lawson",       team: "Red Bull",      grid: 8  },
-  { driverRef: "gasly",           driver_name: "Pierre Gasly",      team: "Alpine",        grid: 9  },
-  { driverRef: "lindblad",        driver_name: "Arvid Lindblad",    team: "Racing Bulls",  grid: 10 },
-  { driverRef: "colapinto",       driver_name: "Franco Colapinto",  team: "Alpine",        grid: 11 },
-  { driverRef: "bearman",         driver_name: "Oliver Bearman",    team: "Haas",          grid: 12 },
-  { driverRef: "bortoleto",       driver_name: "Gabriel Bortoleto", team: "Audi",          grid: 13 },
+  { driverRef: "hadjar",          driver_name: "Isack Hadjar",      team: "Red Bull",      grid: 8  },
+  { driverRef: "lawson",          driver_name: "Liam Lawson",       team: "Racing Bulls",  grid: 9  },
+  { driverRef: "gasly",           driver_name: "Pierre Gasly",      team: "Alpine",        grid: 10 },
+  { driverRef: "lindblad",        driver_name: "Arvid Lindblad",    team: "Racing Bulls",  grid: 11 },
+  { driverRef: "colapinto",       driver_name: "Franco Colapinto",  team: "Alpine",        grid: 12 },
+  { driverRef: "bearman",         driver_name: "Oliver Bearman",    team: "Haas",          grid: 13 },
   { driverRef: "hulkenberg",      driver_name: "Nico Hulkenberg",   team: "Audi",          grid: 14 },
-  { driverRef: "sainz",           driver_name: "Carlos Sainz",      team: "Williams",      grid: 15 },
-  { driverRef: "albon",           driver_name: "Alex Albon",        team: "Williams",      grid: 16 },
-  { driverRef: "ocon",            driver_name: "Esteban Ocon",      team: "Haas",          grid: 17 },
-  { driverRef: "alonso",          driver_name: "Fernando Alonso",   team: "Aston Martin",  grid: 18 },
-  { driverRef: "tsunoda",         driver_name: "Yuki Tsunoda",      team: "Racing Bulls",  grid: 19 },
+  { driverRef: "bortoleto",       driver_name: "Gabriel Bortoleto", team: "Audi",          grid: 15 },
+  { driverRef: "ocon",            driver_name: "Esteban Ocon",      team: "Haas",          grid: 16 },
+  { driverRef: "alonso",          driver_name: "Fernando Alonso",   team: "Aston Martin",  grid: 17 },
+  { driverRef: "sainz",           driver_name: "Carlos Sainz",      team: "Williams",      grid: 18 },
+  { driverRef: "albon",           driver_name: "Alex Albon",        team: "Williams",      grid: 19 },
   { driverRef: "stroll",          driver_name: "Lance Stroll",      team: "Aston Martin",  grid: 20 },
   { driverRef: "bottas",          driver_name: "Valtteri Bottas",   team: "Cadillac",      grid: 21 },
   { driverRef: "perez",           driver_name: "Sergio Perez",      team: "Cadillac",      grid: 22 },

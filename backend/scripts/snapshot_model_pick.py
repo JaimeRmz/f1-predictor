@@ -7,12 +7,12 @@ later with hindsight.
 Modes (exactly one required):
 
   --backfill        Snapshot every COMPLETED 2026 race listed in COMPLETED_2026
-                    (rounds 1-11, 13 and 14, raceIds 1169-1179, 1181 and 1182;
-                    see the note there on why round 12 is excluded) via the
-                    /predict/{race_id} endpoint — the same pre-race-feature
-                    source the 2026 Season accuracy tracker uses. Existing
-                    snapshot rows are left untouched (never overwritten
-                    silently).
+                    (rounds 1-11, 13, 14 and 15, raceIds 1169-1179, 1181-1183;
+                    see the notes there on why rounds 12, 16 and 17 are
+                    excluded) via the /predict/{race_id} endpoint — the same
+                    pre-race-feature source the 2026 Season accuracy tracker
+                    uses. Existing snapshot rows are left untouched (never
+                    overwritten silently).
 
   --race-id N       Snapshot a single race. If N has no result rows yet (an
                     UPCOMING race such as Hungary 1179), the model's current
@@ -73,30 +73,49 @@ COMPLETED_2026 = [
     # Listed here because it IS completed and DOES have a snapshot; the
     # Accuracy Tracker's own qualiISO check is what actually flags the timing.
     (1182, 14, "Spanish GP (Madrid)"),
+    # 1183 (Azerbaijan GP, round 15) has a model_snapshots row taken
+    # 2026-09-23T20:36Z, BEFORE its real quali cutoff (2026-09-25T12:00Z) --
+    # a genuine pre-race foresight pick.
+    (1183, 15, "Azerbaijan GP"),
+    # NOTE: Bahrain GP in Malaysia (1184, round 16) and the Singapore GP
+    # (1185, round 17) are COMPLETED but are deliberately NOT listed here,
+    # same reasoning as the Dutch GP (1180) above: no pre-race snapshot was
+    # ever taken for either (the snapshot-model-pick workflow has never
+    # successfully run -- see the 2026-10-18 Actions audit), and --backfill
+    # would insert a hindsight pick derived from /predict on the real grid.
+    # Their Model column stays empty. Adding them here would silently undo
+    # that decision.
 ]
 COMPLETED_IDS = {rid for rid, _, _ in COMPLETED_2026}
 RACE_NAME = {rid: name for rid, _, name in COMPLETED_2026}
 RACE_ROUND = {rid: rnd for rid, rnd, _ in COMPLETED_2026}
 
 # Upcoming races → circuitRef, for the /whatif path (mirror of UPCOMING_RACES_2026).
+# 1183 (Azerbaijan), 1184 (Bahrain in Malaysia) and 1185 (Singapore) are now
+# completed -- dropped from here the same way 1181/1182 were dropped before.
 UPCOMING_CIRCUIT = {
-    1183: "baku", 1184: "marina_bay", 1185: "americas", 1186: "rodriguez",
-    1187: "interlagos", 1188: "las_vegas", 1189: "losail", 1190: "yas_marina",
+    1186: "americas", 1187: "rodriguez",
+    1188: "interlagos", 1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
 }
 UPCOMING_NAME = {
-    1183: "Azerbaijan GP", 1184: "Singapore GP", 1185: "United States GP", 1186: "Mexico City GP",
-    1187: "Brazilian GP", 1188: "Las Vegas GP", 1189: "Qatar GP", 1190: "Abu Dhabi GP",
+    1186: "United States GP",
+    1187: "Mexico City GP", 1188: "Brazilian GP", 1189: "Las Vegas GP", 1190: "Qatar GP", 1191: "Abu Dhabi GP",
 }
 
 # Driver roster for /whatif (mirror of STANDINGS_GRID_2026): driverRef + a
 # starting grid guess. auto_quali=true means the qualifying model re-predicts
 # the grid, so these grid values are only a fallback seed.
+# Reflects the lineup as of Baku (raceId 1183, round 15) onward: Hadjar back
+# at Red Bull, Lawson back at Racing Bulls, Tsunoda out of the grid entirely
+# (confirmed against Jolpica results for raceIds 1183/1184/1185) -- the
+# Zandvoort (round 12) swap this list had before has reversed. See the same
+# note on STANDINGS_GRID_2026 in constants.js.
 ROSTER = [
-    ("antonelli", 1), ("russell", 2), ("hamilton", 3), ("norris", 4),
-    ("leclerc", 5), ("max_verstappen", 6), ("piastri", 7), ("lawson", 8),
-    ("gasly", 9), ("lindblad", 10), ("colapinto", 11), ("bearman", 12),
-    ("bortoleto", 13), ("hulkenberg", 14), ("sainz", 15), ("albon", 16),
-    ("ocon", 17), ("alonso", 18), ("tsunoda", 19), ("stroll", 20),
+    ("antonelli", 1), ("russell", 2), ("hamilton", 3), ("max_verstappen", 4),
+    ("leclerc", 5), ("norris", 6), ("piastri", 7), ("hadjar", 8),
+    ("lawson", 9), ("gasly", 10), ("lindblad", 11), ("colapinto", 12),
+    ("bearman", 13), ("hulkenberg", 14), ("bortoleto", 15), ("ocon", 16),
+    ("alonso", 17), ("sainz", 18), ("albon", 19), ("stroll", 20),
     ("bottas", 21), ("perez", 22),
 ]
 
