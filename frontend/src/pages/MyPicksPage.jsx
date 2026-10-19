@@ -6,7 +6,7 @@ import {
   API, NEXT_RACE, COMPLETED_2026, STANDINGS_GRID_2026,
   TEAM_COLORS, CONSTRUCTOR_OVERRIDES, SITE_URL, flagUrl,
 } from "../constants.js";
-import { computeTally } from "../lib/tally.js";
+import { computeTally, pickWinnerRef } from "../lib/tally.js";
 import { useHealth } from "../health.jsx";
 import { useAuth } from "../auth.jsx";
 import { supabase } from "../lib/supabaseClient.js";
@@ -34,12 +34,20 @@ const teamOf = (ref) => CONSTRUCTOR_OVERRIDES[ref] ||
   STANDINGS_GRID_2026.find(d => d.driverRef === ref)?.team;
 const colorOf = (ref) => TEAM_COLORS[teamOf(ref)] || "var(--dimmed)";
 
-// The model's top-3 for a race, as driverRefs. `model_snapshots` stores them
-// in predicted_p1/p2/p3, matching how the picker stores its own picks and how
-// the backend reports actual results. Returns null when there's no snapshot
-// row for the race (handled as an empty Model column downstream).
-const snapshotTop3 = (row) =>
-  row?.predicted_p1 ? [row.predicted_p1, row.predicted_p2, row.predicted_p3] : null;
+// The model's top-3 for a race, as driverRefs, plus the matching frozen WIN
+// probability for each slot. `model_snapshots` stores the refs in
+// predicted_p1/p2/p3 (matching how the picker stores its own picks and how
+// the backend reports actual results) and each slot's win probability in
+// p1_win/p2_win/p3_win — the latter is what tally.js's pickWinnerRef() uses
+// to find the model's actual winner pick, since predicted_p1 isn't always the
+// highest-win-probability driver (see tally.js). Returns null when there's no
+// snapshot row for the race (handled as an empty Model column downstream).
+const snapshotTop3 = (row) => row?.predicted_p1
+  ? {
+      refs: [row.predicted_p1, row.predicted_p2, row.predicted_p3],
+      winProbs: [row.p1_win, row.p2_win, row.p3_win],
+    }
+  : null;
 
 const isLocked = () => new Date() >= new Date(NEXT_RACE.qualiCutoffISO);
 
@@ -299,8 +307,13 @@ const Picker = () => {
 const podiumHits = (refs, actualSet) =>
   refs ? refs.filter(r => r && actualSet.has(r)).length : 0;
 
-const PickColumn = ({ title, refs, actualSet, actualWinnerRef, accent }) => {
-  const winnerRight = refs && actualWinnerRef && refs[0] === actualWinnerRef;
+const PickColumn = ({ title, refs, winnerRef, actualSet, actualWinnerRef, accent }) => {
+  // `winnerRef` lets the caller say which of the 3 displayed picks counts as
+  // the "winner" call — for the Model column that's the win-probability pick
+  // (see pickWinnerRef in tally.js), not necessarily slot P1. Defaults to
+  // refs[0] (the User column's own P1 pick is always its winner call).
+  const pickedWinnerRef = winnerRef !== undefined ? winnerRef : refs?.[0];
+  const winnerRight = pickedWinnerRef && actualWinnerRef && pickedWinnerRef === actualWinnerRef;
   const hits = podiumHits(refs, actualSet);
   return (
     // Nested inside a GlassPanel that has already blurred the backdrop, so this
@@ -418,10 +431,12 @@ const History = () => {
             .sort((x, y) => x.positionOrder - y.positionOrder)
             .map(d => d.driverRef);
         }
+        const snap = snapByRace[race.raceId];
         return {
           ...race,
           userRefs: predByRace[race.raceId] || null,
-          modelRefs: snapByRace[race.raceId] || null,
+          modelRefs: snap?.refs || null,
+          modelWinProbs: snap?.winProbs || null,
           actualWinnerRef,
           actualPodium,
           actualSet: new Set(actualPodium),
@@ -476,7 +491,7 @@ const History = () => {
           </div>
           <div style={{ padding: "0.85rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "0.6rem" }}>
             <PickColumn title="Your Pick" refs={r.userRefs} actualSet={r.actualSet} actualWinnerRef={r.resultKnown ? r.actualWinnerRef : null} accent="var(--gold)" />
-            <PickColumn title="Model's Pick" refs={r.modelRefs} actualSet={r.actualSet} actualWinnerRef={r.resultKnown ? r.actualWinnerRef : null} accent="var(--muted)" />
+            <PickColumn title="Model's Pick" refs={r.modelRefs} winnerRef={pickWinnerRef(r.modelRefs, r.modelWinProbs)} actualSet={r.actualSet} actualWinnerRef={r.resultKnown ? r.actualWinnerRef : null} accent="var(--muted)" />
             <ActualColumn orderedRefs={r.actualPodium} />
           </div>
 

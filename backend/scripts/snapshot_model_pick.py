@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""Freeze the model's top-3 podium pick for a race into Supabase's
+"""Freeze the model's P1/P2/P3 pick for a race into Supabase's
 `model_snapshots` table, so the My Picks results view can compare a user's pick
 against what the model predicted — captured at snapshot time, not recomputed
 later with hindsight.
+
+predicted_p1 is the model's WIN-probability favorite across the whole field;
+predicted_p2/p3 are the next two highest by PODIUM probability, excluding
+whoever is p1. (Before 2026-10-19 all three slots were picked purely by
+podium probability, which could make predicted_p1 someone other than the
+model's actual highest-confidence winner call -- see the
+fix/snapshot-winner-semantics commit.)
 
 Modes (exactly one required):
 
@@ -143,18 +150,30 @@ def wait_for_ready(api_base, timeout=90):
 
 
 def top3_from_records(records):
-    """Given per-driver prediction records, return the 3 driverRefs with the
-    highest podium_probability (most-likely first), plus lookups of driver name,
-    podium probability and win probability keyed by ref."""
-    ranked = sorted(records, key=lambda d: d.get("podium_probability", 0), reverse=True)
-    top3 = ranked[:3]
-    if len(top3) < 3:
-        die(f"expected >=3 drivers in prediction, got {len(top3)}")
-    refs = [d["driverRef"] for d in top3]
-    names = {d["driverRef"]: d.get("driver_name", d["driverRef"]) for d in ranked}
-    probs = {d["driverRef"]: d.get("podium_probability", 0) for d in ranked}
-    wins = {d["driverRef"]: d.get("win_probability", 0) for d in ranked}
-    return refs, names, probs, wins
+    """Winner-first pick: P1 is whoever the WIN model ranks highest across the
+    whole field (not necessarily the podium favorite -- a win is a subset of a
+    podium, so they're related but different questions). P2/P3 are the next
+    two highest by podium_probability, excluding whoever was already picked
+    as P1. Also returns podium_refs, the OLD pure-podium-probability top 3
+    (unaffected by this change), so that information isn't lost now that P1
+    no longer means "most likely to podium" -- see snapshot_one().
+
+    Returns (refs, names, probs, wins, podium_refs)."""
+    if len(records) < 3:
+        die(f"expected >=3 drivers in prediction, got {len(records)}")
+
+    by_podium = sorted(records, key=lambda d: d.get("podium_probability", 0), reverse=True)
+    podium_refs = [d["driverRef"] for d in by_podium[:3]]
+
+    by_win = sorted(records, key=lambda d: d.get("win_probability", 0), reverse=True)
+    winner_ref = by_win[0]["driverRef"]
+    next_two_by_podium = [d["driverRef"] for d in by_podium if d["driverRef"] != winner_ref][:2]
+    refs = [winner_ref] + next_two_by_podium
+
+    names = {d["driverRef"]: d.get("driver_name", d["driverRef"]) for d in records}
+    probs = {d["driverRef"]: d.get("podium_probability", 0) for d in records}
+    wins = {d["driverRef"]: d.get("win_probability", 0) for d in records}
+    return refs, names, probs, wins, podium_refs
 
 
 def predict_completed(api_base, race_id):
@@ -244,15 +263,31 @@ def fmt_pick(ref, names, probs):
     return f"{last(names.get(ref, ref))} {probs.get(ref, 0) * 100:4.1f}%"
 
 
-def print_row(race_id, rnd, name, refs, names, probs, status):
+def print_row(race_id, rnd, name, refs, names, probs, status, podium_refs=None):
     cells = [fmt_pick(r, names, probs) for r in refs]
     print(f"{race_id:>6}  {str(rnd):>3}  {name:<24}  {cells[0]:<22}{cells[1]:<22}{cells[2]:<22}  {status}")
+    # The win-first rule can reorder (or, rarely, swap a driver out of) the
+    # old pure-podium-probability top 3. Surfaced here for visibility since
+    # it isn't written to Supabase (no new columns -- see snapshot_one).
+    if podium_refs is not None and podium_refs != refs:
+        old_names = ", ".join(last(names.get(r, r)) for r in podium_refs)
+        print(f"{'':>6}  {'':>3}  {'(old podium-rank rule:':<24}  {old_names})")
 
 
 # ── Modes ────────────────────────────────────────────────────────
 def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *, force, dry_run):
     """Decide insert / update / skip for one race and (unless dry-run) do it.
-    Returns the status string."""
+    Returns the status string.
+
+    predicted_p1 is the win-probability favorite (argmax across the whole
+    field, not just among podium favorites); predicted_p2/p3 are the next two
+    highest by podium_probability, excluding p1. This is a change in WHAT
+    SELECTS each slot, not in the table's columns -- predicted_p1/p2/p3 and
+    p1_win/p1_podium/p2_win/p2_podium/p3_win/p3_podium are the same 9 columns
+    as before. We don't write the old pure-podium top 3 anywhere (that would
+    need new model_snapshots columns, which requires a Supabase migration
+    this script has no access to run) -- it's only surfaced in print_row()
+    for visibility when it differs from the new pick."""
     row = {
         "race_id": race_id,
         "predicted_p1": refs[0],
@@ -279,11 +314,11 @@ def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *
 def run_backfill(args, supa, api_base):
     print_header("BACKFILL - completed 2026 races (model /predict top-3)")
     for race_id, rnd, name in COMPLETED_2026:
-        refs, names, probs, wins = predict_completed(api_base, race_id)
+        refs, names, probs, wins, podium_refs = predict_completed(api_base, race_id)
         # Backfill never overwrites (force is meaningless here).
         status = snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name,
                               force=False, dry_run=args.dry_run)
-        print_row(race_id, rnd, name, refs, names, probs, status)
+        print_row(race_id, rnd, name, refs, names, probs, status, podium_refs)
     print()
 
 
@@ -291,18 +326,18 @@ def run_single(args, supa, api_base):
     race_id = args.race_id
     upcoming = race_id not in COMPLETED_IDS
     if upcoming:
-        refs, names, probs, wins = predict_upcoming(api_base, race_id)
+        refs, names, probs, wins, podium_refs = predict_upcoming(api_base, race_id)
         rnd, name = "—", UPCOMING_NAME.get(race_id, f"race {race_id}")
         source = "/whatif auto-quali"
     else:
-        refs, names, probs, wins = predict_completed(api_base, race_id)
+        refs, names, probs, wins, podium_refs = predict_completed(api_base, race_id)
         rnd, name = RACE_ROUND[race_id], RACE_NAME[race_id]
         source = "/predict"
 
     print_header(f"SINGLE RACE {race_id} ({name}) — model pick via {source}")
     status = snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name,
                           force=args.force, dry_run=args.dry_run)
-    print_row(race_id, rnd, name, refs, names, probs, status)
+    print_row(race_id, rnd, name, refs, names, probs, status, podium_refs)
     if status.startswith("SKIPPED"):
         print("\nA snapshot already exists for this race. Re-run with --force to overwrite "
               "(only if you genuinely intend to — this race has a fairness deadline).")
