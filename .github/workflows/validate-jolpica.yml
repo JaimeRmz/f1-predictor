@@ -1,0 +1,79 @@
+# Weekly sanity check: every ingested 2026 race's results/qualifying/
+# standings rows, re-derived from Jolpica, must still match what's committed.
+#
+# This catches two different things over time: (1) Jolpica correcting a race's
+# classification after the fact (penalty, appeal, tie-break revision -- the
+# same category of drift fixed for Miami/Monaco/Barcelona/Belgium), and (2) a
+# latent bug in update_from_jolpica.py's own field mapping, which a single
+# always-the-same-race check (the old --validate, hardcoded to the Belgian GP)
+# could never surface for any other race.
+#
+# Report-only: this never writes to data/*.csv. A mismatch needs a human to
+# look at backend/scripts/update_from_jolpica.py --validate's output and
+# decide whether it's a Jolpica-side correction (fix the data, same workflow
+# as the historical-classification-drift fixes) or a script bug (fix the
+# mapping) -- never auto-applied, for the same reason the classification
+# fixes themselves were never auto-applied.
+
+name: Validate Jolpica data (weekly)
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"  # Monday 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install --disable-pip-version-check requests
+
+      - name: Validate every ingested 2026 race against Jolpica
+        id: validate
+        run: |
+          set -o pipefail
+          python backend/scripts/update_from_jolpica.py --validate 2>&1 | tee validate.log
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Jolpica validate — $(date -u +%Y-%m-%d)"
+            echo ""
+            echo '```'
+            cat validate.log 2>/dev/null || echo "(no output — the step failed before producing any)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # One open issue per failing week, not one per run -- re-runs or repeat
+      # weekly failures for the same unresolved drift update the existing
+      # issue instead of piling up duplicates.
+      - name: File or update an issue on mismatch
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="Jolpica validate failed"
+          BODY="$(printf '%s\n' \
+            "Re-running \`update_from_jolpica.py --validate\` found a mismatch between committed 2026 data and Jolpica. See the full field-by-field diff in this run's job summary:" \
+            "" \
+            "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            "" \
+            "This never writes to data/*.csv by itself. A human needs to decide, per mismatch, whether it's Jolpica correcting a race after the fact (fix the data, same process as the Miami/Monaco/Barcelona/Belgian GP classification-drift fixes) or a bug in update_from_jolpica.py's field mapping (fix the script).")"
+          existing="$(gh issue list --search "$TITLE in:title" --state open --json number --jq '.[0].number')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$BODY"
+          else
+            gh issue create --title "$TITLE" --body "$BODY"
+          fi
