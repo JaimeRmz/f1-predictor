@@ -30,12 +30,13 @@ JOLPICA_SEASON_URL = "https://api.jolpi.ca/ergast/f1/{season}.json?limit=100"
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ykpkieabxvipkyyynypr.supabase.co")
 
 # raceId -> the circuitRef snapshot_model_pick.py uses for /whatif.
-# Mirrors UPCOMING_CIRCUIT there; keep the two in step. 1181 (Italian GP) and
-# 1182 (Spanish GP) are completed and already snapshotted, so they're dropped
-# here the same way they were dropped from snapshot_model_pick.py's copy of
-# this dict.
+# Mirrors UPCOMING_CIRCUIT there; keep the two in step. 1181 (Italian GP),
+# 1182 (Spanish GP) and 1183 (Azerbaijan GP) are completed and already
+# snapshotted; 1184 (Bahrain GP in Malaysia) and 1185 (Singapore GP) are
+# completed with NO snapshot (the workflow never ran successfully -- see the
+# 2026-10-18 Actions audit) and are not getting a hindsight one. All five are
+# dropped here the same way 1181/1182 were dropped from this dict before.
 UPCOMING_CIRCUIT = {
-    1183: "baku", 1184: "sepang", 1185: "marina_bay",
     1186: "americas", 1187: "rodriguez", 1188: "interlagos",
     1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
 }

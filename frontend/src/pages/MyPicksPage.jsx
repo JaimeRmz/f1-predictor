@@ -76,7 +76,7 @@ const Picker = () => {
   // (NOT a live /whatif, so the numbers can't drift after the fact).
   const [snap, setSnap] = useState(null);
   const [snapState, setSnapState] = useState("loading"); // loading | ready | stale | missing | error
-  const { cardRef, shareState, share } = useShareCard("azerbaijan-gp-baku-me-vs-model.png", "My podium pick vs the model.");
+  const { cardRef, shareState, share } = useShareCard("us-gp-austin-me-vs-model.png", "My podium pick vs the model.");
 
   // Load any existing pick for this race so re-visits/edits start from it.
   useEffect(() => {
