@@ -37,7 +37,7 @@ on:
         description: "Snapshot this raceId now, ignoring the schedule window"
         required: false
       dry_run:
-        description: "Compute and print the pick without writing"
+        description: "DRY RUN: probe Supabase access, then compute the pick for race_id (or the next upcoming race) and print it. Writes nothing."
         type: boolean
         default: false
 
@@ -68,10 +68,9 @@ jobs:
         run: pip install --disable-pip-version-check requests
 
       # Fails loudly and specifically if SUPABASE_SECRET_KEY is missing, wrong, or
-      # lacks the table grants. Needs no API wake. Skipped only for a dry run,
-      # which writes nothing and needs no secret.
+      # lacks the table grants. Needs no API wake. Runs on dry runs too: the probe
+      # is a read plus an update that matches no row, so it writes nothing.
       - name: Check Supabase access
-        if: github.event.inputs.dry_run != 'true'
         env:
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
         run: python backend/scripts/snapshot_model_pick.py --check-access
@@ -85,7 +84,9 @@ jobs:
           if [ -z "$SUPABASE_PUBLISHABLE_KEY" ]; then
             echo "SUPABASE_PUBLISHABLE_KEY secret is not set (needed to read model_snapshots)"; exit 1
           fi
-          python backend/scripts/due_snapshot.py --season 2026
+          NEXT=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then NEXT="--next"; fi
+          python backend/scripts/due_snapshot.py --season 2026 $NEXT
 
       - name: Resolve target
         id: target

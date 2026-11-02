@@ -130,6 +130,9 @@ def main():
                     help="stop trying this many hours before the cutoff")
     ap.add_argument("--miss-hours", type=float, default=72.0,
                     help="raise a missed alarm for this long after a cutoff passes")
+    ap.add_argument("--next", action="store_true",
+                    help="manual dry runs: ignore the window and target the soonest upcoming race "
+                         "(even if already snapshotted) so the pipeline can be exercised any day")
     ap.add_argument("--now", help="override current time (ISO-8601 UTC), for testing")
     args = ap.parse_args()
 
@@ -149,7 +152,7 @@ def main():
     due, missed = [], []
     for race in upcoming:
         race_id, ref = race["raceId"], race["circuitRef"]
-        if race_id in have:
+        if race_id in have and not args.next:
             continue
         entry = sched.get(CIRCUIT_ALIAS.get(ref, ref))
         if not entry:
@@ -159,7 +162,10 @@ def main():
             continue
         name, cutoff, session = entry
         hours = (cutoff - now) / timedelta(hours=1)
-        if args.guard_hours <= hours <= args.lead_hours:
+        if args.next:
+            if hours > 0:
+                due.append((hours, race_id, name, cutoff, session))
+        elif args.guard_hours <= hours <= args.lead_hours:
             due.append((hours, race_id, name, cutoff, session))
         elif -args.miss_hours <= hours < args.guard_hours:
             missed.append((hours, race_id, name, cutoff, session))

@@ -132,9 +132,18 @@ _dev_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 _env_origins = [o.strip() for o in os.environ.get("FRONTEND_URL", "").split(",") if o.strip()]
 allowed_origins = _env_origins or _dev_origins
 
+# Vercel preview deployments get a fresh *.vercel.app host per branch/commit, so
+# listing them in FRONTEND_URL can never keep up. Allow exactly this project's
+# preview hosts (f1-predictor-<anything>-jaime-codes.vercel.app) by pattern;
+# production stays an explicit allowlist. Previews serve the same public,
+# read-only API, and the pattern is anchored to the team slug so another
+# account's *.vercel.app cannot match.
+PREVIEW_ORIGIN_REGEX = r"^https://f1-predictor-[a-z0-9-]+-jaime-codes\.vercel\.app$"
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=PREVIEW_ORIGIN_REGEX,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { SectionHeader, BackendPanel, SkeletonList } from "../shared.jsx";
+import { SectionHeader, BackendPanel, SkeletonList, WakingPanel } from "../shared.jsx";
 import { GlassPanel } from "../components/GlassPanel.jsx";
 import { API } from "../constants.js";
 
@@ -43,19 +43,33 @@ const RemainingMath = ({ s, label }) => (
 const ChampionshipPage = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [offline, setOffline] = useState(false);
+  const [offline, setOffline] = useState(false);   // no HTTP response at all
+  const [httpError, setHttpError] = useState(null); // server answered, but with an error
+  const [slow, setSlow] = useState(false);          // still waiting after SLOW_MS
 
-  // setState only ever runs inside the async callbacks (or the retry click
-  // handler below), never synchronously inside the mount effect.
+  // The request is capped so a hung server ends in a real error state instead
+  // of a skeleton forever; a cold start (30-50 s on the free tier) fits well
+  // inside it. After SLOW_MS we swap the skeleton for the amber WAKING panel so
+  // the wait is explained. Nothing here ever claims a champion without data.
+  // setState only runs inside async/timer callbacks, never synchronously in the
+  // mount effect.
+  const SLOW_MS = 6000, TIMEOUT_MS = 70000;
   const fetchStatus = () => {
-    axios.get(`${API}/championship/status`)
-      .then(r => { setData(r.data); setLoading(false); })
-      .catch(() => { setLoading(false); setOffline(true); });
+    const slowTimer = setTimeout(() => setSlow(true), SLOW_MS);
+    axios.get(`${API}/championship/status`, { timeout: TIMEOUT_MS })
+      .then(r => { setData(r.data); setHttpError(null); setLoading(false); })
+      .catch(e => {
+        setLoading(false);
+        if (e.response) setHttpError(e.response.data?.detail || `HTTP ${e.response.status}`);
+        else setOffline(true);
+      })
+      .finally(() => { clearTimeout(slowTimer); setSlow(false); });
+    return () => clearTimeout(slowTimer);
   };
 
   useEffect(fetchStatus, []);
 
-  const retry = () => { setLoading(true); setOffline(false); fetchStatus(); };
+  const retry = () => { setLoading(true); setOffline(false); setHttpError(null); fetchStatus(); };
 
   const d = data?.drivers;
   const k = data?.constructors;
@@ -73,7 +87,17 @@ const ChampionshipPage = () => {
       />
 
       {offline && <BackendPanel detail="The championship status request failed." onRetry={retry} />}
-      {loading && <SkeletonList rows={6} metrics={1} />}
+      {httpError && (
+        <GlassPanel style={{ borderColor: "var(--border-red)", padding: "2rem", textAlign: "center" }}>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: 700, color: "var(--red)", letterSpacing: "0.2em" }}>STATUS UNAVAILABLE</div>
+          <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.8, margin: "0.75rem auto 1rem", maxWidth: "460px" }}>
+            The server is up but could not compute the championship status ({String(httpError)}).
+            No standings are shown rather than possibly-wrong ones.
+          </p>
+          <button onClick={retry} className="btn-ghost" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.2)", color: "var(--text)", padding: "0.5rem 1.25rem", fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>↺ Retry</button>
+        </GlassPanel>
+      )}
+      {loading && (slow ? <WakingPanel /> : <SkeletonList rows={6} metrics={1} />)}
 
       {!loading && data && (
         <>

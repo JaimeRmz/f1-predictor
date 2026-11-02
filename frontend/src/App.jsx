@@ -2,7 +2,10 @@ import { useState, useEffect, useRef, Fragment, lazy, Suspense } from "react";
 import { MotionConfig } from "framer-motion";
 import { StatCard } from "./shared.jsx";
 import { TelemetryTraces } from "./components/TelemetryTraces.jsx";
-import { prefersReducedMotion } from "./constants.js";
+import { prefersReducedMotion, NEXT_RACE } from "./constants.js";
+
+// Nav label and page key for the next-race tab: the flag follows NEXT_RACE.
+const NEXT_RACE_TAB = `Next Race ${NEXT_RACE.flag}`;
 import { HealthProvider, useHealth } from "./health.jsx";
 import { AuthProvider } from "./auth.jsx";
 import { CAR_TARGET_COUNT, computeGeometry, sparseSampleTargets } from "./carSampling.js";
@@ -52,7 +55,7 @@ const HealthIndicator = () => {
 
 // ── NAV ────────────────────────────────────────────────────────
 const Nav = ({ page, setPage, onNavigate }) => {
-  const links = ["Home", "Predictor", "Next Race 🇺🇸", "What-If 🎮", "My Picks 🎯", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
+  const links = ["Home", "Predictor", NEXT_RACE_TAB, "What-If 🎮", "My Picks 🎯", "Championship", "Drivers", "Compare", "2026 Season", "Model"];
   // Stickiness lives on the shared .chrome-sticky wrapper in App() below, so the
   // nav pins directly under the topbar without either needing to hardcode the
   // other's height. This element only owns the frosted fill.
@@ -1398,7 +1401,7 @@ export default function App() {
   const pages = {
     "Home": <HomePage />,
     "Predictor": <PredictorPage />,
-    "Next Race 🇺🇸": <NextRacePage />,
+    [NEXT_RACE_TAB]: <NextRacePage />,
     "What-If 🎮": <WhatIfPage />,
     "My Picks 🎯": <MyPicksPage />,
     "Championship": <ChampionshipPage />,
