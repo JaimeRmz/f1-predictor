@@ -105,47 +105,116 @@ Model minus baseline, paired:
 
 Per-race values: `analysis/out/backtest_sums_*.csv`.
 
-### 4.4 Reliability (10 equal-width bins, pooled)
+### 4.4 Reliability (10 equal-width bins, pooled), with n and 95% intervals for every bin
 
-Win probability: predicted mean vs observed frequency.
+`n` = driver-races in the bin, `events` = wins (or podiums) among them, `races` = how many of the 43 races contribute to the bin. Two intervals for the observed rate: **Wilson** (treats driver-races as independent) and **by-race bootstrap** (resamples whole races; the more honest one when a bin's rows cluster in a few races). Where a bin has 0 events the bootstrap collapses to [0.000, 0.000] and says nothing about uncertainty; use the Wilson interval there.
 
-| bin | (a) n | (a) pred | (a) obs | (b) n | (b) pred | (b) obs |
-|---|---|---|---|---|---|---|
-| 0.0-0.1 | 680 | 0.008 | 0.001 | 679 | 0.007 | 0.006 |
-| 0.1-0.2 | 34 | 0.143 | 0.029 | 28 | 0.148 | 0.107 |
-| 0.2-0.3 | 34 | 0.247 | 0.029 | 24 | 0.240 | 0.125 |
-| 0.3-0.4 | 20 | 0.355 | 0.000 | 17 | 0.337 | 0.118 |
-| 0.4-0.5 | 21 | 0.450 | 0.000 | 14 | 0.447 | 0.071 |
-| 0.5-0.6 | 9 | 0.570 | 0.000 | 24 | 0.537 | 0.208 |
-| 0.6-0.7 | 14 | 0.660 | 0.214 | 17 | 0.643 | 0.059 |
-| 0.7-0.8 | 23 | 0.760 | 0.261 | 18 | 0.753 | 0.333 |
-| 0.8-0.9 | 29 | 0.863 | 0.414 | 28 | 0.838 | 0.286 |
-| 0.9-1.0 | 33 | 0.938 | 0.576 | 43 | 0.940 | 0.233 |
+**(a) real grid, win probability** (897 driver-races, 43 races)
 
-Podium probability:
+| bin | n | events | races | mean pred | observed | Wilson 95% | by-race bootstrap 95% |
+|---|---|---|---|---|---|---|---|
+| 0.0-0.1 | 680 | 1 | 43 | 0.008 | 0.001 | [0.000, 0.008] | [0.000, 0.004] |
+| 0.1-0.2 | 34 | 1 | 28 | 0.143 | 0.029 | [0.005, 0.149] | [0.000, 0.100] |
+| 0.2-0.3 | 34 | 1 | 25 | 0.247 | 0.029 | [0.005, 0.149] | [0.000, 0.094] |
+| 0.3-0.4 | 20 | 0 | 16 | 0.355 | 0.000 | [0.000, 0.161] | [0.000, 0.000] |
+| 0.4-0.5 | 21 | 0 | 17 | 0.450 | 0.000 | [0.000, 0.155] | [0.000, 0.000] |
+| 0.5-0.6 | 9 | 0 | 8 | 0.570 | 0.000 | [0.000, 0.299] | [0.000, 0.000] |
+| 0.6-0.7 | 14 | 3 | 12 | 0.660 | 0.214 | [0.076, 0.476] | [0.000, 0.429] |
+| 0.7-0.8 | 23 | 6 | 21 | 0.760 | 0.261 | [0.125, 0.465] | [0.087, 0.458] |
+| 0.8-0.9 | 29 | 12 | 23 | 0.863 | 0.414 | [0.255, 0.593] | [0.250, 0.591] |
+| 0.9-1.0 | 33 | 19 | 28 | 0.938 | 0.576 | [0.408, 0.728] | [0.433, 0.724] |
 
-| bin | (a) n | (a) pred | (a) obs | (b) n | (b) pred | (b) obs |
-|---|---|---|---|---|---|---|
-| 0.0-0.1 | 560 | 0.019 | 0.004 | 557 | 0.018 | 0.011 |
-| 0.1-0.2 | 43 | 0.146 | 0.000 | 46 | 0.145 | 0.109 |
-| 0.2-0.3 | 28 | 0.253 | 0.071 | 19 | 0.253 | 0.000 |
-| 0.3-0.4 | 18 | 0.338 | 0.222 | 20 | 0.344 | 0.150 |
-| 0.4-0.5 | 21 | 0.446 | 0.143 | 16 | 0.456 | 0.250 |
-| 0.5-0.6 | 18 | 0.556 | 0.111 | 26 | 0.549 | 0.231 |
-| 0.6-0.7 | 40 | 0.655 | 0.250 | 30 | 0.648 | 0.400 |
-| 0.7-0.8 | 40 | 0.746 | 0.375 | 42 | 0.754 | 0.429 |
-| 0.8-0.9 | 50 | 0.853 | 0.500 | 47 | 0.849 | 0.447 |
-| 0.9-1.0 | 79 | 0.941 | 0.835 | 89 | 0.945 | 0.607 |
+**(a) real grid, podium probability** (897 driver-races, 43 races)
 
-Reading it: with n of 9-50 per upper bin each observed rate is itself noisy (a bin of 20 has a standard error of about 0.1), so single bins mean little. The pattern across bins does not: every bin above 0.1 sits well below its predicted value in both conditions, and (b) is worse than (a). The model is overconfident everywhere, consistent with the class-weighted training (`scale_pos_weight`) inflating scores.
+| bin | n | events | races | mean pred | observed | Wilson 95% | by-race bootstrap 95% |
+|---|---|---|---|---|---|---|---|
+| 0.0-0.1 | 560 | 2 | 43 | 0.019 | 0.004 | [0.001, 0.013] | [0.000, 0.009] |
+| 0.1-0.2 | 43 | 0 | 27 | 0.146 | 0.000 | [0.000, 0.082] | [0.000, 0.000] |
+| 0.2-0.3 | 28 | 2 | 22 | 0.253 | 0.071 | [0.020, 0.226] | [0.000, 0.179] |
+| 0.3-0.4 | 18 | 4 | 17 | 0.338 | 0.222 | [0.090, 0.452] | [0.056, 0.412] |
+| 0.4-0.5 | 21 | 3 | 18 | 0.446 | 0.143 | [0.050, 0.346] | [0.000, 0.304] |
+| 0.5-0.6 | 18 | 2 | 15 | 0.556 | 0.111 | [0.031, 0.328] | [0.000, 0.286] |
+| 0.6-0.7 | 40 | 10 | 27 | 0.655 | 0.250 | [0.142, 0.402] | [0.108, 0.388] |
+| 0.7-0.8 | 40 | 15 | 29 | 0.746 | 0.375 | [0.242, 0.530] | [0.237, 0.500] |
+| 0.8-0.9 | 50 | 25 | 34 | 0.853 | 0.500 | [0.366, 0.634] | [0.389, 0.608] |
+| 0.9-1.0 | 79 | 66 | 43 | 0.941 | 0.835 | [0.739, 0.901] | [0.756, 0.911] |
+
+**(b) predicted quali, win probability** (892 driver-races, 43 races)
+
+| bin | n | events | races | mean pred | observed | Wilson 95% | by-race bootstrap 95% |
+|---|---|---|---|---|---|---|---|
+| 0.0-0.1 | 679 | 4 | 43 | 0.007 | 0.006 | [0.002, 0.015] | [0.001, 0.012] |
+| 0.1-0.2 | 28 | 3 | 26 | 0.148 | 0.107 | [0.037, 0.272] | [0.000, 0.240] |
+| 0.2-0.3 | 24 | 3 | 18 | 0.240 | 0.125 | [0.043, 0.310] | [0.000, 0.280] |
+| 0.3-0.4 | 17 | 2 | 13 | 0.337 | 0.118 | [0.033, 0.343] | [0.000, 0.294] |
+| 0.4-0.5 | 14 | 1 | 13 | 0.447 | 0.071 | [0.013, 0.315] | [0.000, 0.250] |
+| 0.5-0.6 | 24 | 5 | 20 | 0.537 | 0.208 | [0.092, 0.405] | [0.056, 0.375] |
+| 0.6-0.7 | 17 | 1 | 16 | 0.643 | 0.059 | [0.010, 0.270] | [0.000, 0.200] |
+| 0.7-0.8 | 18 | 6 | 15 | 0.753 | 0.333 | [0.163, 0.563] | [0.120, 0.577] |
+| 0.8-0.9 | 28 | 8 | 22 | 0.838 | 0.286 | [0.153, 0.471] | [0.143, 0.423] |
+| 0.9-1.0 | 43 | 10 | 37 | 0.940 | 0.233 | [0.132, 0.377] | [0.116, 0.349] |
+
+**(b) predicted quali, podium probability** (892 driver-races, 43 races)
+
+| bin | n | events | races | mean pred | observed | Wilson 95% | by-race bootstrap 95% |
+|---|---|---|---|---|---|---|---|
+| 0.0-0.1 | 557 | 6 | 43 | 0.018 | 0.011 | [0.005, 0.023] | [0.004, 0.020] |
+| 0.1-0.2 | 46 | 5 | 30 | 0.145 | 0.109 | [0.047, 0.230] | [0.026, 0.196] |
+| 0.2-0.3 | 19 | 0 | 15 | 0.253 | 0.000 | [0.000, 0.168] | [0.000, 0.000] |
+| 0.3-0.4 | 20 | 3 | 16 | 0.344 | 0.150 | [0.052, 0.360] | [0.000, 0.350] |
+| 0.4-0.5 | 16 | 4 | 15 | 0.456 | 0.250 | [0.102, 0.495] | [0.059, 0.500] |
+| 0.5-0.6 | 26 | 6 | 22 | 0.549 | 0.231 | [0.110, 0.421] | [0.083, 0.371] |
+| 0.6-0.7 | 30 | 12 | 22 | 0.648 | 0.400 | [0.246, 0.577] | [0.241, 0.567] |
+| 0.7-0.8 | 42 | 18 | 32 | 0.754 | 0.429 | [0.291, 0.578] | [0.289, 0.575] |
+| 0.8-0.9 | 47 | 21 | 35 | 0.849 | 0.447 | [0.314, 0.588] | [0.311, 0.586] |
+| 0.9-1.0 | 89 | 54 | 43 | 0.945 | 0.607 | [0.503, 0.702] | [0.522, 0.694] |
+
+**Reading it, with the intervals:**
+- *Real grid:* the predicted value is **above the Wilson upper bound in 8 of 10 win bins and 9 of 10 podium bins**. The exceptions are win 0.0-0.2 (where the observed rate and prediction are both near zero) and podium 0.3-0.4 (n = 18).
+- *Predicted qualifying:* the predicted value is above the Wilson upper bound in **6 of 10 bins for win and 6 of 10 for podium** (win 0.4-1.0; podium 0.2-0.3 and 0.5-1.0). The remaining low and middle bins are *consistent with* their predictions at this sample size, so I do not claim they are miscalibrated.
+- **No bin in either condition is significantly under-predicted**: the model is never too timid, only too confident. This replaces my earlier, stronger wording that "every bin above 0.1" was below its prediction; with n between 9 and 50 per upper bin that was not supported for every bin.
+- Single bins with n < 25 are weak evidence on their own (a bin of 20 with ~0 events has a Wilson upper bound near 0.16). The case rests on the pattern across the upper bins and on the Brier/ECE results, not on any one row.
 
 ### 4.5 How good is the predicted grid? (`analysis/04_grid_diagnostics.py`, 43 races)
 
 Mean Spearman vs the real grid 0.74 (2025: 0.69, 2026: 0.80); pole-sitter named correctly in 7 of 43 races (16.3%); mean position error 3.2; top-3 grid overlap 1.58 of 3. This is the weakest link in the snapshot path.
 
+### 4.6 Winner-hit rates, every figure with its sample size and intervals
+
+The pick is the driver with the highest `win_probability` (ties: higher podium score, then better grid). Each race is one trial, so **n = races (43 overall, 24 in 2025, 19 in 2026)**. Wilson = binomial interval on races; bootstrap = resampling races. Chance for a random pick is about 4.8%.
+
+| condition | scope | method | hits / races | rate | Wilson 95% | by-race bootstrap 95% |
+|---|---|---|---|---|---|---|
+| a_real_grid | all 43 | model (argmax win_probability) | 26 / 43 | 60.5% | [45.6, 73.6] | [46.5, 74.4] |
+| a_real_grid | all 43 | pre-race standings leader | 12 / 43 | 27.9% | [16.7, 42.7] | [14.0, 41.9] |
+| a_real_grid | all 43 | best constructor's top driver | 13 / 43 | 30.2% | [18.6, 45.1] | [16.3, 44.2] |
+| a_real_grid | all 43 | grid leader (pole) | 29 / 43 | 67.4% | [52.5, 79.5] | [53.5, 81.4] |
+| a_real_grid | 2025 (24) | model (argmax win_probability) | 12 / 24 | 50.0% | [31.4, 68.6] | [29.2, 70.8] |
+| a_real_grid | 2025 (24) | pre-race standings leader | 5 / 24 | 20.8% | [9.2, 40.5] | [4.2, 37.5] |
+| a_real_grid | 2025 (24) | best constructor's top driver | 6 / 24 | 25.0% | [12.0, 44.9] | [8.3, 41.7] |
+| a_real_grid | 2025 (24) | grid leader (pole) | 16 / 24 | 66.7% | [46.7, 82.0] | [45.8, 83.3] |
+| a_real_grid | 2026 R1-19 (19) | model (argmax win_probability) | 14 / 19 | 73.7% | [51.2, 88.2] | [52.6, 89.5] |
+| a_real_grid | 2026 R1-19 (19) | pre-race standings leader | 7 / 19 | 36.8% | [19.1, 59.0] | [15.8, 57.9] |
+| a_real_grid | 2026 R1-19 (19) | best constructor's top driver | 7 / 19 | 36.8% | [19.1, 59.0] | [15.8, 57.9] |
+| a_real_grid | 2026 R1-19 (19) | grid leader (pole) | 13 / 19 | 68.4% | [46.0, 84.6] | [47.4, 89.5] |
+| b_predicted_quali | all 43 | model (argmax win_probability) | 9 / 43 | 20.9% | [11.4, 35.2] | [9.3, 32.6] |
+| b_predicted_quali | all 43 | pre-race standings leader | 12 / 43 | 27.9% | [16.7, 42.7] | [16.3, 41.9] |
+| b_predicted_quali | all 43 | best constructor's top driver | 13 / 43 | 30.2% | [18.6, 45.1] | [16.3, 44.2] |
+| b_predicted_quali | all 43 | grid leader (pole) | 8 / 43 | 18.6% | [9.7, 32.6] | [7.0, 30.2] |
+| b_predicted_quali | 2025 (24) | model (argmax win_probability) | 3 / 24 | 12.5% | [4.3, 31.0] | [0.0, 29.2] |
+| b_predicted_quali | 2025 (24) | pre-race standings leader | 5 / 24 | 20.8% | [9.2, 40.5] | [4.2, 37.5] |
+| b_predicted_quali | 2025 (24) | best constructor's top driver | 6 / 24 | 25.0% | [12.0, 44.9] | [8.3, 41.7] |
+| b_predicted_quali | 2025 (24) | grid leader (pole) | 3 / 24 | 12.5% | [4.3, 31.0] | [0.0, 29.2] |
+| b_predicted_quali | 2026 R1-19 (19) | model (argmax win_probability) | 6 / 19 | 31.6% | [15.4, 54.0] | [10.5, 52.6] |
+| b_predicted_quali | 2026 R1-19 (19) | pre-race standings leader | 7 / 19 | 36.8% | [19.1, 59.0] | [15.8, 57.9] |
+| b_predicted_quali | 2026 R1-19 (19) | best constructor's top driver | 7 / 19 | 36.8% | [19.1, 59.0] | [15.8, 57.9] |
+| b_predicted_quali | 2026 R1-19 (19) | grid leader (pole) | 5 / 19 | 26.3% | [11.8, 48.8] | [10.5, 47.4] |
+
+With 19-24 races per year, the 95% intervals on any single rate are about 35-40 points wide, and even over all 43 races they are about 28 points wide. Differences between methods that look large in one year (for instance 2025 model 50.0% vs pole 66.7% on the real grid) are inside the noise.
+
 ## 5. Experiments (throwaway; nothing here is used by the app)
 
-All on the same 43 races, intervals bootstrap-by-race (2,000 resamples). Difference columns are paired against the raw scores. "Cal" variants were fit on **2023-24 out-of-sample predictions (919 driver-races, 46 races) of throwaway XGBoost models trained only through 2022**, using the production hyperparameters, so no 2025-26 information touches any calibrator. The production artifacts were not used to fit anything.
+All on the same 43 races, intervals bootstrap-by-race (2,000 resamples). Difference columns are paired against the raw scores. "Cal" variants were fit on **2023-24 out-of-sample predictions (919 driver-races, 46 races) of throwaway XGBoost models trained only through 2022**, using the production hyperparameters, so no 2025-26 information touches any calibrator. The production artifacts were not used to fit anything. Section 5.5 explains exactly why that calibration data is out of sample, and tests whether the choice matters.
 
 ### 5.1 Real grid, condition (a)
 
@@ -195,6 +264,31 @@ Treating the scores as strengths and simulating finishing order (exact win proba
 
 **Verdict on the three experiments:** each improves Brier with intervals excluding 0 and fixes the "sums to 3.0" problem. None of them makes the model better than the one-line rank baselines (grid with the real grid, standings with the predicted grid). What would add information is a better qualifying prediction, not more post-processing.
 
+### 5.5 Where the calibration data came from (is it really out of sample?)
+
+**The question.** The production models train on `year <= 2024`, so their predictions for 2023-24 are *in sample*: they were fit on those outcomes. They cannot honestly be used to fit a calibrator for later years.
+
+**What was done (and what it is not).** The calibrators in 5.1-5.2 were fit on predictions for 2023-24 from **throwaway models trained only on `year <= 2022`** (`analysis/03_experiments.py`, `fit_through_2022`). For *those* models, 2023-24 is a **temporal holdout: out of sample for the model that scored it**. It is not cross-validation and it is not in-sample. The production artifacts were never used to produce calibration data in 5.1-5.2. Two limits remain: the calibrator is then applied to a *different* model (trained through 2024), and the sample is small (919 driver-races, 46 races).
+
+**Does the choice change the result? No, by test** (`analysis/06_calibration_provenance.py`). I fit Platt and isotonic calibrators on three different calibration sets and scored all of them on the same 2025-26 real-grid production scores (43 races, 897 driver-races). The model-fit of each set:
+- **V1** (used above): models trained through 2022, scoring 2023-24 (919 rows).
+- **V2** (the leaky shortcut): the *production* models scoring 2023-24, which they were trained on (919 rows, in sample).
+- **V3** (expanding-window time-series CV): for each year Y from 2015 to 2024, models trained on years < Y scoring Y, pooled (4219 rows, 209 races; every row is held out with respect to the model that scored it).
+
+| calibration data and method | Brier win | Brier podium | mean sums (win / podium) | change vs V1-Platt (win / podium) |
+|---|---|---|---|---|
+| raw production scores | 0.0617 [0.0556, 0.0681] | 0.0870 [0.0781, 0.0962] | 2.86 / 5.17 | +0.0338 / +0.0282 |
+| V1 holdout 2023-24 (models <=2022) | platt | 0.0280 [0.0237, 0.0325] | 0.0588 [0.0514, 0.0666] | 1.09 / 3.13 | reference |
+| V1 holdout 2023-24 (models <=2022) | isotonic | 0.0297 [0.0254, 0.0343] | 0.0591 [0.0508, 0.0677] | 1.01 / 3.15 | +0.0017 [-0.0010, +0.0042] / +0.0002 [-0.0013, +0.0020] |
+| V2 in-sample 2023-24 (production models) | platt | 0.0292 [0.0231, 0.0353] | 0.0586 [0.0488, 0.0687] | 1.01 / 3.17 | +0.0012 [-0.0008, +0.0032] / -0.0003 [-0.0030, +0.0025] |
+| V2 in-sample 2023-24 (production models) | isotonic | 0.0288 [0.0235, 0.0343] | 0.0586 [0.0493, 0.0683] | 0.98 / 3.15 | +0.0008 [-0.0008, +0.0025] / -0.0002 [-0.0026, +0.0023] |
+| V3 rolling-origin 2015-2024 | platt | 0.0286 [0.0251, 0.0322] | 0.0590 [0.0513, 0.0669] | 1.20 / 3.31 | +0.0006 [-0.0003, +0.0016] / +0.0002 [-0.0002, +0.0005] |
+| V3 rolling-origin 2015-2024 | isotonic | 0.0292 [0.0258, 0.0328] | 0.0590 [0.0511, 0.0672] | 1.21 / 3.33 | +0.0013 [-0.0001, +0.0026] / +0.0002 [-0.0010, +0.0014] |
+
+All six calibrated variants land at roughly **0.028-0.029 win and 0.059 podium Brier**, and every difference between them is inside its confidence interval (largest: +0.0017 win for V1-isotonic). The in-sample shortcut (V2) happens to give the same answer because the production models are only mildly overfit: their mean podium score on 2023-24 (0.258) is almost the same as the honest holdout's (0.256), against an actual podium rate of 0.150. In other words the overconfidence is **systematic (a level shift, consistent with class weighting), not overfitting**, which is why the provenance of the calibration data barely matters. V2 is still methodologically unsound and should not be used if a calibrator is ever shipped; V3 is the better design because it uses 209 held-out races instead of 46. Note that V3-Platt, like V1, still leaves the per-race sums above 1 / 3 (1.20 / 3.31), so a renormalisation step would still be needed.
+
+This is evaluated for the real-grid condition only. As in 5.2, a calibrator fit on real-grid predictions does not transfer to the predicted-grid path.
+
 ## 6. Other findings made while auditing (for Parts 1A, 1C, 1D)
 
 | # | finding | evidence | status |
@@ -209,18 +303,25 @@ Treating the scores as strengths and simulating finishing order (exact win proba
 
 - 43 races: winner hit rate intervals are about ±14pp wide; differences smaller than that should not be read as real.
 - Priors for the baselines are fit on 2010-2024 outcomes, so they are fair for 2025-26, but they know nothing of the 2026 rules either.
-- The calibrators were fit on a *different* model (trained through 2022) than the one being evaluated (trained through 2024); applying them to the production scores is an approximation. A calibrator fit on the production model's own out-of-sample predictions would need either held-out years (none are left) or the expanding-window approach in 5.3.
+- The calibrators in 5.1-5.2 were fit on a *different* model (trained through 2022) than the one being evaluated (trained through 2024). Section 5.5 shows that swapping in an in-sample fit or a 10-season expanding-window fit changes the result by less than the noise, so this is not driving the conclusions. A calibrator for the production model itself has no held-out years left; the expanding-window design in 5.5 (V3) is the way to get one.
 - Section 5.1-5.2 conclusions about "level with the baseline" mean *not distinguishable at this sample size*, not proven equal.
 - Log loss uses clipped probabilities (1e-4); Brier is unaffected by clipping.
 - Not examined: the quali model on its own terms beyond section 4.5, constructor-level effects, wet races, sprint weekends, and DNF modelling.
 
-## 8. Reproduce
+## 8. Carried forward to the next parts (scope additions from the product owner)
+
+- **Part 1C:** test whether practice pace (FP2/FP3 long runs), sprint-qualifying results, or the previous race's grid improve the *pre-qualifying* grid prediction, using OpenF1 / FastF1 historical data. Motivation: section 4.5 and 5.2 show the predicted grid is the largest single source of error on the snapshot path. See `docs/stage1/00-scope.md`.
+- **Part 1D:** a validation check that catches an all-NULL `grid` for a race (the 2025 Qatar GP defect, section 6 row 1). See `docs/stage1/00-scope.md`.
+
+## 9. Reproduce
 
 ```
 python analysis/01_pit_check.py        # point-in-time recomputation (about 10 s)
 python analysis/02_backtest.py         # the replay + bootstrap (about 4 min); PATCH_QATAR_GRID=0 reproduces the unpatched numbers
 python analysis/03_experiments.py      # normalisation, calibration, Plackett-Luce, fresh-feature hybrid (about 20 s)
 python analysis/04_grid_diagnostics.py # predicted-grid accuracy
+python analysis/05_report_tables.py    # per-bin n + intervals, winner-hit table
+python analysis/06_calibration_provenance.py  # does the calibration data's provenance matter (section 5.5)
 ```
 
-Outputs in `analysis/out/`: `pit_check.json`, `backtest_results.json`, `backtest_rows.csv` (every prediction), `backtest_sums_*.csv`, `backtest_dropped_no_history.csv`, `experiments_results.json`, and `unpatched/` (the same results before the Qatar patch, for the sensitivity check). Bootstrap seeds are fixed. The scripts import `backend/main.py` and `backend/lookups.py` and load the committed model artifacts read-only.
+Outputs in `analysis/out/`: `pit_check.json`, `backtest_results.json`, `backtest_rows.csv` (every prediction), `backtest_sums_*.csv`, `backtest_dropped_no_history.csv`, `experiments_results.json`, and `reliability_ci.*`, `winner_hit_ci.*`, `calibration_provenance.json`, and `unpatched/` (the same results before the Qatar patch, for the sensitivity check). Bootstrap seeds are fixed. The scripts import `backend/main.py` and `backend/lookups.py` and load the committed model artifacts read-only.
