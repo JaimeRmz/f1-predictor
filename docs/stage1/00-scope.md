@@ -28,6 +28,6 @@ The existing `--validate` did not catch this. **Verified (by reading `update_fro
 
 ## Decisions log
 
-- Stage 1 part order (as instructed): 1B (done) -> 1A -> 1C -> 1D. Each part is pushed to `docs/stage1-audit` and followed by a stop.
+- Stage 1 part order (as instructed): 1B (done) -> 1A (done) -> 1C -> 1D. Each part is pushed to `docs/stage1-audit` and followed by a stop.
 - The 2025 Qatar grid defect is patched **in memory only** inside the audit scripts. No data file was modified.
 - My Picks is out of scope for every part.

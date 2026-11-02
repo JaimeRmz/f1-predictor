@@ -1,0 +1,152 @@
+{
+ "Home": {
+  "requests": 1,
+  "bytes": 61,
+  "byPath": {
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1
+  }
+ },
+ "Predictor": {
+  "requests": 2,
+  "bytes": 19451,
+  "byPath": {
+   "/races": {
+    "n": 1,
+    "bytes": 19390
+   },
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1
+  }
+ },
+ "Next Race": {
+  "requests": 3,
+  "bytes": 3708,
+  "byPath": {
+   "/whatif": {
+    "n": 2,
+    "bytes": 3647
+   },
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1,
+   "flagcdn.com": 1
+  }
+ },
+ "What-If": {
+  "requests": 5,
+  "bytes": 5933,
+  "byPath": {
+   "/whatif/qualifying": {
+    "n": 2,
+    "bytes": 2876
+   },
+   "/whatif": {
+    "n": 2,
+    "bytes": 2996
+   },
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1
+  }
+ },
+ "Championship": {
+  "requests": 2,
+  "bytes": 3760,
+  "byPath": {
+   "/championship/status": {
+    "n": 1,
+    "bytes": 3699
+   },
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1
+  }
+ },
+ "Drivers": {
+  "requests": 2,
+  "bytes": 7533,
+  "byPath": {
+   "/drivers": {
+    "n": 1,
+    "bytes": 7472
+   },
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1
+  }
+ },
+ "Compare": {
+  "requests": 2,
+  "bytes": 7533,
+  "byPath": {
+   "/drivers": {
+    "n": 1,
+    "bytes": 7472
+   },
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1
+  }
+ },
+ "2026 Season": {
+  "requests": 20,
+  "bytes": 167666,
+  "byPath": {
+   "/predict/{raceId}": {
+    "n": 19,
+    "bytes": 167605
+   },
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 5
+  }
+ },
+ "Model": {
+  "requests": 1,
+  "bytes": 61,
+  "byPath": {
+   "/": {
+    "n": 1,
+    "bytes": 61
+   }
+  },
+  "blockedNonLocal": {
+   "ykpkieabxvipkyyynypr.supabase.co": 1
+  }
+ }
+}
