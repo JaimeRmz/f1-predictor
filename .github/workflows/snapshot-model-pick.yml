@@ -13,8 +13,8 @@
 # #2) was the only signal. The "workflow is green" badge was misleading: a run
 # that ends in the alarm step succeeds. The changes below exist so that cannot
 # happen quietly again:
-#   * "Check Supabase access" runs on EVERY tick, so a missing/wrong secret fails
-#     the run (and opens an issue) days before any cutoff, not at it.
+#   * "Check Supabase access" (read-only) runs on EVERY tick, so a missing/wrong
+#     secret fails the run (and opens an issue) days before any cutoff, not at it.
 #   * any failed run opens ONE deduplicated issue (+ Discord if configured), and
 #     the next green run closes it.
 #   * the Render API is only woken when a write is actually due.
@@ -67,9 +67,11 @@ jobs:
       - name: Install deps
         run: pip install --disable-pip-version-check requests
 
-      # Fails loudly and specifically if SUPABASE_SECRET_KEY is missing, wrong, or
-      # lacks the table grants. Needs no API wake. Runs on dry runs too: the probe
-      # is a read plus an update that matches no row, so it writes nothing.
+      # Fails loudly and specifically if SUPABASE_SECRET_KEY is missing, malformed,
+      # a publishable key in the wrong slot, or cannot read the table. READ-ONLY:
+      # one GET, no writes to production on any tick. Needs no API wake. (Write
+      # grants are not probed -- a dry-run dispatch exercises everything but the
+      # insert.)
       - name: Check Supabase access
         env:
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}

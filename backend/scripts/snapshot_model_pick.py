@@ -376,31 +376,45 @@ def run_single(args, supa, api_base):
 
 
 def check_access(url, key):
-    """Prove the secret can do what a snapshot needs, WITHOUT creating a row.
-    Run on every scheduled workflow tick, so a missing/wrong SUPABASE_SECRET_KEY
-    is found weeks before a cutoff, not at it (that is how the US and Mexico
-    City snapshots were lost: the write step failed on every attempt).
+    """READ-ONLY check that the secret is present and is a secret key. Run on
+    every scheduled workflow tick, so a missing/wrong SUPABASE_SECRET_KEY is
+    found days before a cutoff, not at it (that is how the US and Mexico City
+    snapshots were lost: the write step failed on every attempt).
 
-    read   GET  model_snapshots              -> key is a valid project key
-    write  PATCH race_id=eq.-1 (matches none)-> role may UPDATE the table
-    A bad key gives 401/403 on both; a publishable key passes the read but is
-    refused the write. INSERT itself cannot be probed without inserting."""
+    Sends one GET and nothing else -- it does not touch the table's rows.
+      1. the key is set;
+      2. its FORMAT is a secret key (sb_secret_..., or a legacy JWT whose role
+         claim is service_role). A publishable/anon key passes a plain read of
+         this table, so format is what catches it pasted into the wrong slot;
+      3. a GET of model_snapshots succeeds (right project, not truncated).
+    What it does NOT prove: that the role may INSERT. A write grant cannot be
+    probed without writing; that is exercised by the real snapshot (and by the
+    dry-run dispatch, which computes but does not write)."""
     if not key:
         die("SUPABASE_SECRET_KEY is empty or unset. Add it under GitHub -> Settings -> "
             "Secrets and variables -> Actions (the service-role secret key, not the publishable one).")
-    h = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json"}
-    base = f"{url.rstrip('/')}/rest/v1/model_snapshots"
-    r = requests.get(base, params={"select": "race_id", "limit": "1"}, headers=h, timeout=20)
+    if key.startswith("sb_publishable_"):
+        die("SUPABASE_SECRET_KEY holds a PUBLISHABLE key (sb_publishable_...). Put the secret key "
+            "(sb_secret_...) in this slot.")
+    if key.count(".") == 2:  # legacy JWT-style key: check its role claim
+        import base64, json
+        try:
+            seg = key.split(".")[1]
+            role = json.loads(base64.urlsafe_b64decode(seg + "=" * (-len(seg) % 4))).get("role")
+        except Exception:
+            role = None
+        if role != "service_role":
+            die(f"SUPABASE_SECRET_KEY is a JWT with role {role!r}, not 'service_role'.")
+    elif not key.startswith("sb_secret_"):
+        die("SUPABASE_SECRET_KEY has an unrecognized format (expected sb_secret_... or a service_role JWT).")
+    h = {"apikey": key, "Authorization": f"Bearer {key}"}
+    r = requests.get(f"{url.rstrip('/')}/rest/v1/model_snapshots",
+                     params={"select": "race_id", "limit": "1"}, headers=h, timeout=20)
     if r.status_code != 200:
         die(f"SUPABASE_SECRET_KEY cannot read model_snapshots: HTTP {r.status_code} {r.text[:160]} -- "
             "the secret is wrong, truncated, or for a different project")
-    r = requests.patch(base, params={"race_id": "eq.-1"}, headers={**h, "Prefer": "return=minimal"},
-                       json={"p1_win": 0}, timeout=20)
-    if r.status_code not in (200, 204):
-        die(f"SUPABASE_SECRET_KEY can read but not write model_snapshots: HTTP {r.status_code} "
-            f"{r.text[:160]} -- is it the PUBLISHABLE key by mistake? the service role needs the grants "
-            "in supabase/migrations/00003 and 00005")
-    print("supabase access OK: secret key can read and write model_snapshots")
+    print("supabase access OK (read-only check): secret key format valid, model_snapshots readable. "
+          "Write grants are not probed.")
 
 
 def main():
