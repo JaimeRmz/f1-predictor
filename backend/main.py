@@ -99,6 +99,15 @@ def _load():
         quali_driver_champ_pos = L["quali_driver_champ_pos"]
         quali_constructor_champ_pos = L["quali_constructor_champ_pos"]
         df = _df
+        # Identity of what answers requests, recorded with every frozen
+        # snapshot (see /meta). Hashing the artifacts means "which model made
+        # this pick" is a fact about the bytes, not a label someone must bump.
+        import hashlib
+        h = hashlib.sha256()
+        for name in ("features.pkl", "podium_model.pkl", "quali_features.pkl", "quali_model.pkl", "winner_model.pkl"):
+            with open(os.path.join(BASE_DIR, name), "rb") as fh:
+                h.update(fh.read())
+        STATE["model_version"] = "m-" + h.hexdigest()[:12]
         STATE["models_ready"] = True
         print(f"[startup] READY — total {(time.perf_counter() - t0) * 1000:.1f} ms", flush=True)
     except Exception as e:  # never crash the process — let "/" report the failure
@@ -123,9 +132,18 @@ _dev_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
 _env_origins = [o.strip() for o in os.environ.get("FRONTEND_URL", "").split(",") if o.strip()]
 allowed_origins = _env_origins or _dev_origins
 
+# Vercel preview deployments get a fresh *.vercel.app host per branch/commit, so
+# listing them in FRONTEND_URL can never keep up. Allow exactly this project's
+# preview hosts (f1-predictor-<anything>-jaime-codes.vercel.app) by pattern;
+# production stays an explicit allowlist. Previews serve the same public,
+# read-only API, and the pattern is anchored to the team slug so another
+# account's *.vercel.app cannot match.
+PREVIEW_ORIGIN_REGEX = r"^https://f1-predictor-[a-z0-9-]+-jaime-codes\.vercel\.app$"
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=PREVIEW_ORIGIN_REGEX,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -160,6 +178,24 @@ def get_quali_features_for_driver(driver_ref: str, circuit_ref: str = ""):
         "constructor_championship_position": quali_constructor_champ_pos.get(constructor_ref, 6),
     }
     return feat, latest
+
+@app.get("/meta")
+def meta():
+    """What produced the predictions this process serves: model artifact hash,
+    deployed commit (Render sets RENDER_GIT_COMMIT), and the newest race in the
+    input data. Snapshots store these so a frozen pick can be traced later."""
+    require_ready()
+    last = df.sort_values(["year", "round"]).iloc[-1]
+    return {
+        "model_version": STATE["model_version"],
+        "git_commit": os.environ.get("RENDER_GIT_COMMIT"),
+        "data_rows": int(len(df)),
+        "inputs_as_of": {
+            "raceId": int(last["raceId"]), "year": int(last["year"]),
+            "round": int(last["round"]), "name": str(last["name_race"]),
+        },
+    }
+
 
 @app.get("/")
 async def root():
@@ -348,24 +384,43 @@ def compare_drivers(driver1: str, driver2: str):
         "head_to_head": head_to_head
     }
 
+@app.get("/championship/status")
+def championship_status_endpoint():
+    """Clinched / not-clinched, with the arithmetic, from the committed
+    Jolpica-sourced standings. No model needed, so it answers during warmup."""
+    from championship import championship_status
+    status = championship_status(DATA_DIR)
+    if status.get("error"):
+        raise HTTPException(status_code=503, detail=status["error"])
+    return status
+
+
 @app.get("/championship/simulate")
 def simulate_championship():
+    """DEPRECATED: kept so the previously deployed frontend keeps working.
+    Standings and remaining points now come from /championship/status's data
+    (they used to be a hand-edited block stuck at round 14, with a fastest-lap
+    point that no longer exists). title_probability is a heuristic, not a
+    calibrated probability, and no current page should display it."""
     require_ready()
-    # Post-Spanish GP (round 14) standings, from data/driver_standings.csv
-    # (raceId 1182) -- the official totals, sprint points included. This block
-    # is hand-maintained: update it with each race ingest, alongside the
-    # matching array in frontend/src/pages/Season2026Page.jsx.
+    from championship import championship_status
+    status = championship_status(DATA_DIR)
+    if status.get("error"):
+        raise HTTPException(status_code=503, detail=status["error"])
+    remaining_races = status["drivers"]["remaining_races"]
+    points_available = status["drivers"]["max_points_available"]
+    drv = pd.read_csv(os.path.join(DATA_DIR, "drivers.csv"))
+    ref_by_name = {f"{r.forename} {r.surname}": r.driverRef for r in drv.itertuples()}
+
+    def _latest_team(ref):
+        rows = df[df['driverRef'] == ref]
+        return str(rows.iloc[-1]['name_constructor']) if len(rows) else ""
     current_standings = [
-        {"driver": "Kimi Antonelli",  "driverRef": "antonelli",      "team": "Mercedes",     "points": 292, "color": "#00d2be"},
-        {"driver": "George Russell",  "driverRef": "russell",         "team": "Mercedes",     "points": 211, "color": "#00d2be"},
-        {"driver": "Lewis Hamilton",  "driverRef": "hamilton",        "team": "Ferrari",      "points": 191, "color": "#e10600"},
-        {"driver": "Lando Norris",    "driverRef": "norris",          "team": "McLaren",      "points": 186, "color": "#ff8000"},
-        {"driver": "Charles Leclerc", "driverRef": "leclerc",         "team": "Ferrari",      "points": 167, "color": "#e10600"},
-        {"driver": "Max Verstappen",  "driverRef": "max_verstappen",  "team": "Red Bull",     "points": 145, "color": "#3671c6"},
-        {"driver": "Oscar Piastri",   "driverRef": "piastri",         "team": "McLaren",      "points": 120, "color": "#ff8000"},
+        {"driver": c["name"], "driverRef": ref_by_name.get(c["name"], ""),
+         "team": _latest_team(ref_by_name.get(c["name"], "")),
+         "points": c["points"], "color": "#8a8a99"}
+        for c in status["drivers"]["contenders"][:7]
     ]
-    remaining_races  = 8
-    points_available = remaining_races * 26  # 26 = win (25) + fastest lap (1)
     leader_pts       = current_standings[0]["points"]
     simulated = []
     for s in current_standings:
@@ -375,7 +430,7 @@ def simulate_championship():
         projected_total = s['points'] + expected_additional
         gap = leader_pts - s['points']
         eliminated = (s['points'] + points_available) < leader_pts
-        contention_score = 0.0 if eliminated else (1 - gap / points_available) ** 2
+        contention_score = 0.0 if eliminated else ((1 - gap / points_available) ** 2 if points_available else 1.0)
         simulated.append({
             **s,
             "projected_total": round(projected_total),

@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""Freeze the model's top-3 podium pick for a race into Supabase's
+"""Freeze the model's P1/P2/P3 pick for a race into Supabase's
 `model_snapshots` table, so the My Picks results view can compare a user's pick
 against what the model predicted — captured at snapshot time, not recomputed
 later with hindsight.
+
+predicted_p1 is the model's WIN-probability favorite across the whole field;
+predicted_p2/p3 are the next two highest by PODIUM probability, excluding
+whoever is p1. (Before 2026-10-19 all three slots were picked purely by
+podium probability, which could make predicted_p1 someone other than the
+model's actual highest-confidence winner call -- see the
+fix/snapshot-winner-semantics commit.)
 
 Modes (exactly one required):
 
@@ -40,6 +47,8 @@ import sys
 import time
 
 import requests
+
+import season_data
 
 DEFAULT_SUPABASE_URL = "https://ykpkieabxvipkyyynypr.supabase.co"
 DEFAULT_API_BASE = os.environ.get("MODEL_API_URL", "http://127.0.0.1:8000")
@@ -85,39 +94,37 @@ COMPLETED_2026 = [
     # would insert a hindsight pick derived from /predict on the real grid.
     # Their Model column stays empty. Adding them here would silently undo
     # that decision.
+    #
+    # NOTE: the United States GP (1186, round 18) and Mexico City GP (1187,
+    # round 19) are likewise COMPLETED and deliberately NOT listed. The
+    # workflow reached its write step inside both snapshot windows and failed
+    # there on every 3-hourly attempt (Actions history; MISSED-cutoff issues
+    # #1 and #2), so both cutoffs (2026-10-24T21:00Z, 2026-10-31T21:00Z) passed
+    # with no snapshot. --backfill would insert a hindsight pick from the real
+    # grid. Their Model column stays empty -- never backfill.
 ]
 COMPLETED_IDS = {rid for rid, _, _ in COMPLETED_2026}
 RACE_NAME = {rid: name for rid, _, name in COMPLETED_2026}
 RACE_ROUND = {rid: rnd for rid, rnd, _ in COMPLETED_2026}
 
-# Upcoming races → circuitRef, for the /whatif path (mirror of UPCOMING_RACES_2026).
-# 1183 (Azerbaijan), 1184 (Bahrain in Malaysia) and 1185 (Singapore) are now
-# completed -- dropped from here the same way 1181/1182 were dropped before.
-UPCOMING_CIRCUIT = {
-    1186: "americas", 1187: "rodriguez",
-    1188: "interlagos", 1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
-}
-UPCOMING_NAME = {
-    1186: "United States GP",
-    1187: "Mexico City GP", 1188: "Brazilian GP", 1189: "Las Vegas GP", 1190: "Qatar GP", 1191: "Abu Dhabi GP",
-}
+# Upcoming races and the entry list are DERIVED from the committed CSVs
+# (season_data.py), not kept in dicts that need editing after every race. A race
+# with result rows (1180, 1184-1187 included) is not "upcoming", so it can never
+# be snapshotted through the /whatif path -- which is also what keeps a late
+# hindsight pick for a missed race out of the table.
+SEASON = 2026
 
-# Driver roster for /whatif (mirror of STANDINGS_GRID_2026): driverRef + a
-# starting grid guess. auto_quali=true means the qualifying model re-predicts
-# the grid, so these grid values are only a fallback seed.
-# Reflects the lineup as of Baku (raceId 1183, round 15) onward: Hadjar back
-# at Red Bull, Lawson back at Racing Bulls, Tsunoda out of the grid entirely
-# (confirmed against Jolpica results for raceIds 1183/1184/1185) -- the
-# Zandvoort (round 12) swap this list had before has reversed. See the same
-# note on STANDINGS_GRID_2026 in constants.js.
-ROSTER = [
-    ("antonelli", 1), ("russell", 2), ("hamilton", 3), ("max_verstappen", 4),
-    ("leclerc", 5), ("norris", 6), ("piastri", 7), ("hadjar", 8),
-    ("lawson", 9), ("gasly", 10), ("lindblad", 11), ("colapinto", 12),
-    ("bearman", 13), ("hulkenberg", 14), ("bortoleto", 15), ("ocon", 16),
-    ("alonso", 17), ("sainz", 18), ("albon", 19), ("stroll", 20),
-    ("bottas", 21), ("perez", 22),
-]
+
+def upcoming_by_id():
+    return {r["raceId"]: r for r in season_data.upcoming_races(SEASON)}
+
+
+# Written alongside the picks when the model_snapshots table has the columns
+# (supabase/migrations/00007_snapshot_provenance.sql). If the migration has not
+# been applied yet the insert is retried without them -- losing the provenance
+# is better than losing the snapshot to a schema lag.
+PROVENANCE_KEYS = ("model_version", "git_commit", "inputs_as_of_race_id", "cutoff_at", "source")
+PROVENANCE = {}
 
 
 def die(msg, code=1):
@@ -143,18 +150,30 @@ def wait_for_ready(api_base, timeout=90):
 
 
 def top3_from_records(records):
-    """Given per-driver prediction records, return the 3 driverRefs with the
-    highest podium_probability (most-likely first), plus lookups of driver name,
-    podium probability and win probability keyed by ref."""
-    ranked = sorted(records, key=lambda d: d.get("podium_probability", 0), reverse=True)
-    top3 = ranked[:3]
-    if len(top3) < 3:
-        die(f"expected >=3 drivers in prediction, got {len(top3)}")
-    refs = [d["driverRef"] for d in top3]
-    names = {d["driverRef"]: d.get("driver_name", d["driverRef"]) for d in ranked}
-    probs = {d["driverRef"]: d.get("podium_probability", 0) for d in ranked}
-    wins = {d["driverRef"]: d.get("win_probability", 0) for d in ranked}
-    return refs, names, probs, wins
+    """Winner-first pick: P1 is whoever the WIN model ranks highest across the
+    whole field (not necessarily the podium favorite -- a win is a subset of a
+    podium, so they're related but different questions). P2/P3 are the next
+    two highest by podium_probability, excluding whoever was already picked
+    as P1. Also returns podium_refs, the OLD pure-podium-probability top 3
+    (unaffected by this change), so that information isn't lost now that P1
+    no longer means "most likely to podium" -- see snapshot_one().
+
+    Returns (refs, names, probs, wins, podium_refs)."""
+    if len(records) < 3:
+        die(f"expected >=3 drivers in prediction, got {len(records)}")
+
+    by_podium = sorted(records, key=lambda d: d.get("podium_probability", 0), reverse=True)
+    podium_refs = [d["driverRef"] for d in by_podium[:3]]
+
+    by_win = sorted(records, key=lambda d: d.get("win_probability", 0), reverse=True)
+    winner_ref = by_win[0]["driverRef"]
+    next_two_by_podium = [d["driverRef"] for d in by_podium if d["driverRef"] != winner_ref][:2]
+    refs = [winner_ref] + next_two_by_podium
+
+    names = {d["driverRef"]: d.get("driver_name", d["driverRef"]) for d in records}
+    probs = {d["driverRef"]: d.get("podium_probability", 0) for d in records}
+    wins = {d["driverRef"]: d.get("win_probability", 0) for d in records}
+    return refs, names, probs, wins, podium_refs
 
 
 def predict_completed(api_base, race_id):
@@ -165,16 +184,22 @@ def predict_completed(api_base, race_id):
     data = r.json()
     if isinstance(data, dict) and data.get("error"):
         die(f"/predict/{race_id}: {data['error']}")
+    PROVENANCE["source"] = "predict_real_grid"
     return top3_from_records(data)
 
 
 def predict_upcoming(api_base, race_id):
     """Model pick for an upcoming race with no result rows yet (uses /whatif
     with auto_quali, so the grid is the model's own predicted qualifying)."""
-    circuit = UPCOMING_CIRCUIT.get(race_id)
-    if not circuit:
-        die(f"raceId {race_id} isn't a known upcoming race (no circuitRef mapping)")
-    body = [{"driverRef": ref, "grid": grid} for ref, grid in ROSTER]
+    race = upcoming_by_id().get(race_id)
+    if not race:
+        die(f"raceId {race_id} isn't an upcoming {SEASON} race (it has result rows, or isn't in races.csv)")
+    circuit = race["circuitRef"]
+    roster = season_data.roster(SEASON)
+    if len(roster) < 20:
+        die(f"derived roster has only {len(roster)} drivers -- refusing to snapshot on a partial entry list")
+    PROVENANCE["source"] = "whatif_auto_quali"
+    body = [{"driverRef": ref, "grid": grid} for ref, grid in roster]
     r = requests.post(
         f"{api_base}/whatif",
         params={"circuitRef": circuit, "auto_quali": "true"},
@@ -209,12 +234,26 @@ class Supa:
             die(f"reading model_snapshots (race {race_id}) failed: HTTP {r.status_code}: {r.text[:200]}")
         return r.json()
 
+    @staticmethod
+    def _missing_column(r):
+        return r.status_code == 400 and "PGRST204" in r.text
+
     def insert(self, row):
         r = requests.post(
             f"{self.base}/model_snapshots",
             headers={**self.h, "Prefer": "return=representation"},
             json=row, timeout=20,
         )
+        if self._missing_column(r):
+            base = {k: v for k, v in row.items() if k not in PROVENANCE_KEYS}
+            print("WARNING: model_snapshots has no provenance columns yet (apply "
+                  "supabase/migrations/00007_snapshot_provenance.sql). Inserting the pick WITHOUT "
+                  f"model_version/as-of -- dropped: {sorted(set(row) - set(base))}", file=sys.stderr)
+            r = requests.post(
+                f"{self.base}/model_snapshots",
+                headers={**self.h, "Prefer": "return=representation"},
+                json=base, timeout=20,
+            )
         if r.status_code not in (200, 201):
             die(f"insert (race {row['race_id']}) failed: HTTP {r.status_code}: {r.text[:300]}")
 
@@ -225,6 +264,15 @@ class Supa:
             headers={**self.h, "Prefer": "return=representation"},
             json=row, timeout=20,
         )
+        if self._missing_column(r):
+            base = {k: v for k, v in row.items() if k not in PROVENANCE_KEYS}
+            print("WARNING: model_snapshots has no provenance columns yet; updating without them.", file=sys.stderr)
+            r = requests.patch(
+                f"{self.base}/model_snapshots",
+                params={"race_id": f"eq.{race_id}"},
+                headers={**self.h, "Prefer": "return=representation"},
+                json=base, timeout=20,
+            )
         if r.status_code not in (200, 204):
             die(f"update (race {race_id}) failed: HTTP {r.status_code}: {r.text[:300]}")
 
@@ -244,15 +292,31 @@ def fmt_pick(ref, names, probs):
     return f"{last(names.get(ref, ref))} {probs.get(ref, 0) * 100:4.1f}%"
 
 
-def print_row(race_id, rnd, name, refs, names, probs, status):
+def print_row(race_id, rnd, name, refs, names, probs, status, podium_refs=None):
     cells = [fmt_pick(r, names, probs) for r in refs]
     print(f"{race_id:>6}  {str(rnd):>3}  {name:<24}  {cells[0]:<22}{cells[1]:<22}{cells[2]:<22}  {status}")
+    # The win-first rule can reorder (or, rarely, swap a driver out of) the
+    # old pure-podium-probability top 3. Surfaced here for visibility since
+    # it isn't written to Supabase (no new columns -- see snapshot_one).
+    if podium_refs is not None and podium_refs != refs:
+        old_names = ", ".join(last(names.get(r, r)) for r in podium_refs)
+        print(f"{'':>6}  {'':>3}  {'(old podium-rank rule:':<24}  {old_names})")
 
 
 # ── Modes ────────────────────────────────────────────────────────
 def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *, force, dry_run):
     """Decide insert / update / skip for one race and (unless dry-run) do it.
-    Returns the status string."""
+    Returns the status string.
+
+    predicted_p1 is the win-probability favorite (argmax across the whole
+    field, not just among podium favorites); predicted_p2/p3 are the next two
+    highest by podium_probability, excluding p1. This is a change in WHAT
+    SELECTS each slot, not in the table's columns -- predicted_p1/p2/p3 and
+    p1_win/p1_podium/p2_win/p2_podium/p3_win/p3_podium are the same 9 columns
+    as before. We don't write the old pure-podium top 3 anywhere (that would
+    need new model_snapshots columns, which requires a Supabase migration
+    this script has no access to run) -- it's only surfaced in print_row()
+    for visibility when it differs from the new pick."""
     row = {
         "race_id": race_id,
         "predicted_p1": refs[0],
@@ -262,6 +326,7 @@ def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *
         "p1_win": round(wins[refs[0]], 4), "p1_podium": round(probs[refs[0]], 4),
         "p2_win": round(wins[refs[1]], 4), "p2_podium": round(probs[refs[1]], 4),
         "p3_win": round(wins[refs[2]], 4), "p3_podium": round(probs[refs[2]], 4),
+        **{k: v for k, v in PROVENANCE.items() if k in PROVENANCE_KEYS and v is not None},
     }
     if dry_run:
         return "DRY-RUN (no write)"
@@ -279,11 +344,11 @@ def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *
 def run_backfill(args, supa, api_base):
     print_header("BACKFILL - completed 2026 races (model /predict top-3)")
     for race_id, rnd, name in COMPLETED_2026:
-        refs, names, probs, wins = predict_completed(api_base, race_id)
+        refs, names, probs, wins, podium_refs = predict_completed(api_base, race_id)
         # Backfill never overwrites (force is meaningless here).
         status = snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name,
                               force=False, dry_run=args.dry_run)
-        print_row(race_id, rnd, name, refs, names, probs, status)
+        print_row(race_id, rnd, name, refs, names, probs, status, podium_refs)
     print()
 
 
@@ -291,33 +356,86 @@ def run_single(args, supa, api_base):
     race_id = args.race_id
     upcoming = race_id not in COMPLETED_IDS
     if upcoming:
-        refs, names, probs, wins = predict_upcoming(api_base, race_id)
-        rnd, name = "—", UPCOMING_NAME.get(race_id, f"race {race_id}")
+        refs, names, probs, wins, podium_refs = predict_upcoming(api_base, race_id)
+        race = upcoming_by_id().get(race_id, {})
+        rnd, name = race.get("round", "—"), race.get("name", f"race {race_id}")
         source = "/whatif auto-quali"
     else:
-        refs, names, probs, wins = predict_completed(api_base, race_id)
+        refs, names, probs, wins, podium_refs = predict_completed(api_base, race_id)
         rnd, name = RACE_ROUND[race_id], RACE_NAME[race_id]
         source = "/predict"
 
     print_header(f"SINGLE RACE {race_id} ({name}) — model pick via {source}")
     status = snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name,
                           force=args.force, dry_run=args.dry_run)
-    print_row(race_id, rnd, name, refs, names, probs, status)
+    print_row(race_id, rnd, name, refs, names, probs, status, podium_refs)
     if status.startswith("SKIPPED"):
         print("\nA snapshot already exists for this race. Re-run with --force to overwrite "
               "(only if you genuinely intend to — this race has a fairness deadline).")
     print()
 
 
+def check_access(url, key):
+    """READ-ONLY check that the secret is present and is a secret key. Run on
+    every scheduled workflow tick, so a missing/wrong SUPABASE_SECRET_KEY is
+    found days before a cutoff, not at it (that is how the US and Mexico City
+    snapshots were lost: the write step failed on every attempt).
+
+    Sends one GET and nothing else -- it does not touch the table's rows.
+      1. the key is set;
+      2. its FORMAT is a secret key (sb_secret_..., or a legacy JWT whose role
+         claim is service_role). A publishable/anon key passes a plain read of
+         this table, so format is what catches it pasted into the wrong slot;
+      3. a GET of model_snapshots succeeds (right project, not truncated).
+    What it does NOT prove: that the role may INSERT. A write grant cannot be
+    probed without writing; that is exercised by the real snapshot (and by the
+    dry-run dispatch, which computes but does not write)."""
+    if not key:
+        die("SUPABASE_SECRET_KEY is empty or unset. Add it under GitHub -> Settings -> "
+            "Secrets and variables -> Actions (the service-role secret key, not the publishable one).")
+    if key.startswith("sb_publishable_"):
+        die("SUPABASE_SECRET_KEY holds a PUBLISHABLE key (sb_publishable_...). Put the secret key "
+            "(sb_secret_...) in this slot.")
+    if key.count(".") == 2:  # legacy JWT-style key: check its role claim
+        import base64, json
+        try:
+            seg = key.split(".")[1]
+            role = json.loads(base64.urlsafe_b64decode(seg + "=" * (-len(seg) % 4))).get("role")
+        except Exception:
+            role = None
+        if role != "service_role":
+            die(f"SUPABASE_SECRET_KEY is a JWT with role {role!r}, not 'service_role'.")
+    elif not key.startswith("sb_secret_"):
+        die("SUPABASE_SECRET_KEY has an unrecognized format (expected sb_secret_... or a service_role JWT).")
+    h = {"apikey": key, "Authorization": f"Bearer {key}"}
+    r = requests.get(f"{url.rstrip('/')}/rest/v1/model_snapshots",
+                     params={"select": "race_id", "limit": "1"}, headers=h, timeout=20)
+    if r.status_code != 200:
+        die(f"SUPABASE_SECRET_KEY cannot read model_snapshots: HTTP {r.status_code} {r.text[:160]} -- "
+            "the secret is wrong, truncated, or for a different project")
+    print("supabase access OK (read-only check): secret key format valid, model_snapshots readable. "
+          "Write grants are not probed.")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Snapshot the model's top-3 podium pick into Supabase.")
-    mode = ap.add_mutually_exclusive_group(required=True)
+    ap.add_argument("--check-access", action="store_true",
+                    help="verify the Supabase secret works (read + write probe, no row created) and exit")
+    ap.add_argument("--cutoff", help="the real cutoff (ISO-8601 UTC) this snapshot is frozen against; stored as cutoff_at")
+    mode = ap.add_mutually_exclusive_group(required=False)
     mode.add_argument("--backfill", action="store_true", help="snapshot all completed 2026 races")
     mode.add_argument("--race-id", type=int, help="snapshot a single race")
     ap.add_argument("--force", action="store_true", help="(--race-id) overwrite an existing snapshot")
     ap.add_argument("--dry-run", action="store_true", help="print picks but write nothing (no secret needed)")
     ap.add_argument("--api-base", default=DEFAULT_API_BASE, help="model API base URL")
     args = ap.parse_args()
+
+    if args.check_access:
+        check_access(os.environ.get("SUPABASE_URL", DEFAULT_SUPABASE_URL),
+                     os.environ.get("SUPABASE_SECRET_KEY"))
+        return
+    if not args.backfill and not args.race_id:
+        ap.error("one of --backfill / --race-id (or --check-access) is required")
 
     if args.force and args.backfill:
         die("--force applies only to --race-id, not --backfill")
@@ -334,6 +452,17 @@ def main():
         supa = Supa(supa_url, key)
 
     wait_for_ready(api_base)
+
+    # Provenance: what produced this pick. /meta is the API's own statement of
+    # its model hash, deployed commit and newest input race.
+    try:
+        m = requests.get(f"{api_base}/meta", timeout=30).json()
+        PROVENANCE.update(model_version=m["model_version"], git_commit=m.get("git_commit"),
+                          inputs_as_of_race_id=m["inputs_as_of"]["raceId"])
+    except Exception as e:  # an older deploy without /meta: snapshot anyway, say so
+        print(f"WARNING: could not read {api_base}/meta ({e!r}); snapshot will carry no model_version", file=sys.stderr)
+    if args.cutoff:
+        PROVENANCE["cutoff_at"] = args.cutoff
 
     if args.backfill:
         run_backfill(args, supa, api_base)

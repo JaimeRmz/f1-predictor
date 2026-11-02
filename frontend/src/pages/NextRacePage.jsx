@@ -7,14 +7,14 @@ import { API, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS, NEXT_RACE
 import SharePredictionCard from "../components/SharePredictionCard.jsx";
 import { useShareCard } from "../useShareCard.js";
 
-// ── NEXT RACE PAGE (United States GP 2026, Austin) ──────────────
+// ── NEXT RACE PAGE (driven entirely by NEXT_RACE in constants.js) ──
 // Countdown owns its own 1-second interval state, so each tick re-renders
 // only this small component — not the whole page (3 lists × 22 rows).
 const RaceCountdown = () => {
   const [countdown, setCountdown] = useState("");
 
   useEffect(() => {
-    const raceDate = new Date("2026-10-25T20:00:00Z"); // 3:00 PM CDT (Austin's own time zone)
+    const raceDate = new Date(NEXT_RACE.raceISO);
     const tick = () => {
       const now = new Date();
       const diff = raceDate - now;
@@ -44,7 +44,7 @@ const NextRacePage = () => {
   // setState only ever runs inside the async callbacks (or the retry click
   // handler below), never synchronously inside the mount effect.
   const fetchPredictions = () => {
-    axios.post(`${API}/whatif?circuitRef=americas&auto_quali=true`, STANDINGS_GRID_2026)
+    axios.post(`${API}/whatif?circuitRef=${NEXT_RACE.circuitRef}&auto_quali=true`, STANDINGS_GRID_2026)
       .then(r => { setPredictions([...r.data].sort((a, b) => a.grid - b.grid)); setPredLoading(false); })
       .catch(() => { setPredLoading(false); setOffline(true); });
   };
@@ -59,7 +59,7 @@ const NextRacePage = () => {
   // The card wants the model's podium order (top-3 by podium_probability),
   // whereas `predictions` above is sorted by grid — so re-sort here. Capture
   // plumbing (toPng, flag decode, share/download) lives in the shared hook.
-  const { cardRef, shareState, share } = useShareCard("us-gp-austin-prediction.png", "Model prediction before qualifying.");
+  const { cardRef, shareState, share } = useShareCard(`${NEXT_RACE.circuitRef}-gp-prediction.png`, "Model prediction before qualifying.");
 
   const podiumRanked = [...predictions].sort((a, b) => (b.podium_probability ?? 0) - (a.podium_probability ?? 0));
   const sharePicks = podiumRanked.slice(0, 3).map(p => {
@@ -80,18 +80,16 @@ const NextRacePage = () => {
   };
   const canShare = !predLoading && sharePicks.length === 3;
 
-  // Normal weekend — races.csv row 1186: FP1/FP2 Fri Oct 23, FP3/quali Sat Oct 24,
-  // race Sun Oct 25 (standard Fri-Sun slot), no sprint. Cross-checked against
-  // Jolpica 2026 round 18 on 2026-10-19. Times converted from UTC to Central
-  // Time / Houston (CDT, UTC-5 — still in effect; US DST doesn't end until
-  // Nov 1, 2026).
-  const schedule = [
-    { session: "Practice 1", day: "Friday Oct 23",   time: "12:30 PM CDT", emoji: "🔧" },
-    { session: "Practice 2", day: "Friday Oct 23",   time: "4:00 PM CDT",  emoji: "🔧" },
-    { session: "Practice 3", day: "Saturday Oct 24", time: "12:30 PM CDT", emoji: "🔧" },
-    { session: "Qualifying", day: "Saturday Oct 24", time: "4:00 PM CDT",  emoji: "⚡" },
-    { session: "Race",       day: "Sunday Oct 25",   time: "3:00 PM CDT",  emoji: "🏁", featured: true },
-  ];
+  // Sessions come from NEXT_RACE.sessions (UTC) and are shown in the viewer's
+  // own time zone, so no zone is hardcoded and nothing here is race-specific.
+  const dayFmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" });
+  const timeFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
+  const schedule = NEXT_RACE.sessions.map(x => {
+    const d = new Date(x.iso);
+    return { ...x, day: dayFmt.format(d), time: timeFmt.format(d) };
+  });
+  const weekendFmt = new Intl.DateTimeFormat(undefined, { month: "long", day: "numeric" });
+  const weekendLabel = `${weekendFmt.format(new Date(NEXT_RACE.sessions[0].iso))}–${new Date(NEXT_RACE.raceISO).getDate()}, ${new Date(NEXT_RACE.raceISO).getFullYear()}`;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -99,9 +97,9 @@ const NextRacePage = () => {
       <div className="canada-hero scanline-overlay accent-strip glass-sheen" style={{ padding: "1.6rem 1.75rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
         <TelemetryTraces color="#ffffff" opacity={0.12} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND 18 · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
-          <div className="hud-title" style={{ fontSize: "1.7rem", letterSpacing: "0.04em" }}>🇺🇸 UNITED STATES GRAND PRIX</div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "500", opacity: 0.8, marginTop: "0.3rem" }}>Circuit of the Americas · Austin, USA · October 23–25, 2026</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND {NEXT_RACE.round} · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
+          <div className="hud-title" style={{ fontSize: "1.7rem", letterSpacing: "0.04em" }}>{NEXT_RACE.flag} {NEXT_RACE.name.toUpperCase()}</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "500", opacity: 0.8, marginTop: "0.3rem" }}>{NEXT_RACE.circuit} · {NEXT_RACE.location} · {weekendLabel}</div>
         </div>
         <div style={{ position: "relative", zIndex: 1, textAlign: "right" }}>
           <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.75, marginBottom: "0.3rem" }}>RACE COUNTDOWN</div>
@@ -113,7 +111,7 @@ const NextRacePage = () => {
       {/* Schedule */}
       <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Race Weekend Schedule · Central Time (Houston)</span>
+          <span className="section-label">Race Weekend Schedule · Your local time</span>
         </div>
         {schedule.map((s, i) => (
           <div key={i} className="stagger-item data-row" style={{
@@ -133,10 +131,10 @@ const NextRacePage = () => {
         ))}
       </GlassPanel>
 
-      {offline && <BackendPanel detail="The Austin prediction request failed." onRetry={retry} />}
+      {offline && <BackendPanel detail={`The ${NEXT_RACE.circuit} prediction request failed.`} onRetry={retry} />}
 
       {/* Predicted qualifying order */}
-      <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying Order — Austin" />
+      <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title={`Predicted Qualifying Order — ${NEXT_RACE.circuit}`} />
       {predLoading && <SkeletonList rows={6} metrics={1} />}
       {!predLoading && predictions.length > 0 && (
         <div className="chart-enter" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -158,7 +156,7 @@ const NextRacePage = () => {
       )}
 
       {/* Pre-race prediction */}
-      <SectionHeader eyebrow="XGBoost · Austin Circuit History · Uses Predicted Grid Above" title="United States GP Pre-Race Prediction" />
+      <SectionHeader eyebrow={`XGBoost · ${NEXT_RACE.circuit} Circuit History · Uses Predicted Grid Above`} title={`${NEXT_RACE.name.replace("Grand Prix", "GP")} Pre-Race Prediction`} />
       {predLoading && <SkeletonList rows={8} />}
       {!predLoading && predictions.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -222,7 +220,7 @@ const NextRacePage = () => {
       <GlassPanel style={{ padding: "20px", display: "flex", gap: "0.75rem" }}>
         <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
         <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
-          Standard race weekend — three practice sessions. Grid auto-predicted by qualifying model · updates after real qualifying. Circuit Podium Rate uses exponential decay (0.75^years) weighting recent Austin history more heavily.
+          Standard race weekend — three practice sessions. Grid auto-predicted by qualifying model · updates after real qualifying. Circuit Podium Rate uses exponential decay (0.75^years) weighting recent {NEXT_RACE.circuit} history more heavily.
         </p>
       </GlassPanel>
     </div>

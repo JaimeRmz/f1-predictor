@@ -1,0 +1,60 @@
+# Dead-man's switch for the data/snapshot pipeline.
+#
+# The snapshot workflow already opens an issue when a run FAILS. This covers the
+# quieter failure: it stops running at all (schedule disabled, workflow deleted,
+# every run cancelled), where nothing fails and nothing alerts.
+#
+# Limit, stated plainly: this is also a scheduled GitHub workflow, so if GitHub
+# stops scheduling the whole repo (e.g. a public repo with no activity for 60
+# days) this stops too. The external HEALTHCHECK_URL ping in
+# snapshot-model-pick.yml is the layer that covers that case.
+
+name: Pipeline heartbeat
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  actions: read
+  issues: write
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check recent successes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          # $1 workflow file, $2 max age in hours, $3 "success" (must have succeeded)
+          # or "any" (must merely have RUN -- the validate job is supposed to fail
+          # loudly on data drift, and that is not the same as having stopped).
+          check() {
+            if [ "$3" = "success" ]; then FILTER="--status success"; else FILTER=""; fi
+            ts="$(gh run list --repo "${{ github.repository }}" --workflow "$1" $FILTER --limit 1 --json createdAt --jq '.[0].createdAt')"
+            if [ -z "$ts" ]; then echo "$1: no matching run on record"; return 1; fi
+            age=$(( ( $(date -u +%s) - $(date -u -d "$ts" +%s) ) / 3600 ))
+            echo "$1: last run $ts (${age}h ago, limit $2h, needs: $3)"
+            [ "$age" -le "$2" ]
+          }
+          bad=""
+          check snapshot-model-pick.yml 4 success || bad="$bad snapshot-model-pick.yml(no success in 4h)"
+          check validate-jolpica.yml 216 any || bad="$bad validate-jolpica.yml(has not run in 9 days)"
+          TITLE="HEARTBEAT: pipeline has stopped"
+          n="$(gh issue list --repo "${{ github.repository }}" --search "$TITLE in:title" --state open --json number --jq '.[0].number')"
+          if [ -n "$bad" ]; then
+            MSG="Expected a recent successful run of:$bad. Check the Actions tab; a scheduled workflow that is disabled or never fires raises no failure of its own."
+            echo "$MSG"
+            if [ -z "$n" ]; then
+              gh issue create --repo "${{ github.repository }}" --title "$TITLE" --body "$MSG"
+              if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+                curl -sf -H 'Content-Type: application/json' -d "{\"content\":\"$TITLE:$bad\"}" "$DISCORD_WEBHOOK_URL" || true
+              fi
+            fi
+            exit 1
+          elif [ -n "$n" ]; then
+            gh issue close "$n" --repo "${{ github.repository }}" --comment "Recovered: both workflows have run recently again."
+          fi

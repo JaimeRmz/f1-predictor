@@ -12,7 +12,8 @@ Emits GitHub Actions outputs (to $GITHUB_OUTPUT when set, else stdout):
   action    write | missed | none
   race_id   the raceId to snapshot (write/missed)
   name      human-readable race name
-  cutoff    the real qualifying cutoff, ISO-8601 UTC
+  session   the session the cutoff is the start of (Qualifying | Sprint_Qualifying)
+  cutoff    the real cutoff (start of the first graded session), ISO-8601 UTC
   hours     signed hours from now to that cutoff (negative = already passed)
 
 Exit status is always 0 unless something genuinely broke -- "nothing due" is a
@@ -26,26 +27,22 @@ from datetime import datetime, timedelta, timezone
 
 import requests
 
+import season_data
+
 JOLPICA_SEASON_URL = "https://api.jolpi.ca/ergast/f1/{season}.json?limit=100"
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ykpkieabxvipkyyynypr.supabase.co")
 
-# raceId -> the circuitRef snapshot_model_pick.py uses for /whatif.
-# Mirrors UPCOMING_CIRCUIT there; keep the two in step. 1181 (Italian GP),
-# 1182 (Spanish GP) and 1183 (Azerbaijan GP) are completed and already
-# snapshotted; 1184 (Bahrain GP in Malaysia) and 1185 (Singapore GP) are
-# completed with NO snapshot (the workflow never ran successfully -- see the
-# 2026-10-18 Actions audit) and are not getting a hindsight one. All five are
-# dropped here the same way 1181/1182 were dropped from this dict before.
-UPCOMING_CIRCUIT = {
-    1186: "americas", 1187: "rodriguez", 1188: "interlagos",
-    1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
-}
+# The races to consider are DERIVED from data/races.csv + results.csv
+# (season_data.upcoming_races): a race with no result rows is upcoming. There is
+# no per-race dict to edit after each round. A race that finished without a
+# snapshot (1180, 1184-1187) has result rows, so it drops out of consideration
+# on its own and is never retro-snapshotted; the MISSED alarm covers the
+# window between the cutoff passing and the result rows being ingested.
 
 # Our circuitRef -> Jolpica circuitId, where the two disagree. Verified against
 # the live 2026 schedule on 2026-09-01; every other ref matches by identity.
 CIRCUIT_ALIAS = {
     "madrid": "madring",
-    "las_vegas": "vegas",
 }
 
 # Round numbers: as of the raceId 1184 renumbering (2026-10-08), Bahrain
@@ -61,8 +58,26 @@ def die(msg, code=1):
     sys.exit(code)
 
 
-def quali_cutoffs(season):
-    """circuitId -> (raceName, aware datetime of the qualifying start)."""
+def _stamp(session):
+    if not session or not session.get("date") or not session.get("time"):
+        return None
+    try:
+        return datetime.fromisoformat(f"{session['date']}T{session['time']}".replace("Z", "+00:00")).astimezone(timezone.utc)
+    except ValueError:
+        return None
+
+
+def cutoffs(season):
+    """circuitId -> (raceName, cutoff, session) where cutoff is the start of the
+    FIRST graded session of the weekend: Sprint Qualifying on a sprint weekend,
+    otherwise Qualifying.
+
+    Sprint-aware on purpose. The snapshot is the model's forecast made before any
+    result of the weekend is known; on a sprint weekend the sprint (and its
+    qualifying) happen BEFORE Saturday's qualifying, so freezing at GP
+    qualifying would let the sprint outcome inform the pick. Taking the earlier
+    session keeps it a true pre-weekend forecast. (No remaining 2026 round is a
+    sprint, so today this equals the qualifying time.)"""
     r = requests.get(JOLPICA_SEASON_URL.format(season=season), timeout=30)
     if r.status_code != 200:
         die(f"Jolpica {season} schedule returned HTTP {r.status_code}")
@@ -71,17 +86,13 @@ def quali_cutoffs(season):
         die(f"Jolpica returned no races for {season}")
     out = {}
     for race in races:
-        q = race.get("Qualifying")
-        if not q or not q.get("date") or not q.get("time"):
-            continue  # no published quali slot yet; nothing to schedule against
-        stamp = f"{q['date']}T{q['time']}".replace("Z", "+00:00")
-        try:
-            out[race["Circuit"]["circuitId"]] = (
-                race["raceName"],
-                datetime.fromisoformat(stamp).astimezone(timezone.utc),
-            )
-        except ValueError:
-            continue
+        sessions = [(_stamp(race.get("SprintQualifying")), "Sprint Qualifying"),
+                    (_stamp(race.get("Qualifying")), "Qualifying")]
+        sessions = [(t, n) for t, n in sessions if t]
+        if not sessions:
+            continue  # no published slot yet; nothing to schedule against
+        t, kind = min(sessions)
+        out[race["Circuit"]["circuitId"]] = (race["raceName"], t, kind)
     return out
 
 
@@ -119,6 +130,9 @@ def main():
                     help="stop trying this many hours before the cutoff")
     ap.add_argument("--miss-hours", type=float, default=72.0,
                     help="raise a missed alarm for this long after a cutoff passes")
+    ap.add_argument("--next", action="store_true",
+                    help="manual dry runs: ignore the window and target the soonest upcoming race "
+                         "(even if already snapshotted) so the pipeline can be exercised any day")
     ap.add_argument("--now", help="override current time (ISO-8601 UTC), for testing")
     args = ap.parse_args()
 
@@ -129,35 +143,44 @@ def main():
     if not pub:
         die("SUPABASE_PUBLISHABLE_KEY is not set (public read key for model_snapshots)")
 
-    cutoffs = quali_cutoffs(args.season)
+    sched = cutoffs(args.season)
     have = snapshotted_ids(pub)
+    upcoming = season_data.upcoming_races(int(args.season))
+    if not upcoming:
+        print("note: no upcoming races in races.csv (season over?)", file=sys.stderr)
 
     due, missed = [], []
-    for race_id, ref in sorted(UPCOMING_CIRCUIT.items()):
-        if race_id in have:
+    for race in upcoming:
+        race_id, ref = race["raceId"], race["circuitRef"]
+        if race_id in have and not args.next:
             continue
-        entry = cutoffs.get(CIRCUIT_ALIAS.get(ref, ref))
+        entry = sched.get(CIRCUIT_ALIAS.get(ref, ref))
         if not entry:
-            print(f"warn: no Jolpica quali slot for raceId {race_id} ({ref})", file=sys.stderr)
+            # Loud, not silent: a race we know about but cannot schedule is
+            # exactly how a cutoff gets missed unnoticed.
+            print(f"warn: no Jolpica session slot for raceId {race_id} ({ref})", file=sys.stderr)
             continue
-        name, cutoff = entry
+        name, cutoff, session = entry
         hours = (cutoff - now) / timedelta(hours=1)
-        if args.guard_hours <= hours <= args.lead_hours:
-            due.append((hours, race_id, name, cutoff))
+        if args.next:
+            if hours > 0:
+                due.append((hours, race_id, name, cutoff, session))
+        elif args.guard_hours <= hours <= args.lead_hours:
+            due.append((hours, race_id, name, cutoff, session))
         elif -args.miss_hours <= hours < args.guard_hours:
-            missed.append((hours, race_id, name, cutoff))
+            missed.append((hours, race_id, name, cutoff, session))
 
     # Soonest cutoff first, so a backlog is worked in deadline order.
     if due:
-        hours, race_id, name, cutoff = min(due)
-        emit(action="write", race_id=race_id, name=name,
+        hours, race_id, name, cutoff, session = min(due)
+        emit(action="write", race_id=race_id, name=name, session=session.replace(" ", "_"),
              cutoff=cutoff.isoformat().replace("+00:00", "Z"), hours=f"{hours:.1f}")
     elif missed:
-        hours, race_id, name, cutoff = min(missed)
-        emit(action="missed", race_id=race_id, name=name,
+        hours, race_id, name, cutoff, session = min(missed)
+        emit(action="missed", race_id=race_id, name=name, session=session.replace(" ", "_"),
              cutoff=cutoff.isoformat().replace("+00:00", "Z"), hours=f"{hours:.1f}")
     else:
-        emit(action="none", race_id="", name="", cutoff="", hours="")
+        emit(action="none", race_id="", name="", session="", cutoff="", hours="")
 
 
 if __name__ == "__main__":
