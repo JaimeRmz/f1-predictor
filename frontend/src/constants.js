@@ -41,6 +41,10 @@ export const CONSTRUCTOR_OVERRIDES = {
   colapinto: "Alpine", gasly: "Alpine",
   lindblad: "Racing Bulls",
   bearman: "Haas", ocon: "Haas",
+  // One-off Haas substitute for Ocon at the Mexico City GP (round 19, raceId
+  // 1187); confirmed against Jolpica results. Kept so that race's My Picks
+  // row still colours.
+  hirakawa: "Haas", ryo_hirakawa: "Haas",
   // Tsunoda was in the grid (Racing Bulls) from Zandvoort (round 12) through
   // the Spanish GP (Madrid, round 14), then left it again from Baku (round
   // 15) onward -- he's no longer in STANDINGS_GRID_2026, so teamOf() has no
@@ -121,8 +125,6 @@ export const glassStyle = (tint, { glow = true } = {}) => ({
 
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
-  { raceId: 1186, round: 18, name: "United States Grand Prix",   circuit: "Austin",      circuitRef: "americas",     date: "Oct 25" },
-  { raceId: 1187, round: 19, name: "Mexico City Grand Prix",     circuit: "Mexico City", circuitRef: "rodriguez",    date: "Nov 1"  },
   { raceId: 1188, round: 20, name: "Brazilian Grand Prix",       circuit: "São Paulo",   circuitRef: "interlagos",   date: "Nov 8"  },
   { raceId: 1189, round: 21, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "las_vegas",    date: "Nov 22" },
   { raceId: 1190, round: 22, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29" },
@@ -154,20 +156,29 @@ export const flagUrl = (circuitRef) => {
 
 // The current upcoming race, as the single source of truth for the countdown,
 // the What-If/Next-Race pages, and the prediction picker's lock. `qualiCutoffISO`
-// is the machine-readable version of NextRacePage's qualifying schedule row
-// (21:00 UTC quali start, from races.csv row 1186 / Jolpica 2026 round 18,
-// cross-checked 2026-10-19): once qualifying starts, the picker locks.
-// `raceISO` matches RaceCountdown's target (2026-10-25T20:00:00Z race start).
-// Austin is a NORMAL weekend (races.csv row 1186 has no sprint_date).
+// is the picker's lock time (qualifying start) and `sessions` the weekend
+// schedule; both are UTC, from Jolpica 2026 round 20 / races.csv row 1188
+// (verified against the Jolpica schedule 2026-11-02). The pages render the
+// sessions in the viewer's own time zone, so nothing here is zone-specific.
+// Brazil is a NORMAL weekend (no sprint_date in races.csv row 1188).
+// Hand-maintained until the schedule endpoint exists (Stage 0 automation work).
 export const NEXT_RACE = {
-  raceId: 1186,
-  round: 18,
-  name: "United States Grand Prix",
-  circuit: "Austin",
-  circuitRef: "americas",
-  flag: "🇺🇸",
-  raceISO: "2026-10-25T20:00:00Z",
-  qualiCutoffISO: "2026-10-24T21:00:00Z",
+  raceId: 1188,
+  round: 20,
+  name: "Brazilian Grand Prix",
+  circuit: "Interlagos",
+  location: "São Paulo, Brazil",
+  circuitRef: "interlagos",
+  flag: "🇧🇷",
+  raceISO: "2026-11-08T17:00:00Z",
+  qualiCutoffISO: "2026-11-07T18:00:00Z",
+  sessions: [
+    { session: "Practice 1", iso: "2026-11-06T15:30:00Z", emoji: "🔧" },
+    { session: "Practice 2", iso: "2026-11-06T19:00:00Z", emoji: "🔧" },
+    { session: "Practice 3", iso: "2026-11-07T14:30:00Z", emoji: "🔧" },
+    { session: "Qualifying", iso: "2026-11-07T18:00:00Z", emoji: "⚡" },
+    { session: "Race",       iso: "2026-11-08T17:00:00Z", emoji: "🏁", featured: true },
+  ],
 };
 
 // Completed 2026 rounds, shared by the 2026 Season page and the My Picks
@@ -207,9 +218,21 @@ export const COMPLETED_2026 = [
   // results view).
   { raceId: 1184, round: 16, name: "Bahrain GP in Malaysia", flag: "🇧🇭", qualiISO: "2026-10-03T08:00:00Z" },
   { raceId: 1185, round: 17, name: "Singapore GP",          flag: "🇸🇬", qualiISO: "2026-10-10T13:00:00Z" },
+  // United States GP (1186) and Mexico City GP (1187) also have NO
+  // model_snapshots row. The workflow reached its write step in both windows
+  // and failed there every 3h (Actions run history; issues #1 and #2 are the
+  // MISSED-cutoff alarms), so the cutoffs (2026-10-24T21:00Z, 2026-10-31T21:00Z)
+  // passed unsnapshotted. Same rule as 1180/1184/1185: never backfill from
+  // /predict's real grid; tally.js drops a snapshot-less race from both sides
+  // of the Model ratio.
+  { raceId: 1186, round: 18, name: "United States GP",      flag: "🇺🇸", qualiISO: "2026-10-24T21:00:00Z" },
+  { raceId: 1187, round: 19, name: "Mexico City GP",        flag: "🇲🇽", qualiISO: "2026-10-31T21:00:00Z" },
 ];
 
-// Roster ordered by post-Singapore GP (round 17) championship standings.
+// Roster ordered by post-Mexico City GP (round 19) championship standings.
+// ASSUMPTION: Ocon is back in the Haas seat for Brazil. Jolpica shows Ryo
+// Hirakawa in it for Mexico only (verified); nothing yet says Ocon returns,
+// so check the round-20 entry list when Jolpica publishes it.
 // Zandvoort (round 12) had swapped Hadjar out, Tsunoda in at Racing Bulls,
 // and Lawson up to Red Bull. By Baku (round 15) that swap reversed: Hadjar
 // is back at Red Bull, Lawson is back at Racing Bulls, and Tsunoda is out of
@@ -221,9 +244,9 @@ export const COMPLETED_2026 = [
 // Hadjar used while he was the one off the grid.
 export const STANDINGS_GRID_2026 = [
   { driverRef: "antonelli",       driver_name: "Kimi Antonelli",    team: "Mercedes",      grid: 1  },
-  { driverRef: "russell",         driver_name: "George Russell",    team: "Mercedes",      grid: 2  },
+  { driverRef: "max_verstappen",  driver_name: "Max Verstappen",    team: "Red Bull",      grid: 2  },
   { driverRef: "hamilton",        driver_name: "Lewis Hamilton",    team: "Ferrari",       grid: 3  },
-  { driverRef: "max_verstappen",  driver_name: "Max Verstappen",    team: "Red Bull",      grid: 4  },
+  { driverRef: "russell",         driver_name: "George Russell",    team: "Mercedes",      grid: 4  },
   { driverRef: "leclerc",         driver_name: "Charles Leclerc",   team: "Ferrari",       grid: 5  },
   { driverRef: "norris",          driver_name: "Lando Norris",      team: "McLaren",       grid: 6  },
   { driverRef: "piastri",         driver_name: "Oscar Piastri",     team: "McLaren",       grid: 7  },

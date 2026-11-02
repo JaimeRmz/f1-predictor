@@ -36,8 +36,11 @@ SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ykpkieabxvipkyyynypr.supa
 # completed with NO snapshot (the workflow never ran successfully -- see the
 # 2026-10-18 Actions audit) and are not getting a hindsight one. All five are
 # dropped here the same way 1181/1182 were dropped from this dict before.
+# 1186 (US GP) and 1187 (Mexico City GP) are completed with NO snapshot either:
+# the write step failed on every attempt inside both windows and the MISSED
+# alarms (issues #1, #2) fired. They are dropped for the same reason.
 UPCOMING_CIRCUIT = {
-    1186: "americas", 1187: "rodriguez", 1188: "interlagos",
+    1188: "interlagos",
     1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
 }
 

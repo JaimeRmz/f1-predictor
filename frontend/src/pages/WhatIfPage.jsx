@@ -3,32 +3,22 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
 import { GlassPanel, HudBrackets } from "../components/GlassPanel.jsx";
-import { API, cardRed, glassStyle, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS } from "../constants.js";
+import { API, cardRed, glassStyle, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS, NEXT_RACE } from "../constants.js";
 
-// ── WHAT IF SIMULATOR (next race: United States GP · Austin) ────────────
-const NEXT_RACE_CIRCUIT = "americas";
-const NEXT_RACE_NAME = "United States GP";
+// ── WHAT IF SIMULATOR (next race comes from NEXT_RACE in constants.js) ──
+const NEXT_RACE_CIRCUIT = NEXT_RACE.circuitRef;
+const NEXT_RACE_NAME = NEXT_RACE.name.replace("Grand Prix", "GP");
 
 // Fallback grid only — shown briefly on mount and used only if the
-// Austin qualifying-order preload request fails. Ordered by
-// post-Singapore GP (round 17) championship standings; also fixes a
-// pre-existing "verstappen" ref (drivers.csv uses "max_verstappen" like
-// everywhere else) that would have failed to resolve server-side.
-const WHATIF_FALLBACK_DRIVERS = [
-  { driverRef: "antonelli", driver_name: "Kimi Antonelli", team: "Mercedes", grid: 1 },
-  { driverRef: "russell", driver_name: "George Russell", team: "Mercedes", grid: 2 },
-  { driverRef: "hamilton", driver_name: "Lewis Hamilton", team: "Ferrari", grid: 3 },
-  { driverRef: "max_verstappen", driver_name: "Max Verstappen", team: "Red Bull", grid: 4 },
-  { driverRef: "leclerc", driver_name: "Charles Leclerc", team: "Ferrari", grid: 5 },
-  { driverRef: "norris", driver_name: "Lando Norris", team: "McLaren", grid: 6 },
-  { driverRef: "piastri", driver_name: "Oscar Piastri", team: "McLaren", grid: 7 },
-];
+// qualifying-order preload request fails. The top seven of the standings
+// roster (STANDINGS_GRID_2026), so it can't drift from it.
+const WHATIF_FALLBACK_DRIVERS = STANDINGS_GRID_2026.slice(0, 7);
 
 const WhatIfPage = () => {
   const teamColors = TEAM_COLORS;
 
   // The "default" to revert to on RESET - starts as the hardcoded fallback,
-  // replaced once the real Austin predicted qualifying order loads.
+  // replaced once the real predicted qualifying order loads.
   const [defaultDrivers, setDefaultDrivers] = useState(WHATIF_FALLBACK_DRIVERS);
   const [drivers, setDrivers] = useState(WHATIF_FALLBACK_DRIVERS);
   const [results, setResults] = useState([]);
@@ -75,7 +65,7 @@ const WhatIfPage = () => {
         setDrivers(preloaded);
         runPrediction(preloaded);
       } catch (e) {
-        console.error("Failed to preload Austin qualifying order, using fallback grid:", e);
+        console.error("Failed to preload qualifying order, using fallback grid:", e);
         runPrediction(WHATIF_FALLBACK_DRIVERS);
       }
     })();
@@ -232,8 +222,8 @@ const WhatIfPage = () => {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
       <SectionHeader
-        eyebrow="Interactive ML · Live Model Calls · Austin"
-        title={`What-If Grid Simulator — ${NEXT_RACE_NAME} · Austin`}
+        eyebrow={`Interactive ML · Live Model Calls · ${NEXT_RACE.circuit}`}
+        title={`What-If Grid Simulator — ${NEXT_RACE_NAME} · ${NEXT_RACE.circuit}`}
         right={
           <button onClick={reset} className="btn-ghost" style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff", padding: "0.45rem 1rem", fontSize: "0.68rem", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>
             ↺ RESET
@@ -244,7 +234,7 @@ const WhatIfPage = () => {
       <GlassPanel style={{ padding: "14px 20px", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--gold)", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
         <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6 }}>
-          Grid pre-loaded with predicted qualifying order for Austin · Drag to simulate alternative scenarios
+          Grid pre-loaded with predicted qualifying order for {NEXT_RACE.circuit} · Drag to simulate alternative scenarios
         </span>
       </GlassPanel>
 

@@ -85,21 +85,27 @@ COMPLETED_2026 = [
     # would insert a hindsight pick derived from /predict on the real grid.
     # Their Model column stays empty. Adding them here would silently undo
     # that decision.
+    #
+    # NOTE: the United States GP (1186, round 18) and Mexico City GP (1187,
+    # round 19) are likewise COMPLETED and deliberately NOT listed. The
+    # workflow reached its write step inside both snapshot windows and failed
+    # there on every 3-hourly attempt (Actions history; MISSED-cutoff issues
+    # #1 and #2), so both cutoffs (2026-10-24T21:00Z, 2026-10-31T21:00Z) passed
+    # with no snapshot. --backfill would insert a hindsight pick from the real
+    # grid. Their Model column stays empty -- never backfill.
 ]
 COMPLETED_IDS = {rid for rid, _, _ in COMPLETED_2026}
 RACE_NAME = {rid: name for rid, _, name in COMPLETED_2026}
 RACE_ROUND = {rid: rnd for rid, rnd, _ in COMPLETED_2026}
 
 # Upcoming races → circuitRef, for the /whatif path (mirror of UPCOMING_RACES_2026).
-# 1183 (Azerbaijan), 1184 (Bahrain in Malaysia) and 1185 (Singapore) are now
-# completed -- dropped from here the same way 1181/1182 were dropped before.
+# 1183-1187 are completed -- dropped from here the same way 1181/1182 were
+# dropped before. 1186/1187 have no snapshot (see the note above).
 UPCOMING_CIRCUIT = {
-    1186: "americas", 1187: "rodriguez",
     1188: "interlagos", 1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
 }
 UPCOMING_NAME = {
-    1186: "United States GP",
-    1187: "Mexico City GP", 1188: "Brazilian GP", 1189: "Las Vegas GP", 1190: "Qatar GP", 1191: "Abu Dhabi GP",
+    1188: "Brazilian GP", 1189: "Las Vegas GP", 1190: "Qatar GP", 1191: "Abu Dhabi GP",
 }
 
 # Driver roster for /whatif (mirror of STANDINGS_GRID_2026): driverRef + a

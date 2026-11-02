@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Spinner, StatCard, SectionHeader, BackendPanel } from "../shared.jsx";
 import { GlassPanel } from "../components/GlassPanel.jsx";
-import { API, UPCOMING_RACES_2026, COMPLETED_2026 } from "../constants.js";
+import { API, UPCOMING_RACES_2026, COMPLETED_2026, NEXT_RACE } from "../constants.js";
 import { useHealth } from "../health.jsx";
 import { RaceStrategySection } from "../components/RaceStrategy.jsx";
 import { supabase } from "../lib/supabaseClient.js";
@@ -31,26 +31,27 @@ const Season2026Page = () => {
     return n;
   });
 
-  // Post-Singapore GP (round 17) standings. These are the OFFICIAL championship
-  // totals from data/driver_standings.csv (raceId 1185), which include sprint
-  // points -- they intentionally differ from /season/2026, whose totals are
-  // summed from results.csv and so are race-only (sprint_results.csv has no
-  // 2026 rows -- see the Zandvoort/Singapore sprint-weekend note elsewhere).
-  // Verstappen won Singapore -- his 2nd win of the season. Lawson is back at
-  // Racing Bulls and Hadjar back at Red Bull as of Baku (round 15) -- see the
-  // STANDINGS_GRID_2026 note in constants.js.
+  // Post-Mexico City GP (round 19) standings. These are the OFFICIAL
+  // championship totals from data/driver_standings.csv (raceId 1187, Jolpica),
+  // which include sprint points -- they intentionally differ from /season/2026,
+  // whose totals are summed from results.csv and so are race-only
+  // (sprint_results.csv has no 2026 rows). Lawson is at Racing Bulls and
+  // Hadjar at Red Bull (see the STANDINGS_GRID_2026 note in constants.js).
+  // Hand-maintained until the standings endpoint exists.
   const standings = [
-    { driver: "Kimi Antonelli",  team: "Mercedes",      pts: 340, wins: 8, color: "#00d2be" },
-    { driver: "George Russell",  team: "Mercedes",      pts: 238, wins: 3, color: "#00d2be" },
-    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 229, wins: 1, color: "#e10600" },
-    { driver: "Max Verstappen",  team: "Red Bull",      pts: 221, wins: 2, color: "#3671c6" },
-    { driver: "Charles Leclerc", team: "Ferrari",       pts: 215, wins: 1, color: "#e10600" },
-    { driver: "Lando Norris",    team: "McLaren",       pts: 201, wins: 2, color: "#ff8000" },
-    { driver: "Oscar Piastri",   team: "McLaren",       pts: 138, wins: 0, color: "#ff8000" },
-    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 97,  wins: 0, color: "#3671c6" },
-    { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 75,  wins: 0, color: "#6692ff" },
-    { driver: "Pierre Gasly",    team: "Alpine",        pts: 41,  wins: 0, color: "#0093cc" },
+    { driver: "Kimi Antonelli",  team: "Mercedes",      pts: 380, wins: 9, color: "#00d2be" },
+    { driver: "Max Verstappen",  team: "Red Bull",      pts: 261, wins: 3, color: "#3671c6" },
+    { driver: "Lewis Hamilton",  team: "Ferrari",       pts: 259, wins: 1, color: "#e10600" },
+    { driver: "George Russell",  team: "Mercedes",      pts: 250, wins: 3, color: "#00d2be" },
+    { driver: "Charles Leclerc", team: "Ferrari",       pts: 245, wins: 1, color: "#e10600" },
+    { driver: "Lando Norris",    team: "McLaren",       pts: 221, wins: 2, color: "#ff8000" },
+    { driver: "Oscar Piastri",   team: "McLaren",       pts: 150, wins: 0, color: "#ff8000" },
+    { driver: "Isack Hadjar",    team: "Red Bull",      pts: 105, wins: 0, color: "#3671c6" },
+    { driver: "Liam Lawson",     team: "Racing Bulls",  pts: 79,  wins: 0, color: "#6692ff" },
+    { driver: "Pierre Gasly",    team: "Alpine",        pts: 43,  wins: 0, color: "#0093cc" },
   ];
+  const roundsDone = COMPLETED_2026.length;
+  const totalRounds = roundsDone + UPCOMING_RACES_2026.length;
   // Leader's points, so the top bar is full-width and the rest scale relative
   // to it — no manual update needed when the leader's total changes each race.
   const maxPts = Math.max(...standings.map(s => s.pts));
@@ -173,21 +174,21 @@ const Season2026Page = () => {
         variant="glass"
         eyebrow="Live Test Set · Post-Training Data"
         title="2026 Formula One Season"
-        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>17 RACES COMPLETE</div></div>}
+        right={<div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "rgba(255,255,255,0.7)", textAlign: "right" }}><div>{roundsDone} RACES COMPLETE</div></div>}
       />
 
       {/* Season summary bar */}
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-        <StatCard label="Completed"  value="17 / 23"      sub="races"             />
-        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub="+102 pts gap" />
-        <StatCard label="Remaining"  value="6"             sub="races to go"       />
-        <StatCard label="Next Race"  value="United States GP" sub="Oct 25 · Austin" />
+        <StatCard label="Completed"  value={`${roundsDone} / ${totalRounds}`}      sub="races"             />
+        <StatCard label="Leader"     value="Antonelli"     accent="var(--red)"  sub={`+${standings[0].pts - standings[1].pts} pts gap`} />
+        <StatCard label="Remaining"  value={String(UPCOMING_RACES_2026.length)} sub="races to go"       />
+        <StatCard label="Next Race"  value={NEXT_RACE.name.replace("Grand Prix", "GP")} sub={`${new Date(NEXT_RACE.raceISO).toLocaleDateString(undefined, { month: "short", day: "numeric" })} · ${NEXT_RACE.circuit}`} />
       </div>
 
       {/* Championship standings */}
       <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Driver Championship — after 17 rounds</span>
+          <span className="section-label">Driver Championship — after {roundsDone} rounds</span>
         </div>
         {standings.map((s, i) => (
           <div key={i} className="data-row stagger-item row-gap-tight" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.75rem 1rem", borderBottom: i < standings.length - 1 ? "1px solid var(--border)" : "none" }}>
@@ -301,7 +302,7 @@ const Season2026Page = () => {
       {/* Remaining calendar */}
       <GlassPanel className="chart-enter">
         <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Remaining 2026 Calendar — 6 rounds</span>
+          <span className="section-label">Remaining 2026 Calendar — {UPCOMING_RACES_2026.length} rounds</span>
         </div>
         {UPCOMING_RACES_2026.map((r, i) => (
           <div key={i} className="data-row stagger-item" style={{ "--i": i, display: "flex", alignItems: "center", gap: "1rem", padding: "0.6rem 1rem", borderBottom: i < UPCOMING_RACES_2026.length - 1 ? "1px solid var(--border)" : "none" }}>
