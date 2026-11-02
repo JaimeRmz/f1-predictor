@@ -1,0 +1,64 @@
+{
+ "rows_checked": 897,
+ "races": 43,
+ "features": {
+  "driver_season_points": {
+   "max_abs_diff": 0.0,
+   "mismatching_rows": 0
+  },
+  "constructor_season_points": {
+   "max_abs_diff": 0.0,
+   "mismatching_rows": 0
+  },
+  "driver_circuit_podium_rate": {
+   "max_abs_diff": 1.1102230246251565e-16,
+   "mismatching_rows": 0
+  },
+  "driver_recent_form": {
+   "max_abs_diff": 3.552713678800501e-15,
+   "mismatching_rows": 0
+  },
+  "constructor_recent_form": {
+   "max_abs_diff": 3.552713678800501e-15,
+   "mismatching_rows": 0
+  },
+  "driver_dnf_rate": {
+   "max_abs_diff": 5.551115123125783e-17,
+   "mismatching_rows": 0
+  },
+  "constructor_dnf_rate": {
+   "max_abs_diff": 5.551115123125783e-17,
+   "mismatching_rows": 0
+  },
+  "driver_last5_points": {
+   "max_abs_diff": 0.0,
+   "mismatching_rows": 0
+  }
+ },
+ "quali_features": {
+  "driver_season_quali_avg": {
+   "max_abs_diff": 3.552713678800501e-15,
+   "mismatching_rows": 0
+  },
+  "driver_last3_quali_avg": {
+   "max_abs_diff": 3.552713678800501e-15,
+   "mismatching_rows": 0
+  },
+  "constructor_season_quali_avg": {
+   "max_abs_diff": 3.552713678800501e-15,
+   "mismatching_rows": 0
+  },
+  "driver_circuit_quali_avg": {
+   "max_abs_diff": 1.7763568394002505e-15,
+   "mismatching_rows": 0
+  },
+  "driver_championship_position": {
+   "max_abs_diff": 0.0,
+   "mismatching_rows": 0
+  },
+  "constructor_championship_position": {
+   "max_abs_diff": 0.0,
+   "mismatching_rows": 0
+  }
+ }
+}
