@@ -348,24 +348,43 @@ def compare_drivers(driver1: str, driver2: str):
         "head_to_head": head_to_head
     }
 
+@app.get("/championship/status")
+def championship_status_endpoint():
+    """Clinched / not-clinched, with the arithmetic, from the committed
+    Jolpica-sourced standings. No model needed, so it answers during warmup."""
+    from championship import championship_status
+    status = championship_status(DATA_DIR)
+    if status.get("error"):
+        raise HTTPException(status_code=503, detail=status["error"])
+    return status
+
+
 @app.get("/championship/simulate")
 def simulate_championship():
+    """DEPRECATED: kept so the previously deployed frontend keeps working.
+    Standings and remaining points now come from /championship/status's data
+    (they used to be a hand-edited block stuck at round 14, with a fastest-lap
+    point that no longer exists). title_probability is a heuristic, not a
+    calibrated probability, and no current page should display it."""
     require_ready()
-    # Post-Spanish GP (round 14) standings, from data/driver_standings.csv
-    # (raceId 1182) -- the official totals, sprint points included. This block
-    # is hand-maintained: update it with each race ingest, alongside the
-    # matching array in frontend/src/pages/Season2026Page.jsx.
+    from championship import championship_status
+    status = championship_status(DATA_DIR)
+    if status.get("error"):
+        raise HTTPException(status_code=503, detail=status["error"])
+    remaining_races = status["drivers"]["remaining_races"]
+    points_available = status["drivers"]["max_points_available"]
+    drv = pd.read_csv(os.path.join(DATA_DIR, "drivers.csv"))
+    ref_by_name = {f"{r.forename} {r.surname}": r.driverRef for r in drv.itertuples()}
+
+    def _latest_team(ref):
+        rows = df[df['driverRef'] == ref]
+        return str(rows.iloc[-1]['name_constructor']) if len(rows) else ""
     current_standings = [
-        {"driver": "Kimi Antonelli",  "driverRef": "antonelli",      "team": "Mercedes",     "points": 292, "color": "#00d2be"},
-        {"driver": "George Russell",  "driverRef": "russell",         "team": "Mercedes",     "points": 211, "color": "#00d2be"},
-        {"driver": "Lewis Hamilton",  "driverRef": "hamilton",        "team": "Ferrari",      "points": 191, "color": "#e10600"},
-        {"driver": "Lando Norris",    "driverRef": "norris",          "team": "McLaren",      "points": 186, "color": "#ff8000"},
-        {"driver": "Charles Leclerc", "driverRef": "leclerc",         "team": "Ferrari",      "points": 167, "color": "#e10600"},
-        {"driver": "Max Verstappen",  "driverRef": "max_verstappen",  "team": "Red Bull",     "points": 145, "color": "#3671c6"},
-        {"driver": "Oscar Piastri",   "driverRef": "piastri",         "team": "McLaren",      "points": 120, "color": "#ff8000"},
+        {"driver": c["name"], "driverRef": ref_by_name.get(c["name"], ""),
+         "team": _latest_team(ref_by_name.get(c["name"], "")),
+         "points": c["points"], "color": "#8a8a99"}
+        for c in status["drivers"]["contenders"][:7]
     ]
-    remaining_races  = 8
-    points_available = remaining_races * 26  # 26 = win (25) + fastest lap (1)
     leader_pts       = current_standings[0]["points"]
     simulated = []
     for s in current_standings:
@@ -375,7 +394,7 @@ def simulate_championship():
         projected_total = s['points'] + expected_additional
         gap = leader_pts - s['points']
         eliminated = (s['points'] + points_available) < leader_pts
-        contention_score = 0.0 if eliminated else (1 - gap / points_available) ** 2
+        contention_score = 0.0 if eliminated else ((1 - gap / points_available) ** 2 if points_available else 1.0)
         simulated.append({
             **s,
             "projected_total": round(projected_total),
