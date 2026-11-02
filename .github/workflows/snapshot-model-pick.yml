@@ -34,12 +34,12 @@ on:
   workflow_dispatch:
     inputs:
       race_id:
-        description: "Snapshot this raceId now, ignoring the schedule window"
+        description: "Force this raceId, ignoring the schedule window (its cutoff is still derived from Jolpica). Blank = the next upcoming race (dry run) or whatever is due."
         required: false
       dry_run:
-        description: "DRY RUN: probe Supabase access, then compute the pick for race_id (or the next upcoming race) and print it. Writes nothing."
+        description: "DRY RUN (default ON): check Supabase access, then compute the pick and print it. Writes nothing. UNTICK to really write a snapshot."
         type: boolean
-        default: false
+        default: true
 
 concurrency:
   group: snapshot-model-pick
@@ -77,34 +77,47 @@ jobs:
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
         run: python backend/scripts/snapshot_model_pick.py --check-access
 
+      # The ONE definition of "dry run": event is workflow_dispatch AND the
+      # dry_run input is true. A scheduled run is never a dry run. Every later
+      # step reads steps.mode.outputs.dry, never the raw input.
+      - name: Resolve mode
+        id: mode
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+          INPUT_RACE_ID: ${{ github.event.inputs.race_id }}
+        run: python backend/scripts/resolve_run.py | tee -a "$GITHUB_OUTPUT"
+
+      # Always runs. Scheduled ticks: is a race inside its snapshot window? Manual
+      # dispatch: a forced race_id (window ignored, but the cutoff is derived
+      # from Jolpica exactly as for a scheduled run, so cutoff_at is always
+      # recorded) or, for a dry run with no race_id, the next upcoming race.
       - name: Decide what is due
         id: due
-        if: github.event.inputs.race_id == ''
         env:
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          RACE_ID_INPUT: ${{ github.event.inputs.race_id }}
+          DRY: ${{ steps.mode.outputs.dry }}
         run: |
-          if [ -z "$SUPABASE_PUBLISHABLE_KEY" ]; then
-            echo "SUPABASE_PUBLISHABLE_KEY secret is not set (needed to read model_snapshots)"; exit 1
+          if [ -n "$RACE_ID_INPUT" ]; then
+            python backend/scripts/due_snapshot.py --season 2026 --race-id "$RACE_ID_INPUT"
+          else
+            if [ -z "$SUPABASE_PUBLISHABLE_KEY" ]; then
+              echo "SUPABASE_PUBLISHABLE_KEY secret is not set (needed to read model_snapshots)"; exit 1
+            fi
+            NEXT=""
+            if [ "$DRY" = "true" ]; then NEXT="--next"; fi
+            python backend/scripts/due_snapshot.py --season 2026 $NEXT
           fi
-          NEXT=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then NEXT="--next"; fi
-          python backend/scripts/due_snapshot.py --season 2026 $NEXT
 
       - name: Resolve target
         id: target
         run: |
-          if [ -n "${{ github.event.inputs.race_id }}" ]; then
-            echo "action=write"                                   >> "$GITHUB_OUTPUT"
-            echo "race_id=${{ github.event.inputs.race_id }}"      >> "$GITHUB_OUTPUT"
-            echo "name=manual dispatch"                            >> "$GITHUB_OUTPUT"
-            echo "cutoff="                                         >> "$GITHUB_OUTPUT"
-          else
-            echo "action=${{ steps.due.outputs.action }}"          >> "$GITHUB_OUTPUT"
-            echo "race_id=${{ steps.due.outputs.race_id }}"        >> "$GITHUB_OUTPUT"
-            echo "name=${{ steps.due.outputs.name }}"              >> "$GITHUB_OUTPUT"
-            echo "cutoff=${{ steps.due.outputs.cutoff }}"          >> "$GITHUB_OUTPUT"
-            echo "session=${{ steps.due.outputs.session }}"        >> "$GITHUB_OUTPUT"
-          fi
+          echo "action=${{ steps.due.outputs.action }}"          >> "$GITHUB_OUTPUT"
+          echo "race_id=${{ steps.due.outputs.race_id }}"        >> "$GITHUB_OUTPUT"
+          echo "name=${{ steps.due.outputs.name }}"              >> "$GITHUB_OUTPUT"
+          echo "cutoff=${{ steps.due.outputs.cutoff }}"          >> "$GITHUB_OUTPUT"
+          echo "session=${{ steps.due.outputs.session }}"        >> "$GITHUB_OUTPUT"
 
       # Render's free plan spins the API down when idle. Wake it only when a
       # snapshot is actually about to be written.
@@ -127,30 +140,35 @@ jobs:
         run: |
           set -o pipefail
           DRY=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then DRY="--dry-run"; fi
+          if [ "${{ steps.mode.outputs.dry }}" = "true" ]; then DRY="--dry-run"; fi
           CUT=""
           if [ -n "${{ steps.target.outputs.cutoff }}" ]; then CUT="--cutoff ${{ steps.target.outputs.cutoff }}"; fi
           python backend/scripts/snapshot_model_pick.py \
             --race-id "${{ steps.target.outputs.race_id }}" \
             --api-base "$API_BASE" $CUT $DRY 2>&1 | tee snap.log
 
-      - name: Job summary
-        if: always() && steps.target.outputs.action == 'write'
-        run: |
-          {
-            echo "## Snapshot — ${{ steps.target.outputs.name }} (raceId ${{ steps.target.outputs.race_id }})"
-            echo ""
-            echo "Cutoff (${{ steps.target.outputs.session }}): \`${{ steps.target.outputs.cutoff }}\`"
-            echo ""
-            echo '```'
-            cat snap.log 2>/dev/null || echo "(no output — the step failed before producing any)"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
+      # Always runs, even after a failure: states which path this run took (due /
+      # forced race_id / dry run / nothing due / missed) and whether anything was
+      # written to production, so a run is never ambiguous.
+      - name: Run summary
+        if: always()
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_RACE_ID: ${{ github.event.inputs.race_id }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+          ACTION: ${{ steps.target.outputs.action }}
+          RACE_ID: ${{ steps.target.outputs.race_id }}
+          RACE_NAME: ${{ steps.target.outputs.name }}
+          CUTOFF: ${{ steps.target.outputs.cutoff }}
+          SESSION: ${{ steps.target.outputs.session }}
+          SNAP_OUTCOME: ${{ steps.snap.outcome }}
+          SNAP_LOG: snap.log
+        run: python backend/scripts/pipeline_summary.py >> "$GITHUB_STEP_SUMMARY"
 
       # Tells you what was frozen, so a pick you disagree with can still be
       # replaced with --force while the cutoff is ahead of you.
       - name: Report what was frozen
-        if: success() && steps.target.outputs.action == 'write' && github.event.inputs.dry_run != 'true'
+        if: success() && steps.target.outputs.action == 'write' && steps.mode.outputs.dry != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

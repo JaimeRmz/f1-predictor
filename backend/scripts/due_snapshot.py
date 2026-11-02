@@ -130,6 +130,9 @@ def main():
                     help="stop trying this many hours before the cutoff")
     ap.add_argument("--miss-hours", type=float, default=72.0,
                     help="raise a missed alarm for this long after a cutoff passes")
+    ap.add_argument("--race-id", type=int,
+                    help="forced/manual run: target this raceId regardless of the window, but still derive its "
+                         "cutoff from Jolpica exactly as a scheduled run does (so cutoff_at is always recorded)")
     ap.add_argument("--next", action="store_true",
                     help="manual dry runs: ignore the window and target the soonest upcoming race "
                          "(even if already snapshotted) so the pipeline can be exercised any day")
@@ -138,6 +141,22 @@ def main():
 
     now = (datetime.fromisoformat(args.now.replace("Z", "+00:00")).astimezone(timezone.utc)
            if args.now else datetime.now(timezone.utc))
+
+    if args.race_id:
+        race = next((r for r in season_data.season_races(int(args.season)) if r["raceId"] == args.race_id), None)
+        if not race:
+            die(f"raceId {args.race_id} is not a {args.season} race in races.csv")
+        entry = cutoffs(args.season).get(CIRCUIT_ALIAS.get(race["circuitRef"], race["circuitRef"]))
+        if not entry:
+            # Fail loudly: a forced snapshot with no recorded cutoff would be
+            # unauditable (and immediately frozen once 00008 is applied).
+            die(f"Jolpica has no published session slot for raceId {args.race_id} ({race['circuitRef']}); "
+                "refusing to force a snapshot that cannot record its cutoff_at")
+        name, cutoff, session = entry
+        emit(action="write", race_id=args.race_id, name=name, session=session.replace(" ", "_"),
+             cutoff=cutoff.isoformat().replace("+00:00", "Z"),
+             hours=f"{(cutoff - now) / timedelta(hours=1):.1f}")
+        return
 
     pub = os.environ.get("SUPABASE_PUBLISHABLE_KEY")
     if not pub:

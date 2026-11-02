@@ -375,6 +375,92 @@ def run_single(args, supa, api_base):
     print()
 
 
+# Jolpica circuitId where it differs from our circuitRef (mirror of
+# due_snapshot.CIRCUIT_ALIAS; matching is by circuit, never by round number).
+JOLPICA_CIRCUIT_ALIAS = {"madrid": "madring"}
+
+
+# The guard's two reads (the API's /meta and Jolpica) are retried before the job
+# fails: one transient 502 or timeout must not cost a snapshot, but a persistent
+# failure must still abort. 3 retries after the first attempt, with backoff.
+# GUARD_BACKOFF_S="0,0,0" makes tests instant.
+GUARD_BACKOFF_S = tuple(float(x) for x in os.environ.get("GUARD_BACKOFF_S", "3,9,27").split(","))
+
+
+def get_json_with_retry(url, what):
+    """GET url -> parsed JSON. Retries (len(GUARD_BACKOFF_S) times) on network
+    errors, 5xx/429 and bad JSON; a definitive 4xx fails at once. Returns the
+    payload or raises RuntimeError with the last reason."""
+    last = "no attempt made"
+    for attempt in range(len(GUARD_BACKOFF_S) + 1):
+        if attempt:
+            delay = GUARD_BACKOFF_S[attempt - 1]
+            print(f"  retry {attempt}/{len(GUARD_BACKOFF_S)} for {what} in {delay:g}s (last: {last})", file=sys.stderr)
+            time.sleep(delay)
+        try:
+            r = requests.get(url, timeout=30)
+        except requests.RequestException as e:
+            last = f"{type(e).__name__}: {e}"
+            continue
+        if r.status_code == 200:
+            try:
+                return r.json()
+            except ValueError as e:
+                last = f"invalid JSON ({e})"
+                continue
+        last = f"HTTP {r.status_code}"
+        if r.status_code < 500 and r.status_code != 429:
+            break  # definitive: retrying will not change it
+    raise RuntimeError(last)
+
+
+def last_completed_race_id():
+    """(raceId, name) of the race Jolpica most recently published results for --
+    the reference for "how fresh must the backend's data be". Deliberately NOT
+    taken from this repo's results.csv: if an ingest was missed, the repo and the
+    backend would be stale together and agree with each other."""
+    try:
+        payload = get_json_with_retry(f"https://api.jolpi.ca/ergast/f1/{SEASON}/last/results.json", "Jolpica last results")
+        races = payload["MRData"]["RaceTable"]["Races"]
+    except (RuntimeError, KeyError, TypeError) as e:
+        die(f"STALE-DATA GUARD: could not read Jolpica's last completed race ({e}), so data freshness "
+            "cannot be verified. Refusing to snapshot (nothing was written).")
+    if not races:
+        die("STALE-DATA GUARD: Jolpica returned no completed 2026 race. Refusing to snapshot.")
+    circuit = races[0]["Circuit"]["circuitId"]
+    for race in season_data.season_races(SEASON):
+        if JOLPICA_CIRCUIT_ALIAS.get(race["circuitRef"], race["circuitRef"]) == circuit:
+            return race["raceId"], race["name"]
+    die(f"STALE-DATA GUARD: Jolpica's last completed race (circuit {circuit}) is not in races.csv. "
+        "Refusing to snapshot (nothing was written).")
+
+
+def require_fresh_inputs(api_base):
+    """Abort -- before anything is computed or written -- unless the backend's
+    data horizon (/meta inputs_as_of.raceId) includes the last completed race.
+
+    A snapshot is supposed to be the model's forecast on everything known. If the
+    deployed backend has not picked up the latest race (a missed ingest, a Render
+    deploy that lagged), a pick would be silently stale AND frozen forever. The
+    abort exits non-zero, which opens the 'Snapshot pipeline FAILING' issue.
+    Returns the /meta payload. Fails closed: an unreachable /meta also aborts."""
+    try:
+        m = get_json_with_retry(f"{api_base}/meta", "API /meta")
+        horizon = int(m["inputs_as_of"]["raceId"])
+        m["model_version"]
+    except Exception as e:
+        die(f"STALE-DATA GUARD: could not read {api_base}/meta ({e!r}) -- cannot verify the backend's "
+            "data horizon. Refusing to snapshot (nothing was written).")
+    need_id, need_name = last_completed_race_id()
+    if horizon < need_id:
+        die(f"STALE-DATA GUARD: backend data ends at raceId {horizon} "
+            f"({m['inputs_as_of'].get('name')}) but the last completed race is raceId {need_id} "
+            f"({need_name}). The backend is serving stale data: ingest/redeploy first. "
+            "Refusing to snapshot (nothing was written).")
+    print(f"data horizon OK: backend includes raceId {horizon} (last completed: {need_id} {need_name})")
+    return m
+
+
 def check_access(url, key):
     """READ-ONLY check that the secret is present and is a secret key. Run on
     every scheduled workflow tick, so a missing/wrong SUPABASE_SECRET_KEY is
@@ -453,14 +539,12 @@ def main():
 
     wait_for_ready(api_base)
 
-    # Provenance: what produced this pick. /meta is the API's own statement of
-    # its model hash, deployed commit and newest input race.
-    try:
-        m = requests.get(f"{api_base}/meta", timeout=30).json()
-        PROVENANCE.update(model_version=m["model_version"], git_commit=m.get("git_commit"),
-                          inputs_as_of_race_id=m["inputs_as_of"]["raceId"])
-    except Exception as e:  # an older deploy without /meta: snapshot anyway, say so
-        print(f"WARNING: could not read {api_base}/meta ({e!r}); snapshot will carry no model_version", file=sys.stderr)
+    # Refuse to proceed on stale inputs (aborts + alerts via the workflow's
+    # failure issue), then record what produced this pick. /meta is the API's own
+    # statement of its model hash, deployed commit and newest input race.
+    m = require_fresh_inputs(api_base)
+    PROVENANCE.update(model_version=m["model_version"], git_commit=m.get("git_commit"),
+                      inputs_as_of_race_id=m["inputs_as_of"]["raceId"])
     if args.cutoff:
         PROVENANCE["cutoff_at"] = args.cutoff
 
