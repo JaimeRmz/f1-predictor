@@ -77,6 +77,17 @@ jobs:
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
         run: python backend/scripts/snapshot_model_pick.py --check-access
 
+      # The ONE definition of "dry run": event is workflow_dispatch AND the
+      # dry_run input is true. A scheduled run is never a dry run. Every later
+      # step reads steps.mode.outputs.dry, never the raw input.
+      - name: Resolve mode
+        id: mode
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_DRY_RUN: ${{ github.event.inputs.dry_run }}
+          INPUT_RACE_ID: ${{ github.event.inputs.race_id }}
+        run: python backend/scripts/resolve_run.py | tee -a "$GITHUB_OUTPUT"
+
       # Always runs. Scheduled ticks: is a race inside its snapshot window? Manual
       # dispatch: a forced race_id (window ignored, but the cutoff is derived
       # from Jolpica exactly as for a scheduled run, so cutoff_at is always
@@ -86,7 +97,7 @@ jobs:
         env:
           SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
           RACE_ID_INPUT: ${{ github.event.inputs.race_id }}
-          DRY_RUN_INPUT: ${{ github.event.inputs.dry_run }}
+          DRY: ${{ steps.mode.outputs.dry }}
         run: |
           if [ -n "$RACE_ID_INPUT" ]; then
             python backend/scripts/due_snapshot.py --season 2026 --race-id "$RACE_ID_INPUT"
@@ -95,7 +106,7 @@ jobs:
               echo "SUPABASE_PUBLISHABLE_KEY secret is not set (needed to read model_snapshots)"; exit 1
             fi
             NEXT=""
-            if [ "$DRY_RUN_INPUT" = "true" ]; then NEXT="--next"; fi
+            if [ "$DRY" = "true" ]; then NEXT="--next"; fi
             python backend/scripts/due_snapshot.py --season 2026 $NEXT
           fi
 
@@ -129,7 +140,7 @@ jobs:
         run: |
           set -o pipefail
           DRY=""
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then DRY="--dry-run"; fi
+          if [ "${{ steps.mode.outputs.dry }}" = "true" ]; then DRY="--dry-run"; fi
           CUT=""
           if [ -n "${{ steps.target.outputs.cutoff }}" ]; then CUT="--cutoff ${{ steps.target.outputs.cutoff }}"; fi
           python backend/scripts/snapshot_model_pick.py \
@@ -157,7 +168,7 @@ jobs:
       # Tells you what was frozen, so a pick you disagree with can still be
       # replaced with --force while the cutoff is ahead of you.
       - name: Report what was frozen
-        if: success() && steps.target.outputs.action == 'write' && github.event.inputs.dry_run != 'true'
+        if: success() && steps.target.outputs.action == 'write' && steps.mode.outputs.dry != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

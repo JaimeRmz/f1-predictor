@@ -9,10 +9,13 @@ stdout, appended to $GITHUB_STEP_SUMMARY by the caller.
 """
 import os
 
+from resolve_run import resolve
+
 
 def classify(env):
     event, race_id = env.get("EVENT", ""), env.get("INPUT_RACE_ID", "")
-    dry = env.get("INPUT_DRY_RUN", "") == "true"
+    # Same single rule as the workflow's 'Resolve mode' step (resolve_run.py).
+    dry = resolve(event, env.get("INPUT_DRY_RUN", ""), race_id)["dry"] == "true"
     action = env.get("ACTION", "")
     if event == "workflow_dispatch" and race_id:
         path = f"FORCED race_id={race_id} (snapshot window ignored; cutoff still derived from Jolpica)"
