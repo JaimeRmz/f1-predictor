@@ -380,24 +380,51 @@ def run_single(args, supa, api_base):
 JOLPICA_CIRCUIT_ALIAS = {"madrid": "madring"}
 
 
+# The guard's two reads (the API's /meta and Jolpica) are retried before the job
+# fails: one transient 502 or timeout must not cost a snapshot, but a persistent
+# failure must still abort. 3 retries after the first attempt, with backoff.
+# GUARD_BACKOFF_S="0,0,0" makes tests instant.
+GUARD_BACKOFF_S = tuple(float(x) for x in os.environ.get("GUARD_BACKOFF_S", "3,9,27").split(","))
+
+
+def get_json_with_retry(url, what):
+    """GET url -> parsed JSON. Retries (len(GUARD_BACKOFF_S) times) on network
+    errors, 5xx/429 and bad JSON; a definitive 4xx fails at once. Returns the
+    payload or raises RuntimeError with the last reason."""
+    last = "no attempt made"
+    for attempt in range(len(GUARD_BACKOFF_S) + 1):
+        if attempt:
+            delay = GUARD_BACKOFF_S[attempt - 1]
+            print(f"  retry {attempt}/{len(GUARD_BACKOFF_S)} for {what} in {delay:g}s (last: {last})", file=sys.stderr)
+            time.sleep(delay)
+        try:
+            r = requests.get(url, timeout=30)
+        except requests.RequestException as e:
+            last = f"{type(e).__name__}: {e}"
+            continue
+        if r.status_code == 200:
+            try:
+                return r.json()
+            except ValueError as e:
+                last = f"invalid JSON ({e})"
+                continue
+        last = f"HTTP {r.status_code}"
+        if r.status_code < 500 and r.status_code != 429:
+            break  # definitive: retrying will not change it
+    raise RuntimeError(last)
+
+
 def last_completed_race_id():
     """(raceId, name) of the race Jolpica most recently published results for --
     the reference for "how fresh must the backend's data be". Deliberately NOT
     taken from this repo's results.csv: if an ingest was missed, the repo and the
     backend would be stale together and agree with each other."""
-    r = None
-    for attempt in range(4):
-        try:
-            r = requests.get(f"https://api.jolpi.ca/ergast/f1/{SEASON}/last/results.json", timeout=30)
-            if r.status_code == 200:
-                break
-        except requests.RequestException:
-            pass
-        time.sleep(2 * (attempt + 1))
-    if r is None or r.status_code != 200:
-        die("STALE-DATA GUARD: could not read Jolpica's last completed race, so data freshness "
+    try:
+        payload = get_json_with_retry(f"https://api.jolpi.ca/ergast/f1/{SEASON}/last/results.json", "Jolpica last results")
+        races = payload["MRData"]["RaceTable"]["Races"]
+    except (RuntimeError, KeyError, TypeError) as e:
+        die(f"STALE-DATA GUARD: could not read Jolpica's last completed race ({e}), so data freshness "
             "cannot be verified. Refusing to snapshot (nothing was written).")
-    races = r.json()["MRData"]["RaceTable"]["Races"]
     if not races:
         die("STALE-DATA GUARD: Jolpica returned no completed 2026 race. Refusing to snapshot.")
     circuit = races[0]["Circuit"]["circuitId"]
@@ -418,7 +445,7 @@ def require_fresh_inputs(api_base):
     abort exits non-zero, which opens the 'Snapshot pipeline FAILING' issue.
     Returns the /meta payload. Fails closed: an unreachable /meta also aborts."""
     try:
-        m = requests.get(f"{api_base}/meta", timeout=30).json()
+        m = get_json_with_retry(f"{api_base}/meta", "API /meta")
         horizon = int(m["inputs_as_of"]["raceId"])
         m["model_version"]
     except Exception as e:
