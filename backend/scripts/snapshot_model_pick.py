@@ -48,6 +48,8 @@ import time
 
 import requests
 
+import season_data
+
 DEFAULT_SUPABASE_URL = "https://ykpkieabxvipkyyynypr.supabase.co"
 DEFAULT_API_BASE = os.environ.get("MODEL_API_URL", "http://127.0.0.1:8000")
 
@@ -105,32 +107,24 @@ COMPLETED_IDS = {rid for rid, _, _ in COMPLETED_2026}
 RACE_NAME = {rid: name for rid, _, name in COMPLETED_2026}
 RACE_ROUND = {rid: rnd for rid, rnd, _ in COMPLETED_2026}
 
-# Upcoming races → circuitRef, for the /whatif path (mirror of UPCOMING_RACES_2026).
-# 1183-1187 are completed -- dropped from here the same way 1181/1182 were
-# dropped before. 1186/1187 have no snapshot (see the note above).
-UPCOMING_CIRCUIT = {
-    1188: "interlagos", 1189: "las_vegas", 1190: "losail", 1191: "yas_marina",
-}
-UPCOMING_NAME = {
-    1188: "Brazilian GP", 1189: "Las Vegas GP", 1190: "Qatar GP", 1191: "Abu Dhabi GP",
-}
+# Upcoming races and the entry list are DERIVED from the committed CSVs
+# (season_data.py), not kept in dicts that need editing after every race. A race
+# with result rows (1180, 1184-1187 included) is not "upcoming", so it can never
+# be snapshotted through the /whatif path -- which is also what keeps a late
+# hindsight pick for a missed race out of the table.
+SEASON = 2026
 
-# Driver roster for /whatif (mirror of STANDINGS_GRID_2026): driverRef + a
-# starting grid guess. auto_quali=true means the qualifying model re-predicts
-# the grid, so these grid values are only a fallback seed.
-# Reflects the lineup as of Baku (raceId 1183, round 15) onward: Hadjar back
-# at Red Bull, Lawson back at Racing Bulls, Tsunoda out of the grid entirely
-# (confirmed against Jolpica results for raceIds 1183/1184/1185) -- the
-# Zandvoort (round 12) swap this list had before has reversed. See the same
-# note on STANDINGS_GRID_2026 in constants.js.
-ROSTER = [
-    ("antonelli", 1), ("russell", 2), ("hamilton", 3), ("max_verstappen", 4),
-    ("leclerc", 5), ("norris", 6), ("piastri", 7), ("hadjar", 8),
-    ("lawson", 9), ("gasly", 10), ("lindblad", 11), ("colapinto", 12),
-    ("bearman", 13), ("hulkenberg", 14), ("bortoleto", 15), ("ocon", 16),
-    ("alonso", 17), ("sainz", 18), ("albon", 19), ("stroll", 20),
-    ("bottas", 21), ("perez", 22),
-]
+
+def upcoming_by_id():
+    return {r["raceId"]: r for r in season_data.upcoming_races(SEASON)}
+
+
+# Written alongside the picks when the model_snapshots table has the columns
+# (supabase/migrations/00007_snapshot_provenance.sql). If the migration has not
+# been applied yet the insert is retried without them -- losing the provenance
+# is better than losing the snapshot to a schema lag.
+PROVENANCE_KEYS = ("model_version", "git_commit", "inputs_as_of_race_id", "cutoff_at", "source")
+PROVENANCE = {}
 
 
 def die(msg, code=1):
@@ -190,16 +184,22 @@ def predict_completed(api_base, race_id):
     data = r.json()
     if isinstance(data, dict) and data.get("error"):
         die(f"/predict/{race_id}: {data['error']}")
+    PROVENANCE["source"] = "predict_real_grid"
     return top3_from_records(data)
 
 
 def predict_upcoming(api_base, race_id):
     """Model pick for an upcoming race with no result rows yet (uses /whatif
     with auto_quali, so the grid is the model's own predicted qualifying)."""
-    circuit = UPCOMING_CIRCUIT.get(race_id)
-    if not circuit:
-        die(f"raceId {race_id} isn't a known upcoming race (no circuitRef mapping)")
-    body = [{"driverRef": ref, "grid": grid} for ref, grid in ROSTER]
+    race = upcoming_by_id().get(race_id)
+    if not race:
+        die(f"raceId {race_id} isn't an upcoming {SEASON} race (it has result rows, or isn't in races.csv)")
+    circuit = race["circuitRef"]
+    roster = season_data.roster(SEASON)
+    if len(roster) < 20:
+        die(f"derived roster has only {len(roster)} drivers -- refusing to snapshot on a partial entry list")
+    PROVENANCE["source"] = "whatif_auto_quali"
+    body = [{"driverRef": ref, "grid": grid} for ref, grid in roster]
     r = requests.post(
         f"{api_base}/whatif",
         params={"circuitRef": circuit, "auto_quali": "true"},
@@ -234,12 +234,26 @@ class Supa:
             die(f"reading model_snapshots (race {race_id}) failed: HTTP {r.status_code}: {r.text[:200]}")
         return r.json()
 
+    @staticmethod
+    def _missing_column(r):
+        return r.status_code == 400 and "PGRST204" in r.text
+
     def insert(self, row):
         r = requests.post(
             f"{self.base}/model_snapshots",
             headers={**self.h, "Prefer": "return=representation"},
             json=row, timeout=20,
         )
+        if self._missing_column(r):
+            base = {k: v for k, v in row.items() if k not in PROVENANCE_KEYS}
+            print("WARNING: model_snapshots has no provenance columns yet (apply "
+                  "supabase/migrations/00007_snapshot_provenance.sql). Inserting the pick WITHOUT "
+                  f"model_version/as-of -- dropped: {sorted(set(row) - set(base))}", file=sys.stderr)
+            r = requests.post(
+                f"{self.base}/model_snapshots",
+                headers={**self.h, "Prefer": "return=representation"},
+                json=base, timeout=20,
+            )
         if r.status_code not in (200, 201):
             die(f"insert (race {row['race_id']}) failed: HTTP {r.status_code}: {r.text[:300]}")
 
@@ -250,6 +264,15 @@ class Supa:
             headers={**self.h, "Prefer": "return=representation"},
             json=row, timeout=20,
         )
+        if self._missing_column(r):
+            base = {k: v for k, v in row.items() if k not in PROVENANCE_KEYS}
+            print("WARNING: model_snapshots has no provenance columns yet; updating without them.", file=sys.stderr)
+            r = requests.patch(
+                f"{self.base}/model_snapshots",
+                params={"race_id": f"eq.{race_id}"},
+                headers={**self.h, "Prefer": "return=representation"},
+                json=base, timeout=20,
+            )
         if r.status_code not in (200, 204):
             die(f"update (race {race_id}) failed: HTTP {r.status_code}: {r.text[:300]}")
 
@@ -303,6 +326,7 @@ def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *
         "p1_win": round(wins[refs[0]], 4), "p1_podium": round(probs[refs[0]], 4),
         "p2_win": round(wins[refs[1]], 4), "p2_podium": round(probs[refs[1]], 4),
         "p3_win": round(wins[refs[2]], 4), "p3_podium": round(probs[refs[2]], 4),
+        **{k: v for k, v in PROVENANCE.items() if k in PROVENANCE_KEYS and v is not None},
     }
     if dry_run:
         return "DRY-RUN (no write)"
@@ -333,7 +357,8 @@ def run_single(args, supa, api_base):
     upcoming = race_id not in COMPLETED_IDS
     if upcoming:
         refs, names, probs, wins, podium_refs = predict_upcoming(api_base, race_id)
-        rnd, name = "—", UPCOMING_NAME.get(race_id, f"race {race_id}")
+        race = upcoming_by_id().get(race_id, {})
+        rnd, name = race.get("round", "—"), race.get("name", f"race {race_id}")
         source = "/whatif auto-quali"
     else:
         refs, names, probs, wins, podium_refs = predict_completed(api_base, race_id)
@@ -350,15 +375,53 @@ def run_single(args, supa, api_base):
     print()
 
 
+def check_access(url, key):
+    """Prove the secret can do what a snapshot needs, WITHOUT creating a row.
+    Run on every scheduled workflow tick, so a missing/wrong SUPABASE_SECRET_KEY
+    is found weeks before a cutoff, not at it (that is how the US and Mexico
+    City snapshots were lost: the write step failed on every attempt).
+
+    read   GET  model_snapshots              -> key is a valid project key
+    write  PATCH race_id=eq.-1 (matches none)-> role may UPDATE the table
+    A bad key gives 401/403 on both; a publishable key passes the read but is
+    refused the write. INSERT itself cannot be probed without inserting."""
+    if not key:
+        die("SUPABASE_SECRET_KEY is empty or unset. Add it under GitHub -> Settings -> "
+            "Secrets and variables -> Actions (the service-role secret key, not the publishable one).")
+    h = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    base = f"{url.rstrip('/')}/rest/v1/model_snapshots"
+    r = requests.get(base, params={"select": "race_id", "limit": "1"}, headers=h, timeout=20)
+    if r.status_code != 200:
+        die(f"SUPABASE_SECRET_KEY cannot read model_snapshots: HTTP {r.status_code} {r.text[:160]} -- "
+            "the secret is wrong, truncated, or for a different project")
+    r = requests.patch(base, params={"race_id": "eq.-1"}, headers={**h, "Prefer": "return=minimal"},
+                       json={"p1_win": 0}, timeout=20)
+    if r.status_code not in (200, 204):
+        die(f"SUPABASE_SECRET_KEY can read but not write model_snapshots: HTTP {r.status_code} "
+            f"{r.text[:160]} -- is it the PUBLISHABLE key by mistake? the service role needs the grants "
+            "in supabase/migrations/00003 and 00005")
+    print("supabase access OK: secret key can read and write model_snapshots")
+
+
 def main():
     ap = argparse.ArgumentParser(description="Snapshot the model's top-3 podium pick into Supabase.")
-    mode = ap.add_mutually_exclusive_group(required=True)
+    ap.add_argument("--check-access", action="store_true",
+                    help="verify the Supabase secret works (read + write probe, no row created) and exit")
+    ap.add_argument("--cutoff", help="the real cutoff (ISO-8601 UTC) this snapshot is frozen against; stored as cutoff_at")
+    mode = ap.add_mutually_exclusive_group(required=False)
     mode.add_argument("--backfill", action="store_true", help="snapshot all completed 2026 races")
     mode.add_argument("--race-id", type=int, help="snapshot a single race")
     ap.add_argument("--force", action="store_true", help="(--race-id) overwrite an existing snapshot")
     ap.add_argument("--dry-run", action="store_true", help="print picks but write nothing (no secret needed)")
     ap.add_argument("--api-base", default=DEFAULT_API_BASE, help="model API base URL")
     args = ap.parse_args()
+
+    if args.check_access:
+        check_access(os.environ.get("SUPABASE_URL", DEFAULT_SUPABASE_URL),
+                     os.environ.get("SUPABASE_SECRET_KEY"))
+        return
+    if not args.backfill and not args.race_id:
+        ap.error("one of --backfill / --race-id (or --check-access) is required")
 
     if args.force and args.backfill:
         die("--force applies only to --race-id, not --backfill")
@@ -375,6 +438,17 @@ def main():
         supa = Supa(supa_url, key)
 
     wait_for_ready(api_base)
+
+    # Provenance: what produced this pick. /meta is the API's own statement of
+    # its model hash, deployed commit and newest input race.
+    try:
+        m = requests.get(f"{api_base}/meta", timeout=30).json()
+        PROVENANCE.update(model_version=m["model_version"], git_commit=m.get("git_commit"),
+                          inputs_as_of_race_id=m["inputs_as_of"]["raceId"])
+    except Exception as e:  # an older deploy without /meta: snapshot anyway, say so
+        print(f"WARNING: could not read {api_base}/meta ({e!r}); snapshot will carry no model_version", file=sys.stderr)
+    if args.cutoff:
+        PROVENANCE["cutoff_at"] = args.cutoff
 
     if args.backfill:
         run_backfill(args, supa, api_base)

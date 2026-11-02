@@ -126,7 +126,7 @@ export const glassStyle = (tint, { glow = true } = {}) => ({
 // ── Constants shared by Predictor + Season2026 pages ───────────
 export const UPCOMING_RACES_2026 = [
   { raceId: 1188, round: 20, name: "Brazilian Grand Prix",       circuit: "São Paulo",   circuitRef: "interlagos",   date: "Nov 8"  },
-  { raceId: 1189, round: 21, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "las_vegas",    date: "Nov 22" },
+  { raceId: 1189, round: 21, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "vegas",        date: "Nov 22" },
   { raceId: 1190, round: 22, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29" },
   { raceId: 1191, round: 23, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina",  circuitRef: "yas_marina",   date: "Dec 6"  },
 ];
@@ -141,7 +141,7 @@ export const SITE_URL = "https://f1predictor.app";
 export const CIRCUIT_COUNTRY = {
   hungaroring: "hu", zandvoort: "nl", monza: "it", madrid: "es", baku: "az",
   sepang: "my", marina_bay: "sg", americas: "us", rodriguez: "mx", interlagos: "br",
-  las_vegas: "us", losail: "qa", yas_marina: "ae",
+  vegas: "us", las_vegas: "us", losail: "qa", yas_marina: "ae",
 };
 
 // Flag image URL for a circuit (flagcdn.com, CORS-enabled so html-to-image can

@@ -99,6 +99,15 @@ def _load():
         quali_driver_champ_pos = L["quali_driver_champ_pos"]
         quali_constructor_champ_pos = L["quali_constructor_champ_pos"]
         df = _df
+        # Identity of what answers requests, recorded with every frozen
+        # snapshot (see /meta). Hashing the artifacts means "which model made
+        # this pick" is a fact about the bytes, not a label someone must bump.
+        import hashlib
+        h = hashlib.sha256()
+        for name in ("features.pkl", "podium_model.pkl", "quali_features.pkl", "quali_model.pkl", "winner_model.pkl"):
+            with open(os.path.join(BASE_DIR, name), "rb") as fh:
+                h.update(fh.read())
+        STATE["model_version"] = "m-" + h.hexdigest()[:12]
         STATE["models_ready"] = True
         print(f"[startup] READY — total {(time.perf_counter() - t0) * 1000:.1f} ms", flush=True)
     except Exception as e:  # never crash the process — let "/" report the failure
@@ -160,6 +169,24 @@ def get_quali_features_for_driver(driver_ref: str, circuit_ref: str = ""):
         "constructor_championship_position": quali_constructor_champ_pos.get(constructor_ref, 6),
     }
     return feat, latest
+
+@app.get("/meta")
+def meta():
+    """What produced the predictions this process serves: model artifact hash,
+    deployed commit (Render sets RENDER_GIT_COMMIT), and the newest race in the
+    input data. Snapshots store these so a frozen pick can be traced later."""
+    require_ready()
+    last = df.sort_values(["year", "round"]).iloc[-1]
+    return {
+        "model_version": STATE["model_version"],
+        "git_commit": os.environ.get("RENDER_GIT_COMMIT"),
+        "data_rows": int(len(df)),
+        "inputs_as_of": {
+            "raceId": int(last["raceId"]), "year": int(last["year"]),
+            "round": int(last["round"]), "name": str(last["name_race"]),
+        },
+    }
+
 
 @app.get("/")
 async def root():
