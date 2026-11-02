@@ -449,6 +449,22 @@ def validate_one(season, rnd, race_id):
                                  f"committed={crow[i]!r} api={arow[i]!r} "
                                  f"(timing detail intentionally not tracked — accepted, not a mismatch)")
                     continue
+                # results.csv "position" is NULL for a non-classified driver in
+                # some committed rows (original Ergast convention, and this
+                # script's own pre-2026-10-19 output) and numeric in others
+                # (Jolpica always sends a number). The substantive facts live
+                # in positionText (R/D/W/...) and positionOrder, which ARE
+                # compared; nothing in the backend reads "position". So NULL
+                # committed vs numeric API, on a row whose positionText is
+                # not a digit, is informational. The reverse (numeric
+                # committed vs NULL API) and any positionText/positionOrder
+                # difference still fail.
+                if (fname == "results.csv" and col == "position" and crow[i] == NULL
+                        and arow[i].isdigit() and not crow[header.index("positionText")].isdigit()):
+                    notes.append(f"  [{fname}] {col_label(fname, k)} · position: "
+                                 f"committed={crow[i]!r} api={arow[i]!r} "
+                                 f"(non-classified, positionText/positionOrder agree — accepted, not a mismatch)")
+                    continue
                 print(f"  [{fname}] {col_label(fname, k)} · {col}: "
                       f"committed={crow[i]!r}  api={arow[i]!r}")
                 file_mismatch += 1
