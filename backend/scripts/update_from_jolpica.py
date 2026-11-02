@@ -5,9 +5,12 @@ existing CSV format.
 
 Usage:
   python update_from_jolpica.py --season 2026 --round 11   # append a real race
-  python update_from_jolpica.py --validate                 # self-check vs the
-                                                            # already-committed
-                                                            # Belgian GP (2026 R10)
+  python update_from_jolpica.py --validate                 # self-check every
+                                                            # ingested 2026 race
+                                                            # (discovered from
+                                                            # results.csv, not
+                                                            # a hardcoded list)
+                                                            # against Jolpica
 
 Design constraints (deliberate):
   * IDs are looked up from the repo CSVs, never taken from the API:
@@ -30,6 +33,7 @@ import csv
 import io
 import os
 import sys
+import time
 
 import requests
 
@@ -166,11 +170,30 @@ def status_id_for(status_text, laps, winner_laps):
 
 
 # ── API fetch ───────────────────────────────────────────────────────────────
-def fetch(season, rnd, endpoint):
+# Paced + retried: --validate now calls this ~4x per race across every
+# ingested 2026 race (not just one), and firing that many requests back to
+# back previously got rate-limited into empty response bodies ("Expecting
+# value: line 1 column 1" JSON errors). A short delay between calls plus a
+# few retries on a transient/empty response fixes that without needing a
+# season-validate-specific code path.
+_FETCH_DELAY_S = 1.0
+
+
+def fetch(season, rnd, endpoint, tries=4):
     url = f"{BASE_URL}/{season}/{rnd}/{endpoint}.json"
-    r = requests.get(url, timeout=30)
-    r.raise_for_status()
-    return r.json()["MRData"]
+    last_err = None
+    for attempt in range(tries):
+        if attempt > 0:
+            time.sleep(_FETCH_DELAY_S * (2 ** (attempt - 1)))  # 1s, 2s, 4s...
+        try:
+            r = requests.get(url, timeout=30)
+            r.raise_for_status()
+            data = r.json()["MRData"]
+            time.sleep(_FETCH_DELAY_S)
+            return data
+        except (requests.RequestException, ValueError) as e:
+            last_err = e
+    raise MappingError(f"fetch {url} failed after {tries} attempts: {last_err}")
 
 
 def get_race(mrdata):
@@ -187,15 +210,23 @@ def build_results(season, rnd, race_id):
     winner_laps = max(int(x["laps"]) for x in items)
     rows = []
     for x in items:
-        ptext = x["positionText"]
         rows.append({
             "raceId": race_id,
             "driverId": resolve_driver(x["Driver"]["driverId"]),
             "constructorId": resolve_constructor(x["Constructor"]["constructorId"]),
             "number": x["number"],
             "grid": x["grid"],
-            "position": ptext if ptext.isdigit() else NULL,
-            "positionText": ptext,
+            # Ergast/Jolpica's "position" is the classified finishing order and
+            # is numeric even for most retirements/DNS entries (e.g. a driver
+            # who completed most of the race before retiring still gets a
+            # real classified position, with positionText="R" marking HOW they
+            # finished, not whether they got a position at all) -- matches
+            # this repo's own committed convention. Previously this derived
+            # "position" from positionText.isdigit(), which wrongly nulled it
+            # out for every non-classified-finish driver regardless of
+            # whether the API actually had a real position for them.
+            "position": x["position"],
+            "positionText": x["positionText"],
             "positionOrder": x["position"],
             "points": x["points"],
             "laps": x["laps"],
@@ -231,8 +262,15 @@ def build_driver_standings(season, rnd, race_id):
             "raceId": race_id,
             "driverId": resolve_driver(x["Driver"]["driverId"]),
             "points": x["points"],
-            "position": x["position"],
-            "positionText": x["positionText"],
+            # Jolpica sometimes omits "position" entirely for a driver tied at
+            # the bottom (observed 2026 R1: 'stroll' at 0 points, positionText
+            # "-") instead of giving every tied driver a distinct tie-broken
+            # number. Falls back to this repo's own \N convention for that
+            # case rather than crashing; validate_one() treats a tied-at-0
+            # position/positionText difference as informational, not a
+            # mismatch, since no points or real ranking is in dispute.
+            "position": x.get("position", NULL),
+            "positionText": x.get("positionText", "-"),
             "wins": x["wins"],
         })
     return rows
@@ -248,8 +286,10 @@ def build_constructor_standings(season, rnd, race_id):
             "raceId": race_id,
             "constructorId": resolve_constructor(x["Constructor"]["constructorId"]),
             "points": x["points"],
-            "position": x["position"],
-            "positionText": x["positionText"],
+            # See the matching comment in build_driver_standings — same
+            # tied-at-the-bottom omission is possible here in principle.
+            "position": x.get("position", NULL),
+            "positionText": x.get("positionText", "-"),
             "wins": x["wins"],
         })
     return rows
@@ -311,15 +351,27 @@ def cmd_append(season, rnd):
           "separate, explicit step — not run here.")
 
 
-def cmd_validate():
-    """Build rows for the Belgian GP (2026 R10) and diff, field by field, against
-    the already-committed rows for its raceId. Surrogate id columns are ignored
-    (positional). Reports every mismatch; exit code 1 if any."""
-    season, rnd = 2026, 10
-    race_id = resolve_race_id(season, rnd)
-    print(f"VALIDATE: 2026 round 10 (Belgian GP) -> raceId {race_id}")
-    print("Comparing API-derived rows against committed CSV rows "
-          "(ignoring surrogate id column).\n")
+def ingested_2026_races():
+    """Every 2026 (season, round, raceId) that's actually been ingested —
+    i.e. has committed results.csv rows — sorted by round. Discovered from
+    the data itself (not a hardcoded list), so a newly-ingested race is
+    automatically in scope next time --validate runs."""
+    rheader, rrows, _, _ = read_rows("races.csv")
+    yi, ri, idi = rheader.index("year"), rheader.index("round"), rheader.index("raceId")
+    races_2026 = {r[idi]: (int(r[yi]), int(r[ri])) for r in rrows if r[yi] == "2026"}
+
+    _, result_rows, _, _ = read_rows("results.csv")
+    ingested_ids = {r[1] for r in result_rows if r[1] in races_2026}
+
+    out = [(races_2026[rid][0], races_2026[rid][1], rid) for rid in ingested_ids]
+    out.sort(key=lambda t: t[1])  # by round
+    return out
+
+
+def validate_one(season, rnd, race_id):
+    """Build rows for one race and diff, field by field, against the already-
+    committed rows for its raceId. Surrogate id columns are ignored
+    (positional). Returns (total_mismatch, notes) for that race."""
     built = build_all(season, rnd, race_id)
 
     total_mismatch = 0
@@ -356,25 +408,85 @@ def cmd_validate():
                                  f"committed={crow[i]!r} api={arow[i]!r} "
                                  f"(both DNF / is_dnf=1 — accepted, not a mismatch)")
                     continue
+                # position/positionText are allowed to differ among drivers or
+                # constructors tied at 0 CHAMPIONSHIP points in the standings
+                # tables specifically: Jolpica's and our own tie-breaking among
+                # equal-points standings entries are both arbitrary (no real
+                # ranking is being disputed), and Jolpica doesn't even
+                # tie-break them the same way every time (round 1 2026: one
+                # tied driver gets no "position" at all -- see
+                # build_driver_standings). Deliberately NOT applied to
+                # results.csv: a driver scoring 0 points in a single race
+                # (anyone outside the top 10) is common and unrelated to
+                # whether they were classified or retired -- that distinction
+                # is exactly the kind of thing this check needs to catch, not
+                # hide. General rule, not a per-driver allowlist.
+                if (fname in ("driver_standings.csv", "constructor_standings.csv")
+                        and col in ("position", "positionText")):
+                    points_i = header.index("points")
+                    if crow[points_i] == "0" and arow[points_i] == "0":
+                        notes.append(f"  [{fname}] {col_label(fname, k)} · {col}: "
+                                     f"committed={crow[i]!r} api={arow[i]!r} "
+                                     f"(both tied at 0 points — accepted, not a mismatch)")
+                        continue
+                # Timing detail (results.csv time/milliseconds/fastestLap/rank/
+                # fastestLapTime/fastestLapSpeed; qualifying.csv q1/q2/q3) is
+                # deliberately written as \N by THIS script's own cmd_append
+                # (see the module docstring) -- Jolpica has the real values,
+                # we just choose not to store them. Races ingested a different
+                # way (the original bulk refresh) DO have real values
+                # committed, so comparing them against our own script's \N
+                # would always "mismatch" on a column we never intended to
+                # populate. General rule: API says \N here -> informational,
+                # regardless of what's committed.
+                timing_cols = {
+                    "results.csv": {"time", "milliseconds", "fastestLap", "rank",
+                                     "fastestLapTime", "fastestLapSpeed"},
+                    "qualifying.csv": {"q1", "q2", "q3"},
+                }
+                if col in timing_cols.get(fname, ()) and arow[i] == NULL:
+                    notes.append(f"  [{fname}] {col_label(fname, k)} · {col}: "
+                                 f"committed={crow[i]!r} api={arow[i]!r} "
+                                 f"(timing detail intentionally not tracked — accepted, not a mismatch)")
+                    continue
                 print(f"  [{fname}] {col_label(fname, k)} · {col}: "
                       f"committed={crow[i]!r}  api={arow[i]!r}")
                 file_mismatch += 1
         tag = "OK" if file_mismatch == 0 else f"{file_mismatch} MISMATCH(ES)"
-        print(f"  -> {fname}: {len(committed)} committed / {len(api)} api rows — {tag}\n")
+        print(f"  -> {fname}: {len(committed)} committed / {len(api)} api rows — {tag}")
         total_mismatch += file_mismatch
 
     if notes:
-        print("Informational (DNF-equivalent statusId differences, not counted):")
+        print("  Informational (DNF-equivalent / 0-point-tie differences, not counted):")
         for n in notes:
-            print(n)
+            print(" " + n)
+    return total_mismatch, notes
+
+
+def cmd_validate():
+    """Scan EVERY ingested 2026 race (not just one) and diff each, field by
+    field, against Jolpica. Exit code 1 if any race has a mismatch."""
+    races = ingested_2026_races()
+    print(f"VALIDATE: {len(races)} ingested 2026 race(s) -> comparing API-derived "
+          "rows against committed CSV rows (ignoring surrogate id column).\n")
+
+    total_mismatch = 0
+    failed_races = []
+    for season, rnd, race_id in races:
+        print(f"--- round {rnd} (raceId {race_id}) ---")
+        file_mismatch, _ = validate_one(season, rnd, race_id)
+        total_mismatch += file_mismatch
+        if file_mismatch:
+            failed_races.append((rnd, race_id, file_mismatch))
         print()
 
     if total_mismatch == 0:
-        print("VALIDATE PASSED — API-derived rows match committed Belgian GP "
+        print(f"VALIDATE PASSED — all {len(races)} ingested 2026 races match Jolpica "
               "(statusId differences that preserve is_dnf are accepted).")
         return 0
-    print(f"VALIDATE FAILED — {total_mismatch} field mismatch(es). "
-          "Investigate before trusting on an unchecked race.")
+    print(f"VALIDATE FAILED — {total_mismatch} field mismatch(es) across "
+          f"{len(failed_races)} race(s): " +
+          ", ".join(f"round {rnd} (raceId {rid}, {n})" for rnd, rid, n in failed_races))
     return 1
 
 
@@ -389,7 +501,7 @@ def main():
     ap.add_argument("--season", type=int, help="season year, e.g. 2026")
     ap.add_argument("--round", type=int, help="round number, e.g. 11")
     ap.add_argument("--validate", action="store_true",
-                    help="self-check against the committed Belgian GP (2026 R10); writes nothing")
+                    help="self-check every ingested 2026 race against Jolpica; writes nothing")
     args = ap.parse_args()
 
     _init_lookups()
