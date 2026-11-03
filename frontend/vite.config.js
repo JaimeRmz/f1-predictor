@@ -22,6 +22,18 @@ const cacheImageAssets = () => ({
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), cacheImageAssets()],
+  // Stage 2 design previews are extra entry pages next to the live app's index.html. The live entry is unchanged.
+  // (Task 2 branches from here and removes these inputs again; do not merge this branch.)
+  build: {
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        'design-a': 'design-a.html',
+        'design-b': 'design-b.html',
+        'design-c': 'design-c.html',
+      },
+    },
+  },
   server: {
     host: true,
     // Allow serving the repo-root data/ dir (one level above this Vite root) so

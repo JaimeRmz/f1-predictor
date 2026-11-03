@@ -1,0 +1,785 @@
+{
+ "MOCK": true,
+ "label": "MOCK DATA - NOT A REAL SESSION",
+ "session": "Mock Race",
+ "total_laps": 71,
+ "drivers": {
+  "ANT": {
+   "name": "Kimi Antonelli",
+   "team": "Mercedes",
+   "color": "#00d2be"
+  },
+  "VER": {
+   "name": "Max Verstappen",
+   "team": "Red Bull",
+   "color": "#3671c6"
+  },
+  "RUS": {
+   "name": "George Russell",
+   "team": "Mercedes",
+   "color": "#00d2be"
+  },
+  "LEC": {
+   "name": "Charles Leclerc",
+   "team": "Ferrari",
+   "color": "#e10600"
+  },
+  "HAM": {
+   "name": "Lewis Hamilton",
+   "team": "Ferrari",
+   "color": "#e10600"
+  },
+  "NOR": {
+   "name": "Lando Norris",
+   "team": "McLaren",
+   "color": "#ff8000"
+  },
+  "HAD": {
+   "name": "Isack Hadjar",
+   "team": "Red Bull",
+   "color": "#3671c6"
+  },
+  "PIA": {
+   "name": "Oscar Piastri",
+   "team": "McLaren",
+   "color": "#ff8000"
+  },
+  "HUL": {
+   "name": "Nico Hülkenberg",
+   "team": "Audi",
+   "color": "#b7babd"
+  },
+  "LAW": {
+   "name": "Liam Lawson",
+   "team": "Racing Bulls",
+   "color": "#6692ff"
+  },
+  "LIN": {
+   "name": "Arvid Lindblad",
+   "team": "Racing Bulls",
+   "color": "#6692ff"
+  },
+  "BOR": {
+   "name": "Gabriel Bortoleto",
+   "team": "Audi",
+   "color": "#b7babd"
+  },
+  "GAS": {
+   "name": "Pierre Gasly",
+   "team": "Alpine",
+   "color": "#0093cc"
+  },
+  "COL": {
+   "name": "Franco Colapinto",
+   "team": "Alpine",
+   "color": "#0093cc"
+  },
+  "BEA": {
+   "name": "Oliver Bearman",
+   "team": "Haas",
+   "color": "#b6babd"
+  },
+  "OCO": {
+   "name": "Esteban Ocon",
+   "team": "Haas",
+   "color": "#b6babd"
+  },
+  "ALO": {
+   "name": "Fernando Alonso",
+   "team": "Aston Martin",
+   "color": "#358c75"
+  },
+  "SAI": {
+   "name": "Carlos Sainz",
+   "team": "Williams",
+   "color": "#37bedd"
+  },
+  "ALB": {
+   "name": "Alexander Albon",
+   "team": "Williams",
+   "color": "#37bedd"
+  },
+  "STR": {
+   "name": "Lance Stroll",
+   "team": "Aston Martin",
+   "color": "#358c75"
+  },
+  "PER": {
+   "name": "Sergio Pérez",
+   "team": "Cadillac",
+   "color": "#c8102e"
+  },
+  "BOT": {
+   "name": "Valtteri Bottas",
+   "team": "Cadillac",
+   "color": "#c8102e"
+  }
+ },
+ "frames": [
+  {
+   "lap": 1,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "NOR",
+    "HAD",
+    "PIA",
+    "HUL",
+    "LAW",
+    "LIN",
+    "BOR",
+    "GAS",
+    "BEA",
+    "COL",
+    "OCO",
+    "ALO",
+    "SAI",
+    "ALB",
+    "STR",
+    "PER",
+    "BOT"
+   ],
+   "track_c": 30.7,
+   "air_c": 24.1,
+   "humidity": 58,
+   "wind_ms": 2.3,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    }
+   ]
+  },
+  {
+   "lap": 3,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "NOR",
+    "HAD",
+    "PIA",
+    "HUL",
+    "LAW",
+    "LIN",
+    "BOR",
+    "GAS",
+    "BEA",
+    "OCO",
+    "COL",
+    "SAI",
+    "ALO",
+    "ALB",
+    "PER",
+    "STR",
+    "BOT"
+   ],
+   "track_c": 31.3,
+   "air_c": 24.1,
+   "humidity": 58,
+   "wind_ms": 2.0,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    }
+   ]
+  },
+  {
+   "lap": 5,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "NOR",
+    "HAD",
+    "PIA",
+    "HUL",
+    "LAW",
+    "LIN",
+    "BOR",
+    "GAS",
+    "BEA",
+    "OCO",
+    "COL",
+    "SAI",
+    "ALO",
+    "ALB",
+    "PER",
+    "BOT",
+    "STR"
+   ],
+   "track_c": 31.6,
+   "air_c": 24.2,
+   "humidity": 57,
+   "wind_ms": 2.1,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    }
+   ]
+  },
+  {
+   "lap": 7,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "NOR",
+    "HAD",
+    "PIA",
+    "HUL",
+    "LAW",
+    "BOR",
+    "LIN",
+    "GAS",
+    "BEA",
+    "OCO",
+    "COL",
+    "SAI",
+    "ALO",
+    "ALB",
+    "PER",
+    "BOT",
+    "STR"
+   ],
+   "track_c": 31.7,
+   "air_c": 24.3,
+   "humidity": 56,
+   "wind_ms": 2.3,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    }
+   ]
+  },
+  {
+   "lap": 9,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "HAD",
+    "NOR",
+    "PIA",
+    "HUL",
+    "LAW",
+    "BOR",
+    "LIN",
+    "GAS",
+    "BEA",
+    "OCO",
+    "COL",
+    "SAI",
+    "ALO",
+    "ALB",
+    "PER",
+    "BOT",
+    "STR"
+   ],
+   "track_c": 31.8,
+   "air_c": 24.4,
+   "humidity": 56,
+   "wind_ms": 2.3,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    }
+   ]
+  },
+  {
+   "lap": 11,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "HAD",
+    "NOR",
+    "PIA",
+    "HUL",
+    "LAW",
+    "BOR",
+    "LIN",
+    "GAS",
+    "OCO",
+    "BEA",
+    "COL",
+    "SAI",
+    "ALO",
+    "ALB",
+    "PER",
+    "BOT",
+    "STR"
+   ],
+   "track_c": 32.2,
+   "air_c": 24.6,
+   "humidity": 56,
+   "wind_ms": 2.6,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    },
+    {
+     "lap": 10,
+     "msg": "VIRTUAL SAFETY CAR ENDING"
+    },
+    {
+     "lap": 11,
+     "msg": "GREEN FLAG - RACING"
+    }
+   ]
+  },
+  {
+   "lap": 13,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "HAD",
+    "LEC",
+    "NOR",
+    "PIA",
+    "HUL",
+    "LAW",
+    "BOR",
+    "LIN",
+    "GAS",
+    "OCO",
+    "BEA",
+    "COL",
+    "SAI",
+    "ALO",
+    "ALB",
+    "PER",
+    "BOT",
+    "STR"
+   ],
+   "track_c": 32.7,
+   "air_c": 24.5,
+   "humidity": 55,
+   "wind_ms": 2.2,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    },
+    {
+     "lap": 10,
+     "msg": "VIRTUAL SAFETY CAR ENDING"
+    },
+    {
+     "lap": 11,
+     "msg": "GREEN FLAG - RACING"
+    }
+   ]
+  },
+  {
+   "lap": 15,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "HAD",
+    "NOR",
+    "PIA",
+    "HUL",
+    "LAW",
+    "BOR",
+    "LIN",
+    "GAS",
+    "OCO",
+    "BEA",
+    "COL",
+    "SAI",
+    "ALO",
+    "BOT",
+    "ALB",
+    "PER",
+    "STR"
+   ],
+   "track_c": 32.7,
+   "air_c": 24.8,
+   "humidity": 54,
+   "wind_ms": 2.4,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    },
+    {
+     "lap": 10,
+     "msg": "VIRTUAL SAFETY CAR ENDING"
+    },
+    {
+     "lap": 11,
+     "msg": "GREEN FLAG - RACING"
+    },
+    {
+     "lap": 14,
+     "msg": "TURN 4: INCIDENT NOTED - CAR 14 (NO FURTHER ACTION)"
+    }
+   ]
+  },
+  {
+   "lap": 17,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "HAD",
+    "NOR",
+    "PIA",
+    "HUL",
+    "LAW",
+    "BOR",
+    "LIN",
+    "GAS",
+    "OCO",
+    "BEA",
+    "COL",
+    "ALO",
+    "SAI",
+    "BOT",
+    "PER",
+    "ALB",
+    "STR"
+   ],
+   "track_c": 33.1,
+   "air_c": 24.7,
+   "humidity": 54,
+   "wind_ms": 2.0,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    },
+    {
+     "lap": 10,
+     "msg": "VIRTUAL SAFETY CAR ENDING"
+    },
+    {
+     "lap": 11,
+     "msg": "GREEN FLAG - RACING"
+    },
+    {
+     "lap": 14,
+     "msg": "TURN 4: INCIDENT NOTED - CAR 14 (NO FURTHER ACTION)"
+    }
+   ]
+  },
+  {
+   "lap": 19,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "LEC",
+    "HAD",
+    "NOR",
+    "PIA",
+    "LAW",
+    "HUL",
+    "BOR",
+    "LIN",
+    "GAS",
+    "OCO",
+    "COL",
+    "BEA",
+    "ALO",
+    "SAI",
+    "BOT",
+    "PER",
+    "ALB",
+    "STR"
+   ],
+   "track_c": 33.4,
+   "air_c": 24.9,
+   "humidity": 54,
+   "wind_ms": 1.9,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    },
+    {
+     "lap": 10,
+     "msg": "VIRTUAL SAFETY CAR ENDING"
+    },
+    {
+     "lap": 11,
+     "msg": "GREEN FLAG - RACING"
+    },
+    {
+     "lap": 14,
+     "msg": "TURN 4: INCIDENT NOTED - CAR 14 (NO FURTHER ACTION)"
+    },
+    {
+     "lap": 18,
+     "msg": "DRS ENABLED"
+    }
+   ]
+  },
+  {
+   "lap": 21,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "HAD",
+    "LEC",
+    "NOR",
+    "PIA",
+    "LAW",
+    "HUL",
+    "BOR",
+    "GAS",
+    "LIN",
+    "OCO",
+    "COL",
+    "BEA",
+    "ALO",
+    "SAI",
+    "BOT",
+    "PER",
+    "ALB",
+    "STR"
+   ],
+   "track_c": 33.6,
+   "air_c": 25.1,
+   "humidity": 53,
+   "wind_ms": 2.8,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    },
+    {
+     "lap": 10,
+     "msg": "VIRTUAL SAFETY CAR ENDING"
+    },
+    {
+     "lap": 11,
+     "msg": "GREEN FLAG - RACING"
+    },
+    {
+     "lap": 14,
+     "msg": "TURN 4: INCIDENT NOTED - CAR 14 (NO FURTHER ACTION)"
+    },
+    {
+     "lap": 18,
+     "msg": "DRS ENABLED"
+    }
+   ]
+  },
+  {
+   "lap": 23,
+   "order": [
+    "VER",
+    "ANT",
+    "RUS",
+    "HAM",
+    "HAD",
+    "LEC",
+    "NOR",
+    "PIA",
+    "LAW",
+    "HUL",
+    "BOR",
+    "LIN",
+    "GAS",
+    "OCO",
+    "COL",
+    "BEA",
+    "ALO",
+    "SAI",
+    "BOT",
+    "PER",
+    "STR",
+    "ALB"
+   ],
+   "track_c": 34.1,
+   "air_c": 25.4,
+   "humidity": 52,
+   "wind_ms": 2.6,
+   "rain": false,
+   "race_control": [
+    {
+     "lap": 1,
+     "msg": "GREEN LIGHT - PIT EXIT OPEN"
+    },
+    {
+     "lap": 3,
+     "msg": "YELLOW IN SECTOR 2"
+    },
+    {
+     "lap": 4,
+     "msg": "CLEAR"
+    },
+    {
+     "lap": 9,
+     "msg": "VIRTUAL SAFETY CAR DEPLOYED"
+    },
+    {
+     "lap": 10,
+     "msg": "VIRTUAL SAFETY CAR ENDING"
+    },
+    {
+     "lap": 11,
+     "msg": "GREEN FLAG - RACING"
+    },
+    {
+     "lap": 14,
+     "msg": "TURN 4: INCIDENT NOTED - CAR 14 (NO FURTHER ACTION)"
+    },
+    {
+     "lap": 18,
+     "msg": "DRS ENABLED"
+    }
+   ]
+  }
+ ],
+ "state_rules": {
+  "live_max_age_s": 10,
+  "delayed_max_age_s": 90
+ },
+ "note": "Generated locally with a fixed seed. Shows only positions, race control and weather: no gap timing and no track position dots."
+}
