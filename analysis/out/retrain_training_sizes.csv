@@ -1,0 +1,216 @@
+variant,raceId,n_train
+V1 expanding,1145,6436
+V2 recent only (2022+),1145,1359
+V3 expanding + recency (half-life 3),1145,6436
+V3a recency half-life 1.5 (sensitivity),1145,6436
+V3b recency half-life 6 (sensitivity),1145,6436
+V1 expanding,1146,6456
+V2 recent only (2022+),1146,1379
+V3 expanding + recency (half-life 3),1146,6456
+V3a recency half-life 1.5 (sensitivity),1146,6456
+V3b recency half-life 6 (sensitivity),1146,6456
+V1 expanding,1147,6476
+V2 recent only (2022+),1147,1399
+V3 expanding + recency (half-life 3),1147,6476
+V3a recency half-life 1.5 (sensitivity),1147,6476
+V3b recency half-life 6 (sensitivity),1147,6476
+V1 expanding,1148,6496
+V2 recent only (2022+),1148,1419
+V3 expanding + recency (half-life 3),1148,6496
+V3a recency half-life 1.5 (sensitivity),1148,6496
+V3b recency half-life 6 (sensitivity),1148,6496
+V1 expanding,1149,6516
+V2 recent only (2022+),1149,1439
+V3 expanding + recency (half-life 3),1149,6516
+V3a recency half-life 1.5 (sensitivity),1149,6516
+V3b recency half-life 6 (sensitivity),1149,6516
+V1 expanding,1150,6536
+V2 recent only (2022+),1150,1459
+V3 expanding + recency (half-life 3),1150,6536
+V3a recency half-life 1.5 (sensitivity),1150,6536
+V3b recency half-life 6 (sensitivity),1150,6536
+V1 expanding,1151,6556
+V2 recent only (2022+),1151,1479
+V3 expanding + recency (half-life 3),1151,6556
+V3a recency half-life 1.5 (sensitivity),1151,6556
+V3b recency half-life 6 (sensitivity),1151,6556
+V1 expanding,1152,6576
+V2 recent only (2022+),1152,1499
+V3 expanding + recency (half-life 3),1152,6576
+V3a recency half-life 1.5 (sensitivity),1152,6576
+V3b recency half-life 6 (sensitivity),1152,6576
+V1 expanding,1153,6596
+V2 recent only (2022+),1153,1519
+V3 expanding + recency (half-life 3),1153,6596
+V3a recency half-life 1.5 (sensitivity),1153,6596
+V3b recency half-life 6 (sensitivity),1153,6596
+V1 expanding,1154,6615
+V2 recent only (2022+),1154,1538
+V3 expanding + recency (half-life 3),1154,6615
+V3a recency half-life 1.5 (sensitivity),1154,6615
+V3b recency half-life 6 (sensitivity),1154,6615
+V1 expanding,1155,6635
+V2 recent only (2022+),1155,1558
+V3 expanding + recency (half-life 3),1155,6635
+V3a recency half-life 1.5 (sensitivity),1155,6635
+V3b recency half-life 6 (sensitivity),1155,6635
+V1 expanding,1156,6655
+V2 recent only (2022+),1156,1578
+V3 expanding + recency (half-life 3),1156,6655
+V3a recency half-life 1.5 (sensitivity),1156,6655
+V3b recency half-life 6 (sensitivity),1156,6655
+V1 expanding,1157,6675
+V2 recent only (2022+),1157,1598
+V3 expanding + recency (half-life 3),1157,6675
+V3a recency half-life 1.5 (sensitivity),1157,6675
+V3b recency half-life 6 (sensitivity),1157,6675
+V1 expanding,1158,6695
+V2 recent only (2022+),1158,1618
+V3 expanding + recency (half-life 3),1158,6695
+V3a recency half-life 1.5 (sensitivity),1158,6695
+V3b recency half-life 6 (sensitivity),1158,6695
+V1 expanding,1159,6715
+V2 recent only (2022+),1159,1638
+V3 expanding + recency (half-life 3),1159,6715
+V3a recency half-life 1.5 (sensitivity),1159,6715
+V3b recency half-life 6 (sensitivity),1159,6715
+V1 expanding,1160,6735
+V2 recent only (2022+),1160,1658
+V3 expanding + recency (half-life 3),1160,6735
+V3a recency half-life 1.5 (sensitivity),1160,6735
+V3b recency half-life 6 (sensitivity),1160,6735
+V1 expanding,1161,6755
+V2 recent only (2022+),1161,1678
+V3 expanding + recency (half-life 3),1161,6755
+V3a recency half-life 1.5 (sensitivity),1161,6755
+V3b recency half-life 6 (sensitivity),1161,6755
+V1 expanding,1162,6775
+V2 recent only (2022+),1162,1698
+V3 expanding + recency (half-life 3),1162,6775
+V3a recency half-life 1.5 (sensitivity),1162,6775
+V3b recency half-life 6 (sensitivity),1162,6775
+V1 expanding,1163,6795
+V2 recent only (2022+),1163,1718
+V3 expanding + recency (half-life 3),1163,6795
+V3a recency half-life 1.5 (sensitivity),1163,6795
+V3b recency half-life 6 (sensitivity),1163,6795
+V1 expanding,1164,6815
+V2 recent only (2022+),1164,1738
+V3 expanding + recency (half-life 3),1164,6815
+V3a recency half-life 1.5 (sensitivity),1164,6815
+V3b recency half-life 6 (sensitivity),1164,6815
+V1 expanding,1165,6835
+V2 recent only (2022+),1165,1758
+V3 expanding + recency (half-life 3),1165,6835
+V3a recency half-life 1.5 (sensitivity),1165,6835
+V3b recency half-life 6 (sensitivity),1165,6835
+V1 expanding,1166,6855
+V2 recent only (2022+),1166,1778
+V3 expanding + recency (half-life 3),1166,6855
+V3a recency half-life 1.5 (sensitivity),1166,6855
+V3b recency half-life 6 (sensitivity),1166,6855
+V1 expanding,1167,6875
+V2 recent only (2022+),1167,1798
+V3 expanding + recency (half-life 3),1167,6875
+V3a recency half-life 1.5 (sensitivity),1167,6875
+V3b recency half-life 6 (sensitivity),1167,6875
+V1 expanding,1168,6895
+V2 recent only (2022+),1168,1818
+V3 expanding + recency (half-life 3),1168,6895
+V3a recency half-life 1.5 (sensitivity),1168,6895
+V3b recency half-life 6 (sensitivity),1168,6895
+V1 expanding,1169,6915
+V2 recent only (2022+),1169,1838
+V3 expanding + recency (half-life 3),1169,6915
+V3a recency half-life 1.5 (sensitivity),1169,6915
+V3b recency half-life 6 (sensitivity),1169,6915
+V1 expanding,1170,6937
+V2 recent only (2022+),1170,1860
+V3 expanding + recency (half-life 3),1170,6937
+V3a recency half-life 1.5 (sensitivity),1170,6937
+V3b recency half-life 6 (sensitivity),1170,6937
+V1 expanding,1171,6959
+V2 recent only (2022+),1171,1882
+V3 expanding + recency (half-life 3),1171,6959
+V3a recency half-life 1.5 (sensitivity),1171,6959
+V3b recency half-life 6 (sensitivity),1171,6959
+V1 expanding,1172,6981
+V2 recent only (2022+),1172,1904
+V3 expanding + recency (half-life 3),1172,6981
+V3a recency half-life 1.5 (sensitivity),1172,6981
+V3b recency half-life 6 (sensitivity),1172,6981
+V1 expanding,1173,7003
+V2 recent only (2022+),1173,1926
+V3 expanding + recency (half-life 3),1173,7003
+V3a recency half-life 1.5 (sensitivity),1173,7003
+V3b recency half-life 6 (sensitivity),1173,7003
+V1 expanding,1174,7025
+V2 recent only (2022+),1174,1948
+V3 expanding + recency (half-life 3),1174,7025
+V3a recency half-life 1.5 (sensitivity),1174,7025
+V3b recency half-life 6 (sensitivity),1174,7025
+V1 expanding,1175,7047
+V2 recent only (2022+),1175,1970
+V3 expanding + recency (half-life 3),1175,7047
+V3a recency half-life 1.5 (sensitivity),1175,7047
+V3b recency half-life 6 (sensitivity),1175,7047
+V1 expanding,1176,7069
+V2 recent only (2022+),1176,1992
+V3 expanding + recency (half-life 3),1176,7069
+V3a recency half-life 1.5 (sensitivity),1176,7069
+V3b recency half-life 6 (sensitivity),1176,7069
+V1 expanding,1177,7091
+V2 recent only (2022+),1177,2014
+V3 expanding + recency (half-life 3),1177,7091
+V3a recency half-life 1.5 (sensitivity),1177,7091
+V3b recency half-life 6 (sensitivity),1177,7091
+V1 expanding,1178,7113
+V2 recent only (2022+),1178,2036
+V3 expanding + recency (half-life 3),1178,7113
+V3a recency half-life 1.5 (sensitivity),1178,7113
+V3b recency half-life 6 (sensitivity),1178,7113
+V1 expanding,1179,7135
+V2 recent only (2022+),1179,2058
+V3 expanding + recency (half-life 3),1179,7135
+V3a recency half-life 1.5 (sensitivity),1179,7135
+V3b recency half-life 6 (sensitivity),1179,7135
+V1 expanding,1180,7157
+V2 recent only (2022+),1180,2080
+V3 expanding + recency (half-life 3),1180,7157
+V3a recency half-life 1.5 (sensitivity),1180,7157
+V3b recency half-life 6 (sensitivity),1180,7157
+V1 expanding,1181,7179
+V2 recent only (2022+),1181,2102
+V3 expanding + recency (half-life 3),1181,7179
+V3a recency half-life 1.5 (sensitivity),1181,7179
+V3b recency half-life 6 (sensitivity),1181,7179
+V1 expanding,1182,7201
+V2 recent only (2022+),1182,2124
+V3 expanding + recency (half-life 3),1182,7201
+V3a recency half-life 1.5 (sensitivity),1182,7201
+V3b recency half-life 6 (sensitivity),1182,7201
+V1 expanding,1183,7223
+V2 recent only (2022+),1183,2146
+V3 expanding + recency (half-life 3),1183,7223
+V3a recency half-life 1.5 (sensitivity),1183,7223
+V3b recency half-life 6 (sensitivity),1183,7223
+V1 expanding,1184,7245
+V2 recent only (2022+),1184,2168
+V3 expanding + recency (half-life 3),1184,7245
+V3a recency half-life 1.5 (sensitivity),1184,7245
+V3b recency half-life 6 (sensitivity),1184,7245
+V1 expanding,1185,7267
+V2 recent only (2022+),1185,2190
+V3 expanding + recency (half-life 3),1185,7267
+V3a recency half-life 1.5 (sensitivity),1185,7267
+V3b recency half-life 6 (sensitivity),1185,7267
+V1 expanding,1186,7289
+V2 recent only (2022+),1186,2212
+V3 expanding + recency (half-life 3),1186,7289
+V3a recency half-life 1.5 (sensitivity),1186,7289
+V3b recency half-life 6 (sensitivity),1186,7289
+V1 expanding,1187,7311
+V2 recent only (2022+),1187,2234
+V3 expanding + recency (half-life 3),1187,7311
+V3a recency half-life 1.5 (sensitivity),1187,7311
+V3b recency half-life 6 (sensitivity),1187,7311

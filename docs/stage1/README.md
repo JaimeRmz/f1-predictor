@@ -10,6 +10,10 @@ Read-only audit of f1predictor.app on branch `docs/stage1-audit` (code as of `ma
 | [03-backend-options.md](03-backend-options.md) | options A / B / C with cost, cold start, limits, parity plan |
 | [04-data-sources-and-live.md](04-data-sources-and-live.md) | source verification, grid-signal experiment, self-updating and live designs |
 | [05-schema-and-pipeline.md](05-schema-and-pipeline.md) | database schema, pipeline, validation catalogue, every manual step |
+| [06-retrain-experiment.md](06-retrain-experiment.md) | walk-forward retraining on the 43 races: does newer data help? |
+| [07-minimal-slice.md](07-minimal-slice.md) | the smallest change that removes the most manual per-race steps before Las Vegas (design only) |
+| [DECISIONS.md](DECISIONS.md) | the owner's decisions on the six open questions, with evidence |
+| [openf1-message-draft.md](openf1-message-draft.md) | draft message to OpenF1 (not sent) |
 
 ## Key findings
 
@@ -23,7 +27,8 @@ Read-only audit of f1predictor.app on branch `docs/stage1-audit` (code as of `ma
 6. **The backend is cold and chatty, not slow:** 25 ms per prediction, 173 MB, but a free-tier wake-up of about a minute and 19 requests (164 kB) on the Season page. (03)
 7. **The frontend ships the official F1 logo in the header** (against the brief), has no router, carries about 198 kB (35% of the entry chunk) of mostly unused Supabase code, has contrast and type-size problems, and has copy that contradicted the backtest. (01)
 8. **A data defect:** the 2025 Qatar GP has a NULL grid for all 20 drivers (the only such race of 348 since 2010); the existing validator would have caught it had it covered 2025. (05)
-9. **Everything season-specific is hand-maintained** in at least 20 places (05). Automation of the snapshot job, secrets, alerts, heartbeat and stale-data guard is already on `main`.
+9. **Retraining on newer data does not help.** Walk-forward retraining (expanding, recent-seasons-only, recency-weighted) lowers raw Brier only by shifting score *level*; after rescaling, the gains vanish, and ranking is equal or worse, including on the 2026 races. (06)
+10. **Everything season-specific is hand-maintained** in at least 20 places (05). Automation of the snapshot job, secrets, alerts, heartbeat and stale-data guard is already on `main`.
 
 **Conflicting or not verified (do not rely on these):**
 
@@ -35,16 +40,17 @@ Read-only audit of f1predictor.app on branch `docs/stage1-audit` (code as of `ma
 
 | # | recommendation | why (evidence) | effort | risk |
 |---|---|---|---|---|
-| 1 | **Remove the official F1 logo and verify the clip-art car's licence** | breaks the stated IP rule; trivial to fix | S | low |
+| 1 | ~~Remove the official F1 logo~~ **Owner decision: keep the logo as is; Stage 2 adds no new official marks.** Car art: licence checked, **appears public domain** (Openclipart #8554, Gerald_G); no replacement | the logo remains against the brief's original rule, by decision; the car check found the artwork is public-domain clip-art | done | accepted by owner |
 | 2 | **Merge the honesty-copy change** (`fix/honesty-copy`, `b3bb3ceb`, after your Saturday-noon window) | copy said "probabilities"; contrast fix measured on rendered pixels (262/262 failing to 23/263) | done | low |
-| 3 | **Fix the Qatar data defect and add the NULL/zero-grid checks** | one race corrupts the real-grid condition; checks cost almost nothing | S | low |
+| 3 | **Qatar data defect: fixed on `fix/data-qatar-grid` (`e69bd7cd`), approved, not merged until after Saturday noon.** The NULL/zero-grid checks are still to be added | one race corrupted the real-grid condition; parity with the golden predictions verified to 1.1e-16 | fix done; checks S | low |
 | 4 | **Build the schema and the scheduled, validated, idempotent pipeline (05) and remove the manual steps** | unlocks everything else; today a race weekend needs about 20 hand edits | L | medium (shadow-run two weekends first) |
-| 5 | **Precompute predictions and the scorecard into the database; keep a thin live endpoint for `/whatif` (option B)** | Season page 19 calls to 1 (0.6-3.7 kB); removes the cold start from 5 of 6 page types; $0-32/month | M | medium |
+| 5 | **Precompute predictions and the scorecard into the database; keep a thin live endpoint for `/whatif` (option B)**. **Hosting decision: stay on Supabase free and Render free; re-decide when the site reads from Supabase** | Season page 19 calls to 1 (0.6-3.7 kB); removes the cold start from 5 of 6 page types; $0-32/month | M | medium |
 | 6 | **Rebuild the frontend on endpoints with real routes**; drop My Picks, anonymous auth, the particle code from the entry chunk; fix type scale, tokens and headings | 01 | L | medium |
 | 7 | **Make the scores coherent and honest**: store per-race normalised scores (sum 1 and 3), label them; keep showing rankings and the genuine-foresight scorecard, and keep probability-heavy UI off until calibration is shipped and measured | rescaling alone cuts win Brier by about half (podium by about a quarter); calibration brings the model only to the level of a one-line rank baseline | S-M | low |
-| 8 | **Add the pre-qualifying forecast** (practice best lap, Sprint Qualifying) as a separate, labelled `forecast_kind` with its own later freeze | held-out gain is consistent but modest (+0.026 to +0.043 Spearman); needs your policy decision | M | medium |
-| 9 | **Live tier**: only after OpenF1 confirms in writing the price model and which topics stream; scope it to a timing tower plus race control and weather | feeds you reported unavailable are the ones a pit-wall view most wants; cost unknown | M-L | medium-high |
-| 10 | **Defer a full rewrite (option C), DNF modelling and a retrain** | no evidence they are the bottleneck; DNF modelling was not examined | n/a | n/a |
+| 8 | **Deferred (owner: not now).** The pre-qualifying forecast (practice best lap, Sprint Qualifying) as a separate, labelled `forecast_kind`; `forecast_kind` stays in the schema design | held-out gain is consistent but modest (+0.026 to +0.043 Spearman) | M | medium |
+| 9 | **Live tier**: unscheduled until OpenF1 answers (message drafted in `openf1-message-draft.md`, to be sent by the owner; the site is a non-commercial portfolio project; **nothing blocks on the reply**); scope it to a timing tower plus race control and weather | feeds reported unavailable are the ones a pit-wall view most wants; cost unknown | M-L | medium-high |
+| 10 | **Defer a full rewrite (option C), DNF modelling and a retrain** | no evidence they are the bottleneck; the retrain experiment (06) found no benefit; DNF modelling was not examined | n/a | n/a |
+| 11 | **Before Las Vegas: the minimal slice** (`07`): one command that ingests a race, validates it, rebuilds the master and lookups and generates the frontend constants; removes 6 of the 20 manual steps fully and 6 partly | Las Vegas snapshot window opens 19 Nov 04:00 UTC; Brazil is the rehearsal | 4-5 days | medium (one-time frontend refactor) |
 
 ## Proposed order of work
 
@@ -54,15 +60,18 @@ Read-only audit of f1predictor.app on branch `docs/stage1-audit` (code as of `ma
 4. **P3, live:** ask OpenF1 the four questions in 04 section 4.0b first; decide on a paid feed and a worker only after the answers.
 5. **P4, polish.**
 
-## Decisions I need from you
+## Decisions recorded (see [DECISIONS.md](DECISIONS.md))
 
-1. Remove the F1 logo (and the car art if its licence cannot be shown)?
-2. Add a second, pre-qualifying forecast, and accept the extra freeze and, on sprint weekends, the second cutoff (04 section 2.4)?
-3. Contact OpenF1 (price model, live topic availability, delayed feed, licence fit), and is the site staying non-commercial?
-4. Supabase free or Pro, and Render free or a $7 instance for `/whatif` (03)?
-5. Approve the data fix for the 2025 Qatar grid (patch from Jolpica; it changes a committed data file)?
-6. Apply migration 00008 after Brazil (the service key already cannot delete; the trigger also freezes updates).
+1. **Logo: keep as is**, no replacement; Stage 2 adds no new official marks. Car art: checked, appears public domain, not replaced.
+2. **Second (pre-qualifying) forecast: not now**; `forecast_kind` stays in the schema design.
+3. **OpenF1:** message drafted for the owner to send; non-commercial portfolio project, no ads or payments; nothing blocks on the reply.
+4. **Hosting:** stay on Supabase free and Render free; re-decide when the site reads from Supabase.
+5. **Qatar grid and Verstappen qualifying number:** approved and done on `fix/data-qatar-grid`; not merged until after Saturday noon.
+6. **Migration 00008:** approved in principle; **tested on a throwaway Postgres, 25 of 25 checks pass**; apply to production only after the Brazil snapshot exists (and after the `race_id 0` test row is deleted).
+7. `analysis/cache/openf1/` is gitignored.
+
+**Still open:** apply 00008 (conditions above); merge `fix/honesty-copy` and `fix/data-qatar-grid` after the freeze; whether to build the minimal slice (07) before Las Vegas; add the NULL/zero-grid checks; send the OpenF1 message.
 
 ## Reproduce
 
-All analysis is scripted in `analysis/` (numbered 01-14); `analysis/out/` holds the outputs; the raw OpenF1 cache (`analysis/cache/openf1/`, about 28 MB) is not committed and rebuilds on re-run. The Part 1B and 1C experiments have fixed seeds.
+All analysis is scripted in `analysis/` (numbered 01-17); `analysis/out/` holds the outputs; the raw OpenF1 cache (`analysis/cache/openf1/`, about 28 MB) is not committed and rebuilds on re-run. The Part 1B and 1C experiments have fixed seeds.
