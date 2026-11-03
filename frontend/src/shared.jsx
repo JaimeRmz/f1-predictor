@@ -461,7 +461,7 @@ export const RaceSelector = ({ upcoming, completed, value, onSelect }) => {
             )}
             {completedFiltered.length > 0 && (
               <>
-                <div style={{ padding: "8px 16px 4px", fontFamily: "var(--mono)", fontSize: "0.6rem", fontWeight: "700", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", opacity: 0.7 }}>Completed</div>
+                <div style={{ padding: "8px 16px 4px", fontFamily: "var(--mono)", fontSize: "0.6rem", fontWeight: "700", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)" }}>Completed</div>
                 {completedFiltered.map(renderOption)}
               </>
             )}

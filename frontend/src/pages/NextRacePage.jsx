@@ -162,7 +162,7 @@ const NextRacePage = () => {
         <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           {predictions.map((p, i) => {
             const team = CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team;
-            const color = teamColors[team] || "var(--dimmed)";
+            const color = teamColors[team] || "var(--muted)";
             return (
               <GlassPanel key={i} tint={color} className="data-row stagger-item row-gap-tight" style={{
                 "--i": i, padding: "16px", display: "flex", alignItems: "center", gap: "1rem",

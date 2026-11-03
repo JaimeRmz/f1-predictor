@@ -17,7 +17,12 @@
      the app already uses everywhere; ink/dim/faint are the design-system names
      from the concept, aliased onto them so both spellings resolve the same. */
   --ink:   #ececec;
-  --dim:   rgba(236, 236, 236, 0.45);
+  /* --dim (aka --muted) is the secondary TEXT colour: 0.66 gives >= 4.5:1 (WCAG AA) on the void
+     (analytic 6.7:1) and on lit/tinted glass up to roughly rgb(70,70,70) (measured in the
+     honesty-copy change). It was 0.45 (3.98:1 on the void, ~1.4-3 on lit glass).
+     --faint (aka --dimmed) is DECORATIVE ONLY (tracks, hairlines, fills): at 0.14 it is ~1.4:1,
+     so never use it as a text colour -- use --muted. */
+  --dim:   rgba(236, 236, 236, 0.66);
   --faint: rgba(236, 236, 236, 0.14);
   --text:   var(--ink);
   --muted:  var(--dim);

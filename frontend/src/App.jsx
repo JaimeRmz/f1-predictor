@@ -1364,7 +1364,7 @@ const HomePage = () => (
         {[
           { num: "01", title: "QUALIFYING PREDICTED", desc: "An XGBoost regressor forecasts the starting grid from current form and circuit history." },
           { num: "02", title: "RACE SIMULATED", desc: "Two classifiers estimate each driver's win and podium probability from the predicted grid." },
-          { num: "03", title: "VALIDATED LIVE", desc: "Every 2026 race tests the models on data they've never seen. Probabilities reflect historical outcome rates, not guesses." },
+          { num: "03", title: "VALIDATED LIVE", desc: "Every 2026 race tests the models on data they've never seen. The outputs are model scores, not calibrated probabilities." },
         ].map((s, i, arr) => (
           <Fragment key={s.num}>
             <div style={{ flex: "1 1 0", minWidth: 0, textAlign: "center" }}>
@@ -1380,7 +1380,7 @@ const HomePage = () => (
       </div>
     </div>
 
-    <div style={{ textAlign: "center", padding: "1.5rem", fontFamily: "var(--mono)", fontSize: "11px", color: "var(--faint)", letterSpacing: "0.2em", position: "relative", zIndex: 1 }}>
+    <div style={{ textAlign: "center", padding: "1.5rem", fontFamily: "var(--mono)", fontSize: "11px", color: "var(--muted)", letterSpacing: "0.2em", position: "relative", zIndex: 1 }}>
       Live predictions. Every race.
     </div>
   </div>

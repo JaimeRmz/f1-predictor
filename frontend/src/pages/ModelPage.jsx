@@ -43,7 +43,7 @@ const ModelPage = () => {
           </Fragment>
         ))}
       </div>
-      <div style={{ textAlign: "center", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", opacity: 0.75 }}>
+      <div style={{ textAlign: "center", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)" }}>
         For upcoming races, the qualifying model's predicted grid feeds directly into the winner and podium models.
       </div>
 
@@ -51,8 +51,9 @@ const ModelPage = () => {
 
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
         <StatCard label="Algorithm" value="XGBoost" accent="var(--red)" sub="gradient boosted trees" />
-        <StatCard label="ROC-AUC" value="0.945" accent="var(--red)" sub="2025–2026 test set" />
-        <StatCard label="Recall" value="89%" sub="podiums caught" />
+        <StatCard label="ROC-AUC · real grid" value="0.954" accent="var(--red)" sub="actual starting grid · 43 races, 2025–26 R19" />
+        <StatCard label="ROC-AUC · predicted grid" value="0.909" accent="var(--red)" sub="pre-qualifying path used for forecasts · 43 races" />
+        <StatCard label="Recall · real grid" value="91.5%" sub="podiums caught at a 0.5 score threshold (86.0% on the predicted grid)" />
         <StatCard label="Training" value="6,436" sub="race entries 2010–2024" />
       </div>
 
@@ -87,7 +88,8 @@ const ModelPage = () => {
             ["Features", "9 engineered features using rolling averages and exponential decay. All calculated from strictly pre-race data — no leakage from future results."],
             ["Training", "XGBoost trained on 2010–2024 (6,436 entries). Time-based split — 2025–2026 seasons held out for evaluation."],
             ["Target", "Binary classification: did the driver finish top 3? Outputs 0–100% podium probability."],
-            ["Evaluation", "Tested on the 2025–2026 holdout. ROC-AUC 0.945, measured after correcting two data-leakage bugs in feature engineering — the circuit-history rate (see features above) and a same-race constructor-feature leak. The figure is computed on strictly pre-race inputs, so it reflects honest out-of-sample performance rather than an inflated in-sample score."],
+            ["Evaluation", "Tested on the 2025–2026 holdout (43 races, through 2026 round 19; fixed figures from the Part 1B backtest, not updated automatically). ROC-AUC 0.954 with the real starting grid and 0.909 on the predicted-grid path that pre-race forecasts use, measured after correcting two data-leakage bugs in feature engineering — the circuit-history rate (see features above) and a same-race constructor-feature leak. The figure is computed on strictly pre-race inputs, so it reflects honest out-of-sample performance rather than an inflated in-sample score."],
+            ["Scores", "The win and podium numbers are model scores, not calibrated probabilities. Across a race the win scores add up to about 3 (a true set of probabilities would add to 1) and the podium scores to about 5 (should be 3), and the highest scores are over-confident, especially on the predicted-grid path. Use them to rank drivers, not as betting odds."],
           ].map(([title, body], i, arr) => (
             <div key={i} style={{ display: "flex", gap: "1.25rem", padding: "0.75rem 0", borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none" }}>
               <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0, width: "70px", paddingTop: "1px", letterSpacing: "0.05em" }}>{title.toUpperCase()}</span>

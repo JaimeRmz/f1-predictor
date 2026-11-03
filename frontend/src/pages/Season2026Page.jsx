@@ -196,7 +196,7 @@ const Season2026Page = () => {
             <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: s.color, flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: "700", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.driver}</div>
-              <div style={{ fontFamily: "var(--mono)", fontSize: "11px", color: "var(--muted)", opacity: 0.5, marginTop: "2px" }}>{s.team} · {s.wins} win{s.wins !== 1 ? "s" : ""}</div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: "11px", color: "var(--muted)", marginTop: "2px" }}>{s.team} · {s.wins} win{s.wins !== 1 ? "s" : ""}</div>
             </div>
             <div className="standings-bar" style={{ width: "140px", flexShrink: 0 }}>
               <div style={{ height: "2px", background: "var(--dimmed)", marginBottom: "3px" }}>
@@ -266,7 +266,7 @@ const Season2026Page = () => {
                   {r.actualWinnerName}
                 </div>
                 <div style={{ padding: "0.6rem 0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.winnerCorrect ? "var(--gold)" : "var(--dimmed)" }}>{r.winnerCorrect ? "✓" : "✗"}</span>
+                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.winnerCorrect ? "var(--gold)" : "var(--muted)" }}>{r.winnerCorrect ? "✓" : "✗"}</span>
                 </div>
                 <div className="hide-mobile" style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", display: "flex", alignItems: "center" }}>
                   {r.predictedNames.join(" · ")}
@@ -275,7 +275,7 @@ const Season2026Page = () => {
                   {r.actualNames.join(" · ")}
                 </div>
                 <div style={{ padding: "0.6rem 0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.podiumCorrect ? "var(--green)" : "var(--dimmed)" }}>{r.podiumCorrect ? "✓" : "✗"}</span>
+                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.podiumCorrect ? "var(--green)" : "var(--muted)" }}>{r.podiumCorrect ? "✓" : "✗"}</span>
                 </div>
               </div>
             ))}

@@ -206,7 +206,7 @@ const PredictorPage = () => {
                     </div>
                     <div className={p.podium_probability > 0.5 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.podium_probability > 0.5 ? "var(--red)" : "var(--muted)" }}><CountUp value={p.podium_probability * 100} suffix="%" /></div>
                   </div>
-                  <div className="hide-mobile" style={{ width: "70px", flexShrink: 0, fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--dimmed)", letterSpacing: "0.06em" }}>EXPLAIN →</div>
+                  <div className="hide-mobile" style={{ width: "70px", flexShrink: 0, fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", letterSpacing: "0.06em" }}>EXPLAIN →</div>
                 </GlassPanel>
               ))}
             </div>
