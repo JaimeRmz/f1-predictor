@@ -54,3 +54,32 @@ def get(endpoint, **params):
             return data
         raise RuntimeError(f"OpenF1 {url} {params} -> HTTP {r.status_code}: {r.text[:120]}")
     raise RuntimeError(f"OpenF1 {url} {params}: gave up after retries")
+
+
+def get_qs(endpoint, qs):
+    """Like get() but with a RAW query string, for OpenF1's comparison filters such as
+    `date>=2026-11-01T21:30:00+00:00` that a params dict cannot express."""
+    url = f"{BASE}/{endpoint}?{qs}"
+    key = hashlib.sha1(url.encode()).hexdigest()
+    path = os.path.join(CACHE, f"{endpoint}_raw_{key[:16]}.json")
+    if os.path.exists(path):
+        STATS["cached"] += 1
+        return json.load(open(path, encoding="utf8"))
+    for attempt in range(6):
+        wait = MIN_INTERVAL - (time.time() - _last[0])
+        if wait > 0:
+            time.sleep(wait)
+        _last[0] = time.time()
+        STATS["network"] += 1
+        try:
+            r = requests.get(url, timeout=60)
+        except requests.RequestException:
+            time.sleep(5 * (attempt + 1)); continue
+        if r.status_code == 200:
+            data = r.json(); json.dump(data, open(path, "w", encoding="utf8")); return data
+        if r.status_code == 404:
+            data = []; json.dump(data, open(path, "w", encoding="utf8")); return data
+        if r.status_code in (429, 500, 502, 503, 504):
+            time.sleep(10 * (attempt + 1)); continue
+        raise RuntimeError(f"OpenF1 {url} -> HTTP {r.status_code}: {r.text[:120]}")
+    raise RuntimeError(f"OpenF1 {url}: gave up after retries")

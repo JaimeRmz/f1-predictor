@@ -1,0 +1,75 @@
+{
+ "checked_at_utc": "2026-11-03T05:50:15.228936+00:00",
+ "session": {
+  "name": "Race",
+  "location": "Mexico City",
+  "key": 11404,
+  "date_start": "2026-11-01T20:00:00+00:00",
+  "date_end": "2026-11-01T22:00:00+00:00",
+  "hours_since_end": 31.8
+ },
+ "historical_rows_for_last_completed_race": {
+  "position": {
+   "rows": 13,
+   "first_ts": "2026-11-01T19:09:06.023000+00:00",
+   "last_ts": "2026-11-01T20:57:34.959000+00:00"
+  },
+  "intervals": {
+   "rows": 1547,
+   "first_ts": "2026-11-01T20:03:31.648000+00:00",
+   "last_ts": "2026-11-01T22:24:06.341000+00:00"
+  },
+  "location (30 s slice)": {
+   "rows": 114,
+   "first_ts": "2026-11-01T20:40:00.257000+00:00",
+   "last_ts": "2026-11-01T20:40:29.838000+00:00"
+  },
+  "car_data (30 s slice)": {
+   "rows": 117,
+   "first_ts": "2026-11-01T20:40:00.256000+00:00",
+   "last_ts": "2026-11-01T20:40:29.817000+00:00"
+  },
+  "race_control": {
+   "rows": 169,
+   "first_ts": "2026-10-31T17:32:52.408000+00:00",
+   "last_ts": "2026-11-01T22:28:30+00:00"
+  },
+  "weather": {
+   "rows": 205,
+   "first_ts": "2026-11-01T19:08:59.071000+00:00",
+   "last_ts": "2026-11-01T22:34:42.626000+00:00"
+  },
+  "laps": {
+   "rows": 70,
+   "first_ts": "2026-11-01T20:03:25.510000+00:00",
+   "last_ts": "2026-11-01T22:22:44.625000+00:00"
+  },
+  "pit": {
+   "rows": 67,
+   "first_ts": "2026-11-01T19:08:59.071000+00:00",
+   "last_ts": "2026-11-01T22:07:08.889000+00:00"
+  },
+  "stints": {
+   "rows": 80,
+   "first_ts": null,
+   "last_ts": null
+  },
+  "session_result": {
+   "rows": 22,
+   "first_ts": null,
+   "last_ts": null
+  },
+  "starting_grid": {
+   "rows": 0,
+   "first_ts": null,
+   "last_ts": null
+  }
+ },
+ "next_weekend": {
+  "location": "S\u00e3o Paulo",
+  "practice1_start": "2026-11-06T15:30:00+00:00",
+  "session_key": 11405,
+  "drivers_listed_before_start": 22,
+  "hours_until_start": 81.7
+ }
+}
