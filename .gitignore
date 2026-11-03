@@ -5,3 +5,7 @@ __pycache__/
 
 .vercel
 .env*
+
+# Raw external API responses cached by the Stage 1 analysis scripts (rebuilt on re-run; ~28 MB).
+# analysis/cache/jolpica_2025_r23_results.json is intentionally tracked (needed to reproduce the Qatar grid patch).
+analysis/cache/openf1/
