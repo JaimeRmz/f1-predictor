@@ -219,3 +219,14 @@ node analysis/09_frontend_network_profile.cjs <outdir> # set BASE_URL to audit a
 ```
 
 Raw outputs are committed in `analysis/out/frontend/` (`a11y_audit.json`, `network_profile.json`); screenshots were viewed but not committed. The scripts print the summary tables used above. Note `network_profile.json` was last written by the production-build run (the dev-server run double-counts requests under StrictMode).
+
+## 15. Addendum: contrast after the `fix/honesty-copy` change (not yet merged)
+
+The branch `fix/honesty-copy` (commit `b3bb3ceb`) raises the secondary text token `--muted` from 45% to 66% opacity and stops using the decorative `--dimmed` token for readable text. Section 8.2's numbers describe `main` and are unchanged until that branch is merged. I measured the effect on **rendered pixels** (`analysis/12_token_contrast.cjs`: hide each text element, screenshot its box, take the 90th-percentile background pixel, composite the text colour over it; outputs in `analysis/out/frontend/token_contrast_baseline.json` and `token_contrast_after.json`):
+
+| | elements measured | below 4.5:1 | median ratio |
+|---|---|---|---|
+| before (`--muted` at 45%) | 262 | 262 (100%) | 3.99 |
+| after (`--muted` at 66%) | 263 | 23 (9%) | 7.27 |
+
+The 23 that remain are not token problems: a few are **muted text on solid red position chips** (P2, P4, P8), two are **team labels carrying their own inline `opacity`**, and most of the rest are **measurement artifacts** (the sampled box catches a neighbouring bright element or the panel's bright HUD corner brackets; I inspected the Drivers list directly and the real background behind those names is dark, median luminance 18). The team-label and red-chip cases remain real and are outside the "raise only muted and dimmed" scope of that change. Text in the three My Picks occurrences of `--dimmed` was left untouched as instructed.

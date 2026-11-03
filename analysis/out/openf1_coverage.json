@@ -1,0 +1,807 @@
+[
+ {
+  "raceId": 1145,
+  "year": 2025,
+  "round": 1,
+  "name": "Australian Grand Prix",
+  "meeting_key": 1254,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 421,
+  "fp2_laps": 552,
+  "fp3_laps": 352,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1146,
+  "year": 2025,
+  "round": 2,
+  "name": "Chinese Grand Prix",
+  "meeting_key": 1255,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 459,
+  "sq_results": 20,
+  "sprint_weekend": true,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1147,
+  "year": 2025,
+  "round": 3,
+  "name": "Japanese Grand Prix",
+  "meeting_key": 1256,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 497,
+  "fp2_laps": 227,
+  "fp3_laps": 334,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1148,
+  "year": 2025,
+  "round": 4,
+  "name": "Bahrain Grand Prix",
+  "meeting_key": 1257,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 426,
+  "fp2_laps": 522,
+  "fp3_laps": 309,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1149,
+  "year": 2025,
+  "round": 5,
+  "name": "Saudi Arabian Grand Prix",
+  "meeting_key": 1258,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 472,
+  "fp2_laps": 394,
+  "fp3_laps": 357,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1150,
+  "year": 2025,
+  "round": 6,
+  "name": "Miami Grand Prix",
+  "meeting_key": 1259,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 434,
+  "sq_results": 20,
+  "sprint_weekend": true,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1151,
+  "year": 2025,
+  "round": 7,
+  "name": "Emilia Romagna Grand Prix",
+  "meeting_key": 1260,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 427,
+  "fp2_laps": 519,
+  "fp3_laps": 361,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1152,
+  "year": 2025,
+  "round": 8,
+  "name": "Monaco Grand Prix",
+  "meeting_key": 1261,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 610,
+  "fp2_laps": 612,
+  "fp3_laps": 491,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1153,
+  "year": 2025,
+  "round": 9,
+  "name": "Spanish Grand Prix",
+  "meeting_key": 1262,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 515,
+  "fp2_laps": 582,
+  "fp3_laps": 309,
+  "sprint_weekend": false,
+  "drivers_mapped": 19
+ },
+ {
+  "raceId": 1154,
+  "year": 2025,
+  "round": 10,
+  "name": "Canadian Grand Prix",
+  "meeting_key": 1263,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 550,
+  "fp2_laps": 598,
+  "fp3_laps": 458,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1155,
+  "year": 2025,
+  "round": 11,
+  "name": "Austrian Grand Prix",
+  "meeting_key": 1264,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 639,
+  "fp2_laps": 664,
+  "fp3_laps": 416,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1156,
+  "year": 2025,
+  "round": 12,
+  "name": "British Grand Prix",
+  "meeting_key": 1277,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 506,
+  "fp2_laps": 536,
+  "fp3_laps": 292,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1157,
+  "year": 2025,
+  "round": 13,
+  "name": "Belgian Grand Prix",
+  "meeting_key": 1265,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 437,
+  "sq_results": 20,
+  "sprint_weekend": true,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1158,
+  "year": 2025,
+  "round": 14,
+  "name": "Hungarian Grand Prix",
+  "meeting_key": 1266,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 520,
+  "fp2_laps": 565,
+  "fp3_laps": 380,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1159,
+  "year": 2025,
+  "round": 15,
+  "name": "Dutch Grand Prix",
+  "meeting_key": 1267,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 561,
+  "fp2_laps": 449,
+  "fp3_laps": 415,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1160,
+  "year": 2025,
+  "round": 16,
+  "name": "Italian Grand Prix",
+  "meeting_key": 1268,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 481,
+  "fp2_laps": 531,
+  "fp3_laps": 419,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1161,
+  "year": 2025,
+  "round": 17,
+  "name": "Azerbaijan Grand Prix",
+  "meeting_key": 1269,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 325,
+  "fp2_laps": 434,
+  "fp3_laps": 377,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1162,
+  "year": 2025,
+  "round": 18,
+  "name": "Singapore Grand Prix",
+  "meeting_key": 1270,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 472,
+  "fp2_laps": 353,
+  "fp3_laps": 440,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1163,
+  "year": 2025,
+  "round": 19,
+  "name": "United States Grand Prix",
+  "meeting_key": 1271,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 478,
+  "sq_results": 20,
+  "sprint_weekend": true,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1164,
+  "year": 2025,
+  "round": 20,
+  "name": "Mexico City Grand Prix",
+  "meeting_key": 1272,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 589,
+  "fp2_laps": 620,
+  "fp3_laps": 453,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1165,
+  "year": 2025,
+  "round": 21,
+  "name": "S\u00e3o Paulo Grand Prix",
+  "meeting_key": 1273,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 628,
+  "sq_results": 20,
+  "sprint_weekend": true,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1166,
+  "year": 2025,
+  "round": 22,
+  "name": "Las Vegas Grand Prix",
+  "meeting_key": 1274,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 535,
+  "fp2_laps": 320,
+  "fp3_laps": 406,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1167,
+  "year": 2025,
+  "round": 23,
+  "name": "Qatar Grand Prix",
+  "meeting_key": 1275,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 556,
+  "sq_results": 20,
+  "sprint_weekend": true,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1168,
+  "year": 2025,
+  "round": 24,
+  "name": "Abu Dhabi Grand Prix",
+  "meeting_key": 1276,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 532,
+  "fp2_laps": 584,
+  "fp3_laps": 326,
+  "sprint_weekend": false,
+  "drivers_mapped": 20
+ },
+ {
+  "raceId": 1169,
+  "year": 2026,
+  "round": 1,
+  "name": "Australian Grand Prix",
+  "meeting_key": 1279,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 487,
+  "fp2_laps": 544,
+  "fp3_laps": 377,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1170,
+  "year": 2026,
+  "round": 2,
+  "name": "Chinese Grand Prix",
+  "meeting_key": 1280,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 540,
+  "sq_results": 21,
+  "sprint_weekend": true,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1171,
+  "year": 2026,
+  "round": 3,
+  "name": "Japanese Grand Prix",
+  "meeting_key": 1281,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 525,
+  "fp2_laps": 547,
+  "fp3_laps": 436,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1172,
+  "year": 2026,
+  "round": 4,
+  "name": "Miami Grand Prix",
+  "meeting_key": 1284,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 757,
+  "sq_results": 21,
+  "sprint_weekend": true,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1173,
+  "year": 2026,
+  "round": 5,
+  "name": "Canadian Grand Prix",
+  "meeting_key": 1285,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 619,
+  "sq_results": 20,
+  "sprint_weekend": true,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1174,
+  "year": 2026,
+  "round": 6,
+  "name": "Monaco Grand Prix",
+  "meeting_key": 1286,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 620,
+  "fp2_laps": 711,
+  "fp3_laps": 518,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1175,
+  "year": 2026,
+  "round": 7,
+  "name": "Barcelona-Catalunya Grand Prix",
+  "meeting_key": 1287,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 544,
+  "fp2_laps": 586,
+  "fp3_laps": 337,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1176,
+  "year": 2026,
+  "round": 8,
+  "name": "Austrian Grand Prix",
+  "meeting_key": 1288,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 502,
+  "fp2_laps": 631,
+  "fp3_laps": 462,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1177,
+  "year": 2026,
+  "round": 9,
+  "name": "British Grand Prix",
+  "meeting_key": 1289,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 613,
+  "sq_results": 22,
+  "sprint_weekend": true,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1178,
+  "year": 2026,
+  "round": 10,
+  "name": "Belgian Grand Prix",
+  "meeting_key": 1290,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 486,
+  "fp2_laps": 394,
+  "fp3_laps": 417,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1179,
+  "year": 2026,
+  "round": 11,
+  "name": "Hungarian Grand Prix",
+  "meeting_key": 1291,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 545,
+  "fp2_laps": 572,
+  "fp3_laps": 393,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1180,
+  "year": 2026,
+  "round": 12,
+  "name": "Dutch Grand Prix",
+  "meeting_key": 1292,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 693,
+  "sq_results": 22,
+  "sprint_weekend": true,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1181,
+  "year": 2026,
+  "round": 13,
+  "name": "Italian Grand Prix",
+  "meeting_key": 1293,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 545,
+  "fp2_laps": 618,
+  "fp3_laps": 472,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1182,
+  "year": 2026,
+  "round": 14,
+  "name": "Spanish Grand Prix",
+  "meeting_key": 1294,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 561,
+  "fp2_laps": 481,
+  "fp3_laps": 261,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1183,
+  "year": 2026,
+  "round": 15,
+  "name": "Azerbaijan Grand Prix",
+  "meeting_key": 1295,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 463,
+  "fp2_laps": 457,
+  "fp3_laps": 446,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1184,
+  "year": 2026,
+  "round": 16,
+  "name": "Bahrain Grand Prix in Malaysia",
+  "meeting_key": 1308,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 506,
+  "fp2_laps": 614,
+  "fp3_laps": 347,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1185,
+  "year": 2026,
+  "round": 17,
+  "name": "Singapore Grand Prix",
+  "meeting_key": 1296,
+  "sessions": [
+   "Practice 1",
+   "Qualifying",
+   "Race",
+   "Sprint",
+   "Sprint Qualifying"
+  ],
+  "fp1_laps": 568,
+  "sq_results": 22,
+  "sprint_weekend": true,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1186,
+  "year": 2026,
+  "round": 18,
+  "name": "United States Grand Prix",
+  "meeting_key": 1297,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 507,
+  "fp2_laps": 589,
+  "fp3_laps": 423,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ },
+ {
+  "raceId": 1187,
+  "year": 2026,
+  "round": 19,
+  "name": "Mexico City Grand Prix",
+  "meeting_key": 1298,
+  "sessions": [
+   "Practice 1",
+   "Practice 2",
+   "Practice 3",
+   "Qualifying",
+   "Race"
+  ],
+  "fp1_laps": 589,
+  "fp2_laps": 656,
+  "fp3_laps": 469,
+  "sprint_weekend": false,
+  "drivers_mapped": 22
+ }
+]

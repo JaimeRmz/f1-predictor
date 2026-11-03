@@ -1,0 +1,3434 @@
+[
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.403908826018038,
+  "mean": 7.433760042203475,
+  "bg": [
+   24,
+   10,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.447986986299135,
+  "mean": 7.4572968916635824,
+  "bg": [
+   16,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.420096649832251,
+  "mean": 7.444849921509907,
+  "bg": [
+   20,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.400564015233136,
+  "mean": 7.420809655927308,
+  "bg": [
+   22,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.383432213366587,
+  "mean": 7.385177899338755,
+  "bg": [
+   24,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.361435791993422,
+  "mean": 7.380234036296211,
+  "bg": [
+   27,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.35091682693493,
+  "mean": 7.365276686246936,
+  "bg": [
+   28,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.374154642466395,
+  "mean": 7.397913435187009,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.394455883643486,
+  "mean": 7.406414401999465,
+  "bg": [
+   23,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.412092983709985,
+  "mean": 7.431871780875955,
+  "bg": [
+   21,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.4261361120092975,
+  "mean": 7.447637909956511,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Models",
+  "worst": 5.107269293204261,
+  "mean": 5.103089547920305,
+  "bg": [
+   10,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "prediction pipeline",
+  "worst": 7.458034442534548,
+  "mean": 7.476854553765441,
+  "bg": [
+   13,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "ROC-AUC",
+  "worst": 5.092820499977882,
+  "mean": 5.102026284230487,
+  "bg": [
+   16,
+   17,
+   18
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "winner model",
+  "worst": 7.461785664295832,
+  "mean": 7.478021253786976,
+  "bg": [
+   12,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Training",
+  "worst": 5.082425338263292,
+  "mean": 5.092030731620605,
+  "bg": [
+   18,
+   18,
+   20
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "race entries",
+  "worst": 7.461785664295832,
+  "mean": 7.4761935570152716,
+  "bg": [
+   12,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Season",
+  "worst": 5.097506178514507,
+  "mean": 5.105028369970936,
+  "bg": [
+   16,
+   16,
+   18
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "live",
+  "worst": 7.397841513778833,
+  "mean": 7.446182841994682,
+  "bg": [
+   16,
+   15,
+   17
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "An XGBoost regressor for",
+  "worst": 7.459668500110951,
+  "mean": 7.472439750927396,
+  "bg": [
+   13,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Two classifiers estimate",
+  "worst": 1.0060108483701051,
+  "mean": 3.7978095264555916,
+  "bg": [
+   235,
+   235,
+   235
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Every 2026 race tests th",
+  "worst": 7.452047965373258,
+  "mean": 7.381118877214911,
+  "bg": [
+   15,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Live predictions. Every ",
+  "worst": 7.450831416572542,
+  "mean": 7.399231669430979,
+  "bg": [
+   12,
+   13,
+   14
+  ]
+ },
+ {
+  "page": "Home",
+  "alpha": "0.6",
+  "extraOpacity": 1,
+  "text": "Three ML models predict ",
+  "worst": 6.206872827627008,
+  "mean": 6.138261571954585,
+  "bg": [
+   20,
+   19,
+   23
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.39359837007709,
+  "mean": 7.426721954691564,
+  "bg": [
+   25,
+   10,
+   13
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.43823298966637,
+  "mean": 7.458984501447564,
+  "bg": [
+   19,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.439435415094992,
+  "mean": 7.4564238056985355,
+  "bg": [
+   17,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.393060136522272,
+  "mean": 7.417572138277655,
+  "bg": [
+   23,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.393801397491628,
+  "mean": 7.405828409825577,
+  "bg": [
+   24,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.374154642466395,
+  "mean": 7.3884981059009025,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.374154642466395,
+  "mean": 7.3876597405311095,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.384951780916767,
+  "mean": 7.400592932674012,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.384951780916767,
+  "mean": 7.415149490591099,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.412092983709985,
+  "mean": 7.432177091221554,
+  "bg": [
+   21,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.4261361120092975,
+  "mean": 7.447793596212668,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Select Grand Prix",
+  "worst": 7.132980738420926,
+  "mean": 7.194525862605448,
+  "bg": [
+   25,
+   23,
+   25
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Choose a race...",
+  "worst": 6.711290665277961,
+  "mean": 6.792748901523169,
+  "bg": [
+   29,
+   33,
+   38
+  ]
+ },
+ {
+  "page": "Predictor",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SELECT A RACE TO RUN THE",
+  "worst": 7.461785664295832,
+  "mean": 7.472756832962785,
+  "bg": [
+   12,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.39359837007709,
+  "mean": 7.4266828646147065,
+  "bg": [
+   25,
+   10,
+   13
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.4437657902230265,
+  "mean": 7.459201026862211,
+  "bg": [
+   18,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.439435415094992,
+  "mean": 7.457035827150301,
+  "bg": [
+   17,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.42453512089329,
+  "mean": 7.444909015404365,
+  "bg": [
+   19,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.395200459602879,
+  "mean": 7.405977729699153,
+  "bg": [
+   24,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.348014593384748,
+  "mean": 7.373505300595172,
+  "bg": [
+   28,
+   11,
+   15
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.374154642466395,
+  "mean": 7.388042901980343,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.384951780916767,
+  "mean": 7.4009162848962475,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.384951780916767,
+  "mean": 7.415660274265597,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.412092983709985,
+  "mean": 7.431897930323655,
+  "bg": [
+   21,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.4261361120092975,
+  "mean": 7.447498032659171,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Race Weekend Schedule · ",
+  "worst": 7.04667717591331,
+  "mean": 7.101051727132199,
+  "bg": [
+   30,
+   24,
+   27
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Friday, Nov 6 · 9:30 AM ",
+  "worst": 7.189905082757914,
+  "mean": 7.242292812263239,
+  "bg": [
+   21,
+   22,
+   26
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Friday, Nov 6 · 1:00 PM ",
+  "worst": 7.229436181234093,
+  "mean": 7.28004152782623,
+  "bg": [
+   20,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Saturday, Nov 7 · 8:30 A",
+  "worst": 7.263775562184789,
+  "mean": 7.30856208878088,
+  "bg": [
+   19,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Saturday, Nov 7 · 12:00 ",
+  "worst": 7.263775562184789,
+  "mean": 7.279114449142069,
+  "bg": [
+   19,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Sunday, Nov 8 · 11:00 AM",
+  "worst": 7.263775562184789,
+  "mean": 7.278429742317674,
+  "bg": [
+   19,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P2",
+  "worst": 1.8018196521018979,
+  "mean": 4.16814430076865,
+  "bg": [
+   194,
+   142,
+   142
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P3",
+  "worst": 7.309715533228437,
+  "mean": 7.299437059626918,
+  "bg": [
+   20,
+   18,
+   20
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P4",
+  "worst": 1.9795594476096308,
+  "mean": 4.010864398210715,
+  "bg": [
+   254,
+   26,
+   2
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P5",
+  "worst": 7.222217829209125,
+  "mean": 7.249278131375515,
+  "bg": [
+   21,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P6",
+  "worst": 7.229436181234093,
+  "mean": 7.251841455856135,
+  "bg": [
+   20,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P7",
+  "worst": 7.229436181234093,
+  "mean": 7.256923687733418,
+  "bg": [
+   20,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P8",
+  "worst": 7.222217829209125,
+  "mean": 7.250649455097157,
+  "bg": [
+   21,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P9",
+  "worst": 7.222217829209125,
+  "mean": 7.255551620518518,
+  "bg": [
+   21,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 0.7,
+  "text": "RB F1 Team",
+  "worst": 4.167495339607005,
+  "mean": 4.1670692322834855,
+  "bg": [
+   16,
+   17,
+   19
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P10",
+  "worst": 7.229436181234093,
+  "mean": 7.255342166361555,
+  "bg": [
+   20,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P11",
+  "worst": 7.229436181234093,
+  "mean": 7.253263709942859,
+  "bg": [
+   20,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P12",
+  "worst": 7.226247211578955,
+  "mean": 7.250418281857756,
+  "bg": [
+   20,
+   21,
+   25
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P13",
+  "worst": 7.219040088403119,
+  "mean": 7.251130475933253,
+  "bg": [
+   21,
+   21,
+   25
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P14",
+  "worst": 7.229436181234093,
+  "mean": 7.25849800820247,
+  "bg": [
+   20,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P15",
+  "worst": 7.2961860166282095,
+  "mean": 7.301446234695969,
+  "bg": [
+   18,
+   19,
+   22
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P16",
+  "worst": 7.226247211578955,
+  "mean": 7.252610404811635,
+  "bg": [
+   20,
+   21,
+   25
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P17",
+  "worst": 7.2961860166282095,
+  "mean": 7.301446234695969,
+  "bg": [
+   18,
+   19,
+   22
+  ]
+ },
+ {
+  "page": "Next Race",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P18",
+  "worst": 7.2961860166282095,
+  "mean": 7.301446234695969,
+  "bg": [
+   18,
+   19,
+   22
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.39359837007709,
+  "mean": 7.425805167297428,
+  "bg": [
+   25,
+   10,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.433053772360808,
+  "mean": 7.45250710200222,
+  "bg": [
+   18,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.441864095636783,
+  "mean": 7.456643816738698,
+  "bg": [
+   16,
+   12,
+   16
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.4261361120092975,
+  "mean": 7.444662980008772,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.403546497021508,
+  "mean": 7.42301331370351,
+  "bg": [
+   22,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.374154642466395,
+  "mean": 7.388001762397513,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.374154642466395,
+  "mean": 7.387689355879408,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.384951780916767,
+  "mean": 7.40099181142763,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.404775634099243,
+  "mean": 7.415245082476399,
+  "bg": [
+   22,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.403546497021508,
+  "mean": 7.429606117860127,
+  "bg": [
+   22,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.4276829674508535,
+  "mean": 7.453402165519751,
+  "bg": [
+   20,
+   11,
+   15
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Grid pre-loaded with pre",
+  "worst": 7.1584669414301425,
+  "mean": 7.243877281777044,
+  "bg": [
+   22,
+   23,
+   25
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drag drivers to reorder ",
+  "worst": 7.461785664295832,
+  "mean": 7.472539532309903,
+  "bg": [
+   12,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P2",
+  "worst": 6.598401503474118,
+  "mean": 6.694162620639265,
+  "bg": [
+   11,
+   38,
+   38
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P3",
+  "worst": 5.961954383949499,
+  "mean": 7.205493600072335,
+  "bg": [
+   84,
+   14,
+   14
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P4",
+  "worst": 5.962487221873647,
+  "mean": 7.206237180561818,
+  "bg": [
+   84,
+   14,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P5",
+  "worst": 5.930184785076141,
+  "mean": 7.203863345594408,
+  "bg": [
+   85,
+   14,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P6",
+  "worst": 6.00012292948368,
+  "mean": 7.210669261343623,
+  "bg": [
+   83,
+   13,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P7",
+  "worst": 5.902771881706534,
+  "mean": 7.171124767393401,
+  "bg": [
+   86,
+   13,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P8",
+  "worst": 1.9915622898683154,
+  "mean": 4.812042308330877,
+  "bg": [
+   253,
+   26,
+   3
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P9",
+  "worst": 5.902771881706534,
+  "mean": 7.207743221010891,
+  "bg": [
+   86,
+   13,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 0.5,
+  "text": "RB F1 Team",
+  "worst": 2.6416516316084917,
+  "mean": 2.690862418752211,
+  "bg": [
+   9,
+   43,
+   43
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P10",
+  "worst": 6.878455099469634,
+  "mean": 7.117970552847436,
+  "bg": [
+   11,
+   32,
+   32
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P11",
+  "worst": 5.930184785076141,
+  "mean": 7.206903467729294,
+  "bg": [
+   85,
+   14,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P12",
+  "worst": 5.930184785076141,
+  "mean": 7.205342558978468,
+  "bg": [
+   85,
+   14,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P13",
+  "worst": 5.930184785076141,
+  "mean": 7.201127934078617,
+  "bg": [
+   85,
+   14,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P14",
+  "worst": 5.902771881706534,
+  "mean": 7.204335651011465,
+  "bg": [
+   86,
+   13,
+   13
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P15",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P16",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P17",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P18",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P19",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P20",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P21",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "What-If",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "P22",
+  "worst": 5.972501324111441,
+  "mean": 7.252116329977553,
+  "bg": [
+   84,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.434482846006695,
+  "mean": 7.4297839907767695,
+  "bg": [
+   18,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.44520636809396,
+  "mean": 7.458419853144663,
+  "bg": [
+   18,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.440870101148433,
+  "mean": 7.456935097022131,
+  "bg": [
+   17,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.42453512089329,
+  "mean": 7.4448716983544445,
+  "bg": [
+   19,
+   12,
+   15
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.403546497021508,
+  "mean": 7.422833897667003,
+  "bg": [
+   22,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.384951780916767,
+  "mean": 7.406289548096385,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.374154642466395,
+  "mean": 7.388562124615872,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.384951780916767,
+  "mean": 7.4010134787130335,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.384951780916767,
+  "mean": 7.415717333739032,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.4106828578925725,
+  "mean": 7.431642660611957,
+  "bg": [
+   21,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.420716670333278,
+  "mean": 7.433323520480339,
+  "bg": [
+   18,
+   13,
+   14
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 0.75,
+  "text": "Derived from Jolpica res",
+  "worst": 4.559621462930748,
+  "mean": 4.578150962665845,
+  "bg": [
+   24,
+   23,
+   27
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Clinched at the Mexico C",
+  "worst": 7.203486979064685,
+  "mean": 7.279724907520748,
+  "bg": [
+   20,
+   22,
+   24
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Constructors' title · no",
+  "worst": 7.155201627687468,
+  "mean": 7.2326926845476045,
+  "bg": [
+   22,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Mercedes leads Ferrari b",
+  "worst": 7.185615234237606,
+  "mean": 7.261547745282634,
+  "bg": [
+   22,
+   22,
+   25
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers' Standings · Wha",
+  "worst": 7.115429141244153,
+  "mean": 7.163780584781711,
+  "bg": [
+   23,
+   24,
+   27
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "LEADER · max reachable 4",
+  "worst": 7.118816454210339,
+  "mean": 7.061094458616874,
+  "bg": [
+   23,
+   24,
+   26
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "CHAMPION",
+  "worst": 7.388197324971234,
+  "mean": 7.414021602292732,
+  "bg": [
+   14,
+   16,
+   18
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2",
+  "worst": 2.119452027864046,
+  "mean": 5.726840398751133,
+  "bg": [
+   138,
+   138,
+   139
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "-119 PTS · max reachable",
+  "worst": 7.256960719650622,
+  "mean": 7.400358401167455,
+  "bg": [
+   20,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "ELIMINATED",
+  "worst": 7.3859084708683636,
+  "mean": 7.413286269424844,
+  "bg": [
+   14,
+   16,
+   19
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3",
+  "worst": 2.1047914742368437,
+  "mean": 5.738074307888835,
+  "bg": [
+   138,
+   139,
+   139
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "-121 PTS · max reachable",
+  "worst": 7.249640263761383,
+  "mean": 7.385515091076281,
+  "bg": [
+   21,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "ELIMINATED",
+  "worst": 7.383607739398469,
+  "mean": 7.415467912830637,
+  "bg": [
+   15,
+   16,
+   18
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "4",
+  "worst": 2.117942023298434,
+  "mean": 5.730741817048689,
+  "bg": [
+   138,
+   138,
+   140
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "-130 PTS · max reachable",
+  "worst": 7.238791717544379,
+  "mean": 7.368707040442021,
+  "bg": [
+   22,
+   20,
+   24
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "ELIMINATED",
+  "worst": 7.376232103230935,
+  "mean": 7.408776290123355,
+  "bg": [
+   16,
+   16,
+   19
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "5",
+  "worst": 2.1047914742368437,
+  "mean": 5.7305846715855555,
+  "bg": [
+   138,
+   139,
+   139
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "-135 PTS · max reachable",
+  "worst": 7.215270872609034,
+  "mean": 7.348782239173788,
+  "bg": [
+   25,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "ELIMINATED",
+  "worst": 7.364502524699365,
+  "mean": 7.353587854123292,
+  "bg": [
+   18,
+   16,
+   19
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "6",
+  "worst": 2.115065120890811,
+  "mean": 5.713195034197108,
+  "bg": [
+   139,
+   138,
+   139
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "-159 PTS · max reachable",
+  "worst": 7.264404418123045,
+  "mean": 7.335520533632959,
+  "bg": [
+   25,
+   18,
+   21
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "ELIMINATED",
+  "worst": 7.272576097054927,
+  "mean": 7.362699711526228,
+  "bg": [
+   21,
+   19,
+   23
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "7",
+  "worst": 7.068758133482945,
+  "mean": 7.076739437112089,
+  "bg": [
+   25,
+   25,
+   27
+  ]
+ },
+ {
+  "page": "Championship",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "-230 PTS · max reachable",
+  "worst": 7.110449994558023,
+  "mean": 7.074784337418822,
+  "bg": [
+   24,
+   24,
+   26
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.392197577748528,
+  "mean": 7.426398781357283,
+  "bg": [
+   25,
+   10,
+   14
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.436798447817285,
+  "mean": 7.457071726747222,
+  "bg": [
+   19,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.439435415094992,
+  "mean": 7.456156086135561,
+  "bg": [
+   17,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.4261361120092975,
+  "mean": 7.445239828755274,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.404775634099243,
+  "mean": 7.423295513957578,
+  "bg": [
+   22,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.384951780916767,
+  "mean": 7.404062289230725,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.362809404305931,
+  "mean": 7.38625827068055,
+  "bg": [
+   27,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.362809404305931,
+  "mean": 7.385319261255666,
+  "bg": [
+   27,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.404775634099243,
+  "mean": 7.415706397146379,
+  "bg": [
+   22,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.412092983709985,
+  "mean": 7.43224918812632,
+  "bg": [
+   21,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.42704770616982,
+  "mean": 7.44105261823912,
+  "bg": [
+   17,
+   13,
+   14
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 0.75,
+  "text": "Career Explorer · 2010–2",
+  "worst": 4.5531592356338715,
+  "mean": 4.569043130377839,
+  "bg": [
+   24,
+   24,
+   25
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "All Drivers",
+  "worst": 7.110449994558023,
+  "mean": 7.148081043507547,
+  "bg": [
+   24,
+   24,
+   26
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Kimi Antonelli",
+  "worst": 7.155201627687468,
+  "mean": 7.197274410825515,
+  "bg": [
+   22,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Max Verstappen",
+  "worst": 7.162696854814807,
+  "mean": 7.218961863644537,
+  "bg": [
+   21,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Lewis Hamilton",
+  "worst": 7.193224871153713,
+  "mean": 7.240291443554561,
+  "bg": [
+   21,
+   22,
+   25
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "George Russell",
+  "worst": 7.200337637391207,
+  "mean": 7.258650698113047,
+  "bg": [
+   20,
+   22,
+   25
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Charles Leclerc",
+  "worst": 7.229436181234093,
+  "mean": 7.281283426987721,
+  "bg": [
+   20,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Lando Norris",
+  "worst": 7.263775562184789,
+  "mean": 7.302026813087759,
+  "bg": [
+   19,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Oscar Piastri",
+  "worst": 7.263775562184789,
+  "mean": 7.310153185239734,
+  "bg": [
+   19,
+   20,
+   23
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Isack Hadjar",
+  "worst": 7.027106983155444,
+  "mean": 6.940586143234026,
+  "bg": [
+   25,
+   26,
+   30
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Liam Lawson",
+  "worst": 4.517841348131198,
+  "mean": 6.844844512405547,
+  "bg": [
+   70,
+   70,
+   73
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Pierre Gasly",
+  "worst": 4.697911718252047,
+  "mean": 6.881424037513062,
+  "bg": [
+   66,
+   67,
+   69
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Arvid Lindblad",
+  "worst": 4.587617608934611,
+  "mean": 6.887334338894732,
+  "bg": [
+   68,
+   69,
+   71
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Franco Colapinto",
+  "worst": 5.392873300177785,
+  "mean": 6.913639803153955,
+  "bg": [
+   54,
+   55,
+   58
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Oliver Bearman",
+  "worst": 3.519773919127137,
+  "mean": 6.775866030182783,
+  "bg": [
+   91,
+   91,
+   93
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Nico Hülkenberg",
+  "worst": 3.014331332163071,
+  "mean": 6.67222501496243,
+  "bg": [
+   103,
+   105,
+   105
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Gabriel Bortoleto",
+  "worst": 3.1060793145815886,
+  "mean": 6.729669237154407,
+  "bg": [
+   101,
+   102,
+   104
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Carlos Sainz",
+  "worst": 3.036352871727924,
+  "mean": 6.662080234502166,
+  "bg": [
+   103,
+   104,
+   106
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Esteban Ocon",
+  "worst": 2.8822719426078414,
+  "mean": 6.612228913489954,
+  "bg": [
+   107,
+   109,
+   109
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Fernando Alonso",
+  "worst": 4.533277870476611,
+  "mean": 6.883711970740997,
+  "bg": [
+   69,
+   70,
+   72
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Alexander Albon",
+  "worst": 3.752860859384261,
+  "mean": 6.830808186401245,
+  "bg": [
+   84,
+   86,
+   88
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Yuki Tsunoda",
+  "worst": 3.002263111020529,
+  "mean": 6.64829470528816,
+  "bg": [
+   104,
+   105,
+   107
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Lance Stroll",
+  "worst": 2.9997297134962357,
+  "mean": 6.671607892789856,
+  "bg": [
+   104,
+   105,
+   108
+  ]
+ },
+ {
+  "page": "Drivers",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Ryo Hirakawa",
+  "worst": 4.411158321289908,
+  "mean": 6.852741981622111,
+  "bg": [
+   72,
+   72,
+   75
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.421236840260403,
+  "mean": 7.4297330708140175,
+  "bg": [
+   21,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.44520636809396,
+  "mean": 7.458419853144663,
+  "bg": [
+   18,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.439435415094992,
+  "mean": 7.455445376370844,
+  "bg": [
+   17,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.420716670333278,
+  "mean": 7.435950378166601,
+  "bg": [
+   18,
+   13,
+   14
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.394455883643486,
+  "mean": 7.421137626759832,
+  "bg": [
+   23,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.374154642466395,
+  "mean": 7.39929240655325,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.374154642466395,
+  "mean": 7.388338672440822,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.374154642466395,
+  "mean": 7.387853096206025,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.384951780916767,
+  "mean": 7.400542456404634,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.412092983709985,
+  "mean": 7.432159713159866,
+  "bg": [
+   21,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.4261361120092975,
+  "mean": 7.4478550490597195,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 0.75,
+  "text": "Career Stats · Head to H",
+  "worst": 4.557902022836407,
+  "mean": 4.572553164420155,
+  "bg": [
+   25,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Driver 1",
+  "worst": 7.155201627687468,
+  "mean": 7.213822789080376,
+  "bg": [
+   22,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Select...",
+  "worst": 6.743880153791741,
+  "mean": 6.822028798880731,
+  "bg": [
+   30,
+   32,
+   37
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Driver 2",
+  "worst": 7.314155341224223,
+  "mean": 7.369426381227826,
+  "bg": [
+   19,
+   18,
+   21
+  ]
+ },
+ {
+  "page": "Compare",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Select...",
+  "worst": 6.978308945910664,
+  "mean": 7.038423115501877,
+  "bg": [
+   26,
+   27,
+   32
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.39359837007709,
+  "mean": 7.426837910350079,
+  "bg": [
+   25,
+   10,
+   13
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.43823298966637,
+  "mean": 7.458806101808201,
+  "bg": [
+   19,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.439435415094992,
+  "mean": 7.455953476886644,
+  "bg": [
+   17,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.4261361120092975,
+  "mean": 7.444678425092088,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.393060136522272,
+  "mean": 7.415900949313488,
+  "bg": [
+   23,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.386169568056526,
+  "mean": 7.405783079624775,
+  "bg": [
+   25,
+   11,
+   12
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.374154642466395,
+  "mean": 7.38841350489639,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.374154642466395,
+  "mean": 7.387599719877528,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.383560860959407,
+  "mean": 7.400469701260023,
+  "bg": [
+   25,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.395678241343825,
+  "mean": 7.412281603322628,
+  "bg": [
+   23,
+   12,
+   12
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Model",
+  "worst": 7.427559220952826,
+  "mean": 7.447663709069298,
+  "bg": [
+   19,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 0.75,
+  "text": "Live Test Set · Post-Tra",
+  "worst": 4.560838702140907,
+  "mean": 4.577948431279737,
+  "bg": [
+   24,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Completed",
+  "worst": 5.0485769502546365,
+  "mean": 5.076934418021987,
+  "bg": [
+   20,
+   21,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "races",
+  "worst": 7.332080078481136,
+  "mean": 7.3813492468339446,
+  "bg": [
+   16,
+   18,
+   21
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Leader",
+  "worst": 5.042975615908135,
+  "mean": 5.074185369717236,
+  "bg": [
+   22,
+   21,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "+119 pts gap",
+  "worst": 7.329198061969358,
+  "mean": 7.381834586382222,
+  "bg": [
+   17,
+   18,
+   20
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Remaining",
+  "worst": 5.041030536752825,
+  "mean": 5.073982010194748,
+  "bg": [
+   23,
+   21,
+   24
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "races to go",
+  "worst": 7.329198061969358,
+  "mean": 7.381342985078322,
+  "bg": [
+   17,
+   18,
+   20
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Next Race",
+  "worst": 5.045947001413236,
+  "mean": 5.076348520161914,
+  "bg": [
+   21,
+   21,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Nov 8 · Interlagos",
+  "worst": 7.329198061969358,
+  "mean": 7.380667331042533,
+  "bg": [
+   17,
+   18,
+   20
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Driver Championship — af",
+  "worst": 7.115429141244153,
+  "mean": 7.156732615388959,
+  "bg": [
+   23,
+   24,
+   27
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Mercedes · 9 wins",
+  "worst": 7.1584669414301425,
+  "mean": 7.214753622712104,
+  "bg": [
+   22,
+   23,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2",
+  "worst": 7.151755991621483,
+  "mean": 7.176343500673398,
+  "bg": [
+   22,
+   23,
+   27
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Red Bull · 3 wins",
+  "worst": 7.129915588237445,
+  "mean": 6.9170683106000705,
+  "bg": [
+   22,
+   24,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3",
+  "worst": 7.126693951219697,
+  "mean": 7.082490595306059,
+  "bg": [
+   22,
+   24,
+   26
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Ferrari · 1 win",
+  "worst": 7.126693951219697,
+  "mean": 6.913725966276254,
+  "bg": [
+   22,
+   24,
+   26
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "4",
+  "worst": 7.150466419304492,
+  "mean": 7.081840016276749,
+  "bg": [
+   23,
+   23,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Mercedes · 3 wins",
+  "worst": 7.129915588237445,
+  "mean": 6.907400037428975,
+  "bg": [
+   22,
+   24,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "5",
+  "worst": 7.126693951219697,
+  "mean": 7.08762272316888,
+  "bg": [
+   22,
+   24,
+   26
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Ferrari · 1 win",
+  "worst": 7.110449994558023,
+  "mean": 6.883425512196717,
+  "bg": [
+   24,
+   24,
+   26
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "6",
+  "worst": 7.129915588237445,
+  "mean": 7.0811619650891515,
+  "bg": [
+   22,
+   24,
+   25
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "McLaren · 2 wins",
+  "worst": 7.099851319070036,
+  "mean": 6.863510886977205,
+  "bg": [
+   28,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "7",
+  "worst": 7.1297544246385,
+  "mean": 7.076978711848589,
+  "bg": [
+   25,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "McLaren · 0 wins",
+  "worst": 6.589306054023028,
+  "mean": 7.163718504547283,
+  "bg": [
+   37,
+   34,
+   37
+  ]
+ },
+ {
+  "page": "2026 Season",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "8",
+  "worst": 2.016096622687925,
+  "mean": 5.40079150307436,
+  "bg": [
+   144,
+   143,
+   144
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "3-MODEL PIPELINE · XGBOO",
+  "worst": 7.39359837007709,
+  "mean": 7.426190638323266,
+  "bg": [
+   25,
+   10,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "SYS STATUS",
+  "worst": 7.43823298966637,
+  "mean": 7.459795653141957,
+  "bg": [
+   19,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Home",
+  "worst": 7.440870101148433,
+  "mean": 7.456529937631093,
+  "bg": [
+   17,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predictor",
+  "worst": 7.4261361120092975,
+  "mean": 7.444802721147289,
+  "bg": [
+   19,
+   12,
+   14
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Next Race 🇧🇷",
+  "worst": 7.403546497021508,
+  "mean": 7.42301331370351,
+  "bg": [
+   22,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "What-If 🎮",
+  "worst": 7.393801397491628,
+  "mean": 7.406056306288378,
+  "bg": [
+   24,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "My Picks 🎯",
+  "worst": 7.374154642466395,
+  "mean": 7.388893597915947,
+  "bg": [
+   26,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Championship",
+  "worst": 7.372772206954684,
+  "mean": 7.387510406296141,
+  "bg": [
+   26,
+   11,
+   14
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Drivers",
+  "worst": 7.384951780916767,
+  "mean": 7.4004425846938435,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Compare",
+  "worst": 7.384951780916767,
+  "mean": 7.414947756694193,
+  "bg": [
+   25,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "2026 Season",
+  "worst": 7.412092983709985,
+  "mean": 7.432040402889511,
+  "bg": [
+   21,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 0.75,
+  "text": "Machine Learning · 3-Mod",
+  "worst": 4.557902022836407,
+  "mean": 4.577379120539023,
+  "bg": [
+   25,
+   23,
+   26
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "XGBRegressor",
+  "worst": 7.266645652461624,
+  "mean": 7.342025079441876,
+  "bg": [
+   19,
+   20,
+   22
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predicts each driver's g",
+  "worst": 7.326613845051266,
+  "mean": 7.3714292585319185,
+  "bg": [
+   17,
+   18,
+   21
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "XGBClassifier",
+  "worst": 7.239170841470853,
+  "mean": 7.316622452370764,
+  "bg": [
+   19,
+   21,
+   23
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predicts who wins the ra",
+  "worst": 7.2961860166282095,
+  "mean": 7.3551586276589935,
+  "bg": [
+   18,
+   19,
+   22
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "XGBClassifier",
+  "worst": 7.232442704006237,
+  "mean": 7.312164683250085,
+  "bg": [
+   20,
+   21,
+   23
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Predicts every driver's ",
+  "worst": 7.2961860166282095,
+  "mean": 7.354924818129221,
+  "bg": [
+   18,
+   19,
+   22
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "For upcoming races, the ",
+  "worst": 7.479116546825548,
+  "mean": 7.4923559810266385,
+  "bg": [
+   11,
+   11,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 0.75,
+  "text": "Machine Learning · XGBoo",
+  "worst": 4.613126697815806,
+  "mean": 4.617789170534334,
+  "bg": [
+   11,
+   12,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Algorithm",
+  "worst": 5.022102858449116,
+  "mean": 5.042334727658494,
+  "bg": [
+   22,
+   23,
+   25
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "gradient boosted trees",
+  "worst": 5.405227218346937,
+  "mean": 7.314346191501118,
+  "bg": [
+   53,
+   55,
+   58
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "ROC-AUC · real grid",
+  "worst": 5.070173883609772,
+  "mean": 5.078188315084304,
+  "bg": [
+   22,
+   18,
+   22
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "actual starting grid · 4",
+  "worst": 7.1823075497568665,
+  "mean": 7.275224879149302,
+  "bg": [
+   22,
+   22,
+   26
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "ROC-AUC · predicted grid",
+  "worst": 5.077798177959122,
+  "mean": 5.0877346165883655,
+  "bg": [
+   22,
+   17,
+   20
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "pre-qualifying path used",
+  "worst": 7.267527759937711,
+  "mean": 7.262175176679286,
+  "bg": [
+   22,
+   19,
+   22
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Recall · real grid",
+  "worst": 5.052260217468617,
+  "mean": 5.061686619120268,
+  "bg": [
+   23,
+   20,
+   22
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "podiums caught at a 0.5 ",
+  "worst": 7.355423044634893,
+  "mean": 7.368742958461019,
+  "bg": [
+   19,
+   16,
+   20
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 0.8,
+  "text": "Training",
+  "worst": 5.090728500951223,
+  "mean": 5.098288242141669,
+  "bg": [
+   19,
+   16,
+   20
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "race entries 2010–2024",
+  "worst": 5.757394254979008,
+  "mean": 7.35690943249661,
+  "bg": [
+   48,
+   49,
+   52
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Podium Model Features",
+  "worst": 7.1035234959967815,
+  "mean": 6.955256353025906,
+  "bg": [
+   24,
+   24,
+   28
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "The qualifying and winne",
+  "worst": 7.382407803812544,
+  "mean": 7.424461247207873,
+  "bg": [
+   23,
+   13,
+   13
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Starting position. P1/P2",
+  "worst": 2.508121243955918,
+  "mean": 6.201864268391006,
+  "bg": [
+   123,
+   121,
+   121
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "Sum of points scored in ",
+  "worst": 1.981065110183577,
+  "mean": 6.1417432548268,
+  "bg": [
+   254,
+   27,
+   3
+  ]
+ },
+ {
+  "page": "Model",
+  "alpha": "0.66",
+  "extraOpacity": 1,
+  "text": "5.1%",
+  "worst": 7.4666679600113195,
+  "mean": 7.4813606116155675,
+  "bg": [
+   11,
+   12,
+   14
+  ]
+ }
+]
