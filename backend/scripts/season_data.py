@@ -47,7 +47,24 @@ def upcoming_races(season):
     return [r for r in season_races(season) if r["raceId"] not in done]
 
 
-def roster(season, window=3, min_appearances=2):
+# One-off entry-list corrections for changes Jolpica has not published yet (it publishes no entry list before a race
+# weekend, so roster() below can only look backwards). Keyed by raceId so a correction can never leak into a later race.
+# "drop": driverRefs who are NOT racing that weekend. A driver with no history rows (a debutant) needs no entry here:
+# the model cannot score him, and snapshot_model_pick.py now warns when a roster driver gets no prediction.
+# Leave this empty unless the FIA entry list has been checked.
+ENTRY_CHANGES = {
+    1188: {"drop": ["ocon"]},   # Brazilian GP. ONLY if Haas has confirmed Ocon is out for this race.
+}
+
+
+def unpredicted(roster_pairs, records):
+    """driverRefs that were sent to the model but got no prediction back. /whatif silently skips a driver with no
+    history rows (HTTP 200, shorter list), so the caller has to compare the two lists to notice."""
+    got = {r["driverRef"] for r in records}
+    return [ref for ref, _ in roster_pairs if ref not in got]
+
+
+def roster(season, window=3, min_appearances=2, race_id=None):
     """[(driverRef, seed_grid)] for the next race, ordered by current standings.
 
     Jolpica publishes no entry list before a race weekend, so the list is
@@ -71,4 +88,6 @@ def roster(season, window=3, min_appearances=2):
         if int(r["raceId"]) == last[-1]:
             standings[r["driverId"]] = float(r["points"])
     ordered = sorted(keep, key=lambda d: (-standings.get(d, 0.0), int(d)))
-    return [(drivers[d], i + 1) for i, d in enumerate(ordered)]
+    drop = set(ENTRY_CHANGES.get(race_id, {}).get("drop", ()))
+    refs = [drivers[d] for d in ordered if drivers[d] not in drop]
+    return [(ref, i + 1) for i, ref in enumerate(refs)]
