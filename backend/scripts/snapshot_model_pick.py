@@ -195,7 +195,7 @@ def predict_upcoming(api_base, race_id):
     if not race:
         die(f"raceId {race_id} isn't an upcoming {SEASON} race (it has result rows, or isn't in races.csv)")
     circuit = race["circuitRef"]
-    roster = season_data.roster(SEASON)
+    roster = season_data.roster(SEASON, race_id=race_id)
     if len(roster) < 20:
         die(f"derived roster has only {len(roster)} drivers -- refusing to snapshot on a partial entry list")
     PROVENANCE["source"] = "whatif_auto_quali"
@@ -211,6 +211,12 @@ def predict_upcoming(api_base, race_id):
     data = r.json()
     if not data:
         die(f"/whatif ({circuit}) returned no predictions")
+    print(f"ENTRY LIST for {race['name']}: {len(roster)} drivers sent ({', '.join(ref for ref, _ in roster)}); "
+          f"{len(data)} predicted.")
+    missing = season_data.unpredicted(roster, data)
+    if missing:
+        print(f"WARNING: /whatif returned no prediction for {missing} (no history rows in the model's data). "
+              "They are left out of this pick; check the entry list.", file=sys.stderr)
     return top3_from_records(data)
 
 
