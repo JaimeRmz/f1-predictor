@@ -1,7 +1,7 @@
 // node src/lib/run-test.mjs   (run from frontend/; needs Vite for import.meta.env)
 import assert from "node:assert/strict";
 import { canonicalTeam } from "../teams.js";
-import { normalizeShares, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
+import { normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
 
 let n = 0;
 const t = (name, got, want) => { assert.deepEqual(got, want, name); n++; };
@@ -54,4 +54,24 @@ const withShares = rankRows([
 t("rank order is by podium score, not by share", withShares.map((r) => r.code), ["D", "B", "F"]);
 t("rankRows win shares sum to 1", near(sumOf(withShares.map((r) => r.winShare)), 1), true);
 t("rankRows podium shares sum to 3", near(sumOf(withShares.map((r) => r.podiumShare)), 3), true);
+// largest-remainder rounding: displayed whole percents total exactly 100 / 300
+const win = normalizeShares([0.96, 0.76, 0.09, 0.48, 0.57, 0.04, 0.05, 0.01, 0.0001, 0], 1);
+const wr = roundShares(win, 1);
+t("win percents total exactly 100", sumOf(wr), 100);
+const pod = normalizeShares([0.96, 0.92, 0.91, 0.87, 0.69, 0.44, 0.16, 0.11, 0.07, 0.01, 0.003], 3);
+const pr = roundShares(pod, 3);
+t("podium percents total exactly 300", sumOf(pr), 300);
+t("naive rounding would not total 100 here", sumOf(normalizeShares([1, 1, 1], 1).map((x) => Math.round(x * 100))), 99);
+t("largest remainder fixes the 3-way split", roundShares(normalizeShares([1, 1, 1], 1), 1), [34, 33, 33]);
+t("ties go to the earlier (higher-ranked) entry", roundShares([0.5, 0.5], 1).reduce((a, b) => a + b, 0), 100);
+t("tiny entries are 0 (shown <1%) and the rest still total", roundShares(normalizeShares([50, 49.9, 0.1], 1), 1), [50, 50, 0]);
+t("missing entries stay null", roundShares([0.5, null, 0.5], 1), [50, null, 50]);
+t("all-zero field", roundShares([0, 0], 1), [0, 0]);
+t("empty", roundShares([], 3), []);
+t("pctLabel normal", pctLabel(34, 0.34), "34%");
+t("pctLabel zero", pctLabel(0, 0.001), "<1%");
+t("pctLabel null", pctLabel(null, null), "—");
+const ranked = rankRows(Array.from({ length: 22 }, (_, i) => ({ driver_name: `D${i} X${i}`, driverRef: `d${i}`, podium_probability: 0.95 / (1 + i * 0.6), win_probability: 0.9 / (1 + i * 1.1) ** 2 })));
+t("rankRows win % total 100", sumOf(ranked.map((r) => r.winPct)), 100);
+t("rankRows podium % total 300", sumOf(ranked.map((r) => r.podiumPct)), 300);
 console.log(`${n} passed`);

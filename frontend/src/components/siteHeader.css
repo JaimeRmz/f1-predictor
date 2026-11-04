@@ -1,8 +1,8 @@
 /* Minimal site header. Opaque dark fill + blur so page content never shows through while scrolling. */
 .sh {
   position: sticky; top: 0; z-index: var(--z-chrome, 40);
-  background: rgba(10, 10, 12, 0.94);
-  backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%);
+  background: rgba(10, 10, 12, 0.985);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border-top: 2px solid rgba(225, 6, 0, 0.45);
   border-bottom: 1px solid var(--hud-line);
   box-shadow: 0 10px 30px -18px rgba(225, 6, 0, 0.35);
@@ -48,6 +48,7 @@
 
 /* in-section tabs (Race: Next Race | Predictor; Championship: Standings | Drivers | 2026 Season) */
 .sub-nav { display: flex; gap: 0.4rem; margin: 0 0 1rem; flex-wrap: wrap; }
+.sub-nav.wide { width: min(1320px, 100vw - 3rem); margin-left: calc(50% - min(660px, 50vw - 1.5rem)); }
 .sub-tab {
   font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; cursor: pointer; color: rgba(236, 236, 236, 0.78);
   background: rgba(255, 255, 255, 0.04); border: 1px solid var(--hud-line); border-radius: 999px; padding: 0.42rem 0.95rem;

@@ -61,7 +61,7 @@
 .hm-top { padding: 1.3rem 1.4rem 1.25rem; }
 .hm-top-head { display: flex; justify-content: space-between; align-items: center; }
 .hm-pos { font-family: var(--mono); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.1em; color: var(--hm-muted); }
-.hm-top:first-child .hm-pos { color: var(--red); }
+.hm-top:first-child .hm-pos { color: #ff6b61; } /* lighter red: 4.5:1+ on the card */
 .hm-top-name { display: flex; align-items: center; gap: 0.7rem; margin-top: 0.9rem; font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(1.25rem, 2.2vw, 1.9rem); line-height: 1.05; letter-spacing: -0.01em; }
 .hm-bar { flex: none; width: 4px; align-self: stretch; min-height: 1em; border-radius: 2px; background: var(--team, var(--hm-muted)); }
 .hm-top-team { font-family: var(--mono); font-size: 0.74rem; color: var(--hm-muted); letter-spacing: 0.08em; margin-top: 0.5rem; text-transform: uppercase; }
@@ -101,6 +101,19 @@
 .hm-more { display: block; width: calc(100% - 1.2rem); margin: 0 0.6rem 0.8rem; padding: 0.7rem; cursor: pointer; font-family: var(--mono); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; color: var(--ink); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--hud-line); border-radius: 10px; }
 .hm-more:hover { border-color: rgba(236, 236, 236, 0.5); }
 .hm-more:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+/* Race page */
+.hm-herotrace { position: relative; overflow: hidden; border-radius: 14px; }
+.hm-herotrace > *:not(.telemetry-traces) { position: relative; z-index: 1; }
+.hm-grid-list { list-style: none; }
+.hm-grid-list li { display: grid; grid-template-columns: 2.4rem 4px auto auto minmax(0, 1fr); align-items: center; gap: 0.5rem; padding: 0.34rem 0; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 0.8rem; }
+.hm-grid-list li:last-child { border-bottom: 0; }
+.hm-grid-list li b { color: var(--hm-muted); }
+.hm-grid-list li:first-child b { color: #ff6b61; }
+.hm-grid-list li .hm-bar { height: 1.1rem; align-self: auto; }
+.hm-grid-list li span { font-weight: 700; letter-spacing: 0.05em; }
+.hm-grid-list li em { font-style: normal; color: var(--hm-muted); font-family: var(--sans); font-size: 0.78rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hm-sched li span i { font-style: normal; }
 
 /* side panels */
 .hm-champ { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 1.55rem; letter-spacing: 0.01em; color: var(--green); line-height: 1.1; }

@@ -1,14 +1,20 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { GlassPanel } from "../components/GlassPanel.jsx";
 import { TeamMark } from "../components/TeamMark.jsx";
+import RaceStrip from "../components/RaceStrip.jsx";
+import TitleRow from "../components/RaceTitle.jsx";
+import Forecast from "../components/ForecastTable.jsx";
+import Panel from "../components/DashPanel.jsx";
+import { useRaceRows } from "../lib/useRaceRows.js";
+import { tz, dayTime } from "../lib/timeFmt.js";
 import { BackendPanel, WakingPanel, SkeletonList } from "../shared.jsx";
 import { supabase } from "../lib/supabaseClient.js";
-import { API, NEXT_RACE, STANDINGS_GRID_2026 } from "../constants.js";
+import { API, NEXT_RACE } from "../constants.js";
 import { TEAMS } from "../teams.js";
 import {
-  CALENDAR, BACKTEST, PHASE_LABEL, defaultRound, raceByRound, titleParts, phaseOf, countdownTarget, countdownParts,
-  rankRows, teamColor, shareLabel, score, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
+  BACKTEST, defaultRound, raceByRound, phaseOf,
+  rankRows, teamColor, pctLabel, score, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
 } from "../lib/homeModel.js";
 import "./home.css";
 
@@ -16,48 +22,8 @@ import "./home.css";
 // Every number comes from the same sources the other pages use: /whatif (upcoming rounds, predicted grid),
 // /predict/{raceId} (completed rounds, real grid), /championship/status, and the model_snapshots table. Calendar,
 // sessions and logos are local. Nothing is invented: when a source is missing or still loading, the panel says so.
-// Scores are the model's raw 0-1 outputs, never percentages; they do not add up to 100%.
-const TIMEOUT_MS = 70000, SLOW_MS = 6000;
-
-const fetchRows = (race) => (race.kind === "completed"
-  ? axios.get(`${API}/predict/${race.raceId}`, { timeout: TIMEOUT_MS })
-  : axios.post(`${API}/whatif?circuitRef=${race.circuitRef}&auto_quali=true`, STANDINGS_GRID_2026, { timeout: TIMEOUT_MS })
-).then((r) => r.data);
-
-// One cache of per-race rows, filled lazily for the selected round and the "last race" round. Switching back to a
-// round already loaded is instant. A failed round is cached as an error until Retry (or the backend panel's auto-retry).
-const useRaceRows = (races) => {
-  const [res, setRes] = useState({});
-  const [attempt, setAttempt] = useState(0);
-  const [slow, setSlow] = useState(false);
-  const started = useRef(new Set());
-  const key = races.filter(Boolean).map((r) => r.raceId).join(",");
-
-  useEffect(() => {
-    const todo = races.filter((r) => r && !started.current.has(r.raceId));
-    if (!todo.length) return undefined;
-    const timer = setTimeout(() => setSlow(true), SLOW_MS);
-    todo.forEach((race) => {
-      started.current.add(race.raceId);
-      fetchRows(race)
-        .then((rows) => setRes((p) => ({ ...p, [race.raceId]: { status: "ready", rows } })))
-        .catch((e) => setRes((p) => ({ ...p, [race.raceId]: { status: "error", http: e.response ? (e.response.data?.detail || `HTTP ${e.response.status}`) : null } })))
-        .finally(() => setSlow(false));
-    });
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, attempt]);
-
-  const retry = useCallback(() => {
-    setRes((p) => {
-      const next = { ...p };
-      Object.keys(next).forEach((id) => { if (next[id].status === "error") { delete next[id]; started.current.delete(Number(id)); } });
-      return next;
-    });
-    setAttempt((a) => a + 1);
-  }, []);
-  return { res, slow, retry };
-};
+// Scores are shown as shares of the field (see normalizeShares); the raw model score is in each tooltip.
+const TIMEOUT_MS = 70000;
 
 const useChampionship = () => {
   const [s, setS] = useState({ status: "loading", data: null });
@@ -89,86 +55,7 @@ const useSnapshot = (race) => {
   return id ? (res[id] || { pending: true }) : { loaded: true, snap: null };
 };
 
-const tz = new Intl.DateTimeFormat(undefined, { timeZoneName: "short" }).formatToParts(new Date()).find((p) => p.type === "timeZoneName")?.value || "local time";
-const dayTime = new Intl.DateTimeFormat(undefined, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
-const pad = (n) => String(n).padStart(2, "0");
-
 // ── pieces ─────────────────────────────────────────────────────
-const RaceStrip = ({ round, onSelect }) => {
-  const ref = useRef(null);
-  const [edge, setEdge] = useState({ l: false, r: true });
-  const measure = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-    setEdge({ l: el.scrollLeft > 4, r: el.scrollLeft + el.clientWidth < el.scrollWidth - 4 });
-  }, []);
-  useEffect(() => {
-    ref.current?.querySelector("[aria-pressed='true']")?.scrollIntoView({ inline: "center", block: "nearest" });
-    measure();
-  }, [round, measure]);
-  useEffect(() => { window.addEventListener("resize", measure); return () => window.removeEventListener("resize", measure); }, [measure]);
-  const nudge = (dir) => ref.current?.scrollBy({ left: dir * ref.current.clientWidth * 0.7, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-  // Arrow keys move focus between chips, Home/End jump to the ends; the focused chip scrolls into view.
-  const onKey = (e) => {
-    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-    const chips = [...ref.current.querySelectorAll(".hm-chip")];
-    const i = chips.indexOf(document.activeElement);
-    if (i < 0) return;
-    const next = step ? chips[i + step] : e.key === "Home" ? chips[0] : e.key === "End" ? chips[chips.length - 1] : null;
-    if (!step && !next) return;
-    e.preventDefault();
-    next?.focus();
-    next?.scrollIntoView({ inline: "nearest", block: "nearest" });
-  };
-  return (
-    <div className="hm-stripwrap">
-      <button type="button" className="hm-arrow l" aria-label="Scroll races left" disabled={!edge.l} onClick={() => nudge(-1)}>‹</button>
-      <nav className="hm-strip" ref={ref} aria-label="Choose a race" onScroll={measure} onKeyDown={onKey}>
-        {CALENDAR.map((r) => (
-          <button key={r.round} type="button" className={`hm-chip${r.kind === "completed" ? " done" : ""}`} aria-pressed={r.round === round} onClick={() => onSelect(r.round)}>
-            <b>R{r.round}</b><span>{r.short}</span>{r.next && <i title="Next race" />}
-          </button>
-        ))}
-      </nav>
-      <button type="button" className="hm-arrow r" aria-label="Scroll races right" disabled={!edge.r} onClick={() => nudge(1)}>›</button>
-      <span className={`hm-fade l${edge.l ? " on" : ""}`} aria-hidden="true" />
-      <span className={`hm-fade r${edge.r ? " on" : ""}`} aria-hidden="true" />
-    </div>
-  );
-};
-
-const Countdown = ({ race }) => {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, []);
-  const tgt = countdownTarget(race, now);
-  if (!tgt) {
-    return <div className="hm-count off"><div className="hm-count-cap">{race.kind === "completed" ? "RACE COMPLETED" : "SESSION TIMES NOT IN THE APP YET"}</div></div>;
-  }
-  const p = countdownParts(tgt.at - now);
-  return (
-    <div className="hm-count" role="timer" aria-label={`${p.d} days ${p.h} hours ${p.m} minutes ${p.s} seconds ${tgt.label.toLowerCase()}`}>
-      <div className="hm-digits">
-        {[[p.d, "D"], [p.h, "H"], [p.m, "M"], [p.s, "S"]].map(([v, u]) => <span key={u}>{pad(v)}<small>{u}</small></span>)}
-      </div>
-      <div className="hm-count-cap">{tgt.label} · {dayTime.format(new Date(tgt.at))} {tz}</div>
-    </div>
-  );
-};
-
-const TitleRow = ({ race, phase }) => {
-  const { base, suffix } = titleParts(race.name);
-  const where = race.raceId === NEXT_RACE.raceId ? NEXT_RACE.location : race.circuit; // only places the app actually knows
-  return (
-    <header className="hm-title">
-      <div>
-        <div className="hm-eyebrow">ROUND {race.round}{where ? ` · ${where.toUpperCase()}` : ""} · {PHASE_LABEL[phase]}</div>
-        <h1>{base} <em>Grand Prix</em>{suffix && <span> {suffix}</span>}</h1>
-      </div>
-      <Countdown race={race} />
-    </header>
-  );
-};
-
 const Top3Card = ({ r, i }) => {
   const color = teamColor(r.teamId);
   return (
@@ -177,49 +64,12 @@ const Top3Card = ({ r, i }) => {
       <div className="hm-top-name"><span className="hm-bar" />{r.driver_name}</div>
       <div className="hm-top-team">{r.code} · {TEAMS[r.teamId]?.name || "Team unknown"}</div>
       <div className="hm-top-scores">
-        <div title={`raw model score ${score(r.win)}`}><label className="gold">WIN SHARE</label><b className="gold">{shareLabel(r.winShare)}</b></div>
-        <div title={`raw model score ${score(r.podium)}`}><label className="teal">PODIUM SHARE</label><b className="teal">{shareLabel(r.podiumShare)}</b></div>
+        <div title={`raw model score ${score(r.win)}`}><label className="gold">WIN SHARE</label><b className="gold">{pctLabel(r.winPct, r.winShare)}</b></div>
+        <div title={`raw model score ${score(r.podium)}`}><label className="teal">PODIUM SHARE</label><b className="teal">{pctLabel(r.podiumPct, r.podiumShare)}</b></div>
       </div>
     </GlassPanel>
   );
 };
-
-const SHOW_DEFAULT = 10;
-const Forecast = ({ ranked }) => {
-  const [all, setAll] = useState(false);
-  const shown = all ? ranked : ranked.slice(0, SHOW_DEFAULT);
-  const max = Math.max(...ranked.map((r) => r.podiumShare ?? 0), 0.0001);
-  return (
-    <GlassPanel className="hm-panel" tilt={false}>
-      <div className="hm-panel-h"><h2>Full forecast</h2><p>Relative strength inside this race's field, not a calibrated chance. Win shares add up to 100%. Hover a figure for the raw model score.</p></div>
-      <div className="hm-tbl" role="table" aria-label="Forecast">
-        <div className="hm-tr hm-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="hm-hide-m">PODIUM SHARE</span><span className="gold">WIN SHARE</span><span className="teal">PODIUM SHARE</span></div>
-        {shown.map((r) => (
-          <div className="hm-tr" role="row" key={r.driverRef} style={{ "--team": teamColor(r.teamId) }}>
-            <span className="hm-n">{r.pos}</span>
-            <span className="hm-tm"><i className="hm-bar" /><TeamMark team={r.teamId} size={22} /></span>
-            <span className="hm-drv"><b>{r.code}</b><span className="hm-hide-m"> {r.driver_name}</span></span>
-            <span className="hm-meter hm-hide-m" aria-hidden="true"><i style={{ width: `${(100 * (r.podiumShare ?? 0)) / max}%` }} /></span>
-            <span className="gold hm-v" title={`raw model score ${score(r.win)}`}>{shareLabel(r.winShare)}</span>
-            <span className="teal hm-v" title={`raw model score ${score(r.podium)}`}>{shareLabel(r.podiumShare)}</span>
-          </div>
-        ))}
-      </div>
-      {ranked.length > SHOW_DEFAULT && (
-        <button type="button" className="hm-more" aria-expanded={all} onClick={() => setAll((v) => !v)}>
-          {all ? `SHOW TOP ${SHOW_DEFAULT} ONLY` : `SHOW ALL ${ranked.length} DRIVERS`}
-        </button>
-      )}
-    </GlassPanel>
-  );
-};
-
-const Panel = ({ title, caption, children, tint }) => (
-  <GlassPanel className="hm-panel" tilt={false} tint={tint}>
-    <div className="hm-panel-h"><h2>{title}</h2><p>{caption}</p></div>
-    <div className="hm-panel-b">{children}</div>
-  </GlassPanel>
-);
 
 const fmt = (n) => Number(n).toLocaleString(undefined, { maximumFractionDigits: 1 });
 const Retry = ({ onRetry, text }) => <p className="hm-note">{text} <button type="button" className="hm-link" onClick={onRetry}>Retry</button></p>;

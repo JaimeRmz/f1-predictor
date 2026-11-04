@@ -89,6 +89,28 @@ export const normalizeShares = (values, total) => {
   return values.map((v) => (sum > 0 && ok(v) ? (v / sum) * total : null));
 };
 
+// Whole-percent display that adds up. Plain Math.round leaves win shares at 98-102%. Largest-remainder rounding gives each
+// entry its floor, then hands the leftover points to the entries with the biggest fractional parts, so the integers total
+// exactly total*100 (100 for win shares, 300 for podium shares). Entries under 0.5% are shown as "<1%" and counted as 0;
+// the remaining entries are scaled up by the (tiny) share they leave out, so the shown numbers still total exactly.
+// null in -> null out. Ties go to the earlier entry (rank order), so the result is deterministic.
+export const roundShares = (shares, total) => {
+  const target = Math.round(total * 100);
+  const ok = (v) => typeof v === "number" && Number.isFinite(v) && v >= 0;
+  const big = shares.map((v) => ok(v) && v >= 0.005);
+  const sum = shares.reduce((a, v, i) => a + (big[i] ? v * 100 : 0), 0);
+  if (sum <= 0) return shares.map((v) => (ok(v) ? 0 : null));
+  const scaled = shares.map((v, i) => (big[i] ? (v * 100 * target) / sum : 0));
+  const out = scaled.map(Math.floor);
+  let left = target - out.reduce((a, b) => a + b, 0);
+  scaled.map((v, i) => [v - Math.floor(v), i]).filter(([, i]) => big[i]).sort((a, b) => b[0] - a[0] || a[1] - b[1])
+    .slice(0, Math.max(0, left)).forEach(([, i]) => { out[i] += 1; left -= 1; });
+  return shares.map((v, i) => (ok(v) ? out[i] : null));
+};
+
+// Label for one rounded percent: "34%", "<1%" (under 1 or counted as zero), "—" (missing).
+export const pctLabel = (pct, share) => (pct == null || share == null ? "—" : pct < 1 || share < 0.005 ? "<1%" : `${pct}%`);
+
 // "34%"; under half a percent "<1%" (so a tiny score never reads as exactly 0); null "—".
 export const shareLabel = (x) => (x == null || !Number.isFinite(x) ? "—" : x < 0.005 ? "<1%" : `${Math.round(x * 100)}%`);
 
@@ -104,7 +126,9 @@ export const rankRows = (rows) => {
     }));
   const w = normalizeShares(ranked.map((r) => r.win), 1);
   const p = normalizeShares(ranked.map((r) => r.podium), 3);
-  return ranked.map((r, i) => ({ ...r, winShare: w[i], podiumShare: p[i] }));
+  const wp = roundShares(w, 1);
+  const pp = roundShares(p, 3);
+  return ranked.map((r, i) => ({ ...r, winShare: w[i], podiumShare: p[i], winPct: wp[i], podiumPct: pp[i] }));
 };
 
 export const score = (v) => (v == null || !Number.isFinite(v) ? "—" : v.toFixed(2));

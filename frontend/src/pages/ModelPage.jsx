@@ -19,7 +19,7 @@ const ModelPage = () => {
   const pipeline = [
     { stage: "01", name: "Qualifying Model", type: "XGBRegressor", desc: "Predicts each driver's grid position ahead of a race.", metricLabel: "Top-10 Accuracy", metricValue: "77.8%" },
     { stage: "02", name: "Winner Model", type: "XGBClassifier", desc: "Predicts who wins the race, using the predicted grid as input.", metricLabel: "ROC-AUC", metricValue: "0.972" },
-    { stage: "03", name: "Podium Model", type: "XGBClassifier", desc: "Predicts every driver's odds of finishing in the top 3.", metricLabel: "ROC-AUC", metricValue: "0.945" },
+    { stage: "03", name: "Podium Model", type: "XGBClassifier", desc: "Gives every driver a raw model score for finishing in the top 3.", metricLabel: "ROC-AUC", metricValue: "0.945" },
   ];
 
   return (
@@ -53,7 +53,7 @@ const ModelPage = () => {
           <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--muted)" }}>How the numbers on Home are made.</span>
         </div>
         <div style={{ padding: "1rem", fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.8 }}>
-          Each driver gets a raw model score for winning and for the podium, computed on their own. Raw scores are not probabilities:
+          Each driver gets a raw model score for winning and for the podium, computed on their own. Raw scores are independent per driver, not shares of anything:
           across a field the win scores add up to about 3 and the podium scores to about 5, not to 1 and 3.
           Home therefore shows shares: a driver's raw win score divided by the field's total (so win shares add up to 100%), and the raw podium
           score divided by the field's total times 3 (podium shares add up to 300%, since three drivers finish on the podium).
@@ -101,7 +101,7 @@ const ModelPage = () => {
             ["Data", "15 years of F1 results (2010–2024) merged across 9 tables — results, qualifying, standings, constructors, circuits, drivers, status."],
             ["Features", "9 engineered features using rolling averages and exponential decay. All calculated from strictly pre-race data — no leakage from future results."],
             ["Training", "XGBoost trained on 2010–2024 (6,436 entries). Time-based split — 2025–2026 seasons held out for evaluation."],
-            ["Target", "Binary classification: did the driver finish top 3? Outputs 0–100% podium probability."],
+            ["Target", "Binary classification: did the driver finish top 3? Outputs a raw model score from 0 to 1 per driver (a score, not a probability; Home shows it as a share of the field)."],
             ["Evaluation", "Tested on the 2025–2026 holdout. ROC-AUC 0.945, measured after correcting two data-leakage bugs in feature engineering — the circuit-history rate (see features above) and a same-race constructor-feature leak. The figure is computed on strictly pre-race inputs, so it reflects honest out-of-sample performance rather than an inflated in-sample score."],
           ].map(([title, body], i, arr) => (
             <div key={i} style={{ display: "flex", gap: "1.25rem", padding: "0.75rem 0", borderBottom: i < arr.length - 1 ? "1px solid var(--border)" : "none" }}>
