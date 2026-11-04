@@ -112,7 +112,7 @@ const PredictorPage = () => {
 
           {isUpcoming && (
             <>
-              {/* ── SECTION 1: PREDICTED QUALIFYING — order only, no probabilities ── */}
+              {/* ── SECTION 1: PREDICTED QUALIFYING — order only, no model scores ── */}
               <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title="Predicted Qualifying" />
               <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "0.75rem" }}>
                 {gridPredictions.map((p, i) => {
@@ -140,7 +140,7 @@ const PredictorPage = () => {
               {/* ── divider between the two sections ── */}
               <div style={{ height: "1px", background: "var(--border)", margin: "0 0 1.5rem" }} />
 
-              {/* ── SECTION 2: PRE-RACE PREDICTION — podium & win probabilities, ordered by predicted grid ── */}
+              {/* ── SECTION 2: PRE-RACE PREDICTION — podium & win model scores, ordered by predicted grid ── */}
               <SectionHeader eyebrow="XGBoost Classifiers · Podium & Win Models" title="Pre-Race Prediction" />
             </>
           )}
@@ -151,20 +151,20 @@ const PredictorPage = () => {
                 which is what marks a value as "this is the model's pick". */}
             <StatCard
               label="Predicted Winner"
-              value={predictedWinner ? `${predictedWinner.driver_name.split(" ").pop()} · ${((predictedWinner.win_probability ?? 0) * 100).toFixed(1)}%` : "—"}
+              value={predictedWinner ? `${predictedWinner.driver_name.split(" ").pop()} · ${(predictedWinner.win_probability ?? 0).toFixed(2)} score` : "—"}
               tint={teamColorOf(predictedWinner)}
               accent="var(--teal)"
             />
             {isUpcoming ? (
               <>
-                <StatCard label="Podium Favorites" value={`${podiumFavorites} drivers`} sub="podium % > 60" />
+                <StatCard label="Podium Favorites" value={`${podiumFavorites} drivers`} sub="podium score above 0.6" />
                 <StatCard label="Predicted Pole" value={predictedPole?.driver_name.split(" ").pop() ?? "—"} tint={teamColorOf(predictedPole)} accent="var(--teal)" />
               </>
             ) : (
               <>
                 <StatCard label="Winner Correct?" value={winnerCorrect === null ? "—" : winnerCorrect ? "✓" : "✗"} accent={winnerCorrect ? "var(--green)" : "var(--red)"} />
                 <StatCard label="Podiums Caught" value={accuracy !== null ? `${podiumsCaught}/${podiums.length} · ${accuracy}%` : "—"} />
-                <StatCard label="High Confidence" value={predictions.filter(p => p.podium_probability > 0.5).length} sub="drivers flagged" />
+                <StatCard label="High Model Score" value={predictions.filter(p => p.podium_probability > 0.5).length} sub="drivers flagged" />
               </>
             )}
           </div>
@@ -178,8 +178,8 @@ const PredictorPage = () => {
               <div className="hide-mobile" style={{ display: "flex", alignItems: "center", gap: "1rem", padding: "0 1.25rem 0.4rem" }}>
                 <div style={{ width: "22px", flexShrink: 0 }} />
                 <div style={{ flex: 1, minWidth: 0 }} />
-                <div style={{ width: "90px", flexShrink: 0, textAlign: "right", fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--gold)", fontWeight: "700", letterSpacing: "0.1em" }}>WIN %</div>
-                <div style={{ width: "90px", flexShrink: 0, textAlign: "right", fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", fontWeight: "700", letterSpacing: "0.1em" }}>PODIUM %</div>
+                <div style={{ width: "90px", flexShrink: 0, textAlign: "right", fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--gold)", fontWeight: "700", letterSpacing: "0.1em" }}>WIN SCORE</div>
+                <div style={{ width: "90px", flexShrink: 0, textAlign: "right", fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", fontWeight: "700", letterSpacing: "0.1em" }}>PODIUM SCORE</div>
                 <div style={{ width: "70px", flexShrink: 0 }} />
               </div>
               {predictions.map((p, i) => (
@@ -198,13 +198,13 @@ const PredictorPage = () => {
                     <div style={{ height: "2px", background: "var(--dimmed)", marginBottom: "4px", overflow: "hidden" }}>
                       <div className="prob-bar" style={{ height: "100%", width: `${((p.win_probability ?? 0) * 100).toFixed(0)}%`, background: "var(--gold)" }} />
                     </div>
-                    <div className={p.win_probability > 0.3 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.win_probability > 0.3 ? "var(--gold)" : "var(--muted)" }}><CountUp value={(p.win_probability ?? 0) * 100} suffix="%" /></div>
+                    <div className={p.win_probability > 0.3 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.win_probability > 0.3 ? "var(--gold)" : "var(--muted)" }}><CountUp value={p.win_probability ?? 0} decimals={2} /></div>
                   </div>
                   <div className="pred-metric" style={{ width: "90px", flexShrink: 0 }}>
                     <div style={{ height: "2px", background: "var(--dimmed)", marginBottom: "4px", overflow: "hidden" }}>
                       <div className="prob-bar" style={{ height: "100%", width: `${(p.podium_probability * 100).toFixed(0)}%`, background: p.podium === 1 ? "var(--green)" : "var(--red)" }} />
                     </div>
-                    <div className={p.podium_probability > 0.5 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.podium_probability > 0.5 ? "var(--red)" : "var(--muted)" }}><CountUp value={p.podium_probability * 100} suffix="%" /></div>
+                    <div className={p.podium_probability > 0.5 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", textAlign: "right", fontSize: "0.82rem", fontWeight: "700", color: p.podium_probability > 0.5 ? "var(--red)" : "var(--muted)" }}><CountUp value={p.podium_probability} decimals={2} /></div>
                   </div>
                   <div className="hide-mobile" style={{ width: "70px", flexShrink: 0, fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--dimmed)", letterSpacing: "0.06em" }}>EXPLAIN →</div>
                 </GlassPanel>
@@ -215,14 +215,14 @@ const PredictorPage = () => {
           {tab === "chart" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <GlassPanel className="chart-enter" style={{ padding: "20px" }}>
-                <div className="section-label" style={{ marginBottom: "1rem" }}>Podium Probability by Driver</div>
+                <div className="section-label" style={{ marginBottom: "1rem" }}>Podium Model Score by Driver</div>
                 <ResponsiveContainer width="100%" height={280}>
                   <BarChart data={predictions} layout="vertical" margin={{ left: 8, right: 24 }}>
                     <CartesianGrid strokeDasharray="2 4" stroke="var(--dimmed)" horizontal={false} />
-                    <XAxis type="number" domain={[0, 1]} tickFormatter={v => `${(v*100).toFixed(0)}%`} stroke="var(--dimmed)" tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "var(--mono)" }} />
+                    <XAxis type="number" domain={[0, 1]} tickFormatter={v => v.toFixed(1)} stroke="var(--dimmed)" tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "var(--mono)" }} />
                     <YAxis type="category" dataKey="driver_name" width={130} stroke="var(--dimmed)" tick={{ fill: "var(--muted)", fontSize: 11 }} />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(225,6,0,0.04)" }} />
-                    <Bar dataKey="podium_probability" radius={0}>
+                    <Bar dataKey="podium_probability" name="Podium model score" radius={0}>
                       {predictions.map((p, i) => <Cell key={i} fill={p.podium === 1 ? "#00c853" : i === 0 ? "#e10600" : i < 3 ? "#ff4422" : "#2a2a38"} />)}
                     </Bar>
                   </BarChart>
@@ -256,7 +256,7 @@ const PredictorPage = () => {
                   <GlassPanel tint={teamColorOf(explainDriver)} style={{ padding: "1rem 1.5rem" }}>
                     <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", color: "var(--muted)", marginBottom: "0.25rem" }}>PREDICTION BREAKDOWN</div>
                     <div className="hud-title" style={{ fontSize: "1.5rem", letterSpacing: "0.04em", color: teamColorOf(explainDriver) || "var(--text)" }}>{explainDriver.driver_name.toUpperCase()}</div>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.78rem", color: "var(--muted)", marginTop: "3px" }}>{(explainDriver.podium_probability * 100).toFixed(1)}% PODIUM PROBABILITY</div>
+                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.78rem", color: "var(--muted)", marginTop: "3px" }}>{explainDriver.podium_probability.toFixed(2)} PODIUM MODEL SCORE</div>
                   </GlassPanel>
                   <GlassPanel className="chart-enter">
                     <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>

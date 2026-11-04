@@ -77,6 +77,9 @@ export const teamIdOf = (row) =>
   || canonicalTeam(row.team || row.name_constructor)
   || canonicalTeam(STANDINGS_GRID_2026.find((d) => d.driverRef === row.driverRef)?.team);
 
+// Team of a current-grid driver by display name (championship rows carry a name, not a driverRef). null if not on the grid.
+export const teamIdByDriverName = (name) => canonicalTeam(STANDINGS_GRID_2026.find((d) => d.driver_name === name)?.team);
+
 export const teamColor = (id) => TEAMS[id]?.color || "#8a8a95";
 
 // Raw scores are independent per-driver outputs (win scores sum to ~3 per race, podium scores to ~5), so on their own they

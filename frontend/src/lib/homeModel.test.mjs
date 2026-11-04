@@ -1,7 +1,7 @@
 // node src/lib/run-test.mjs   (run from frontend/; needs Vite for import.meta.env)
 import assert from "node:assert/strict";
 import { canonicalTeam } from "../teams.js";
-import { normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
+import { teamIdByDriverName, normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
 
 let n = 0;
 const t = (name, got, want) => { assert.deepEqual(got, want, name); n++; };
@@ -74,4 +74,6 @@ t("pctLabel null", pctLabel(null, null), "—");
 const ranked = rankRows(Array.from({ length: 22 }, (_, i) => ({ driver_name: `D${i} X${i}`, driverRef: `d${i}`, podium_probability: 0.95 / (1 + i * 0.6), win_probability: 0.9 / (1 + i * 1.1) ** 2 })));
 t("rankRows win % total 100", sumOf(ranked.map((r) => r.winPct)), 100);
 t("rankRows podium % total 300", sumOf(ranked.map((r) => r.podiumPct)), 300);
+t("team by driver name", teamIdByDriverName("Kimi Antonelli"), "mercedes");
+t("team by driver name (unknown driver)", teamIdByDriverName("Nobody Here"), null);
 console.log(`${n} passed`);

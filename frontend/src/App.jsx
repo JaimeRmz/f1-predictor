@@ -65,7 +65,7 @@ export default function App() {
       <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.5rem 2rem 4rem", position: "relative" }}>
         {showSweep && <div className="sweep-line" />}
         {sec && sec.pages.length > 1 && (
-          <div className={`sub-nav${page === PAGES.race ? " wide" : ""}`} role="group" aria-label={`${sec.label} pages`}>
+          <div className={`sub-nav${[PAGES.race, PAGES.champ, PAGES.drivers, PAGES.season].includes(page) ? " wide" : ""}`} role="group" aria-label={`${sec.label} pages`}>
             {sec.pages.map(pg => (
               <button key={pg} type="button" className="sub-tab" aria-pressed={pg === page} onClick={() => { setPage(pg); handleNavigate(); }}>{SUB_LABEL[pg]}</button>
             ))}

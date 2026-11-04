@@ -239,7 +239,7 @@ const WhatIfPage = () => {
       </GlassPanel>
 
       <p style={{ fontFamily: "var(--mono)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.7 }}>
-        Drag drivers to reorder the starting grid. Each change triggers a live XGBoost prediction — watch probabilities update in real time.
+        Drag drivers to reorder the starting grid. Each change triggers a live XGBoost prediction — watch model scores update in real time.
       </p>
 
       <div className="whatif-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
@@ -280,7 +280,7 @@ const WhatIfPage = () => {
         {/* RIGHT */}
         <div>
           <div className="section-label" style={{ marginBottom: "0.6rem" }}>
-            Live Podium Probabilities
+            Live Podium Model Scores
             {loading && <span style={{ fontFamily: "var(--mono)", color: "var(--red)", marginLeft: "0.75rem", fontSize: "0.58rem", animation: "pulse 0.8s infinite" }}>● COMPUTING</span>}
           </div>
           {offline && <BackendPanel detail="The live model call failed." onRetry={reset} />}
@@ -305,7 +305,7 @@ const WhatIfPage = () => {
                       <div style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: tc, marginTop: "1px" }}>Grid P{r.grid}</div>
                     </div>
                     <div style={{ fontFamily: "var(--mono)", fontSize: "1rem", fontWeight: "700", color: i === 0 ? "var(--red)" : i < 3 ? "#ff4422" : "var(--muted)" }}>
-                      <CountUp value={r.podium_probability * 100} suffix="%" />
+                      <CountUp value={r.podium_probability} decimals={2} />
                     </div>
                   </div>
                   <div style={{ height: "2px", background: "var(--dimmed)", overflow: "hidden" }}>
@@ -320,7 +320,7 @@ const WhatIfPage = () => {
             <div style={{ ...cardRed, padding: "0.85rem 1rem", marginTop: "0.75rem" }}>
               <div className="section-label" style={{ color: "var(--red)", marginBottom: "0.35rem" }}>Model Insight</div>
               <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", margin: 0, lineHeight: 1.7 }}>
-                <span style={{ color: "var(--text)" }}>{results[0].driver_name}</span> leads at <span style={{ color: "var(--red)" }}>{(results[0].podium_probability * 100).toFixed(1)}%</span> from P{results[0].grid}.
+                <span style={{ color: "var(--text)" }}>{results[0].driver_name}</span> leads with a model score of <span style={{ color: "var(--red)" }}>{results[0].podium_probability.toFixed(2)}</span> from P{results[0].grid}.
                 {results[0].grid > 3 ? " Circuit history is overriding grid position." : " Front row start is the dominant factor."}
               </p>
             </div>

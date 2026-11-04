@@ -6,6 +6,7 @@ import RaceStrip from "../components/RaceStrip.jsx";
 import TitleRow from "../components/RaceTitle.jsx";
 import Forecast from "../components/ForecastTable.jsx";
 import Panel from "../components/DashPanel.jsx";
+import ScoreFigure from "../components/ScoreFigure.jsx";
 import { useRaceRows } from "../lib/useRaceRows.js";
 import { tz, dayTime } from "../lib/timeFmt.js";
 import { BackendPanel, WakingPanel, SkeletonList } from "../shared.jsx";
@@ -14,7 +15,7 @@ import { API, NEXT_RACE } from "../constants.js";
 import { TEAMS } from "../teams.js";
 import {
   BACKTEST, defaultRound, raceByRound, phaseOf,
-  rankRows, teamColor, pctLabel, score, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
+  rankRows, teamColor, pctLabel, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
 } from "../lib/homeModel.js";
 import "./home.css";
 
@@ -64,8 +65,8 @@ const Top3Card = ({ r, i }) => {
       <div className="hm-top-name"><span className="hm-bar" />{r.driver_name}</div>
       <div className="hm-top-team">{r.code} · {TEAMS[r.teamId]?.name || "Team unknown"}</div>
       <div className="hm-top-scores">
-        <div title={`raw model score ${score(r.win)}`}><label className="gold">WIN SHARE</label><b className="gold">{pctLabel(r.winPct, r.winShare)}</b></div>
-        <div title={`raw model score ${score(r.podium)}`}><label className="teal">PODIUM SHARE</label><b className="teal">{pctLabel(r.podiumPct, r.podiumShare)}</b></div>
+        <div><label className="gold">WIN SHARE</label><b className="gold"><ScoreFigure raw={r.win}>{pctLabel(r.winPct, r.winShare)}</ScoreFigure></b></div>
+        <div><label className="teal">PODIUM SHARE</label><b className="teal"><ScoreFigure raw={r.podium}>{pctLabel(r.podiumPct, r.podiumShare)}</ScoreFigure></b></div>
       </div>
     </GlassPanel>
   );

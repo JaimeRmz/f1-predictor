@@ -192,7 +192,7 @@ export const CustomTooltip = ({ active, payload }) => {
       <p style={{ fontFamily: "var(--mono)", color: "var(--text)", fontWeight: "700", margin: "0 0 4px", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>{d.driver_name || d.driver || d.name || d.circuit}</p>
       {payload.map((p, i) => (
         <p key={i} style={{ fontFamily: "var(--mono)", color: p.color || "var(--red)", margin: "2px 0", fontSize: "0.78rem", fontWeight: "700" }}>
-          {p.name}: {typeof p.value === "number" && p.value <= 1 ? `${(p.value * 100).toFixed(1)}%` : p.value}
+          {p.name}: {typeof p.value === "number" && p.value <= 1 ? p.value.toFixed(2) : p.value}
         </p>
       ))}
     </div>
