@@ -331,7 +331,7 @@ const WhatIfPage = () => {
       <GlassPanel style={{ padding: "20px", display: "flex", gap: "0.75rem" }}>
         <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>INFO</span>
         <p style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
-          Each reorder triggers a live POST to the XGBoost model. Only grid position changes — championship points, recent form, and circuit history stay fixed. This isolates the pure qualifying effect on race outcome probability.
+          Each reorder triggers a live POST to the XGBoost model. Only grid position changes — championship points, recent form, and circuit history stay fixed. This isolates the pure qualifying effect on the race outcome model scores.
         </p>
       </GlassPanel>
     </div>
