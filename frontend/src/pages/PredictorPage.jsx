@@ -83,7 +83,9 @@ const PredictorPage = () => {
   const winnerCorrect = !isUpcoming && predictedWinner && actualWinner ? predictedWinner.driverRef === actualWinner.driverRef : null;
   const podiumFavorites = predictions.filter((p) => p.podium_probability > 0.6).length;
   const predictedPole = gridRows[0];
-  const { base, suffix } = titleParts(selectedRaceName || "");
+  // The selector's label is "2026 Rd 20 — Brazilian Grand Prix (Nov 8)" or "2025 — Name"; keep just the race name.
+  const raceName = (selectedRaceName || "").replace(/^\d{4}( Rd \d+)? — /, "").replace(/ \([A-Z][a-z]{2} \d+\)$/, "");
+  const { base, suffix } = titleParts(raceName);
   const explainRow = explainDriver ? rows.find((r) => r.driverRef === explainDriver.driverRef) : null;
 
   return (
@@ -91,7 +93,7 @@ const PredictorPage = () => {
       <header className="hm-title">
         <div>
           <div className="hm-eyebrow">{selectedRaceName ? (isUpcoming ? "PRE-QUALIFYING PREDICTION · USES THE PREDICTED GRID" : "MODEL REPLAY WITH THE REAL GRID · NOT A FORECAST") : "RACE PREDICTOR · ANY RACE, PAST OR UPCOMING"}</div>
-          <h1 className="wordfit">{selectedRaceName ? <>{base}{selectedRaceName !== base ? <> <em>Grand Prix</em></> : null}{suffix && <span> {suffix}</span>}</> : <>Race <em>predictor</em></>}</h1>
+          <h1 className="wordfit">{selectedRaceName ? <>{base}{raceName !== base ? <> <em>Grand Prix</em></> : null}{suffix && <span> {suffix}</span>}</> : <>Race <em>predictor</em></>}</h1>
         </div>
       </header>
 

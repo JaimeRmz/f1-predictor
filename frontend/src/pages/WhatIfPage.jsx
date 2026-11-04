@@ -1,9 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
+import { BackendPanel, SkeletonList } from "../shared.jsx";
+import { TeamMark } from "../components/TeamMark.jsx";
+import ScoreFigure from "../components/ScoreFigure.jsx";
+import Panel from "../components/DashPanel.jsx";
+import { rowsWithShares, pctLabel, teamIdOf, teamColor, driverCode } from "../lib/homeModel.js";
+import "./home.css";
 import { GlassPanel, HudBrackets } from "../components/GlassPanel.jsx";
-import { API, cardRed, glassStyle, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS, NEXT_RACE } from "../constants.js";
+import { API, glassStyle, STANDINGS_GRID_2026, NEXT_RACE } from "../constants.js";
 
 // ── WHAT IF SIMULATOR (next race comes from NEXT_RACE in constants.js) ──
 const NEXT_RACE_CIRCUIT = NEXT_RACE.circuitRef;
@@ -15,8 +20,6 @@ const NEXT_RACE_NAME = NEXT_RACE.name.replace("Grand Prix", "GP");
 const WHATIF_FALLBACK_DRIVERS = STANDINGS_GRID_2026.slice(0, 7);
 
 const WhatIfPage = () => {
-  const teamColors = TEAM_COLORS;
-
   // The "default" to revert to on RESET - starts as the hardcoded fallback,
   // replaced once the real predicted qualifying order loads.
   const [defaultDrivers, setDefaultDrivers] = useState(WHATIF_FALLBACK_DRIVERS);
@@ -217,123 +220,106 @@ const WhatIfPage = () => {
     endDrag(false);
   };
 
-  const maxProb = results.length > 0 ? Math.max(...results.map(r => r.podium_probability)) : 1;
+  const shown = rowsWithShares(results); // the API order (best podium score first), with shares of the field
+  const maxShare = shown.length > 0 ? Math.max(...shown.map((r) => r.podiumShare ?? 0), 0.0001) : 1;
+  const tidOfDriver = (d) => teamIdOf({ driverRef: d.driverRef, team: d.team });
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <SectionHeader
-        eyebrow={`Interactive ML · Live Model Calls · ${NEXT_RACE.circuit}`}
-        title={`What-If Grid Simulator — ${NEXT_RACE_NAME} · ${NEXT_RACE.circuit}`}
-        right={
-          <button onClick={reset} className="btn-ghost" style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.25)", color: "#fff", padding: "0.45rem 1rem", fontSize: "0.68rem", fontWeight: "700", letterSpacing: "0.1em", textTransform: "uppercase", cursor: "pointer", fontFamily: "var(--mono)" }}>
-            ↺ RESET
-          </button>
-        }
-      />
-
-      <GlassPanel style={{ padding: "14px 20px", display: "flex", gap: "0.6rem", alignItems: "center", borderLeft: "3px solid var(--gold)" }}>
-        <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--gold)", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
-        <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", lineHeight: 1.6 }}>
-          Grid pre-loaded with predicted qualifying order for {NEXT_RACE.circuit} · Drag to simulate alternative scenarios
-        </span>
-      </GlassPanel>
-
-      <p style={{ fontFamily: "var(--mono)", fontSize: "0.7rem", color: "var(--muted)", lineHeight: 1.7 }}>
-        Drag drivers to reorder the starting grid. Each change triggers a live XGBoost prediction — watch model scores update in real time.
-      </p>
-
-      <div className="whatif-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
-        {/* LEFT */}
+    <div className="hm">
+      <header className="hm-title">
         <div>
-          <div className="section-label" style={{ marginBottom: "0.6rem" }}>Starting Grid — <span style={{ color: "var(--red)" }}>drag to reorder</span></div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {drivers.map((d, i) => {
-              const team = CONSTRUCTOR_OVERRIDES[d.driverRef] || d.team;
-              return (
-              <GlassPanel key={d.driverRef} className="data-row"
-                tint={teamColors[team] || null}
-                tilt={false}
-                data-index={i}
-                ref={el => { rowRefs.current[i] = el; }}
-                onPointerDown={e => handlePointerDown(e, i)}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerCancel={handlePointerCancel}
-                style={{
-                  display: "flex", alignItems: "center", gap: "0.85rem", padding: "16px",
-                  cursor: "default", userSelect: "none",
-                }}>
-                <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", width: "20px", flexShrink: 0 }}>P{i + 1}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: "700", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{d.driver_name}</div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: "11px", color: teamColors[team] || "var(--muted)", opacity: 0.5, marginTop: "1px" }}>{team}</div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px", opacity: 0.25, flexShrink: 0 }}>
-                  {[0,1,2].map(n => <div key={n} style={{ display: "flex", gap: "2px" }}><div style={{ width: "3px", height: "3px", borderRadius: "50%", background: "var(--text)" }} /><div style={{ width: "3px", height: "3px", borderRadius: "50%", background: "var(--text)" }} /></div>)}
-                </div>
-              </GlassPanel>
-              );
-            })}
-          </div>
+          <div className="hm-eyebrow">INTERACTIVE · LIVE MODEL CALLS · {NEXT_RACE.circuit.toUpperCase()}</div>
+          <h1 className="wordfit">What-if grid <em>simulator</em></h1>
         </div>
+        <button type="button" onClick={reset} className="hm-reset">↺ RESET GRID</button>
+      </header>
 
-        {/* RIGHT */}
-        <div>
-          <div className="section-label" style={{ marginBottom: "0.6rem" }}>
-            Live Podium Model Scores
-            {loading && <span style={{ fontFamily: "var(--mono)", color: "var(--red)", marginLeft: "0.75rem", fontSize: "0.58rem", animation: "pulse 0.8s infinite" }}>● COMPUTING</span>}
-          </div>
-          {offline && <BackendPanel detail="The live model call failed." onRetry={reset} />}
-          {!offline && results.length === 0 && <SkeletonList rows={6} metrics={1} />}
-          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-            {results.map((r, i) => {
-              const rTeam = CONSTRUCTOR_OVERRIDES[r.driverRef] || drivers.find(d => d.driverRef === r.driverRef)?.team;
-              const tc = teamColors[rTeam] || "#2a2a38";
+      <Panel title={`${NEXT_RACE_NAME} · ${NEXT_RACE.circuit}`} caption="Move drivers up or down the starting grid and watch the model's podium shares change.">
+        <p className="hm-note">
+          The grid starts as the predicted qualifying order for {NEXT_RACE.circuit}. Drag a driver (press and hold on touch screens) to simulate an alternative qualifying result.
+          Each change triggers a live XGBoost prediction. Shares are relative strength inside this race's field, not a calibrated chance; tap or hover a figure for the raw model score.
+        </p>
+      </Panel>
+
+      <div className="wf-grid">
+        {/* LEFT: the draggable grid */}
+        <GlassPanel className="hm-panel" tilt={false}>
+          <div className="hm-panel-h"><h2>Starting grid</h2><p>Drag to reorder. Row 1 is pole position.</p></div>
+          <div className="wf-list">
+            {drivers.map((d, i) => {
+              const tid = tidOfDriver(d);
+              const col = teamColor(tid);
               return (
-                <motion.div key={r.driverRef} layout
-                  animate={{ opacity: loading ? 0.6 : 1 }}
-                  transition={{ opacity: { duration: 0.15 }, layout: { type: "spring", stiffness: 350, damping: 32 } }}
-                  className="data-row glass-panel" style={{
-                  ...glassStyle(i === 0 ? "#e10600" : tc),
-                  padding: "16px",
-                }}>
-                  <HudBrackets tint={i === 0 ? "#e10600" : tc} />
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", width: "20px", flexShrink: 0 }}>P{i + 1}</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: "700", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>{r.driver_name}</div>
-                      <div style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: tc, marginTop: "1px" }}>Grid P{r.grid}</div>
-                    </div>
-                    <div style={{ fontFamily: "var(--mono)", fontSize: "1rem", fontWeight: "700", color: i === 0 ? "var(--red)" : i < 3 ? "#ff4422" : "var(--muted)" }}>
-                      <CountUp value={r.podium_probability} decimals={2} />
-                    </div>
-                  </div>
-                  <div style={{ height: "2px", background: "var(--dimmed)", overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${(r.podium_probability / maxProb) * 100}%`, background: i === 0 ? "var(--red)" : i < 3 ? "#ff4422" : tc, transition: "width 0.35s cubic-bezier(0.25,0.46,0.45,0.94)" }} />
-                  </div>
-                </motion.div>
+                <GlassPanel key={d.driverRef} className="data-row wf-row"
+                  tint={tid ? col : null}
+                  tilt={false}
+                  data-index={i}
+                  ref={el => { rowRefs.current[i] = el; }}
+                  onPointerDown={e => handlePointerDown(e, i)}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={handlePointerUp}
+                  onPointerCancel={handlePointerCancel}
+                  style={{ display: "flex", alignItems: "center", gap: "0.7rem", padding: "0.55rem 0.9rem", cursor: "default", userSelect: "none", "--team": col }}>
+                  <b className="wf-pos" style={{ color: i === 0 ? "#ff6b61" : undefined }}>P{i + 1}</b>
+                  <i className="hm-bar" style={{ height: "1.3rem", alignSelf: "auto" }} />
+                  <TeamMark team={tid} size={20} />
+                  <span className="wf-drv"><b>{driverCode(d.driver_name)}</b> <span>{d.driver_name}</span></span>
+                  <span className="wf-grip" aria-hidden="true">{[0, 1, 2].map(n => <span key={n}><i /><i /></span>)}</span>
+                </GlassPanel>
               );
             })}
           </div>
+        </GlassPanel>
 
-          {hasRun && results.length > 0 && !loading && (
-            <div style={{ ...cardRed, padding: "0.85rem 1rem", marginTop: "0.75rem" }}>
-              <div className="section-label" style={{ color: "var(--red)", marginBottom: "0.35rem" }}>Model Insight</div>
-              <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", margin: 0, lineHeight: 1.7 }}>
-                <span style={{ color: "var(--text)" }}>{results[0].driver_name}</span> leads with a model score of <span style={{ color: "var(--red)" }}>{results[0].podium_probability.toFixed(2)}</span> from P{results[0].grid}.
-                {results[0].grid > 3 ? " Circuit history is overriding grid position." : " Front row start is the dominant factor."}
-              </p>
+        {/* RIGHT: live results */}
+        <div className="hm-side">
+          <GlassPanel className="hm-panel" tilt={false}>
+            <div className="hm-panel-h">
+              <h2>Live podium shares {loading && <span className="wf-computing">● COMPUTING</span>}</h2>
+              <p>Each driver's share of the podium places for this grid. Podium shares add up to 300%.</p>
             </div>
+            <div className="wf-list">
+              {offline && <BackendPanel detail="The live model call failed." onRetry={reset} />}
+              {!offline && results.length === 0 && <SkeletonList rows={6} metrics={1} />}
+              {shown.map((r, i) => {
+                const tid = teamIdOf({ driverRef: r.driverRef, team: drivers.find(d => d.driverRef === r.driverRef)?.team });
+                const tc = i === 0 ? "#e10600" : teamColor(tid);
+                return (
+                  <motion.div key={r.driverRef} layout
+                    animate={{ opacity: loading ? 0.6 : 1 }}
+                    transition={{ opacity: { duration: 0.15 }, layout: { type: "spring", stiffness: 350, damping: 32 } }}
+                    className="data-row glass-panel wf-row" style={{ ...glassStyle(tc), padding: "0.55rem 0.9rem" }}>
+                    <HudBrackets tint={tc} />
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.7rem" }}>
+                      <b className="wf-pos" style={{ color: i === 0 ? "#ff6b61" : undefined }}>P{i + 1}</b>
+                      <TeamMark team={tid} size={20} />
+                      <span className="wf-drv"><b>{r.code}</b> <span>{r.driver_name}</span><small>GRID P{r.grid}</small></span>
+                      <span className="teal wf-share"><ScoreFigure raw={r.podium}>{pctLabel(r.podiumPct, r.podiumShare)}</ScoreFigure></span>
+                    </div>
+                    <div className="hm-meter" aria-hidden="true" style={{ marginTop: 6 }}><i style={{ width: `${(100 * (r.podiumShare ?? 0)) / maxShare}%`, background: i === 0 ? "var(--red)" : undefined, transition: "width 0.35s cubic-bezier(0.25,0.46,0.45,0.94)" }} /></div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </GlassPanel>
+
+          {hasRun && shown.length > 0 && !loading && (
+            <Panel title="Model insight" caption="A one-line reading of the current result.">
+              <p className="hm-note">
+                <span className="pr-ink">{shown[0].driver_name}</span> leads with a podium share of <span className="pr-red">{pctLabel(shown[0].podiumPct, shown[0].podiumShare)}</span> from P{shown[0].grid}.
+                {shown[0].grid > 3 ? " Circuit history is overriding grid position." : " Front row start is the dominant factor."}
+              </p>
+            </Panel>
           )}
+
+          <Panel title="How this works" caption="What changes between runs, and what does not.">
+            <p className="hm-note">
+              Each reorder triggers a live POST to the XGBoost model. Only grid position changes: championship points, recent form and circuit history stay fixed.
+              This isolates the pure qualifying effect on the race outcome model scores.
+            </p>
+          </Panel>
         </div>
       </div>
-
-      <GlassPanel style={{ padding: "20px", display: "flex", gap: "0.75rem" }}>
-        <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>INFO</span>
-        <p style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
-          Each reorder triggers a live POST to the XGBoost model. Only grid position changes — championship points, recent form, and circuit history stay fixed. This isolates the pure qualifying effect on the race outcome model scores.
-        </p>
-      </GlassPanel>
     </div>
   );
 };
