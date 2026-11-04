@@ -21,7 +21,7 @@ const ScoreFigure = ({ raw, children }) => {
 
   return (
     <span className="hm-figwrap" ref={ref}>
-      <button type="button" className="hm-fig" aria-expanded={open} aria-describedby={open ? id : undefined} title={`raw model score ${score(raw)}`} onClick={() => setOpen((o) => !o)}>
+      <button type="button" className="hm-fig" aria-expanded={open} aria-describedby={open ? id : undefined} title={`raw model score ${score(raw)}`} onClick={(e) => { e.stopPropagation(); setOpen((o) => !o); }}>
         {children}
       </button>
       {open && <span className="hm-figpop" role="status" id={id}>raw model score {score(raw)}</span>}

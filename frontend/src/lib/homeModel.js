@@ -11,6 +11,32 @@ export const BACKTEST = {
   standingsLeader: { hits: 12, ci: [0.17, 0.43] },
 };
 
+// Full winner-pick backtest for the Model page: 43 out-of-sample races (2025-2026), how often each method named the race
+// winner. "predicted" = the model's pre-qualifying path (it uses its own predicted grid); "real" = the model handed the real
+// grid after qualifying. Source: analysis/out/winner_hit_ci.json, keys {b_predicted_quali,a_real_grid}|all_43|*.
+// ci = 95% Wilson interval. Static results, not fetched.
+export const BACKTEST_FULL = {
+  races: 43,
+  predicted: {
+    label: "Before qualifying", sub: "the model uses its own predicted grid",
+    rows: [
+      { key: "model", label: "Model", hits: 9, ci: [0.11, 0.35], model: true },
+      { key: "standings", label: "Pick the points leader", hits: 12, ci: [0.17, 0.43] },
+      { key: "constructor", label: "Pick the best team's lead driver", hits: 13, ci: [0.19, 0.45] },
+      { key: "grid", label: "Pick the predicted pole sitter", hits: 8, ci: [0.10, 0.33] },
+    ],
+  },
+  real: {
+    label: "After qualifying", sub: "the model is given the real starting grid",
+    rows: [
+      { key: "model", label: "Model", hits: 26, ci: [0.46, 0.74], model: true },
+      { key: "standings", label: "Pick the points leader", hits: 12, ci: [0.17, 0.43] },
+      { key: "constructor", label: "Pick the best team's lead driver", hits: 13, ci: [0.19, 0.45] },
+      { key: "grid", label: "Pick the pole sitter", hits: 29, ci: [0.53, 0.80] },
+    ],
+  },
+};
+
 const shortName = (n) => n.replace(/\s+(Grand Prix|GP)\b/, "");
 
 // The calendar, in round order. Completed rounds and the upcoming ones come from constants.js (the single source the
@@ -119,20 +145,33 @@ export const shareLabel = (x) => (x == null || !Number.isFinite(x) ? "—" : x <
 
 // Ranked by podium score, ties broken by win score (the model's own order, unchanged by shares). `win`/`podium` keep the
 // raw scores for tooltips; winShare/podiumShare are what Home displays.
-export const rankRows = (rows) => {
-  const ranked = [...rows]
+// Adds win/podium shares (and whole percents that total exactly 100 / 300) to rows IN THE ORDER GIVEN. Rows need `win` and
+// `podium` raw scores. Used by rankRows and by pages that keep the API's own order (Predictor, What-If).
+export const withShares = (rows) => {
+  const w = normalizeShares(rows.map((r) => r.win), 1);
+  const p = normalizeShares(rows.map((r) => r.podium), 3);
+  const wp = roundShares(w, 1);
+  const pp = roundShares(p, 3);
+  return rows.map((r, i) => ({ ...r, winShare: w[i], podiumShare: p[i], winPct: wp[i], podiumPct: pp[i] }));
+};
+
+export const rankRows = (rows) => withShares(
+  [...rows]
     .filter((r) => Number.isFinite(r.podium_probability))
     .sort((a, b) => b.podium_probability - a.podium_probability || (b.win_probability ?? 0) - (a.win_probability ?? 0))
     .map((r, i) => ({
       ...r, pos: i + 1, code: driverCode(r.driver_name), teamId: teamIdOf(r),
       win: r.win_probability ?? null, podium: r.podium_probability,
-    }));
-  const w = normalizeShares(ranked.map((r) => r.win), 1);
-  const p = normalizeShares(ranked.map((r) => r.podium), 3);
-  const wp = roundShares(w, 1);
-  const pp = roundShares(p, 3);
-  return ranked.map((r, i) => ({ ...r, winShare: w[i], podiumShare: p[i], winPct: wp[i], podiumPct: pp[i] }));
-};
+    })),
+);
+
+// Same, but keeps the order the rows arrive in (positions follow that order).
+export const rowsWithShares = (rows) => withShares(
+  rows.filter((r) => Number.isFinite(r.podium_probability)).map((r, i) => ({
+    ...r, pos: i + 1, code: driverCode(r.driver_name), teamId: teamIdOf(r),
+    win: r.win_probability ?? null, podium: r.podium_probability,
+  })),
+);
 
 export const score = (v) => (v == null || !Number.isFinite(v) ? "—" : v.toFixed(2));
 

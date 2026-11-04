@@ -48,9 +48,9 @@ const statusOf = (c, i, clinched) => (i === 0 && clinched ? "CHAMPION" : c.mathe
 const DriversTable = ({ d }) => {
   const max = Math.max(...d.contenders.map((c) => c.points), 1);
   return (
-    <Panel title="Drivers' standings" caption="Official points, with how many each driver could still reach.">
+    <Panel title="Drivers' standings" caption="Official points. MAX REACHABLE is current points plus every point still available.">
       <div className="ch-tbl" role="table" aria-label="Drivers' standings">
-        <div className="ch-tr ch-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="hm-hide-m" /><span>PTS</span><span className="hm-hide-m">GAP</span><span className="hm-hide-m">MAX</span></div>
+        <div className="ch-tr ch-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="hm-hide-m" /><span>PTS</span><span className="hm-hide-m">GAP</span><span className="hm-hide-m" title="Current points plus every point still available.">MAX REACHABLE</span></div>
         {d.contenders.map((c, i) => {
           const tid = teamIdByDriverName(c.name);
           return (
@@ -73,9 +73,9 @@ const DriversTable = ({ d }) => {
 const ConstructorsTable = ({ k }) => {
   const max = Math.max(...k.contenders.map((c) => c.points), 1);
   return (
-    <Panel title="Constructors' standings" caption="Team points, with the most each team could still reach.">
+    <Panel title="Constructors' standings" caption="Team points. MAX REACHABLE is current points plus every point still available.">
       <div className="ch-tbl" role="table" aria-label="Constructors' standings">
-        <div className="ch-tr ch-th ch-team" role="row"><span>POS</span><span /><span>TEAM</span><span>PTS</span><span className="hm-hide-m">MAX</span></div>
+        <div className="ch-tr ch-th ch-team" role="row"><span>POS</span><span /><span>TEAM</span><span>PTS</span><span className="hm-hide-m" title="Current points plus every point still available.">MAX REACHABLE</span></div>
         {k.contenders.map((c, i) => {
           const tid = canonicalTeam(c.name);
           return (

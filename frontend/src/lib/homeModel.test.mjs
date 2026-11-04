@@ -1,7 +1,7 @@
 // node src/lib/run-test.mjs   (run from frontend/; needs Vite for import.meta.env)
 import assert from "node:assert/strict";
 import { canonicalTeam } from "../teams.js";
-import { teamIdByDriverName, normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
+import { rowsWithShares, BACKTEST_FULL, teamIdByDriverName, normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
 
 let n = 0;
 const t = (name, got, want) => { assert.deepEqual(got, want, name); n++; };
@@ -76,4 +76,8 @@ t("rankRows win % total 100", sumOf(ranked.map((r) => r.winPct)), 100);
 t("rankRows podium % total 300", sumOf(ranked.map((r) => r.podiumPct)), 300);
 t("team by driver name", teamIdByDriverName("Kimi Antonelli"), "mercedes");
 t("team by driver name (unknown driver)", teamIdByDriverName("Nobody Here"), null);
+const kept = rowsWithShares([{ driver_name: "A B", driverRef: "x", podium_probability: 0.2, win_probability: 0.1 }, { driver_name: "C D", driverRef: "y", podium_probability: 0.9, win_probability: 0.9 }]);
+t("rowsWithShares keeps the given order", kept.map((r) => r.code), ["B", "D"]);
+t("rowsWithShares percents total", [sumOf(kept.map((r) => r.winPct)), sumOf(kept.map((r) => r.podiumPct))], [100, 300]);
+t("backtest: model 9/43 vs points leader 12/43 before qualifying", [BACKTEST_FULL.predicted.rows[0].hits, BACKTEST_FULL.predicted.rows[1].hits, BACKTEST_FULL.races], [9, 12, 43]);
 console.log(`${n} passed`);

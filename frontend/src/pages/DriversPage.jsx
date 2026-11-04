@@ -129,13 +129,13 @@ const DriversPage = () => {
                     </BarChart>
                   </ResponsiveContainer>
                 </Panel>
-                <Panel title="Best circuits" caption="Share of races at each circuit that ended on the podium (top six).">
+                <Panel title="Best circuits" caption="Share of races at each circuit that ended on the podium, with how many races that is based on. One or two races is limited history.">
                   <div className="dr-circuits">
                     {stats.circuit_stats.slice(0, 6).map((c, i) => (
                       <div key={i} className="dr-circ">
                         <span>{c.circuitRef}</span>
-                        <div className="hm-meter" aria-hidden="true"><i style={{ width: `${c.podium_rate * 100}%`, background: "var(--red)" }} /></div>
-                        <b>{(c.podium_rate * 100).toFixed(0)}%</b>
+                        <div className="hm-meter" aria-hidden="true"><i style={{ width: `${c.podium_rate * 100}%`, background: "var(--red)", opacity: c.races <= 2 ? 0.45 : 1 }} /></div>
+                        <b>{(c.podium_rate * 100).toFixed(0)}%<small>{c.races} race{c.races === 1 ? "" : "s"}{c.races <= 2 ? " · limited history" : ""}</small></b>
                       </div>
                     ))}
                   </div>

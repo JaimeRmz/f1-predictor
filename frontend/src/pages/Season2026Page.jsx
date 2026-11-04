@@ -233,14 +233,14 @@ const Season2026Page = () => {
           {!loadingAcc && accuracy && (
             <div style={{ display: "flex", flexDirection: "column", gap: "2px", alignItems: "flex-end" }}>
               {/* Pre-race (snapshot) cohort — small sample so far, counts only. */}
-              <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", fontWeight: "700" }}>
+              <span style={{ fontFamily: "var(--mono)", fontSize: "0.74rem", fontWeight: "700" }}>
                 <span className="live-pulse" style={{ color: "var(--gold)", letterSpacing: "0.08em", display: "inline-block" }}>PRE-RACE</span>
                 <span style={{ color: "var(--text)" }}> · WIN {accuracy.preRace.winnerCorrect}/{accuracy.preRace.n} · POD {accuracy.preRace.podiumCorrect}/{accuracy.preRace.n}</span>
               </span>
               {/* Test-set (live, post-qualifying) cohort — larger sample, show %. */}
-              <span style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", fontWeight: "700" }}>
-                <span style={{ color: "var(--muted)", letterSpacing: "0.08em" }}>TEST-SET</span>
-                <span style={{ color: "var(--text)", opacity: 0.8 }}> · WIN {accuracy.testSet.winnerCorrect}/{accuracy.testSet.n} · {accuracy.testSet.winnerPct}% · POD {accuracy.testSet.podiumCorrect}/{accuracy.testSet.n} · {accuracy.testSet.podiumPct}%</span>
+              <span style={{ fontFamily: "var(--mono)", fontSize: "0.74rem", fontWeight: "700" }}>
+                <span style={{ color: "var(--hm-muted)", letterSpacing: "0.08em" }}>TEST-SET</span>
+                <span style={{ color: "var(--text)", opacity: 1 }}> · WIN {accuracy.testSet.winnerCorrect}/{accuracy.testSet.n} · {accuracy.testSet.winnerPct}% · POD {accuracy.testSet.podiumCorrect}/{accuracy.testSet.n} · {accuracy.testSet.podiumPct}%</span>
               </span>
             </div>
           )}
@@ -252,48 +252,48 @@ const Season2026Page = () => {
         ) : loadingAcc ? <Spinner text="LOADING ACCURACY DATA..." /> : accuracy && (
           <>
             {/* Methodology legend — the table mixes two kinds of evaluation. */}
-            <div style={{ padding: "0.5rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", gap: "1.25rem", flexWrap: "wrap", fontFamily: "var(--mono)", fontSize: "0.56rem", color: "var(--muted)", lineHeight: 1.5 }}>
+            <div style={{ padding: "0.5rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", gap: "1.25rem", flexWrap: "wrap", fontFamily: "var(--mono)", fontSize: "0.74rem", color: "var(--hm-muted)", lineHeight: 1.5 }}>
               <span><span style={{ color: "var(--gold)", fontWeight: 700 }}>● PRE-RACE</span> — frozen pre-qualifying snapshot (genuine foresight)</span>
               <span><span style={{ fontWeight: 700 }}>● POST-QUALI</span> — live model on the real grid (test-set accuracy, not foresight)</span>
             </div>
-            <div className="accuracy-grid" style={{ display: "grid", gridTemplateColumns: "100px 1fr 1fr 44px 1fr 1fr 44px", borderBottom: "1px solid var(--border)" }}>
+            <div className="accuracy-grid" style={{ display: "grid", gridTemplateColumns: "128px 1fr 1fr 44px 1fr 1fr 44px", borderBottom: "1px solid var(--border)" }}>
               {[
                 { h: "RACE" }, { h: "PRED. WINNER" }, { h: "ACTUAL WINNER" }, { h: "WIN" },
                 { h: "PREDICTED TOP 3", hideMobile: true }, { h: "ACTUAL TOP 3", hideMobile: true }, { h: "POD" },
               ].map((col, i) => (
-                <div key={i} className={col.hideMobile ? "hide-mobile" : undefined} style={{ padding: "0.45rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", color: "var(--muted)", letterSpacing: "0.1em" }}>{col.h}</div>
+                <div key={i} className={col.hideMobile ? "hide-mobile" : undefined} style={{ padding: "0.45rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.74rem", fontWeight: "700", color: "var(--hm-muted)", letterSpacing: "0.1em" }}>{col.h}</div>
               ))}
             </div>
             {accuracy.races.map((r, i) => (
-              <div key={i} className="data-row stagger-item accuracy-grid" style={{ "--i": i, display: "grid", gridTemplateColumns: "100px 1fr 1fr 44px 1fr 1fr 44px", borderBottom: i < accuracy.races.length - 1 ? "1px solid var(--border)" : "none", borderLeft: r.podiumCorrect ? "3px solid var(--green)" : "3px solid var(--dimmed)" }}>
+              <div key={i} className="data-row stagger-item accuracy-grid" style={{ "--i": i, display: "grid", gridTemplateColumns: "128px 1fr 1fr 44px 1fr 1fr 44px", borderBottom: i < accuracy.races.length - 1 ? "1px solid var(--border)" : "none", borderLeft: r.podiumCorrect ? "3px solid var(--green)" : "3px solid var(--dimmed)" }}>
                 <div style={{ padding: "0.6rem 0.75rem" }}>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", fontWeight: "700" }}>RD {r.round} {r.flag}</div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: "var(--text)", marginTop: "2px", fontWeight: "600" }}>{r.name}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: "0.74rem", color: "var(--hm-muted)", fontWeight: "700" }}>RD {r.round} {r.flag}</div>
+                  <div style={{ fontFamily: "var(--mono)", fontSize: "0.74rem", color: "var(--text)", marginTop: "2px", fontWeight: "600" }}>{r.name}</div>
                   <span className={r.source === "snapshot" ? "live-pulse" : undefined} style={{
-                    display: "inline-block", marginTop: "4px", fontFamily: "var(--mono)", fontSize: "0.5rem",
+                    display: "inline-block", marginTop: "4px", fontFamily: "var(--mono)", fontSize: "0.74rem",
                     fontWeight: "700", letterSpacing: "0.06em", padding: "1px 5px", borderRadius: "3px",
                     color: r.source === "snapshot" ? "var(--gold)" : "var(--muted)",
                     background: r.source === "snapshot" ? "rgba(255,199,0,0.12)" : "rgba(255,255,255,0.05)",
                     border: "1px solid " + (r.source === "snapshot" ? "rgba(255,199,0,0.4)" : "rgba(255,255,255,0.15)"),
                   }}>{r.source === "snapshot" ? "PRE-RACE" : "POST-QUALI"}</span>
                 </div>
-                <div style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--gold)", display: "flex", alignItems: "center" }}>
+                <div style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.74rem", color: "var(--gold)", display: "flex", alignItems: "center" }}>
                   {r.predictedWinnerName}
                 </div>
-                <div style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--text)", display: "flex", alignItems: "center" }}>
+                <div style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.74rem", color: "var(--text)", display: "flex", alignItems: "center" }}>
                   {r.actualWinnerName}
                 </div>
                 <div style={{ padding: "0.6rem 0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.winnerCorrect ? "var(--gold)" : "var(--dimmed)" }}>{r.winnerCorrect ? "✓" : "✗"}</span>
+                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.winnerCorrect ? "var(--gold)" : "var(--hm-muted)" }}>{r.winnerCorrect ? "✓" : "✗"}</span>
                 </div>
-                <div className="hide-mobile" style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", display: "flex", alignItems: "center" }}>
+                <div className="hide-mobile" style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.74rem", color: "var(--hm-muted)", display: "flex", alignItems: "center" }}>
                   {r.predictedNames.join(" · ")}
                 </div>
-                <div className="hide-mobile" style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--text)", display: "flex", alignItems: "center" }}>
+                <div className="hide-mobile" style={{ padding: "0.6rem 0.75rem", fontFamily: "var(--mono)", fontSize: "0.74rem", color: "var(--text)", display: "flex", alignItems: "center" }}>
                   {r.actualNames.join(" · ")}
                 </div>
                 <div style={{ padding: "0.6rem 0.75rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.podiumCorrect ? "var(--green)" : "var(--dimmed)" }}>{r.podiumCorrect ? "✓" : "✗"}</span>
+                  <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: r.podiumCorrect ? "var(--green)" : "var(--hm-muted)" }}>{r.podiumCorrect ? "✓" : "✗"}</span>
                 </div>
               </div>
             ))}
