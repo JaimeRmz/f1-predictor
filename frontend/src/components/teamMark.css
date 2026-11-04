@@ -1,0 +1,7 @@
+/* TeamMark: logo box + coloured-code fallback chip. Always sits beside the team colour bar and driver code. */
+.tm-box { display: inline-flex; align-items: center; justify-content: center; flex: none; vertical-align: middle; }
+.tm-box img { display: block; }
+.tm-chip {
+  border: 1px solid; border-radius: 5px; font-family: var(--mono); font-weight: 700; letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.04); line-height: 1;
+}
