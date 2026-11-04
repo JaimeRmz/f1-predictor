@@ -230,9 +230,12 @@ export const COMPLETED_2026 = [
 ];
 
 // Roster ordered by post-Mexico City GP (round 19) championship standings.
-// ASSUMPTION: Ocon is back in the Haas seat for Brazil. Jolpica shows Ryo
-// Hirakawa in it for Mexico only (verified); nothing yet says Ocon returns,
-// so check the round-20 entry list when Jolpica publishes it.
+// Haas has dropped Esteban Ocon for the rest of 2026; Rafael Camara debuts at the
+// Brazilian GP (round 20). Ocon is therefore OUT of this list. Camara is deliberately
+// NOT added: he has no results in the model's data, so /whatif cannot score him (it
+// would silently skip him) and Home / Race say so in a footnote (RACE_NOTES in
+// lib/homeModel.js). Ocon keeps his CONSTRUCTOR_OVERRIDES entry and a FORMER_DRIVERS_2026
+// row below so his past races still colour and name correctly.
 // Zandvoort (round 12) had swapped Hadjar out, Tsunoda in at Racing Bulls,
 // and Lawson up to Red Bull. By Baku (round 15) that swap reversed: Hadjar
 // is back at Red Bull, Lawson is back at Racing Bulls, and Tsunoda is out of
@@ -258,12 +261,16 @@ export const STANDINGS_GRID_2026 = [
   { driverRef: "bearman",         driver_name: "Oliver Bearman",    team: "Haas",          grid: 13 },
   { driverRef: "hulkenberg",      driver_name: "Nico Hulkenberg",   team: "Audi",          grid: 14 },
   { driverRef: "bortoleto",       driver_name: "Gabriel Bortoleto", team: "Audi",          grid: 15 },
-  { driverRef: "ocon",            driver_name: "Esteban Ocon",      team: "Haas",          grid: 16 },
   { driverRef: "alonso",          driver_name: "Fernando Alonso",   team: "Aston Martin",  grid: 17 },
   { driverRef: "sainz",           driver_name: "Carlos Sainz",      team: "Williams",      grid: 18 },
   { driverRef: "albon",           driver_name: "Alex Albon",        team: "Williams",      grid: 19 },
   { driverRef: "stroll",          driver_name: "Lance Stroll",      team: "Aston Martin",  grid: 20 },
   { driverRef: "bottas",          driver_name: "Valtteri Bottas",   team: "Cadillac",      grid: 21 },
   { driverRef: "perez",           driver_name: "Sergio Perez",      team: "Cadillac",      grid: 22 },
+];
+
+// Drivers who raced earlier in 2026 but are no longer on the entry list. Only for naming and colouring past races.
+export const FORMER_DRIVERS_2026 = [
+  { driverRef: "ocon", driver_name: "Esteban Ocon", team: "Haas" },
 ];
 

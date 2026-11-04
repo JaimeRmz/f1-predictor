@@ -1,7 +1,7 @@
 // node src/lib/run-test.mjs   (run from frontend/; needs Vite for import.meta.env)
 import assert from "node:assert/strict";
 import { canonicalTeam } from "../teams.js";
-import { rowsWithShares, BACKTEST_FULL, teamIdByDriverName, normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
+import { raceNote, RACE_NOTES, rowsWithShares, BACKTEST_FULL, teamIdByDriverName, normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
 
 let n = 0;
 const t = (name, got, want) => { assert.deepEqual(got, want, name); n++; };
@@ -80,4 +80,7 @@ const kept = rowsWithShares([{ driver_name: "A B", driverRef: "x", podium_probab
 t("rowsWithShares keeps the given order", kept.map((r) => r.code), ["B", "D"]);
 t("rowsWithShares percents total", [sumOf(kept.map((r) => r.winPct)), sumOf(kept.map((r) => r.podiumPct))], [100, 300]);
 t("backtest: model 9/43 vs points leader 12/43 before qualifying", [BACKTEST_FULL.predicted.rows[0].hits, BACKTEST_FULL.predicted.rows[1].hits, BACKTEST_FULL.races], [9, 12, 43]);
+t("R20 has the Camara footnote", /Câmara.*debut.*does not score him/.test(raceNote(1188)), true);
+t("no footnote leaks into other rounds", [raceNote(1187), raceNote(1189), raceNote(1190), raceNote(1191), raceNote(undefined)], [null, null, null, null, null]);
+t("only R20 has a note", Object.keys(RACE_NOTES), ["1188"]);
 console.log(`${n} passed`);

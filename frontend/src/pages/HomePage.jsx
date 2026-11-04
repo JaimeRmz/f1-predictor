@@ -14,7 +14,7 @@ import { supabase } from "../lib/supabaseClient.js";
 import { API, NEXT_RACE } from "../constants.js";
 import { TEAMS } from "../teams.js";
 import {
-  BACKTEST, defaultRound, raceByRound, phaseOf,
+  BACKTEST, raceNote, defaultRound, raceByRound, phaseOf,
   rankRows, teamColor, pctLabel, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
 } from "../lib/homeModel.js";
 import "./home.css";
@@ -194,7 +194,7 @@ const HomePage = () => {
       )}
       <div className="hm-grid">
         <div className="hm-main">
-          {ranked.length > 0 && <Forecast ranked={ranked} />}
+          {ranked.length > 0 && <Forecast ranked={ranked} note={raceNote(race.raceId)} />}
         {!cur && (slow ? <WakingPanel /> : <SkeletonList rows={5} metrics={2} />)}
         {cur?.status === "error" && (cur.http
           ? (

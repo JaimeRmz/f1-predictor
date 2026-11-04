@@ -13,7 +13,7 @@ import { BackendPanel, WakingPanel, SkeletonList } from "../shared.jsx";
 import { NEXT_RACE, SITE_URL, flagUrl } from "../constants.js";
 import { TEAMS } from "../teams.js";
 import { useShareCard } from "../useShareCard.js";
-import { defaultRound, raceByRound, phaseOf, rankRows, teamColor, pctLabel } from "../lib/homeModel.js";
+import { defaultRound, raceByRound, phaseOf, rankRows, teamColor, pctLabel, raceNote } from "../lib/homeModel.js";
 import "./home.css";
 
 // ── RACE PAGE ──────────────────────────────────────────────────
@@ -76,7 +76,7 @@ const RacePage = () => {
             )
             : <BackendPanel detail={`The ${race.name} prediction request failed.`} onRetry={retry} />)}
           {ranked.length > 0 && (
-            <Forecast ranked={ranked} defaultAll title={upcoming ? "Pre-race prediction" : "Model replay"} caption={forecastCaption} />
+            <Forecast ranked={ranked} defaultAll note={raceNote(race.raceId)} title={upcoming ? "Pre-race prediction" : "Model replay"} caption={forecastCaption} />
           )}
         </div>
 

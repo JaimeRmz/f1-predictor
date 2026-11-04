@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { STANDINGS_GRID_2026, TEAM_COLORS, CONSTRUCTOR_OVERRIDES } from "../constants.js";
+import { STANDINGS_GRID_2026, FORMER_DRIVERS_2026, TEAM_COLORS, CONSTRUCTOR_OVERRIDES } from "../constants.js";
 
 // ── RACE STRATEGY (tyre table + lap-by-lap position chart) ───────
 // Loads the cached OpenF1 telemetry for one race on demand, straight from the
@@ -11,7 +11,7 @@ function loadStrategy(raceId) {
   return entry ? entry[1]().then(m => m.default) : Promise.resolve(null);
 }
 
-const NAME = Object.fromEntries(STANDINGS_GRID_2026.map(d => [d.driverRef, d.driver_name]));
+const NAME = Object.fromEntries([...STANDINGS_GRID_2026, ...FORMER_DRIVERS_2026].map(d => [d.driverRef, d.driver_name]));
 const lastName = (ref) => (NAME[ref] || ref).split(" ").pop();
 const teamOf = (ref) => CONSTRUCTOR_OVERRIDES[ref] || STANDINGS_GRID_2026.find(d => d.driverRef === ref)?.team;
 const colorOf = (ref) => TEAM_COLORS[teamOf(ref)] || "#8a8a95";

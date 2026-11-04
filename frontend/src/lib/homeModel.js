@@ -138,6 +138,12 @@ export const roundShares = (shares, total) => {
 };
 
 // Label for one rounded percent: "34%", "<1%" (under 1 or counted as zero), "—" (missing).
+// Per-race footnotes, keyed by raceId, shown under the forecast on Home and Race for that race only.
+export const RACE_NOTES = {
+  1188: "Rafael Câmara (Haas) is making his F1 debut and has no history, so the model does not score him.",
+};
+export const raceNote = (raceId) => RACE_NOTES[raceId] ?? null;
+
 export const pctLabel = (pct, share) => (pct == null || share == null ? "—" : pct < 1 || share < 0.005 ? "<1%" : `${pct}%`);
 
 // "34%"; under half a percent "<1%" (so a tiny score never reads as exactly 0); null "—".
