@@ -79,16 +79,33 @@ export const teamIdOf = (row) =>
 
 export const teamColor = (id) => TEAMS[id]?.color || "#8a8a95";
 
-// Ranked by podium score, ties broken by win score. Scores are the API's raw values (win scores sum to ~3, podium
-// scores to ~5): never rescaled, never shown as percentages.
-export const rankRows = (rows) =>
-  [...rows]
+// Raw scores are independent per-driver outputs (win scores sum to ~3 per race, podium scores to ~5), so on their own they
+// read like probabilities and are not. Shares rescale them INSIDE one race's field: values / sum(values) * total. Win
+// shares use total 1 (100%), podium shares total 3 (300%: three drivers finish on the podium). Entries that are missing or
+// negative get null, not 0; a field that sums to 0 gives all null. Display only: the ranking never uses shares.
+export const normalizeShares = (values, total) => {
+  const ok = (v) => typeof v === "number" && Number.isFinite(v) && v >= 0;
+  const sum = values.reduce((a, v) => a + (ok(v) ? v : 0), 0);
+  return values.map((v) => (sum > 0 && ok(v) ? (v / sum) * total : null));
+};
+
+// "34%"; under half a percent "<1%" (so a tiny score never reads as exactly 0); null "—".
+export const shareLabel = (x) => (x == null || !Number.isFinite(x) ? "—" : x < 0.005 ? "<1%" : `${Math.round(x * 100)}%`);
+
+// Ranked by podium score, ties broken by win score (the model's own order, unchanged by shares). `win`/`podium` keep the
+// raw scores for tooltips; winShare/podiumShare are what Home displays.
+export const rankRows = (rows) => {
+  const ranked = [...rows]
     .filter((r) => Number.isFinite(r.podium_probability))
     .sort((a, b) => b.podium_probability - a.podium_probability || (b.win_probability ?? 0) - (a.win_probability ?? 0))
     .map((r, i) => ({
       ...r, pos: i + 1, code: driverCode(r.driver_name), teamId: teamIdOf(r),
       win: r.win_probability ?? null, podium: r.podium_probability,
     }));
+  const w = normalizeShares(ranked.map((r) => r.win), 1);
+  const p = normalizeShares(ranked.map((r) => r.podium), 3);
+  return ranked.map((r, i) => ({ ...r, winShare: w[i], podiumShare: p[i] }));
+};
 
 export const score = (v) => (v == null || !Number.isFinite(v) ? "—" : v.toFixed(2));
 

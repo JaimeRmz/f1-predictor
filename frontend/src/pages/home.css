@@ -12,8 +12,18 @@
 .hm label { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; color: var(--hm-muted); font-weight: 700; display: block; }
 .hm label.gold { color: var(--gold); } .hm label.teal { color: var(--teal); } .hm label.green { color: var(--green); }
 
-/* race selector */
-.hm-strip { display: flex; gap: 0.45rem; overflow-x: auto; padding: 0.15rem 0.1rem 0.5rem; scrollbar-width: thin; scroll-snap-type: x proximity; }
+/* race selector: no native scrollbar; arrows + edge fades show it scrolls */
+.hm-stripwrap { position: relative; display: flex; align-items: center; gap: 0.4rem; }
+.hm-strip { flex: 1; min-width: 0; display: flex; gap: 0.45rem; overflow-x: auto; padding: 0.4rem 0.1rem; scroll-snap-type: x proximity; scrollbar-width: none; -ms-overflow-style: none; }
+.hm-strip::-webkit-scrollbar { display: none; }
+.hm-arrow { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--hud-line); background: rgba(255, 255, 255, 0.05); color: var(--ink); font-size: 1.25rem; line-height: 1; cursor: pointer; }
+.hm-arrow:disabled { opacity: 0.3; cursor: default; }
+.hm-arrow:not(:disabled):hover { border-color: rgba(236, 236, 236, 0.5); }
+.hm-arrow:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.hm-fade { position: absolute; top: 0; bottom: 0; width: 36px; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+.hm-fade.l { left: 38px; background: linear-gradient(90deg, #0a0a0c, transparent); }
+.hm-fade.r { right: 38px; background: linear-gradient(270deg, #0a0a0c, transparent); }
+.hm-fade.on { opacity: 1; }
 .hm-chip {
   flex: none; scroll-snap-align: center; display: inline-flex; align-items: baseline; gap: 0.45rem; position: relative;
   font-family: var(--mono); font-size: 0.74rem; color: var(--text); cursor: pointer; white-space: nowrap;
@@ -73,7 +83,7 @@
 
 /* forecast table */
 .hm-tbl { padding: 0.3rem 0.6rem 0.8rem; }
-.hm-tr { display: grid; grid-template-columns: 2.2rem 5rem minmax(0, 1fr) minmax(5rem, 0.8fr) 3.6rem 3.6rem; align-items: center; gap: 0.7rem; padding: 0.42rem 0.55rem; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 0.82rem; }
+.hm-tr { display: grid; grid-template-columns: 2.2rem 5rem minmax(0, 1fr) minmax(4rem, 0.8fr) 4.6rem 4.6rem; align-items: center; gap: 0.7rem; padding: 0.42rem 0.55rem; border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 0.82rem; }
 .hm-tr:last-child { border-bottom: 0; }
 .hm-th { font-size: 0.66rem; letter-spacing: 0.12em; color: var(--hm-muted); font-weight: 700; padding-top: 0.7rem; }
 .hm-th .gold, .hm-th .teal { text-align: right; }
@@ -87,6 +97,10 @@
 .hm-meter { height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.07); overflow: hidden; }
 .hm-meter i { display: block; height: 100%; background: var(--teal); border-radius: 3px; }
 .hm-v { text-align: right; font-weight: 700; }
+
+.hm-more { display: block; width: calc(100% - 1.2rem); margin: 0 0.6rem 0.8rem; padding: 0.7rem; cursor: pointer; font-family: var(--mono); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; color: var(--ink); background: rgba(255, 255, 255, 0.05); border: 1px solid var(--hud-line); border-radius: 10px; }
+.hm-more:hover { border-color: rgba(236, 236, 236, 0.5); }
+.hm-more:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 
 /* side panels */
 .hm-champ { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 1.55rem; letter-spacing: 0.01em; color: var(--green); line-height: 1.1; }
@@ -123,7 +137,9 @@
   .hm-top3 { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 0.75rem; padding-bottom: 0.4rem; margin: 0 -0.25rem; }
   .hm-top { flex: 0 0 82%; scroll-snap-align: center; }
   .hm-hide-m { display: none; }
-  .hm-tr { grid-template-columns: 1.6rem 3.4rem minmax(0, 1fr) 3.1rem 3.1rem; gap: 0.5rem; padding-left: 0.2rem; padding-right: 0.2rem; }
+  .hm-th { font-size: 0.58rem; letter-spacing: 0.06em; }
+  .hm-arrow { display: none; } .hm-fade.l { left: 0; } .hm-fade.r { right: 0; }
+  .hm-tr { grid-template-columns: 1.6rem 3.4rem minmax(0, 1fr) 3.4rem 3.4rem; gap: 0.5rem; padding-left: 0.2rem; padding-right: 0.2rem; }
   .hm-tbl { padding: 0.2rem 0.4rem 0.6rem; }
   .hm-two, .hm-rel { grid-template-columns: 1fr; }
   .hm-sec { flex-direction: column; gap: 0.25rem; }

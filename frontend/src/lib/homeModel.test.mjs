@@ -1,7 +1,7 @@
 // node src/lib/run-test.mjs   (run from frontend/; needs Vite for import.meta.env)
 import assert from "node:assert/strict";
 import { canonicalTeam } from "../teams.js";
-import { titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
+import { normalizeShares, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
 
 let n = 0;
 const t = (name, got, want) => { assert.deepEqual(got, want, name); n++; };
@@ -32,4 +32,26 @@ t("phase completed", phaseOf(raceByRound(19)), "final");
 t("last race of R20 is R19", lastRaceFor(raceByRound(20)).round, 19);
 t("a completed round is its own last race", lastRaceFor(raceByRound(7)).round, 7);
 t("last race of R23 is R19", lastRaceFor(raceByRound(23)).round, 19);
+const sumOf = (a) => a.reduce((x, y) => x + (y ?? 0), 0);
+const near = (a, b) => Math.abs(a - b) < 1e-9;
+t("win shares sum to 1", near(sumOf(normalizeShares([0.96, 0.76, 0.09, 0.5], 1)), 1), true);
+t("podium shares sum to 3", near(sumOf(normalizeShares([0.96, 0.92, 0.91, 0.1], 3)), 3), true);
+t("shares are proportional", normalizeShares([1, 3], 1), [0.25, 0.75]);
+t("all-zero field -> all null", normalizeShares([0, 0, 0], 1), [null, null, null]);
+t("empty field", normalizeShares([], 1), []);
+t("missing values are null and ignored in the sum", normalizeShares([1, null, undefined, NaN, 3], 1), [0.25, null, null, null, 0.75]);
+t("negative values are null", normalizeShares([-1, 1], 1), [null, 1]);
+t("shareLabel rounds", shareLabel(0.3449), "34%");
+t("shareLabel <1%", shareLabel(0.004), "<1%");
+t("shareLabel zero is <1%", shareLabel(0), "<1%");
+t("shareLabel 0.5% is 1%", shareLabel(0.005), "1%");
+t("shareLabel null", shareLabel(null), "—");
+const withShares = rankRows([
+  { driver_name: "A B", driverRef: "x", podium_probability: 0.5, win_probability: 0.2 },
+  { driver_name: "C D", driverRef: "y", podium_probability: 0.9, win_probability: 0.1 },
+  { driver_name: "E F", driverRef: "z", podium_probability: 0.1, win_probability: 0.7 },
+]);
+t("rank order is by podium score, not by share", withShares.map((r) => r.code), ["D", "B", "F"]);
+t("rankRows win shares sum to 1", near(sumOf(withShares.map((r) => r.winShare)), 1), true);
+t("rankRows podium shares sum to 3", near(sumOf(withShares.map((r) => r.podiumShare)), 3), true);
 console.log(`${n} passed`);

@@ -47,6 +47,21 @@ const ModelPage = () => {
         For upcoming races, the qualifying model's predicted grid feeds directly into the winner and podium models.
       </div>
 
+      <GlassPanel className="chart-enter">
+        <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: "2px" }}>
+          <span className="section-label">Raw model score vs share</span>
+          <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--muted)" }}>How the numbers on Home are made.</span>
+        </div>
+        <div style={{ padding: "1rem", fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", lineHeight: 1.8 }}>
+          Each driver gets a raw model score for winning and for the podium, computed on their own. Raw scores are not probabilities:
+          across a field the win scores add up to about 3 and the podium scores to about 5, not to 1 and 3.
+          Home therefore shows shares: a driver's raw win score divided by the field's total (so win shares add up to 100%), and the raw podium
+          score divided by the field's total times 3 (podium shares add up to 300%, since three drivers finish on the podium).
+          Shares describe relative strength inside one race's field, not a calibrated chance. The raw model score is available as a
+          tooltip on every figure on Home. Drivers are ranked by raw podium score; shares never change the order.
+        </div>
+      </GlassPanel>
+
       <SectionHeader variant="glass" eyebrow="Machine Learning · XGBoost Classifier" title="Podium Model Documentation" />
 
       <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>

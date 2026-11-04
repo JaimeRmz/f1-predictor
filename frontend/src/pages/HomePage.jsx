@@ -8,7 +8,7 @@ import { API, NEXT_RACE, STANDINGS_GRID_2026 } from "../constants.js";
 import { TEAMS } from "../teams.js";
 import {
   CALENDAR, BACKTEST, PHASE_LABEL, defaultRound, raceByRound, titleParts, phaseOf, countdownTarget, countdownParts,
-  rankRows, teamColor, score, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
+  rankRows, teamColor, shareLabel, score, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
 } from "../lib/homeModel.js";
 import "./home.css";
 
@@ -96,15 +96,44 @@ const pad = (n) => String(n).padStart(2, "0");
 // ── pieces ─────────────────────────────────────────────────────
 const RaceStrip = ({ round, onSelect }) => {
   const ref = useRef(null);
-  useEffect(() => { ref.current?.querySelector("[aria-pressed='true']")?.scrollIntoView({ inline: "center", block: "nearest" }); }, [round]);
+  const [edge, setEdge] = useState({ l: false, r: true });
+  const measure = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    setEdge({ l: el.scrollLeft > 4, r: el.scrollLeft + el.clientWidth < el.scrollWidth - 4 });
+  }, []);
+  useEffect(() => {
+    ref.current?.querySelector("[aria-pressed='true']")?.scrollIntoView({ inline: "center", block: "nearest" });
+    measure();
+  }, [round, measure]);
+  useEffect(() => { window.addEventListener("resize", measure); return () => window.removeEventListener("resize", measure); }, [measure]);
+  const nudge = (dir) => ref.current?.scrollBy({ left: dir * ref.current.clientWidth * 0.7, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  // Arrow keys move focus between chips, Home/End jump to the ends; the focused chip scrolls into view.
+  const onKey = (e) => {
+    const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    const chips = [...ref.current.querySelectorAll(".hm-chip")];
+    const i = chips.indexOf(document.activeElement);
+    if (i < 0) return;
+    const next = step ? chips[i + step] : e.key === "Home" ? chips[0] : e.key === "End" ? chips[chips.length - 1] : null;
+    if (!step && !next) return;
+    e.preventDefault();
+    next?.focus();
+    next?.scrollIntoView({ inline: "nearest", block: "nearest" });
+  };
   return (
-    <nav className="hm-strip" ref={ref} aria-label="Choose a race">
-      {CALENDAR.map((r) => (
-        <button key={r.round} type="button" className={`hm-chip${r.kind === "completed" ? " done" : ""}`} aria-pressed={r.round === round} onClick={() => onSelect(r.round)}>
-          <b>R{r.round}</b><span>{r.short}</span>{r.next && <i title="Next race" />}
-        </button>
-      ))}
-    </nav>
+    <div className="hm-stripwrap">
+      <button type="button" className="hm-arrow l" aria-label="Scroll races left" disabled={!edge.l} onClick={() => nudge(-1)}>‹</button>
+      <nav className="hm-strip" ref={ref} aria-label="Choose a race" onScroll={measure} onKeyDown={onKey}>
+        {CALENDAR.map((r) => (
+          <button key={r.round} type="button" className={`hm-chip${r.kind === "completed" ? " done" : ""}`} aria-pressed={r.round === round} onClick={() => onSelect(r.round)}>
+            <b>R{r.round}</b><span>{r.short}</span>{r.next && <i title="Next race" />}
+          </button>
+        ))}
+      </nav>
+      <button type="button" className="hm-arrow r" aria-label="Scroll races right" disabled={!edge.r} onClick={() => nudge(1)}>›</button>
+      <span className={`hm-fade l${edge.l ? " on" : ""}`} aria-hidden="true" />
+      <span className={`hm-fade r${edge.r ? " on" : ""}`} aria-hidden="true" />
+    </div>
   );
 };
 
@@ -148,31 +177,39 @@ const Top3Card = ({ r, i }) => {
       <div className="hm-top-name"><span className="hm-bar" />{r.driver_name}</div>
       <div className="hm-top-team">{r.code} · {TEAMS[r.teamId]?.name || "Team unknown"}</div>
       <div className="hm-top-scores">
-        <div><label className="gold">WIN SCORE</label><b className="gold">{score(r.win)}</b></div>
-        <div><label className="teal">PODIUM SCORE</label><b className="teal">{score(r.podium)}</b></div>
+        <div title={`raw model score ${score(r.win)}`}><label className="gold">WIN SHARE</label><b className="gold">{shareLabel(r.winShare)}</b></div>
+        <div title={`raw model score ${score(r.podium)}`}><label className="teal">PODIUM SHARE</label><b className="teal">{shareLabel(r.podiumShare)}</b></div>
       </div>
     </GlassPanel>
   );
 };
 
+const SHOW_DEFAULT = 10;
 const Forecast = ({ ranked }) => {
-  const max = Math.max(...ranked.map((r) => r.podium), 0.0001);
+  const [all, setAll] = useState(false);
+  const shown = all ? ranked : ranked.slice(0, SHOW_DEFAULT);
+  const max = Math.max(...ranked.map((r) => r.podiumShare ?? 0), 0.0001);
   return (
     <GlassPanel className="hm-panel" tilt={false}>
-      <div className="hm-panel-h"><h2>Full forecast</h2><p>Every driver, best podium score first. Model scores, not percentages. They do not add up to 100%.</p></div>
-      <div className="hm-tbl" role="table" aria-label="Full forecast">
-        <div className="hm-tr hm-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="hm-hide-m">PODIUM SCORE</span><span className="gold">WIN</span><span className="teal">PODIUM</span></div>
-        {ranked.map((r) => (
+      <div className="hm-panel-h"><h2>Full forecast</h2><p>Relative strength inside this race's field, not a calibrated chance. Win shares add up to 100%. Hover a figure for the raw model score.</p></div>
+      <div className="hm-tbl" role="table" aria-label="Forecast">
+        <div className="hm-tr hm-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="hm-hide-m">PODIUM SHARE</span><span className="gold">WIN SHARE</span><span className="teal">PODIUM SHARE</span></div>
+        {shown.map((r) => (
           <div className="hm-tr" role="row" key={r.driverRef} style={{ "--team": teamColor(r.teamId) }}>
             <span className="hm-n">{r.pos}</span>
             <span className="hm-tm"><i className="hm-bar" /><TeamMark team={r.teamId} size={22} /></span>
             <span className="hm-drv"><b>{r.code}</b><span className="hm-hide-m"> {r.driver_name}</span></span>
-            <span className="hm-meter hm-hide-m" aria-hidden="true"><i style={{ width: `${(100 * r.podium) / max}%` }} /></span>
-            <span className="gold hm-v">{score(r.win)}</span>
-            <span className="teal hm-v">{score(r.podium)}</span>
+            <span className="hm-meter hm-hide-m" aria-hidden="true"><i style={{ width: `${(100 * (r.podiumShare ?? 0)) / max}%` }} /></span>
+            <span className="gold hm-v" title={`raw model score ${score(r.win)}`}>{shareLabel(r.winShare)}</span>
+            <span className="teal hm-v" title={`raw model score ${score(r.podium)}`}>{shareLabel(r.podiumShare)}</span>
           </div>
         ))}
       </div>
+      {ranked.length > SHOW_DEFAULT && (
+        <button type="button" className="hm-more" aria-expanded={all} onClick={() => setAll((v) => !v)}>
+          {all ? `SHOW TOP ${SHOW_DEFAULT} ONLY` : `SHOW ALL ${ranked.length} DRIVERS`}
+        </button>
+      )}
     </GlassPanel>
   );
 };
