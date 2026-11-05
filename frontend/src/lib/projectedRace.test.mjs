@@ -189,12 +189,28 @@ ok(strongOnTop > runs * 0.3, "the top-scored drivers are on the podium in many r
   const t0 = performance.now(), ts = typicalSeed(codesB, brazilScores), ms = performance.now() - t0;
   eq(ts, typicalSeed(codesB, brazilScores), "the typical seed is deterministic");
   ok(ms < 1500, `typicalSeed over 10,000 seeds took ${ms.toFixed(0)} ms`);
-  // its order is closer to the median order than the typical random seed is
+  // its order is closer to the median order than the other seeds where the rank-1 driver wins
   const mean = new Array(21).fill(0); for (let sd = 1; sd <= 10000; sd++) drawnOrder(codesB, brazilScores, sd).forEach((c, p) => { mean[codesB.indexOf(c)] += (p + 1) / 10000; });
   const dist = (sd) => drawnOrder(codesB, brazilScores, sd).reduce((a, c, p) => a + Math.abs(p + 1 - mean[codesB.indexOf(c)]), 0);
-  const all = Array.from({ length: 400 }, (_, i) => dist(1 + i * 25)).sort((x, y) => x - y);
-  ok(dist(ts) <= all[0] + 1e-9, `the typical seed (${ts}) is at least as close to the median order as 400 sampled seeds (${dist(ts).toFixed(1)} vs best ${all[0].toFixed(1)}, median ${all[200].toFixed(1)})`);
+  const all = Array.from({ length: 400 }, (_, i) => 1 + i * 25).filter((sd) => drawnOrder(codesB, brazilScores, sd)[0] === "ANT").map(dist).sort((x, y) => x - y);
+  ok(dist(ts) <= all[0] + 1e-9, `the typical seed (${ts}) is at least as close to the median order as the ANT-wins seeds among 400 sampled (${dist(ts).toFixed(1)} vs best ${all[0].toFixed(1)}, median ${all[all.length >> 1].toFixed(1)})`);
   console.log(`   (typical Brazil seed ${ts}, ${ms.toFixed(0)} ms)`);
+}
+
+// ── the typical (default) race shows the most common outcome: the model's rank-1 driver wins
+{
+  const vegas = ["RUS", "ANT", "VER", "LEC", "HAM", "NOR", "PIA", "HAD", "LAW", "GAS", "LIN", "HUL", "COL", "BOR", "BEA", "SAI", "ALB", "ALO", "STR", "PER", "BOT"];
+  const vw = [0.3103, 0.9264, 0.7867, 0.2888, 0.4852, 0.0409, 0.0092, 0.0545, 0.0088, 0.001, 0.0022, 0.0012, 0.0004, 0.0008, 0.0004, 0.0003, 0.0003, 0.0003, 0.0004, 0.0003, 0.0003];
+  const vp = [0.9018, 0.9478, 0.953, 0.775, 0.6612, 0.3723, 0.107, 0.1622, 0.0528, 0.0228, 0.0255, 0.0651, 0.0094, 0.0252, 0.0029, 0.0017, 0.0005, 0.0021, 0.0004, 0.0005, 0.0003];
+  const vegasScores = Object.fromEntries(vegas.map((c, i) => [c, { win: vw[i], podium: vp[i] }]));
+  for (const [name, cs, sc] of [["Brazil", brazil, brazilScores], ["Las Vegas", vegas, vegasScores]]) {
+    const lead = cs[modelRanking(cs, sc)[0]], t0 = performance.now(), seed = typicalSeed(cs, sc), ms = performance.now() - t0;
+    eq(lead, "ANT", `${name}: the model's rank-1 driver is ANT`);
+    eq(drawnOrder(cs, sc, seed)[0], lead, `${name}: the default (typical) seed ${seed} has the model's rank-1 driver winning`);
+    eq(typicalSeed(cs, sc), seed, `${name}: the typical seed is deterministic`);
+    ok(ms < 1500, `${name}: typicalSeed took ${ms.toFixed(0)} ms`);
+    console.log(`   (${name}: typical seed ${seed}, ${ms.toFixed(0)} ms, order ${drawnOrder(cs, sc, seed).join(" ")})`);
+  }
 }
 
 // ── drivers without a model score are not simulated

@@ -6,8 +6,10 @@ the same player as the recorded races, and never read as a forecast. It changes 
 **What it is:** dots running lap by lap on the real circuit, starting from the model's predicted grid, finishing in an order drawn from the
 the model's own ranking shuffled by noise set from the model's real backtest errors (a "rank-anchored" draw: see the header of `frontend/src/lib/projectedRace.js`), with 1-2 stops on the real pit
 lane path, lapped cars at the back, and a seed shown on screen (same seed = same race; "Run another race" draws a new one).
-The race opens on a **typical** seed: of 10,000 seeds, the one whose finishing order is closest to the median order (each driver's mean
-finishing place over all seeds). It is computed in the browser from the same scores (~0.2 s).
+The race opens on a **typical** seed (the most common outcome): of 10,000 seeds, keep only those where the model's rank-1 driver
+(`modelRanking()[0]`) wins, then take the one whose finishing order is closest to the median order (each driver's mean finishing place
+over all 10,000 seeds). It is deterministic and computed in the browser from the same scores (~0.1-0.2 s). Brazil (rank-1 ANT, who wins ~28% of
+draws): seed 6590, order ANT VER LEC HAD RUS HAM NOR PIA BOR LAW ...
 
 ## How the draw was set (analysis/23-26_projected_draw_*)
 `analysis/23_projected_draw_profile.py` measures the model's real error by predicted rank over the 43 backtest races (predicted-grid condition,

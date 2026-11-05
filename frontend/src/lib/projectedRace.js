@@ -91,17 +91,27 @@ export const drawnOrder = (codes, scores, seed) => {
 };
 
 /**
- * A "typical" seed: of `tries` seeds, the one whose finishing order is closest to the median order (every driver's mean finishing
- * position over all the seeds, ranked), measured as the sum over drivers of |finishing place - mean place|. Ties go to the lowest seed.
+ * A "typical" seed: of `tries` seeds, keep only those where the model's rank-1 driver (modelRanking()[0]) wins, then take the one whose
+ * finishing order is closest to the median order (every driver's mean finishing place over ALL the seeds, ranked), measured as the sum
+ * over drivers of |finishing place - mean place|. So the default race shows the most common outcome. Ties go to the lowest seed.
+ * If no seed has the rank-1 driver winning (cannot happen with real scores), every seed is a candidate.
  */
 export const typicalSeed = (codes, scores, tries = 10000) => {
-  const sum = new Array(codes.length).fill(0), idx = new Map(codes.map((c, i) => [c, i]));
-  for (let s = 1; s <= tries; s++) drawnOrder(codes, scores, s).forEach((c, p) => { sum[idx.get(c)] += p + 1; });
-  const mean = sum.map((v) => v / tries);
+  const n = codes.length, idx = new Map(codes.map((c, i) => [c, i])), lead = codes[modelRanking(codes, scores)[0]];
+  const orders = new Array(tries), sum = new Array(n).fill(0);
+  for (let s = 1; s <= tries; s++) {
+    const o = drawnOrder(codes, scores, s).map((c) => idx.get(c));
+    orders[s - 1] = o;
+    for (let p = 0; p < n; p++) sum[o[p]] += p + 1;
+  }
+  const mean = sum.map((v) => v / tries), leadI = idx.get(lead);
+  const pool = orders.some((o) => o[0] === leadI);
   let best = 1, bestD = Infinity;
   for (let s = 1; s <= tries; s++) {
+    const o = orders[s - 1];
+    if (pool && o[0] !== leadI) continue;
     let d = 0;
-    drawnOrder(codes, scores, s).forEach((c, p) => { d += Math.abs(p + 1 - mean[idx.get(c)]); });
+    for (let p = 0; p < n; p++) d += Math.abs(p + 1 - mean[o[p]]);
     if (d < bestD - 1e-9) { bestD = d; best = s; }
   }
   return best;
