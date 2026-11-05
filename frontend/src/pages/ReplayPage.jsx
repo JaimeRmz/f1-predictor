@@ -3,9 +3,10 @@ import { GlassPanel } from "../components/GlassPanel.jsx";
 import Panel from "../components/DashPanel.jsx";
 import RaceStrip from "../components/RaceStrip.jsx";
 import ReplayPlayer from "../components/ReplayPlayer.jsx";
+import ProjectedRace from "../components/ProjectedRace.jsx";
 import { SkeletonList } from "../shared.jsx";
 import { useManifest, useReplayRace } from "../lib/useReplayData.js";
-import { titleParts } from "../lib/homeModel.js";
+import { titleParts, CALENDAR } from "../lib/homeModel.js";
 import "./home.css";
 import "./replay.css";
 
@@ -21,29 +22,39 @@ const Unavailable = ({ children }) => (
   </Panel>
 );
 
+const UPCOMING = CALENDAR.filter((r) => r.kind === "upcoming");
+
 const ReplayPage = () => {
   const manifest = useManifest();
   const [picked, setPicked] = useState(null);
   const races = manifest.races;
-  const entry = races.find((r) => r.raceId === picked) || races[races.length - 1] || null;
+  // Upcoming rounds sit at the end of the strip (id "p<raceId>") and open the Projected race instead of a recorded replay.
+  const projectedRace = typeof picked === "string" ? UPCOMING.find((r) => `p${r.raceId}` === picked) || null : null;
+  const entry = projectedRace ? null : races.find((r) => r.raceId === picked) || races[races.length - 1] || null;
   const data = useReplayRace(manifest.status === "ready" ? entry : null);
-  const items = races.map((r) => ({ id: r.raceId, tag: `${r.year} R${r.round}`, label: r.name.replace(/\s+(Grand Prix|GP)\b/, "") }));
-  const { base, suffix } = entry ? titleParts(entry.name) : { base: "", suffix: "" };
+  const items = [
+    ...races.map((r) => ({ id: r.raceId, tag: `${r.year} R${r.round}`, label: r.name.replace(/\s+(Grand Prix|GP)\b/, "") })),
+    ...UPCOMING.map((r) => ({ id: `p${r.raceId}`, tag: `R${r.round} · PROJECTED`, label: r.short, upcoming: true })),
+  ];
+  const shown = projectedRace || entry;
+  const { base, suffix } = shown ? titleParts(shown.name) : { base: "", suffix: "" };
 
   return (
     <div className="hm">
-      {manifest.status === "ready" && entry && <RaceStrip items={items} selectedId={entry.raceId} onSelect={setPicked} />}
+      {manifest.status === "ready" && shown && <RaceStrip items={items} selectedId={projectedRace ? `p${projectedRace.raceId}` : entry.raceId} onSelect={setPicked} />}
 
       <header className="hm-title">
         <div>
-          <div className="hm-eyebrow">REPLAY · REAL RECORDED POSITIONS{entry ? ` · ${entry.year} · ROUND ${entry.round}` : ""}</div>
-          <h1 className="wordfit">{entry ? <>{base} <em>Grand Prix</em>{suffix && <span> {suffix}</span>}</> : <>Race <em>replay</em></>}</h1>
+          <div className="hm-eyebrow">{projectedRace ? `PROJECTED RACE · ILLUSTRATION · 2026 · ROUND ${projectedRace.round}` : `REPLAY · REAL RECORDED POSITIONS${entry ? ` · ${entry.year} · ROUND ${entry.round}` : ""}`}</div>
+          <h1 className="wordfit">{shown ? <>{base} <em>Grand Prix</em>{suffix && <span> {suffix}</span>}</> : <>Race <em>replay</em></>}</h1>
         </div>
       </header>
 
       {manifest.status === "loading" && <SkeletonList rows={4} metrics={1} />}
       {manifest.status === "unavailable" && <Unavailable>The replay files are not available on this deployment (no replay location is configured, or it could not be reached). Nothing else is affected.</Unavailable>}
-      {manifest.status === "ready" && !entry && <Unavailable>No race has a replay yet.</Unavailable>}
+      {manifest.status === "ready" && !shown && <Unavailable>No race has a replay yet.</Unavailable>}
+
+      {projectedRace && manifest.status === "ready" && <ProjectedRace key={projectedRace.raceId} race={projectedRace} />}
 
       {entry && manifest.status === "ready" && data.status === "loading" && <SkeletonList rows={6} metrics={1} />}
       {entry && manifest.status === "ready" && data.status === "unavailable" && <Unavailable>Replay not available for this race. Pick another race above.</Unavailable>}
@@ -61,8 +72,9 @@ const ReplayPage = () => {
 
       {manifest.status === "ready" && (
         <p className="rp-credit">
-          Replay of real recorded positions, interpolated; not official timing.<br />
-          {manifest.license || CREDIT}
+          {projectedRace
+            ? <>Projected race: an illustration, not a forecast and not a replay of real events.<br />Circuit shapes and typical times derived from OpenF1 position data (CC BY-NC-SA 4.0).</>
+            : <>Replay of real recorded positions, interpolated; not official timing.<br />{manifest.license || CREDIT}</>}
         </p>
       )}
     </div>

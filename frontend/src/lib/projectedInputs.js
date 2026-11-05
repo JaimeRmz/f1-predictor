@@ -1,0 +1,24 @@
+import { driverCode, teamIdOf, teamColor } from "./homeModel.js";
+
+/**
+ * Turn the rows the page already fetches for an upcoming race (POST /whatif, predicted grid) into the generator's inputs.
+ * grid   = [{ code, name, team, colour }] in predicted grid order (pole first)
+ * scores = { [code]: { win, podium } } the rows' existing raw model scores, passed through untouched
+ * A row without a finite podium score still appears in `grid`; the generator leaves it out of the race.
+ */
+export const inputsFromRows = (rows) => {
+  const used = new Set();
+  const list = [...rows]
+    .sort((a, b) => (a.grid ?? 99) - (b.grid ?? 99) || (b.podium_probability ?? 0) - (a.podium_probability ?? 0))
+    .map((r) => {
+      let code = driverCode(r.driver_name);
+      for (let k = 2; used.has(code); k++) code = `${code.slice(0, 2)}${k}`;
+      used.add(code);
+      const teamId = teamIdOf(r);
+      return { code, name: r.driver_name, team: teamId || r.team, colour: teamColor(teamId).replace("#", ""), row: r };
+    });
+  return {
+    grid: list.map((g) => ({ code: g.code, name: g.name, team: g.team, colour: g.colour })),
+    scores: Object.fromEntries(list.map((g) => [g.code, { win: g.row.win_probability ?? 0, podium: g.row.podium_probability }])),
+  };
+};

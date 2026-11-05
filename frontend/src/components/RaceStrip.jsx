@@ -35,7 +35,7 @@ const RaceStrip = ({ round, onSelect, items = null, selectedId = null }) => {
       <nav className="hm-strip" ref={ref} aria-label="Choose a race" onScroll={measure} onKeyDown={onKey}>
         {items
           ? items.map((r) => (
-            <button key={r.id} type="button" className="hm-chip done" aria-pressed={r.id === selectedId} onClick={() => onSelect(r.id)}>
+            <button key={r.id} type="button" className={`hm-chip${r.upcoming ? "" : " done"}`} aria-pressed={r.id === selectedId} onClick={() => onSelect(r.id)}>
               <b>{r.tag}</b><span>{r.label}</span>
             </button>
           ))

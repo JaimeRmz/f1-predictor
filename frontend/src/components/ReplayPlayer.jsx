@@ -8,7 +8,7 @@ const STEP_S = 10;
 
 // Canvas player. The animation loop (requestAnimationFrame) owns the clock in a ref and draws straight to the canvas; React state is
 // touched only a few times a second (the readout, scrubbers and order board), never per frame.
-const ReplayPlayer = ({ rep }) => {
+const ReplayPlayer = ({ rep, projected = false }) => {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
   const staticRef = useRef(null);            // offscreen layer: outline, pit lane, start/finish
@@ -196,12 +196,12 @@ const ReplayPlayer = ({ rep }) => {
             <label className="rp-range"><span>LAP</span>
               <input type="range" min={1} max={rep.lapsTotal} step={1} value={Math.max(ui.lap, 1)} onChange={(e) => { const ts = lapStartTime(rep, Number(e.target.value)); if (ts != null) seek(ts); }} aria-label="Jump to lap" aria-valuetext={`Lap ${Math.max(ui.lap, 1)} of ${rep.lapsTotal}`} />
             </label>
-            <div className="rp-legend" aria-hidden="true"><i className="SC" /> safety car <i className="VSC" /> virtual SC <i className="RED" /> red flag <i className="GAP" /> data gap <i className="tick" /> pit stop</div>
+            <div className="rp-legend" aria-hidden="true">{!projected && <><i className="SC" /> safety car <i className="VSC" /> virtual SC <i className="RED" /> red flag <i className="GAP" /> data gap </>}<i className="tick" /> pit stop</div>
           </div>
         </div>
 
         <aside className="rp-board" aria-label="Order board">
-          <h2>Order <small>official positions</small></h2>
+          <h2>Order <small>{projected ? "in this illustration" : "official positions"}</small></h2>
           <ol>
             {ui.board.map((r) => (
               <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}${r.noData ? " nodata" : ""}`} style={{ "--team": r.colour }}>
@@ -210,7 +210,9 @@ const ReplayPlayer = ({ rep }) => {
               </li>
             ))}
           </ol>
-          <p className="rp-note">Gaps update once a lap. Positions are the official feed; they can lag the dots by a moment. NO DATA means OpenF1 sent no position for that car just now.</p>
+          <p className="rp-note">{projected
+            ? "Gaps update once a lap. Order and gaps come from the illustration itself, not from a timing feed."
+            : "Gaps update once a lap. Positions are the official feed; they can lag the dots by a moment. NO DATA means OpenF1 sent no position for that car just now."}</p>
         </aside>
       </div>
     </div>
