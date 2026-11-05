@@ -27,6 +27,9 @@ const DEG = 0.045;                // s/lap slower per lap of tyre age
 const PIT_MPS = 21;               // pit lane speed limit, m/s (about 75 km/h)
 const AFTER = 0.8;                // fraction of a lap a car cruises after its flag, then parks
 
+/** Shown with every projected race. */
+export const PROJECTED_LABEL = "Illustration: one possible race consistent with the model's scores. It does not predict specific events such as pit stops, safety cars or incidents.";
+
 // ── seeded randomness
 export const mulberry32 = (seed) => {
   let a = seed >>> 0;

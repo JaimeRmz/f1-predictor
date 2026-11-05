@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { generateProjectedRace, plackettLuce, scoreWeights, mulberry32 } from "./projectedRace.js";
 import { decodeReplay, decodeDelta, boardAt, lapAt } from "./replay.js";
+import { inputsFromRows } from "./projectedInputs.js";
 
 let n = 0;
 const ok = (cond, msg) => { assert.ok(cond, msg); n++; };
@@ -165,6 +166,21 @@ ok(strongOnTop > runs * 0.3, "the top-scored drivers are on the podium in many r
   const j = generateProjectedRace(pack, withExtra, { ...scoresOf(), YYY: { win: 0.1, podium: NaN } }, 5);
   eq(j.drivers.map((d) => d.code), CODES, "a driver with no (or NaN) score is excluded");
   ok(!("XXX" in j.pos) && !("YYY" in j.pos) && !("XXX" in j.board), "and has no positions");
+}
+
+// ── model rows (as POST /whatif returns them) -> generator inputs: scores pass through untouched, grid order follows the predicted grid
+{
+  const rows = [
+    { driver_name: "Lando Norris", driverRef: "norris", team: "McLaren", grid: 2, win_probability: 0.21, podium_probability: 0.55 },
+    { driver_name: "Max Verstappen", driverRef: "max_verstappen", team: "Red Bull", grid: 1, win_probability: 0.3, podium_probability: 0.6 },
+    { driver_name: "Gabriel Bortoleto", driverRef: "bortoleto", team: "Audi", grid: 3, win_probability: 0.01, podium_probability: 0.04 },
+    { driver_name: "Franco Camara", driverRef: "camara", team: "Cadillac", grid: 4 },
+  ];
+  const { grid: g, scores: sc } = inputsFromRows(rows);
+  eq(g.map((x) => x.code), ["VER", "NOR", "BOR", "CAM"], "grid is in predicted-grid order with three-letter codes");
+  eq(sc.NOR, { win: 0.21, podium: 0.55 }, "the model's raw scores are passed through unchanged");
+  ok(!Number.isFinite(sc.CAM.podium), "a row without a score stays without one, so the generator leaves the driver out");
+  ok(/^[0-9a-f]{6}$/i.test(g[0].colour), "team colour is a bare hex string like the replay files use");
 }
 
 // ── errors and speed

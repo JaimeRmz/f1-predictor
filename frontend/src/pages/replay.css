@@ -66,3 +66,16 @@
 .rp-legend i.GAP { background: repeating-linear-gradient(45deg, #ffb020 0 2px, rgba(255, 176, 32, 0.3) 2px 4px); }
 .rp-board li.nodata { opacity: 0.75; }
 .rp-board li.nodata em { color: #ffb020; font-weight: 700; font-size: 0.66rem; letter-spacing: 0.04em; }
+
+/* projected race: the always-visible illustration notice, seed row and method note */
+.pr-notice { display: flex; gap: 0.8rem; align-items: flex-start; padding: 0.8rem 1rem; border: 1px solid rgba(255, 176, 32, 0.55); border-left-width: 4px; border-radius: 12px; background: rgba(255, 176, 32, 0.08); }
+.pr-notice b { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; color: #ffb020; padding-top: 0.15rem; white-space: nowrap; }
+.pr-notice p { font-size: 0.95rem; line-height: 1.5; color: var(--ink); margin: 0; }
+.pr-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; margin: 0.8rem 0; font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.08em; color: var(--hm-muted); }
+.pr-seed b { color: var(--ink); font-size: 0.95rem; letter-spacing: 0.1em; margin-left: 0.3rem; font-variant-numeric: tabular-nums; }
+.pr-again { margin-left: auto; }
+.pr-how { margin-top: 0.8rem; font-size: 0.82rem; line-height: 1.6; color: var(--hm-muted); max-width: 70ch; }
+@media (max-width: 900px) {
+  .pr-notice { flex-direction: column; gap: 0.3rem; }
+  .pr-again { margin-left: 0; width: 100%; }
+}
