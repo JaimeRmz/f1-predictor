@@ -27,6 +27,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import sys
 import tempfile
 import time
@@ -399,10 +400,25 @@ def build_race(raw, race, n_results=None, log=print, dbg=None):
         return o
 
     # ── quality: computed order vs the official feed, every 15 s of racing
+    # a red flag parks the field in the pit lane, where "who is ahead" is meaningless: skip the suspension and 3 minutes of restart
+    red_spans, _open = [], None
+    for m in sorted(rcm, key=lambda m: m["date"]):
+        msg = (m.get("message") or "").upper(); t_abs = ep(m["date"])
+        if m.get("flag") == "RED" or re.search(r"\bRED FLAG\b", msg):
+            if _open is None:
+                _open = t_abs
+        elif _open is not None and ("SESSION STARTED" in msg or "GREEN LIGHT" in msg) and t_abs > _open + 60:
+            red_spans.append((_open, t_abs + 180)); _open = None
+    if _open is not None:
+        red_spans.append((_open, race_end))
+    if any(b_ > lights_out for _, b_ in red_spans):
+        q["approximated"].append("order check skips the red-flag suspension and 3 minutes after the restart")
     checks = []
     P = np.vstack([prog[n] for n in nums])
     pos_of = {n: k for k, n in enumerate(nums)}
     for t_abs in np.arange(lights_out + 120, race_end - 60, 15.0):
+        if any(a_ <= t_abs <= b_ for a_, b_ in red_spans):
+            continue
         i = int(t_abs - T0)
         col = P[:, i]; live = ~np.isnan(col)
         off = official_order(t_abs)
@@ -467,13 +483,18 @@ def build_race(raw, race, n_results=None, log=print, dbg=None):
             elif "IN THIS LAP" in msg:
                 flags.append(dict(t=t, lap=lap, kind="SC_END", msg="SAFETY CAR IN THIS LAP"))
                 if sc_open is not None: bands.append(dict(kind="SC", a=sc_open, b=t)); sc_open = None
-        elif m.get("flag") == "RED":
-            flags.append(dict(t=t, lap=lap, kind="RED", msg="RED FLAG", before_start=t < (lights_out - T0))); red_open = t
-        elif red_open is not None and ("GREEN LIGHT" in msg or "RESUM" in msg or "RESTART" in msg):
-            if t > 0 and red_open >= 0: bands.append(dict(kind="RED", a=red_open, b=t))
+        elif m.get("flag") == "RED" or re.search(r"\bRED FLAG\b", msg):        # word boundary: "CHEQUERED FLAG" must not match
+            if red_open is None:
+                flags.append(dict(t=t, lap=lap, kind="RED", msg="RED FLAG", before_start=t < (lights_out - T0)))
+                red_open = t
+        elif red_open is not None and ("SESSION STARTED" in msg or "GREEN LIGHT" in msg) and t > red_open + 60:
+            if t > 0 and red_open >= 0:
+                bands.append(dict(kind="RED", a=red_open, b=t))
             red_open = None
         elif m.get("flag") == "CHEQUERED":
             flags.append(dict(t=t, lap=lap, kind="CHEQUERED", msg="CHEQUERED FLAG"))
+    if red_open is not None and red_open >= 0:
+        bands.append(dict(kind="RED", a=red_open, b=round(race_end - T0, 1)))
     for kind, o_ in (("SC", sc_open), ("VSC", vsc_open)):
         if o_ is not None:
             bands.append(dict(kind=kind, a=o_, b=round(race_end - T0, 1)))

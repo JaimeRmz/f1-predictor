@@ -2,6 +2,7 @@
 
 - file: 363 KB gzipped; 22 cars; track 6926 m (outline closed from a 14.2 m gap)
 - order vs OpenF1 /position (327 checks, every 15 s): leader 0.997, top 3 0.994, exact positions 0.975, within one place 0.998
+- share of the race with usable positions (median car): 1.0
 - longest location gap: 0 s; zero-filled cars: none; dropped drivers: none
 - retired: PER, STR, RUS; disqualified after the race: none; did not start: none
 - pit lane drawn: yes

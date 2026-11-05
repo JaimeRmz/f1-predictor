@@ -53,12 +53,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       console.log('@1440 frame rate while playing at 64x:', JSON.stringify(fps));
       await page.evaluate(() => document.querySelectorAll('.rp-sp')[1].click());
     }
-    const races = only || ['Japanese', 'Belgian', 'Chinese', 'Miami'];
-    for (const name of races) {
-      await pickRace(new RegExp(name));
-      await seekLap(name === 'Chinese' ? 6 : name === 'Miami' ? 3 : name === 'Belgian' ? 2 : 10);
-      console.log(`@${tag} ${name}:`, JSON.stringify(await state()), 'inked', await inked());
-      if (name === 'Japanese' || name === 'Miami' || (name === 'Belgian' && tag === '390')) await tall(`replay-${name.toLowerCase()}-${tag}.png`);
+    // [chip regex, file name, lap to jump to, extra: seek into the red-flag period]
+    const races = [[/2025 R\d+\s+Japanese/, 'japanese', 10, false], [/2026 R\d+\s+Italian/, 'italian', 8, true], [/2026 R\d+\s+Miami/, 'miami', 3, false], [/2025 R\d+\s+Belgian/, 'belgian', 2, false]];
+    for (const [re, name, lap, red] of races) {
+      await pickRace(re);
+      await seekLap(lap);
+      if (red) {                                   // Italian 2026: red flag from lap 3 to the restart; jump to the middle of it
+        await page.evaluate(() => { const el = document.querySelector('input[aria-label="Replay time"]'); const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '1200'); el.dispatchEvent(new Event('input', { bubbles: true })); });
+        await sleep(500);
+      }
+      console.log(`@${tag} ${name}:`, JSON.stringify(await state()), 'inked', await inked(), '| band badge:', await page.evaluate(() => document.querySelector('.rp-band')?.innerText || null));
+      if ((tag === '1440' && ['japanese', 'italian', 'miami'].includes(name)) || (tag === '390' && ['japanese', 'belgian'].includes(name))) await tall(`replay-${name}-${tag}.png`);
     }
     // an unavailable race file / manifest is handled: request a race that does not exist by blocking the file
     await page.close();
