@@ -59,7 +59,7 @@ const ProjectedRace = ({ race }) => {
       </div>
       <ReplayPlayer key={`${race.raceId}-${seed}`} rep={rep} projected />
       <p className="pr-how">
-        The finishing order is drawn at random from the model's win and podium scores, so drivers with higher scores tend to finish higher.
+        The finishing order starts from the model's own ranking and is shuffled by about as much as the model was off in past races: front runners usually finish near the front, big upsets are rare but possible.
         Cars start from the predicted grid, make one or two stops in the real pit lane and never crash or retire. The same seed always gives the same race.
         The scores and shares shown on the Race page are unchanged.
       </p>

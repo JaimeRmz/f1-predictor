@@ -1,0 +1,78 @@
+
+===== BRAZIL  (21 drivers, 10000 seeds each) =====
+model rank  driver   |  win freq OLD  NEW | podium freq OLD  NEW | mean position OLD  NEW
+    1      ANT       |    20.9%  38.3%  |    55.5%  61.7%   |     3.6   3.9
+    2      VER       |    18.2%  19.8%  |    51.1%  59.0%   |     3.9   4.3
+    3      RUS       |     9.2%  10.2%  |    28.4%  47.8%   |     5.7   5.0
+    4      LEC       |    14.1%  14.1%  |    41.8%  38.8%   |     4.5   6.3
+    5      HAM       |    13.7%   9.1%  |    41.5%  31.7%   |     4.6   7.1
+    6      NOR       |     4.9%   6.5%  |    16.5%  25.9%   |     7.8   7.8
+    7      HAD       |     3.0%   0.9%  |    10.3%  12.8%   |     9.7   7.6
+    8      PIA       |     1.9%   0.3%  |     6.2%   6.9%   |    11.5   8.7
+    9      HÜL       |     1.5%   0.2%  |     5.1%   3.5%   |    12.5   9.6
+   10      LAW       |     1.4%   0.1%  |     5.1%   1.8%   |    12.5  10.4
+   11      LIN       |     1.3%   0.3%  |     4.0%   3.8%   |    13.6  10.3
+   12      BOR       |     1.1%   0.2%  |     4.0%   2.6%   |    13.5  11.2
+   13      GAS       |     1.2%   0.0%  |     3.8%   1.2%   |    13.6  12.3
+   14      COL       |     1.1%   0.0%  |     3.7%   0.8%   |    14.0  13.1
+   15      BEA       |     1.0%   0.0%  |     3.4%   0.4%   |    14.3  14.2
+   16      ALO       |     0.9%   0.1%  |     3.4%   0.4%   |    14.2  14.0
+   17      SAI       |     0.9%   0.0%  |     3.2%   0.3%   |    14.2  15.1
+   18      ALB       |     1.0%   0.0%  |     3.2%   0.2%   |    14.4  16.2
+   19      STR       |     0.8%   0.0%  |     3.1%   0.2%   |    14.2  17.1
+   20      BOT       |     1.0%   0.0%  |     3.3%   0.1%   |    14.3  18.0
+   21      PÉR       |     1.1%   0.0%  |     3.3%   0.1%   |    14.3  18.9
+top-3 overlap with the model's top 3 (mean of 3):  OLD 1.35  NEW 1.69   real backtest 1.6
+model's rank-1 driver wins:                         OLD  20.9%  NEW  38.3%   real backtest  23.3%
+(c) a model-bottom-half driver finishes in the top 5:
+      share of seeds with at least one:   OLD  61.1%  NEW  33.9%   real backtest  25.6%
+      per bottom-half driver:             OLD   7.8%  NEW   3.7%   real backtest   3.0%
+      a driver ranked 7-10 finishes 17th or worse (per driver):  OLD  18.8%  NEW   9.8%
+      a driver ranked 8th or lower finishes on the podium (share of seeds): OLD  54.7%  NEW  22.3%
+(d) six finishing orders from the NEW method (seeds 1-6, not picked):
+   seed 1: LEC VER NOR RUS ANT HAM HAD HÜL LAW SAI LIN BEA ALO PIA COL BOR ALB GAS STR BOT PÉR
+   seed 2: ANT VER RUS NOR BOR HAD PIA LEC HÜL LAW GAS ALO SAI HAM COL LIN BOT ALB PÉR STR BEA
+   seed 3: VER LEC RUS LAW HÜL ANT BOR HAM PIA NOR BEA LIN BOT SAI COL ALO HAD PÉR ALB STR GAS
+   seed 4: LEC HAM ANT VER NOR HAD PIA LAW HÜL BOR RUS LIN GAS BEA ALO BOT SAI COL ALB PÉR STR
+   seed 5: NOR ANT LIN LEC VER PIA HÜL HAM HAD RUS COL BEA STR GAS BOT ALB ALO LAW BOR SAI PÉR
+   seed 6: NOR RUS PIA LEC ANT HAD BOR GAS ALO LAW LIN SAI BEA COL BOT ALB VER HAM PÉR STR HÜL
+   model ranking:  ANT VER RUS LEC HAM NOR HAD PIA HÜL LAW LIN BOR GAS COL BEA ALO SAI ALB STR BOT PÉR
+
+===== LAS VEGAS  (21 drivers, 10000 seeds each) =====
+model rank  driver   |  win freq OLD  NEW | podium freq OLD  NEW | mean position OLD  NEW
+    1      ANT       |    21.1%  38.3%  |    56.3%  61.7%   |     3.6   3.9
+    2      VER       |    19.3%  19.8%  |    52.7%  59.0%   |     3.8   4.3
+    3      RUS       |    12.5%  10.2%  |    37.0%  47.8%   |     4.9   5.0
+    4      LEC       |    10.8%  14.1%  |    34.1%  38.8%   |     5.2   6.3
+    5      HAM       |    12.7%   9.1%  |    38.9%  31.7%   |     4.8   7.1
+    6      NOR       |     4.5%   6.5%  |    15.2%  25.9%   |     8.1   7.8
+    7      HAD       |     3.0%   0.9%  |    10.6%  12.8%   |     9.6   7.6
+    8      PIA       |     1.9%   0.3%  |     6.5%   6.9%   |    11.4   8.7
+    9      HÜL       |     1.5%   0.2%  |     5.2%   3.5%   |    12.5   9.6
+   10      LAW       |     1.4%   0.1%  |     5.1%   1.8%   |    12.5  10.4
+   11      LIN       |     1.2%   0.3%  |     4.1%   3.8%   |    13.5  10.3
+   12      BOR       |     1.1%   0.2%  |     4.0%   2.6%   |    13.6  11.2
+   13      GAS       |     1.2%   0.0%  |     3.8%   1.2%   |    13.5  12.3
+   14      COL       |     1.1%   0.0%  |     3.7%   0.8%   |    14.0  13.1
+   15      BEA       |     1.0%   0.0%  |     3.4%   0.4%   |    14.3  14.2
+   16      ALO       |     0.9%   0.1%  |     3.4%   0.4%   |    14.2  14.0
+   17      SAI       |     0.9%   0.0%  |     3.2%   0.3%   |    14.2  15.1
+   18      ALB       |     1.0%   0.0%  |     3.1%   0.2%   |    14.3  16.2
+   19      PÉR       |     0.8%   0.0%  |     3.1%   0.2%   |    14.3  17.1
+   20      STR       |     1.0%   0.0%  |     3.3%   0.1%   |    14.4  18.0
+   21      BOT       |     1.1%   0.0%  |     3.3%   0.1%   |    14.3  18.9
+top-3 overlap with the model's top 3 (mean of 3):  OLD 1.46  NEW 1.69   real backtest 1.6
+model's rank-1 driver wins:                         OLD  21.1%  NEW  38.3%   real backtest  23.3%
+(c) a model-bottom-half driver finishes in the top 5:
+      share of seeds with at least one:   OLD  61.2%  NEW  33.9%   real backtest  25.6%
+      per bottom-half driver:             OLD   7.8%  NEW   3.7%   real backtest   3.0%
+      a driver ranked 7-10 finishes 17th or worse (per driver):  OLD  18.5%  NEW   9.8%
+      a driver ranked 8th or lower finishes on the podium (share of seeds): OLD  55.3%  NEW  22.3%
+(d) six finishing orders from the NEW method (seeds 1-6, not picked):
+   seed 1: LEC VER NOR RUS ANT HAM HAD HÜL LAW SAI LIN BEA ALO PIA COL BOR ALB GAS PÉR STR BOT
+   seed 2: ANT VER RUS NOR BOR HAD PIA LEC HÜL LAW GAS ALO SAI HAM COL LIN STR ALB BOT PÉR BEA
+   seed 3: VER LEC RUS LAW HÜL ANT BOR HAM PIA NOR BEA LIN STR SAI COL ALO HAD BOT ALB PÉR GAS
+   seed 4: LEC HAM ANT VER NOR HAD PIA LAW HÜL BOR RUS LIN GAS BEA ALO STR SAI COL ALB BOT PÉR
+   seed 5: NOR ANT LIN LEC VER PIA HÜL HAM HAD RUS COL BEA PÉR GAS STR ALB ALO LAW BOR SAI BOT
+   seed 6: NOR RUS PIA LEC ANT HAD BOR GAS ALO LAW LIN SAI BEA COL STR ALB VER HAM BOT PÉR HÜL
+   model ranking:  ANT VER RUS LEC HAM NOR HAD PIA HÜL LAW LIN BOR GAS COL BEA ALO SAI ALB PÉR STR BOT

@@ -5,11 +5,11 @@
 // What is drawn: dots running lap by lap from the predicted grid, a finishing order drawn from the model's scores, 1-2 pit stops on the
 // real pit-lane path, lapped cars at the back. What is NOT modelled: crashes, retirements, safety cars, red flags, weather, penalties.
 //
-// How the finishing order is drawn (Plackett-Luce): each driver gets a weight from the model's two scores,
-//     w = 0.5 * (win share) + 0.5 * (podium share) + 0.25 / N
-// where a share is that driver's score divided by the sum over the cars simulated, and N is the number of cars. The order is drawn one
-// place at a time: P1 is picked with chance proportional to w, removed, P2 is picked from the rest the same way, and so on. The small
-// constant keeps a low-scoring driver possible without hiding the ranking. Drivers with no model score are not simulated.
+// How the finishing order is drawn (rank-anchored): start from the model's own ranking for the race (the highest win score takes P1, the rest
+// follow by podium score), add noise to each rank whose size comes from the model's real backtest errors for that rank (a place or two
+// most of the time, now and then a big upset), and sort. So front runners usually finish near the front, big upsets are rare but possible, and the back of the
+// field stays at the back. Drivers with no model score are not simulated. The scores are used for the ranking only; nothing is shown as a probability.
+// (An earlier draw, Plackett-Luce on the scores plus a floor, was too flat below the top six: see analysis/25_projected_draw_compare.mjs.)
 //
 // How the race is shaped: finishing times are fixed first (the drawn order plus random gaps, some cars lapped). Each driver's race pace is
 // then solved so an unobstructed car ends exactly on its time, with fuel burn, tyre wear, lap noise and 1-2 pit stops on the real pit
@@ -48,24 +48,39 @@ const expo = (rnd, mean) => -mean * Math.log(1 - rnd());
 const cum = (d) => { const o = new Float64Array(d.length); let a = 0; for (let i = 0; i < d.length; i++) { a += d[i]; o[i] = a; } return o; };
 const enc = (a) => { const o = new Array(a.length); let p = 0; for (let i = 0; i < a.length; i++) { const v = Math.round(a[i]); o[i] = v - p; p = v; } return o; };
 
-/** Plackett-Luce weights from the model's scores (see the header). `scores[code] = { win, podium }`; entries without a finite podium score are dropped. */
-export const scoreWeights = (codes, scores) => {
-  const win = codes.map((c) => Math.max(0, scores[c].win ?? 0)), pod = codes.map((c) => Math.max(0, scores[c].podium));
-  const sw = win.reduce((a, b) => a + b, 0) || 1, sp = pod.reduce((a, b) => a + b, 0) || 1;
-  return codes.map((_, i) => 0.5 * (win[i] / sw) + 0.5 * (pod[i] / sp) + 0.25 / codes.length);
+/** The model's own ranking for the race, best first (indices into `codes`): the highest win score takes P1, everyone else follows by podium score (ties: win score). */
+export const modelRanking = (codes, scores) => {
+  const win = (i) => scores[codes[i]].win ?? 0, pod = (i) => scores[codes[i]].podium;
+  const idx = codes.map((_, i) => i);
+  const lead = idx.reduce((best, i) => (win(i) > win(best) || (win(i) === win(best) && pod(i) > pod(best)) ? i : best), 0);
+  return [lead, ...idx.filter((i) => i !== lead).sort((x, y) => pod(y) - pod(x) || win(y) - win(x) || x - y)];
 };
 
-/** Draw a full finishing order (indices into `weights`) one place at a time, each pick proportional to weight among those left. */
-export const plackettLuce = (weights, rnd) => {
-  const left = weights.map((w, i) => i), out = [];
-  while (left.length) {
-    const tot = left.reduce((a, i) => a + weights[i], 0);
-    let u = rnd() * tot, pick = left.length - 1;
-    for (let k = 0; k < left.length; k++) { u -= weights[left[k]]; if (u <= 0) { pick = k; break; } }
-    out.push(left[pick]);
-    left.splice(pick, 1);
-  }
-  return out;
+// Noise added to each predicted rank before sorting, fitted so the scatter matches the model's REAL backtest errors
+// (analysis/23_projected_draw_profile.py: 43 races, predicted-grid condition, retirements removed; analysis/24_projected_draw_fit.py).
+// Two parts: an everyday wobble of a place or two, and now and then a big one-sided upset: anyone ranked 1-15 has a bad day and drops back,
+// an also-ran (16th or lower) has a good one and climbs. The fit reproduces, per rank group, the real median miss, the share 9+ places out and the
+// win / podium / top-5 rates, and no driver can finish higher than the best the real backtest ever saw for its rank group (7th-10th: 2nd,
+// 11th-15th: 3rd, 16th or lower: 4th); in 43 real races a driver the model ranked 7th or lower never won.
+const WOBBLE_SD = [3.433, 1.433, 5.096, 2.375, 3.61, 2.302];                       // by predicted rank: 1, 2-3, 4-6, 7-10, 11-15, 16+
+const UPSET_PROB = [0.529, 0.4348, 0.2235, 0.0431];                      // by rank group: 1-6, 7-10, 11-15, 16+
+const UPSET_DIR = [1, 1, 1, -1];                                  // +1 falls back, -1 climbs
+const BEST_FINISH = [1, 2, 3, 4];                                // best place seen in 43 real races for rank groups 1-6, 7-10, 11-15, 16+
+const UPSET_SIZE = 7.416;                       // places (half-normal)
+
+/**
+ * Rank-anchored draw of a finishing order (indices into `codes`): start from the model's ranking, add noise of the size the model's real
+ * backtest errors have for that rank, sort. Front runners usually finish near the front, big upsets are rare but possible, the back stays
+ * at the back. Entries without a finite podium score must already be removed.
+ */
+export const rankAnchoredOrder = (codes, scores, rnd) => {
+  const keys = modelRanking(codes, scores).map((idx, r0) => {
+    const r = r0 + 1, b = r === 1 ? 0 : r <= 3 ? 1 : r <= 6 ? 2 : r <= 10 ? 3 : r <= 15 ? 4 : 5, g = r <= 6 ? 0 : r <= 10 ? 1 : r <= 15 ? 2 : 3;
+    const z1 = normal(rnd), z2 = Math.abs(normal(rnd)), u = rnd();
+    const dir = UPSET_DIR[g] || Math.sign(z1) || 1;
+    return { idx, r, key: Math.max(BEST_FINISH[g] + 0.01 * r, r + WOBBLE_SD[b] * z1 + (u < UPSET_PROB[g] ? dir * UPSET_SIZE * z2 : 0)) };
+  });
+  return keys.sort((x, y) => x.key - y.key || x.r - y.r).map((k) => k.idx);
 };
 
 // ── circuit geometry from a pack
@@ -163,7 +178,7 @@ export const generateProjectedRace = (pack, grid, scores, seed) => {
 
   // 1. finishing order drawn from the model's scores
   const codes = racers.map((r) => r.code);
-  const order = plackettLuce(scoreWeights(codes, scores), rnd);        // order[p] = racer index finishing in place p+1
+  const order = rankAnchoredOrder(codes, scores, rnd);                 // order[p] = racer index finishing in place p+1
   const place = new Array(N); order.forEach((c, p) => { place[c] = p; });
 
   // 2. finishing gaps: who is lapped, and the target time of each car's last crossing

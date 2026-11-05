@@ -1,6 +1,6 @@
 // node src/lib/run-test.mjs   (run from frontend/)
 import assert from "node:assert/strict";
-import { generateProjectedRace, plackettLuce, scoreWeights, mulberry32 } from "./projectedRace.js";
+import { generateProjectedRace, rankAnchoredOrder, modelRanking, mulberry32 } from "./projectedRace.js";
 import { decodeReplay, decodeDelta, boardAt, lapAt } from "./replay.js";
 import { inputsFromRows } from "./projectedInputs.js";
 
@@ -63,16 +63,25 @@ const distToPath = (px, py, path) => {
   return best;
 };
 
-// ── the draw
-const w = scoreWeights(["A", "B", "C"], { A: { win: 0.6, podium: 0.8 }, B: { win: 0.3, podium: 0.5 }, C: { win: 0, podium: 0.02 } });
-ok(w[0] > w[1] && w[1] > w[2] && w[2] > 0, "weights follow the scores and stay above zero for a weak driver");
-eq(plackettLuce([1, 1, 1, 1], mulberry32(1)).slice().sort(), [0, 1, 2, 3], "a draw is a permutation");
+// ── the draw: rank-anchored, noise set from the model's real backtest errors
+const brazil = ["ANT", "VER", "RUS", "LEC", "HAM", "NOR", "HAD", "PIA", "HUL", "LAW", "LIN", "BOR", "GAS", "COL", "BEA", "ALO", "SAI", "ALB", "STR", "BOT", "PER"];
+const brazilScores = Object.fromEntries(brazil.map((c, i) => [c, { win: [0.958, 0.762, 0.091, 0.484, 0.571, 0.044, 0.054, 0.009, 0.001, 0.009, 0.002][i] ?? 0, podium: [0.958, 0.917, 0.905, 0.871, 0.693, 0.442, 0.162, 0.107, 0.065, 0.053, 0.025, 0.025, 0.021, 0.009, 0.003, 0.002, 0.002, 0.001, 0, 0, 0][i] }]));
+eq(modelRanking(["B", "A", "C"], { A: { win: 0.2, podium: 0.9 }, B: { win: 0.1, podium: 0.5 }, C: { win: 0.8, podium: 0.4 } }), [2, 1, 0], "the highest win score takes P1, the rest follow by podium score");
+eq(modelRanking(["B", "A"], { A: { win: 0, podium: 0.5 }, B: { win: 0, podium: 0.5 } }), [0, 1], "full ties keep the given order");
+eq(rankAnchoredOrder(brazil, brazilScores, mulberry32(1)).slice().sort((x, y) => x - y), brazil.map((_, i) => i), "a draw is a permutation");
+eq(rankAnchoredOrder(brazil, brazilScores, mulberry32(9)), rankAnchoredOrder(brazil, brazilScores, mulberry32(9)), "the draw is deterministic per seed");
 {
-  const rnd = mulberry32(7), wins = [0, 0, 0], top2 = [0, 0, 0], R = 20000;
-  for (let i = 0; i < R; i++) { const o = plackettLuce(w, rnd); wins[o[0]]++; o.slice(0, 2).forEach((d) => top2[d]++); }
-  ok(wins[0] > wins[1] && wins[1] > wins[2], "the highest-scored driver wins most often");
-  ok(wins[2] > R * 0.005, "a weak-score driver still wins sometimes (not impossible)");
-  ok(Math.abs(wins[0] / R - w[0] / (w[0] + w[1] + w[2])) < 0.02, "P1 frequency follows the weight share");
+  const R = 6000, rnd = mulberry32(7), wins = new Array(21).fill(0), podium = new Array(21).fill(0), top5 = new Array(21).fill(0), sum = new Array(21).fill(0);
+  for (let i = 0; i < R; i++) {
+    rankAnchoredOrder(brazil, brazilScores, rnd).forEach((d, p) => { sum[d] += p + 1; if (p === 0) wins[d]++; if (p < 3) podium[d]++; if (p < 5) top5[d]++; });
+  }
+  ok(wins[0] / R > 0.15 && wins[0] / R < 0.4, `the model's top driver wins ${(100 * wins[0] / R).toFixed(1)}% of draws (real backtest 23%)`);
+  ok(wins[0] > wins[1] && wins[1] > wins[2], "win frequency follows the model ranking at the top");
+  ok(wins.slice(6).reduce((a, b) => a + b, 0) / R < 0.04, "drivers ranked 7th or lower rarely win (real backtest: none in 43 races; this draw: about 2%)");
+  ok(podium.slice(6).reduce((a, b) => a + b, 0) / R > 0.1 && podium.slice(6).reduce((a, b) => a + b, 0) / R < 0.4, "a podium place goes to someone ranked 7th or lower in some draws (real backtest: ~0.23 per race)");
+  ok(top5[20] >= 1 && top5[20] / R < 0.05, "the lowest-ranked driver sometimes, but rarely, finishes in the top five");
+  for (let i = 1; i < 21; i++) ok(sum[i] / R > sum[i - 1] / R - 0.5, `average finishing position never improves as the model rank gets worse (rank ${i + 1})`);
+  ok(sum[0] / R < 5 && sum[20] / R > 16, "front runners finish near the front on average and the back stays at the back");
 }
 
 // ── determinism
@@ -82,7 +91,7 @@ ok(JSON.stringify(a) !== JSON.stringify(c2) && a.race.projected.order.join() !==
 ok(a.race.projected.seed === 4242, "the seed is reported");
 
 // ── across many seeds: laps, order, speed, overlap, pits, lapped cars
-let lappedSeen = 0, strongOnTop = 0, weakFinishedTop5 = 0, runs = 0, nearSecs = 0, carSecs = 0;
+let lappedSeen = 0, strongOnTop = 0, runs = 0, nearSecs = 0, carSecs = 0;
 const SEEDS = Array.from({ length: 24 }, (_, i) => 1000 + i * 37);
 for (const seed of SEEDS) {
   const j = generateProjectedRace(pack, grid, scoresOf(), seed), codes = j.drivers.map((d) => d.code);
@@ -140,13 +149,12 @@ for (const seed of SEEDS) {
   ok(j.drivers.every((d) => d.status === null && d.out_t === null), "nobody retires");
   runs++;
   if (j.race.projected.order.slice(0, 3).includes("AAA") || j.race.projected.order.slice(0, 3).includes("BBB")) strongOnTop++;
-  if (j.race.projected.order.indexOf("TTT") < 5) weakFinishedTop5++;
 }
 ok(nearSecs / carSecs < 0.03, `cars within 3 m of another car for ${((100 * nearSecs) / carSecs).toFixed(2)}% of the time`);
 ok(lappedSeen >= 1, "lapped cars occurred in the sample");
 ok(strongOnTop > runs * 0.3, "the top-scored drivers are on the podium in many races");
 
-// ── the weakest-scored driver sometimes finishes high (loose bound, many short races)
+// ── the highest-scored driver wins far more often than the lowest (many short races)
 {
   const short = stadium(8);
   let top5 = 0, firstBest = 0, firstWeak = 0, R = 150;
@@ -156,7 +164,7 @@ ok(strongOnTop > runs * 0.3, "the top-scored drivers are on the podium in many r
     if (o[0] === "AAA") firstBest++;
     if (o[0] === "TTT") firstWeak++;
   }
-  ok(top5 >= 1, `the lowest-scored driver finished in the top five in ${top5} of ${R} races`);
+  ok(top5 <= R * 0.1, `the lowest-scored driver finished in the top five in ${top5} of ${R} races (rare)`);
   ok(firstBest > firstWeak, "the highest-scored driver wins more often than the lowest");
 }
 

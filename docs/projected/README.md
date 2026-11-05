@@ -4,7 +4,7 @@ One illustrative race for an upcoming round, on the Replay page (strip chips mar
 the same player as the recorded races, and never read as a forecast. It changes no score, share or probability anywhere on the site.
 
 **What it is:** dots running lap by lap on the real circuit, starting from the model's predicted grid, finishing in an order drawn from the
-model's existing win and podium scores (Plackett-Luce, see the header of `frontend/src/lib/projectedRace.js`), with 1-2 stops on the real pit
+model's own ranking shuffled by noise fitted to the model's real backtest errors (rank-anchored draw; see the header of `frontend/src/lib/projectedRace.js` and `analysis/23-25_projected_draw_*`), with 1-2 stops on the real pit
 lane path, lapped cars at the back, and a seed shown on screen (same seed = same race; "Run another race" draws a new one).
 **What it is not:** no crashes, retirements, safety cars or red flags; a driver with no model score is not simulated.
 The label "Illustration: one possible race consistent with the model's scores. It does not predict specific events such as pit stops, safety
