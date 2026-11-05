@@ -7,6 +7,7 @@ import { AuthProvider } from "./auth.jsx";
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const PredictorPage = lazy(() => import("./pages/PredictorPage.jsx"));
+const ReplayPage = lazy(() => import("./pages/ReplayPage.jsx"));
 const NextRacePage = lazy(() => import("./pages/NextRacePage.jsx"));
 const WhatIfPage = lazy(() => import("./pages/WhatIfPage.jsx"));
 const ChampionshipPage = lazy(() => import("./pages/ChampionshipPage.jsx"));
@@ -41,6 +42,7 @@ export default function App() {
   const pages = {
     [PAGES.home]: <HomePage />,
     [PAGES.predictor]: <PredictorPage />,
+    [PAGES.replay]: <ReplayPage />,
     [PAGES.race]: <NextRacePage />,
     [PAGES.whatif]: <WhatIfPage />,
     [PAGES.picks]: <MyPicksPage />, // kept, but no longer linked from the nav
@@ -65,7 +67,7 @@ export default function App() {
       <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.5rem 2rem 4rem", position: "relative" }}>
         {showSweep && <div className="sweep-line" />}
         {sec && sec.pages.length > 1 && (
-          <div className={`sub-nav${[PAGES.race, PAGES.predictor, PAGES.champ, PAGES.drivers, PAGES.season].includes(page) ? " wide" : ""}`} role="group" aria-label={`${sec.label} pages`}>
+          <div className={`sub-nav${[PAGES.race, PAGES.predictor, PAGES.replay, PAGES.champ, PAGES.drivers, PAGES.season].includes(page) ? " wide" : ""}`} role="group" aria-label={`${sec.label} pages`}>
             {sec.pages.map(pg => (
               <button key={pg} type="button" className="sub-tab" aria-pressed={pg === page} onClick={() => { setPage(pg); handleNavigate(); }}>{SUB_LABEL[pg]}</button>
             ))}
