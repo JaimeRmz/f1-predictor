@@ -1,5 +1,9 @@
 # Stage 2 — pit-wall design directions
 
+> The three preview directions below were screenshotted for review; those images (`docs/stage2/img/`) are no longer in
+> the tree. They exist in the history of `design/pitwall-previews`, and `capture.cjs` regenerates them from that branch.
+> The shipped design is documented in `reskin/REPORT.md`.
+
 Three previews, five screens each, all built from **local fixtures** (no API calls; the capture
 script blocks every non-local request and recorded 0 attempts). Screenshots: `docs/stage2/img/`
 (`{a,b,c}-{home,race,champ,live,model}-{desktop,390}.png`, desktop = 1280 px).

@@ -2,8 +2,12 @@
 
 Frontend only. Nothing merged to main, no PR. `backend/`, `supabase/`, `.github/` and My Picks untouched.
 
+> Screenshots: only six representative images are kept in the repo (`all-home-1440`, `all-home-390`, `all-race-1440`,
+> `all-champ-standings-1440`, `all-model-1440`, `header-390-menu`) to keep the tree small. `capture-all.cjs` regenerates
+> one per page and sub-tab, `capture-six.cjs` regenerates the six kept here; both need `npx vite` and the backend run locally.
+
 ## Pages done (all follow the Home system: shared header, plain-English panel titles with one-line captions, glass grid, TeamMark logos, mono tabular numerals)
-| Nav | Page | Screenshots (1440 / 390) |
+| Nav | Page | Screenshot (kept ones only, see note above) |
 |---|---|---|
 | HOME | Home | `all-home-*` |
 | RACE | Next Race | `all-race-*` |
@@ -29,7 +33,7 @@ All images are in this folder. Every screenshot was taken against the locally ru
 - Predictor keeps the API's row order for its table (not re-sorted), and what-if keeps the API order for its live results.
 - The Season standings table is now fetched (`/championship/status` + `/season/2026`) instead of hand-typed. Wins come from race results, points from the official table.
 - Compare's circuit chart has no race counts in the data, so the caption says so.
-- `homeModel.js` backtest numbers and the Model page's pipeline figures (ROC-AUC 0.972 / 0.945, 77.8%, recall 89%) are static text, not fetched.
+- `homeModel.js` backtest numbers and every figure on the Model page are fixed values from the Stage 1 backtest (43 races: 2025 R1-R24 and 2026 R1-R19), recomputed from `analysis/out/backtest_rows.csv`, not fetched: podium ROC-AUC 0.954 real grid / 0.909 predicted grid, podium recall at a 0.5 score 91.5% / 86.0% (precision 52.0% / 47.4%), winner ROC-AUC 0.966 / 0.904, predicted-vs-real top-10 grid overlap 79.0%. They replace the earlier 0.945 / 0.972 / 89% / 77.8%, which the backtest does not reproduce (the old 77.8% and 0.972 have no source in the backtest, so they were replaced by the measured values and labelled with what they measure).
 
 ## Still off
 - Race strategy rows (inside Season) keep their original internals and are low contrast; locally they were empty (no OpenF1 cache), so they were not visually checked with data.

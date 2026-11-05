@@ -5,6 +5,10 @@ import "./home.css";
 // ── MODEL ──────────────────────────────────────────────────────
 // What the model is, and how well it actually does. The headline evidence is the winner-pick backtest below (static
 // results of the Stage 1 backtest, not fetched): the model is compared with simple rules, before and after qualifying.
+// Every figure on this page is a FIXED number from that backtest (43 races: 2025 R1-R24 and 2026 R1-R19; analysis/out/
+// backtest_rows.csv), recomputed rather than copied: podium ROC-AUC 0.954 (real grid) / 0.909 (predicted grid), podium
+// recall at a 0.5 score 91.5% / 86.0% (precision 52.0% / 47.4%), winner ROC-AUC 0.966 / 0.904, predicted-vs-real top-10
+// grid overlap 79.0%. They are not updated automatically.
 const features = [
   { name: "Grid Position",          pct: 44.3, desc: "Starting position. P1/P2 qualifiers podium ~75% of the time. The dominant predictor by a wide margin." },
   { name: "Recent Points (Last 5)", pct: 25.4, desc: "Sum of points scored in the driver's last 5 races (cross-season). Captures current form and corrects overestimation of drivers with strong historical records but recent underperformance." },
@@ -18,9 +22,9 @@ const features = [
 ];
 
 const pipeline = [
-  { stage: "01", name: "Qualifying Model", type: "XGBRegressor", desc: "Predicts each driver's grid position ahead of a race.", metricLabel: "Top-10 Accuracy", metricValue: "77.8%" },
-  { stage: "02", name: "Winner Model", type: "XGBClassifier", desc: "Predicts who wins the race, using the predicted grid as input.", metricLabel: "ROC-AUC", metricValue: "0.972" },
-  { stage: "03", name: "Podium Model", type: "XGBClassifier", desc: "Gives every driver a raw model score for finishing in the top 3.", metricLabel: "ROC-AUC", metricValue: "0.945" },
+  { stage: "01", name: "Qualifying Model", type: "XGBRegressor", desc: "Predicts each driver's grid position ahead of a race.", metricLabel: "Top-10 overlap", metricValue: "79.0%", note: "predicted top 10 vs real top 10, 43 races" },
+  { stage: "02", name: "Winner Model", type: "XGBClassifier", desc: "Predicts who wins the race, using the predicted grid as input.", metricLabel: "ROC-AUC", metricValue: "0.966 / 0.904", note: "real grid / predicted grid" },
+  { stage: "03", name: "Podium Model", type: "XGBClassifier", desc: "Gives every driver a raw model score for finishing in the top 3.", metricLabel: "ROC-AUC", metricValue: "0.954 / 0.909", note: "real grid / predicted grid" },
 ];
 
 const howItWorks = [
@@ -28,7 +32,8 @@ const howItWorks = [
   ["Features", "9 engineered features using rolling averages and exponential decay. All calculated from strictly pre-race data — no leakage from future results."],
   ["Training", "XGBoost trained on 2010–2024 (6,436 entries). Time-based split — 2025–2026 seasons held out for evaluation."],
   ["Target", "Binary classification: did the driver finish top 3? Outputs a raw model score from 0 to 1 per driver (a score, not a probability; Home shows it as a share of the field)."],
-  ["Evaluation", "Tested on the 2025–2026 holdout. ROC-AUC 0.945, measured after correcting two data-leakage bugs in feature engineering — the circuit-history rate (see features above) and a same-race constructor-feature leak. The figure is computed on strictly pre-race inputs, so it reflects honest out-of-sample performance rather than an inflated in-sample score."],
+  ["Evaluation", "Tested on the 2025–2026 holdout (43 races, through 2026 round 19; fixed figures from the Part 1B backtest, not updated automatically). Podium ROC-AUC 0.954 with the real starting grid and 0.909 on the predicted-grid path that pre-race forecasts use, measured after correcting two data-leakage bugs in feature engineering — the circuit-history rate (see features above) and a same-race constructor-feature leak. The figure is computed on strictly pre-race inputs, so it reflects honest out-of-sample performance rather than an inflated in-sample score."],
+  ["Scores", "The win and podium numbers are model scores, not calibrated probabilities. Across a race the win scores add up to about 3 (a true set of probabilities would add to 1) and the podium scores to about 5 (should be 3), and the highest scores are over-confident, especially on the predicted-grid path. Use them to rank drivers, not as betting odds."],
 ];
 
 const pct = (h, n) => Math.round((100 * h) / n);
@@ -80,6 +85,7 @@ const ModelPage = () => {
                   <p className="hm-note">{m.desc}</p>
                   <label className="gold">{m.metricLabel.toUpperCase()}</label>
                   <b>{m.metricValue}</b>
+                  <small className="md-note">{m.note}</small>
                 </div>
               ))}
             </div>
@@ -100,13 +106,13 @@ const ModelPage = () => {
         </div>
 
         <aside className="hm-side">
-          <Panel title="Podium model at a glance" caption="The headline numbers, measured on 2025–2026 races held out of training.">
+          <Panel title="Podium model at a glance" caption="The headline numbers, measured on 43 races of 2025–2026 (through round 19) held out of training.">
             <div className="hm-tiles">
-              {[["ALGORITHM", "XGBoost"], ["ROC-AUC", "0.945"], ["RECALL", "89%"], ["TRAINING", "6,436"]].map(([l, v]) => (
+              {[["ALGORITHM", "XGBoost"], ["ROC-AUC · REAL GRID", "0.954"], ["ROC-AUC · PREDICTED GRID", "0.909"], ["RECALL · REAL GRID", "91.5%"], ["RECALL · PREDICTED GRID", "86.0%"], ["TRAINING", "6,436"]].map(([l, v]) => (
                 <div key={l} className="hm-tile"><label>{l}</label><b>{v}</b></div>
               ))}
             </div>
-            <p className="hm-note dim">Recall: share of actual podium finishers the model flagged. Training: race entries 2010–2024.</p>
+            <p className="hm-note dim">Real grid: the model is given the actual starting grid. Predicted grid: the pre-qualifying path the site uses for forecasts. Recall: share of actual podium finishers with a score of at least 0.5 (precision at that threshold is 52% and 47%). Training: race entries 2010–2024.</p>
           </Panel>
 
           <Panel title="Raw model score vs share" caption="How the numbers on Home are made.">
