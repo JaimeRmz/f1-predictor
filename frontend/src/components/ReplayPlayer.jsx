@@ -196,7 +196,7 @@ const ReplayPlayer = ({ rep, projected = false }) => {
             <label className="rp-range"><span>LAP</span>
               <input type="range" min={1} max={rep.lapsTotal} step={1} value={Math.max(ui.lap, 1)} onChange={(e) => { const ts = lapStartTime(rep, Number(e.target.value)); if (ts != null) seek(ts); }} aria-label="Jump to lap" aria-valuetext={`Lap ${Math.max(ui.lap, 1)} of ${rep.lapsTotal}`} />
             </label>
-            <div className="rp-legend" aria-hidden="true"><i className="SC" /> safety car <i className="VSC" /> virtual SC <i className="RED" /> red flag <i className="GAP" /> data gap <i className="tick" /> pit stop</div>
+            <div className="rp-legend" aria-hidden="true">{!projected && <><i className="SC" /> safety car <i className="VSC" /> virtual SC <i className="RED" /> red flag <i className="GAP" /> data gap </>}<i className="tick" /> pit stop</div>
           </div>
         </div>
 

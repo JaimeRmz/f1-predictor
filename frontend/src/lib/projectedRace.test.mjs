@@ -1,6 +1,6 @@
 // node src/lib/run-test.mjs   (run from frontend/)
 import assert from "node:assert/strict";
-import { generateProjectedRace, rankAnchoredOrder, modelRanking, mulberry32 } from "./projectedRace.js";
+import { generateProjectedRace, rankAnchoredOrder, modelRanking, mulberry32, drawnOrder, typicalSeed } from "./projectedRace.js";
 import { decodeReplay, decodeDelta, boardAt, lapAt } from "./replay.js";
 import { inputsFromRows } from "./projectedInputs.js";
 
@@ -77,10 +77,10 @@ eq(rankAnchoredOrder(brazil, brazilScores, mulberry32(9)), rankAnchoredOrder(bra
   }
   ok(wins[0] / R > 0.15 && wins[0] / R < 0.4, `the model's top driver wins ${(100 * wins[0] / R).toFixed(1)}% of draws (real backtest 23%)`);
   ok(wins[0] > wins[1] && wins[1] > wins[2], "win frequency follows the model ranking at the top");
-  ok(wins.slice(6).reduce((a, b) => a + b, 0) / R < 0.04, "drivers ranked 7th or lower rarely win (real backtest: none in 43 races; this draw: about 2%)");
+  ok(wins.slice(6).reduce((a, b) => a + b, 0) / R < 0.025, "drivers ranked 7th or lower rarely win (real backtest: none in 43 races; this draw: under 2%)");
   ok(podium.slice(6).reduce((a, b) => a + b, 0) / R > 0.1 && podium.slice(6).reduce((a, b) => a + b, 0) / R < 0.4, "a podium place goes to someone ranked 7th or lower in some draws (real backtest: ~0.23 per race)");
   ok(top5[20] >= 1 && top5[20] / R < 0.05, "the lowest-ranked driver sometimes, but rarely, finishes in the top five");
-  for (let i = 1; i < 21; i++) ok(sum[i] / R > sum[i - 1] / R - 0.5, `average finishing position never improves as the model rank gets worse (rank ${i + 1})`);
+  for (let i = 1; i < 21; i++) ok(sum[i] / R > sum[i - 1] / R - 0.3, `average finishing position never improves (to within 0.3 places) as the model rank gets worse (rank ${i + 1})`);
   ok(sum[0] / R < 5 && sum[20] / R > 16, "front runners finish near the front on average and the back stays at the back");
 }
 
@@ -141,6 +141,17 @@ for (const seed of SEEDS) {
     ok((j.in_pit[p.d] || []).some(([s, e]) => s <= p.t - p.lane_s + 0.2 && e >= p.t - 0.2), "the stop is listed in in_pit");
   }
   for (const d of codes) ok(stops[d] >= 1 && stops[d] <= 2, `${d} makes one or two stops`);
+  // gaps never decrease down the order: seconds first (non-decreasing), then "+1 LAP" / "+2 LAPS" (non-decreasing), the leader at 0
+  for (const row of j.laps) {
+    let lastSec = 0, lastLaps = 0, sawLapped = false;
+    row.order.forEach((cd, p) => {
+      const g = row.gap[cd];
+      if (g === undefined) { ok(row.lap === 1 && p > 0, `lap 1 only lists the leader's gap (${cd})`); return; }
+      if (p === 0) { eq(g, 0, "the leader's gap is 0"); return; }
+      if (typeof g === "string") { sawLapped = true; const nl = Number(g.match(/\+(\d+)/)[1]); ok(nl >= lastLaps, `lapped gaps do not decrease (${cd}, lap ${row.lap}, seed ${seed})`); lastLaps = nl; }
+      else { ok(!sawLapped, `a car with a time gap sits behind a lapped car (${cd}, lap ${row.lap}, seed ${seed})`); ok(g >= lastSec - 1e-9, `gaps do not decrease down the order (${cd}, lap ${row.lap}, seed ${seed}: ${g} after ${lastSec})`); lastSec = g; }
+    });
+  }
   // the output is a valid replay file for the existing player code
   const rep = decodeReplay(j);
   eq([rep.cars.length, rep.lapsTotal, lapAt(rep, j.race.chequered), rep.outages.length, rep.bands.length], [20, 30, 30, 0, 0], "decodes like a recorded replay");
@@ -166,6 +177,24 @@ ok(strongOnTop > runs * 0.3, "the top-scored drivers are on the podium in many r
   }
   ok(top5 <= R * 0.1, `the lowest-scored driver finished in the top five in ${top5} of ${R} races (rare)`);
   ok(firstBest > firstWeak, "the highest-scored driver wins more often than the lowest");
+}
+
+// ── seed helpers: the order for a seed without building the race, and the typical seed
+{
+  const codesB = brazil, sameAsRace = [3, 77, 4242].every((sd) => {
+    const rows = brazil.map((c) => ({ code: c, name: c, team: "T", colour: "ffffff" }));
+    return drawnOrder(codesB, brazilScores, sd).join() === generateProjectedRace(pack, rows, brazilScores, sd).race.projected.order.join();
+  });
+  ok(sameAsRace, "drawnOrder(seed) is exactly the order generateProjectedRace draws for that seed");
+  const t0 = performance.now(), ts = typicalSeed(codesB, brazilScores), ms = performance.now() - t0;
+  eq(ts, typicalSeed(codesB, brazilScores), "the typical seed is deterministic");
+  ok(ms < 1500, `typicalSeed over 10,000 seeds took ${ms.toFixed(0)} ms`);
+  // its order is closer to the median order than the typical random seed is
+  const mean = new Array(21).fill(0); for (let sd = 1; sd <= 10000; sd++) drawnOrder(codesB, brazilScores, sd).forEach((c, p) => { mean[codesB.indexOf(c)] += (p + 1) / 10000; });
+  const dist = (sd) => drawnOrder(codesB, brazilScores, sd).reduce((a, c, p) => a + Math.abs(p + 1 - mean[codesB.indexOf(c)]), 0);
+  const all = Array.from({ length: 400 }, (_, i) => dist(1 + i * 25)).sort((x, y) => x - y);
+  ok(dist(ts) <= all[0] + 1e-9, `the typical seed (${ts}) is at least as close to the median order as 400 sampled seeds (${dist(ts).toFixed(1)} vs best ${all[0].toFixed(1)}, median ${all[200].toFixed(1)})`);
+  console.log(`   (typical Brazil seed ${ts}, ${ms.toFixed(0)} ms)`);
 }
 
 // ── drivers without a model score are not simulated

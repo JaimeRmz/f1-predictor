@@ -9,7 +9,7 @@
 // follow by podium score), add noise to each rank whose size comes from the model's real backtest errors for that rank (a place or two
 // most of the time, now and then a big upset), and sort. So front runners usually finish near the front, big upsets are rare but possible, and the back of the
 // field stays at the back. Drivers with no model score are not simulated. The scores are used for the ranking only; nothing is shown as a probability.
-// (An earlier draw, Plackett-Luce on the scores plus a floor, was too flat below the top six: see analysis/25_projected_draw_compare.mjs.)
+// (An earlier draw weighted every driver by its scores plus a floor and was too flat below the top six: see analysis/25_projected_draw_compare.mjs.)
 //
 // How the race is shaped: finishing times are fixed first (the drawn order plus random gaps, some cars lapped). Each driver's race pace is
 // then solved so an unobstructed car ends exactly on its time, with fuel burn, tyre wear, lap noise and 1-2 pit stops on the real pit
@@ -57,30 +57,54 @@ export const modelRanking = (codes, scores) => {
 };
 
 // Noise added to each predicted rank before sorting, fitted so the scatter matches the model's REAL backtest errors
-// (analysis/23_projected_draw_profile.py: 43 races, predicted-grid condition, retirements removed; analysis/24_projected_draw_fit.py).
+// (analysis/23_projected_draw_profile.py: 43 races, predicted-grid condition, retirements removed), then tuned on this code with the Brazil scores
+// (analysis/26_projected_draw_tune.mjs): the model's top driver wins ~28% of draws, a bottom-half driver reaches the top five ~2.5% of the time.
 // Two parts: an everyday wobble of a place or two, and now and then a big one-sided upset: anyone ranked 1-15 has a bad day and drops back,
 // an also-ran (16th or lower) has a good one and climbs. The fit reproduces, per rank group, the real median miss, the share 9+ places out and the
 // win / podium / top-5 rates, and no driver can finish higher than the best the real backtest ever saw for its rank group (7th-10th: 2nd,
 // 11th-15th: 3rd, 16th or lower: 4th); in 43 real races a driver the model ranked 7th or lower never won.
-const WOBBLE_SD = [3.433, 1.433, 5.096, 2.375, 3.61, 2.302];                       // by predicted rank: 1, 2-3, 4-6, 7-10, 11-15, 16+
-const UPSET_PROB = [0.529, 0.4348, 0.2235, 0.0431];                      // by rank group: 1-6, 7-10, 11-15, 16+
+/** Fitted draw parameters (analysis/26_projected_draw_tune.mjs). wobble: by predicted rank 1, 2-3, 4-6, 7-10, 11-15, 16+; upsetProb: by rank group 1-6, 7-10, 11-15, 16+. */
+export const DRAW_PARAMS = { wobble: [0.2, 4.4, 6.167, 2.97, 3.053, 2.331], upsetProb: [0.732, 0.652, 0.264, 0.141], upsetSize: 3.789 };
 const UPSET_DIR = [1, 1, 1, -1];                                  // +1 falls back, -1 climbs
 const BEST_FINISH = [1, 2, 3, 4];                                // best place seen in 43 real races for rank groups 1-6, 7-10, 11-15, 16+
-const UPSET_SIZE = 7.416;                       // places (half-normal)
 
 /**
  * Rank-anchored draw of a finishing order (indices into `codes`): start from the model's ranking, add noise of the size the model's real
  * backtest errors have for that rank, sort. Front runners usually finish near the front, big upsets are rare but possible, the back stays
  * at the back. Entries without a finite podium score must already be removed.
  */
-export const rankAnchoredOrder = (codes, scores, rnd) => {
+export const rankAnchoredOrder = (codes, scores, rnd, params = DRAW_PARAMS) => {
   const keys = modelRanking(codes, scores).map((idx, r0) => {
     const r = r0 + 1, b = r === 1 ? 0 : r <= 3 ? 1 : r <= 6 ? 2 : r <= 10 ? 3 : r <= 15 ? 4 : 5, g = r <= 6 ? 0 : r <= 10 ? 1 : r <= 15 ? 2 : 3;
     const z1 = normal(rnd), z2 = Math.abs(normal(rnd)), u = rnd();
     const dir = UPSET_DIR[g] || Math.sign(z1) || 1;
-    return { idx, r, key: Math.max(BEST_FINISH[g] + 0.01 * r, r + WOBBLE_SD[b] * z1 + (u < UPSET_PROB[g] ? dir * UPSET_SIZE * z2 : 0)) };
+    return { idx, r, key: Math.max(BEST_FINISH[g] + 0.01 * r, r + params.wobble[b] * z1 + (u < params.upsetProb[g] ? dir * params.upsetSize * z2 : 0)) };
   });
   return keys.sort((x, y) => x.key - y.key || x.r - y.r).map((k) => k.idx);
+};
+
+/** The finishing order (driver codes) the generator draws for this seed, without building the race. Same random stream as generateProjectedRace. */
+export const drawnOrder = (codes, scores, seed) => {
+  const rnd = mulberry32(seed);
+  normal(rnd);                                                         // the race-pace jitter, drawn first in generateProjectedRace
+  return rankAnchoredOrder(codes, scores, rnd).map((i) => codes[i]);
+};
+
+/**
+ * A "typical" seed: of `tries` seeds, the one whose finishing order is closest to the median order (every driver's mean finishing
+ * position over all the seeds, ranked), measured as the sum over drivers of |finishing place - mean place|. Ties go to the lowest seed.
+ */
+export const typicalSeed = (codes, scores, tries = 10000) => {
+  const sum = new Array(codes.length).fill(0), idx = new Map(codes.map((c, i) => [c, i]));
+  for (let s = 1; s <= tries; s++) drawnOrder(codes, scores, s).forEach((c, p) => { sum[idx.get(c)] += p + 1; });
+  const mean = sum.map((v) => v / tries);
+  let best = 1, bestD = Infinity;
+  for (let s = 1; s <= tries; s++) {
+    let d = 0;
+    drawnOrder(codes, scores, s).forEach((c, p) => { d += Math.abs(p + 1 - mean[idx.get(c)]); });
+    if (d < bestD - 1e-9) { bestD = d; best = s; }
+  }
+  return best;
 };
 
 // ── circuit geometry from a pack
@@ -362,16 +386,18 @@ export const generateProjectedRace = (pack, grid, scores, seed) => {
   const leaderCross = (k) => Math.min(...cars.filter((c) => c.n >= k).map((c) => c.T[(k - 1) * V]));
   for (let k = 1; k <= K; k++) {
     const t = k === 1 ? LIGHTS_OUT : leaderCross(k);
-    const rows = orderAt(t), lead = rows[0];
+    // order and gaps from the time each car reaches the leader's line crossing, so gaps never decrease down the order
+    const m = (k - 1) * V, arrive = (c) => (k === 1 ? c.T0 : m <= c.M ? c.T[m] : Infinity);
+    const rows = cars.slice().sort((a, b) => arrive(a) - arrive(b) || a.i - b.i);
+    const leadLap = k > 1 ? rows[0].T[m] - rows[0].T[m - V] : lapRef;
     const gap = {};
-    rows.forEach((r, p) => {
-      if (p === 0) { gap[r.c.code] = 0; return; }
+    rows.forEach((c, p) => {
+      if (p === 0) { gap[c.code] = 0; return; }
       if (k === 1) return;
-      const behind = Math.floor((lead.st.mrank - r.st.mrank) / V + 1e-9);
-      if (behind >= 1) gap[r.c.code] = `+${behind} ${behind === 1 ? "LAP" : "LAPS"}`;
-      else if ((k - 1) * V <= r.c.M) gap[r.c.code] = Math.round((r.c.T[(k - 1) * V] - t) * 10) / 10;
+      const g = arrive(c) - t, behind = Number.isFinite(g) ? Math.floor(g / leadLap + 1e-9) : Math.max(1, k - c.n);
+      gap[c.code] = behind >= 1 ? `+${behind} ${behind === 1 ? "LAP" : "LAPS"}` : Math.round(g * 10) / 10;
     });
-    laps.push({ lap: k, t: Math.round(t * 10) / 10, order: rows.map((r) => r.c.code), gap });
+    laps.push({ lap: k, t: Math.round(t * 10) / 10, order: rows.map((c) => c.code), gap });
   }
   const lapStarts = {};
   cars.forEach((c) => {

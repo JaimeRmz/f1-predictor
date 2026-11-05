@@ -79,3 +79,8 @@
   .pr-notice { flex-direction: column; gap: 0.3rem; }
   .pr-again { margin-left: 0; width: 100%; }
 }
+
+/* the TIME / LAP sliders: label on the left, slider filling the rest (a later generic label rule had turned this into stacked blocks) */
+.rp .rp-range { display: grid; grid-template-columns: 3rem minmax(0, 1fr); align-items: center; gap: 0.6rem; }
+.rp .rp-range span { white-space: nowrap; }
+.pr-seed em { font-style: normal; color: var(--teal); letter-spacing: 0.08em; }

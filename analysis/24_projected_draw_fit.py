@@ -59,13 +59,16 @@ def loss(theta):
         l += ((st[k]["med"] - Q["med"][k]) / 1.0) ** 2 + ((st[k]["p75"] - Q["p75"][k]) / 1.5) ** 2 + ((st[k]["p90"] - Q["p90"][k]) / 3.0) ** 2
         l += ((st[k]["le2"] - Q["le2"][k]) / 0.08) ** 2 + ((st[k]["ge9"] - Q["ge9"][k]) / 0.05) ** 2
     for k in range(6):
-        tight = 0.25 if k >= 3 else 0.4                     # ranks 7+: real wins are zero and podiums rare, so be strict there
+        tight = 0.25 if k >= 3 else (1.0 if k == 0 else 0.4)                     # ranks 7+: real wins are zero and podiums rare, so be strict there
         l += ((st[k]["win"] - REAL_WIN[k]) / (0.04 * tight)) ** 2 + ((st[k]["pod"] - REAL_POD[k]) / (0.05 * tight)) ** 2 + ((st[k]["t5"] - REAL_T5[k]) / 0.06) ** 2
     for k in range(6):
         l += ((st[k]["bias"] - REAL_BIAS[k]) / 0.8) ** 2
     mp = fin.mean(axis=0)                                  # the average finishing position must never improve as the model rank gets worse
     l += (np.maximum(0, mp[:-1] - mp[1:]) ** 2).sum() / 0.05 ** 2
-    l += ((bhd - BH_DRIVER) / 0.01) ** 2 + ((bhr - BH_RACE) / 0.05) ** 2
+    # priorities: (1) the model's rank-1 driver wins 25-30% (target 27%; real backtest 23%), (2) a bottom-half driver in the top 5 stays under
+    # ~4% per driver / ~38% of races (hinge: no pressure to go lower), (3) ceilings and monotone mean finish (kept above)
+    l += ((st[0]["win"] - 0.27) / 0.008) ** 2
+    l += (max(0.0, bhd - 0.035) / 0.004) ** 2 + (max(0.0, bhr - 0.33) / 0.03) ** 2
     return l
 
 best = None
