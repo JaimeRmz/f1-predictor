@@ -5,9 +5,9 @@ For each completed 2025-2026 race this writes <raceId>.json.gz (1 Hz positions p
 manifest.json. Everything the player needs is in that one file: track outline, start/finish, pit lane path, per-lap order and
 gaps, the official /position order feed, pit stops, retirements and race-control flags.
 
-    python backend/scripts/build_replay.py --race-id 1147          # one race
-    python backend/scripts/build_replay.py --all                    # every completed 2025-2026 race (skips finished ones)
-    python backend/scripts/build_replay.py --all --force            # rebuild
+    python scripts/build_replay.py --race-id 1147          # one race
+    python scripts/build_replay.py --all                    # every completed 2025-2026 race (skips finished ones)
+    python scripts/build_replay.py --all --force            # rebuild
 
 Position data: OpenF1 (CC BY-NC-SA 4.0). The replay is interpolated from ~3.8 Hz samples and is not official timing.
 
@@ -37,7 +37,7 @@ import numpy as np
 import requests
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REPO = os.path.normpath(os.path.join(HERE, "..", ".."))
+REPO = os.path.normpath(os.path.join(HERE, ".."))
 DATA = os.path.join(REPO, "data")
 BASE = "https://api.openf1.org/v1"
 MIN_INTERVAL = 2.4            # seconds between network calls => at most 25 a minute

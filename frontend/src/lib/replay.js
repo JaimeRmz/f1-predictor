@@ -1,5 +1,5 @@
 // Pure logic for the race replay (no React, no network): decoding the compact file, cubic interpolation, the order board.
-// File format: see backend/scripts/build_replay.py. Positions are decimetres, delta-encoded at 1 Hz. The order board is the
+// File format: see scripts/build_replay.py. Positions are decimetres, delta-encoded at 1 Hz. The order board is the
 // official OpenF1 /position feed, not an order recomputed from x/y.
 
 /** Cumulative sum of a delta-encoded integer array -> Float32Array. */

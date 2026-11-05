@@ -11,7 +11,7 @@ import "./replay.css";
 
 // ── RACE · REPLAY ──────────────────────────────────────────────
 // Real recorded positions of a completed race, replayed on the track outline. The files are produced offline by
-// backend/scripts/build_replay.py from OpenF1 historical data and served from VITE_REPLAY_BASE_URL (a public storage bucket) or, in
+// scripts/build_replay.py from OpenF1 historical data and served from VITE_REPLAY_BASE_URL (a public storage bucket) or, in
 // development, /replay-dev/. When the base URL or a race file is missing, this page says so and the rest of the site is unaffected.
 const CREDIT = "Position data: OpenF1 (CC BY-NC-SA 4.0). Replay is interpolated from ~3.8 Hz samples and is not official timing.";
 

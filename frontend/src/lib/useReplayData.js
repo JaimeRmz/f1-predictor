@@ -3,7 +3,7 @@ import { decodeReplay, parseReplayBuffer } from "./replay.js";
 
 // Where the replay files live. Production: a public Supabase Storage bucket, set through VITE_REPLAY_BASE_URL (optional: when it is
 // unset the Replay tab shows "not available" and nothing else on the site changes). Development: the untracked
-// frontend/public/replay-dev/ folder written by backend/scripts/build_replay.py.
+// frontend/public/replay-dev/ folder written by scripts/build_replay.py.
 export const replayBase = () => {
   const b = import.meta.env.VITE_REPLAY_BASE_URL || (import.meta.env.DEV ? "/replay-dev/" : "");
   return b ? (b.endsWith("/") ? b : `${b}/`) : "";

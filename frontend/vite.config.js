@@ -21,7 +21,7 @@ const cacheImageAssets = () => ({
   },
 })
 
-// The untracked dev replay files (frontend/public/replay-dev/, written by backend/scripts/build_replay.py) are for `npm run dev` only:
+// The untracked dev replay files (frontend/public/replay-dev/, written by scripts/build_replay.py) are for `npm run dev` only:
 // keep them out of a production build so a local build can never ship them. Production reads VITE_REPLAY_BASE_URL instead.
 const stripReplayDev = () => {
   let out = ''

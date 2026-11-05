@@ -6,7 +6,7 @@ Real recorded car positions of completed 2025-2026 races, replayed on the track 
 > The site is non-commercial. The derived replay files are share-alike under the same licence.
 
 ## How it works
-1. `backend/scripts/build_replay.py` downloads one race from OpenF1's free historical API (about 30 calls, at most 25 a minute) and writes
+1. `scripts/build_replay.py` downloads one race from OpenF1's free historical API (about 30 calls, at most 25 a minute) and writes
    `<raceId>.json.gz` plus an entry in `manifest.json`. It deletes the race's raw download afterwards (a race is 90-140 MB raw; the file is about 350 KB).
 2. The player (`frontend/src/pages/ReplayPage.jsx`, `components/ReplayPlayer.jsx`, `lib/replay.js`) fetches `manifest.json`, then one race file on
    demand, decodes it once and animates it with cubic interpolation of the 1 Hz positions on a canvas.
@@ -28,11 +28,11 @@ Positions are decimetres, delta-encoded, one sample per second from 90 s before 
 
 ## Try it locally
 ```
-python backend/scripts/build_replay.py --race-id 1147        # Japan 2025 (needs the data/*.csv in the repo and network)
+python scripts/build_replay.py --race-id 1147        # Japan 2025 (needs the data/*.csv in the repo and network)
 cd frontend && npm run dev                                   # then RACE -> REPLAY
 ```
 The script writes to `frontend/public/replay-dev/` (git-ignored). In development the page reads `/replay-dev/` automatically.
-Everything else (all 43): `python backend/scripts/build_replay.py --all` (about 80 s a race, resumable).
+Everything else (all 43): `python scripts/build_replay.py --all` (about 80 s a race, resumable).
 
 ## Hosting in production (Supabase Storage)
 The page works without any of this: when `VITE_REPLAY_BASE_URL` is unset or unreachable it shows "Replay not available".
