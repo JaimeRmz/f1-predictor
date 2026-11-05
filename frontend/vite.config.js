@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -19,9 +21,21 @@ const cacheImageAssets = () => ({
   },
 })
 
+// The untracked dev replay files (frontend/public/replay-dev/, written by backend/scripts/build_replay.py) are for `npm run dev` only:
+// keep them out of a production build so a local build can never ship them. Production reads VITE_REPLAY_BASE_URL instead.
+const stripReplayDev = () => {
+  let out = ''
+  return {
+    name: 'strip-replay-dev',
+    apply: 'build',
+    configResolved(cfg) { out = path.resolve(cfg.root, cfg.build.outDir) },
+    closeBundle() { if (out) fs.rmSync(path.join(out, 'replay-dev'), { recursive: true, force: true }) },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), cacheImageAssets()],
+  plugins: [react(), cacheImageAssets(), stripReplayDev()],
   server: {
     host: true,
     // Allow serving the repo-root data/ dir (one level above this Vite root) so

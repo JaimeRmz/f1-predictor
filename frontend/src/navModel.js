@@ -6,6 +6,7 @@ export const PAGES = {
   home: "Home",
   race: `Next Race ${NEXT_RACE.flag}`,
   predictor: "Predictor",
+  replay: "Replay",
   champ: "Championship",
   drivers: "Drivers",
   season: "2026 Season",
@@ -18,7 +19,7 @@ export const PAGES = {
 
 export const SECTIONS = [
   { id: "home", label: "HOME", pages: [PAGES.home] },
-  { id: "race", label: "RACE", pages: [PAGES.race, PAGES.predictor] },
+  { id: "race", label: "RACE", pages: [PAGES.race, PAGES.predictor, PAGES.replay] },
   { id: "champ", label: "CHAMPIONSHIP", pages: [PAGES.champ, PAGES.drivers, PAGES.season] },
   { id: "live", label: "LIVE", pages: [PAGES.live] },
   { id: "model", label: "MODEL", pages: [PAGES.model] },
@@ -31,7 +32,7 @@ export const MORE = [
 
 // Short label for the in-section tabs.
 export const SUB_LABEL = {
-  [PAGES.race]: "NEXT RACE", [PAGES.predictor]: "PREDICTOR",
+  [PAGES.race]: "NEXT RACE", [PAGES.predictor]: "PREDICTOR", [PAGES.replay]: "REPLAY",
   [PAGES.champ]: "STANDINGS", [PAGES.drivers]: "DRIVERS", [PAGES.season]: "2026 SEASON",
 };
 
