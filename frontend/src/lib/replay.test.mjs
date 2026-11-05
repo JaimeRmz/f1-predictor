@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import zlib from "node:zlib";
 import {
-  decodeDelta, cubicAt, decodeReplay, carStateAt, officialPosition, lapAt, lapStartTime, boardAt, gapLabel, bandAt, raceClock, trackBounds, parseReplayBuffer,
+  decodeDelta, cubicAt, decodeReplay, findOutages, outageAt, carStateAt, officialPosition, lapAt, lapStartTime, boardAt, gapLabel, bandAt, raceClock, trackBounds, parseReplayBuffer,
 } from "./replay.js";
 
 let n = 0;
@@ -100,4 +100,17 @@ t("parseReplayBuffer accepts plain JSON", (await parseReplayBuffer(raw)).race.la
 await assert.rejects(() => parseReplayBuffer(Buffer.from("not json")));
 n++;
 
+// ── data gaps
+t("a car in a hole is flagged noData on the board, with its own label", [boardAt(rep, 45).find((r) => r.code === "CCC").noData, gapLabel({ ...boardAt(rep, 45).find((r) => r.code === "CCC") })], [true, "NO DATA"]);
+t("noData clears after the hole", boardAt(rep, 55).find((r) => r.code === "CCC").noData, false);
+t("OUT and DSQ tags still win over NO DATA", [gapLabel({ out: true, noData: true, pos: 3 }), gapLabel({ dsq: true, noData: true, pos: 3 })], ["OUT", "DSQ"]);
+t("one car's hole is not a whole-feed outage", [rep.outages, outageAt(rep, 45)], [[], null]);
+const allHole = decodeReplay({ ...J, gaps: { AAA: [[100, 120]], BBB: [[100, 120]], CCC: [[100, 106], [112, 120]] } });
+t("a hole shared by (nearly) every car is an outage", allHole.outages, [{ a: 100, b: 120 }]);
+t("outageAt inside / outside", [outageAt(allHole, 110)?.a, outageAt(allHole, 90)], [100, null]);
+const half = findOutages([{ status: null, outT: null, holes: [[10, 20]] }, { status: null, outT: null, holes: null }], 40);
+t("exactly half the racing cars missing counts as an outage", half, [{ a: 10, b: 20 }]);
+const retiredIgnored = findOutages([{ status: "dnf", outT: 5, holes: [[10, 20]] }, { status: null, outT: null, holes: [[10, 20]] }], 40);
+t("retired cars are not counted as racing", retiredIgnored, [{ a: 10, b: 20 }]);
+t("a hole under 4 s is not reported", findOutages([{ status: null, outT: null, holes: [[10, 12]] }], 40), []);
 console.log(`${n} replay tests passed`);

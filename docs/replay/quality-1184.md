@@ -1,7 +1,7 @@
 # Replay quality: Bahrain Grand Prix in Malaysia 2026 (raceId 1184)
 
 - file: 451 KB gzipped; 22 cars; track 5476 m (outline closed from a 10.1 m gap)
-- order vs OpenF1 /position (417 checks, every 15 s): leader 0.995, top 3 0.986, exact positions 0.953, within one place 0.994
+- order vs OpenF1 /position (417 checks, every 15 s), strict vs lenient: leader 0.981 strict / 0.995 lenient; positions 0.953 exactly right / 0.994 within one place; top 3 0.986
 - share of the race with usable positions (median car): 1.0
 - longest location gap: 0 s; zero-filled cars: none; dropped drivers: none
 - retired: ALB, RUS, BOT; disqualified after the race: none; did not start: none

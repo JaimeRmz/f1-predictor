@@ -1,7 +1,7 @@
 # Replay quality: Australian Grand Prix 2026 (raceId 1169)
 
 - file: 317 KB gzipped; 21 cars; track 5190 m (outline closed from a 46.5 m gap)
-- order vs OpenF1 /position (321 checks, every 15 s): leader 1.0, top 3 1.0, exact positions 0.979, within one place 0.999
+- order vs OpenF1 /position (321 checks, every 15 s), strict vs lenient: leader 0.988 strict / 1.0 lenient; positions 0.979 exactly right / 0.999 within one place; top 3 1.0
 - share of the race with usable positions (median car): 1.0
 - longest location gap: 0 s; zero-filled cars: none; dropped drivers: PIA
 - retired: HAD, ALO, BOT; disqualified after the race: none; did not start: HUL

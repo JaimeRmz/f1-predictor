@@ -1,7 +1,7 @@
 # Replay quality: Hungarian Grand Prix 2026 (raceId 1179)
 
 - file: 224 KB gzipped; 22 cars; track 3637 m (outline closed from a 30.6 m gap)
-- order vs OpenF1 /position (386 checks, every 15 s): leader 0.899, top 3 0.715, exact positions 0.682, within one place 0.886
+- order vs OpenF1 /position (386 checks, every 15 s), strict vs lenient: leader 0.715 strict / 0.899 lenient; positions 0.682 exactly right / 0.886 within one place; top 3 0.715
 - share of the race with usable positions (median car): 0.995
 - longest location gap: 4612 s; zero-filled cars: PER, BOT, PIA; dropped drivers: none
 - retired: PER, BOT, PIA; disqualified after the race: none; did not start: none

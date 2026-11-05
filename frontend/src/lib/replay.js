@@ -27,6 +27,26 @@ const inAny = (ranges, t) => {
   return false;
 };
 
+/** Runs of seconds (4 s or longer) where at least half of the cars still racing have no position data: the whole feed dropped out. */
+export const findOutages = (cars, n, minLen = 4) => {
+  const out = [];
+  let start = -1;
+  for (let s = 0; s <= n; s++) {
+    let racing = 0, hidden = 0;
+    if (s < n) {
+      for (const c of cars) {
+        if ((c.status === "dnf" || c.status === "dns") && c.outT != null && s >= c.outT) continue;
+        racing++;
+        if (inAny(c.holes, s)) hidden++;
+      }
+    }
+    const gap = s < n && racing > 0 && hidden / racing >= 0.5;
+    if (gap && start < 0) start = s;
+    if (!gap && start >= 0) { if (s - start >= minLen) out.push({ a: start, b: s - 1 }); start = -1; }
+  }
+  return out;
+};
+
 /** Turn the parsed JSON into typed arrays and lookups the player can use every frame. */
 export const decodeReplay = (j) => {
   const cars = j.drivers.map((d, idx) => ({
@@ -39,8 +59,9 @@ export const decodeReplay = (j) => {
   }));
   const ox = decodeDelta(j.track.outline.x), oy = decodeDelta(j.track.outline.y);
   const pit = j.track.pit ? { x: decodeDelta(j.track.pit.x), y: decodeDelta(j.track.pit.y) } : null;
+  const outages = findOutages(cars, j.race.n);
   return {
-    race: j.race, license: j.license, cars, byCode: Object.fromEntries(cars.map((c) => [c.code, c])),
+    race: j.race, license: j.license, cars, outages, byCode: Object.fromEntries(cars.map((c) => [c.code, c])),
     outline: { x: ox, y: oy }, pit, sf: j.track.sf, trackLengthM: j.track.length_m,
     laps: j.laps, lapStartsLeader: j.laps.map((l) => l.t), flags: j.flags, bands: j.bands, pits: j.pits,
     endT: j.race.chequered + 30, startT: Math.max(0, j.race.lights_out - 30), lightsOut: j.race.lights_out, lapsTotal: j.race.laps,
@@ -87,7 +108,7 @@ export const boardAt = (rep, t) => {
   const gaps = lapIdx >= 0 ? rep.laps[lapIdx].gap : {};
   const rows = rep.cars.map((car) => {
     const st = carStateAt(rep, car, t);
-    return { code: car.code, team: car.team, colour: car.colour, pos: officialPosition(car, t) ?? 99, out: st.out, inPit: st.inPit, dsq: st.dsq, gap: gaps?.[car.code] ?? null, status: car.status };
+    return { code: car.code, team: car.team, colour: car.colour, pos: officialPosition(car, t) ?? 99, out: st.out, inPit: st.inPit, dsq: st.dsq, noData: st.hidden, gap: gaps?.[car.code] ?? null, status: car.status };
   });
   rows.sort((a, b) => a.pos - b.pos || (a.code < b.code ? -1 : 1));
   return rows;
@@ -106,11 +127,15 @@ const lapRowIndex = (rep, t) => {
 export const gapLabel = (row) => {
   if (row.out) return "OUT";
   if (row.dsq) return "DSQ";
+  if (row.noData) return "NO DATA";
   if (row.inPit) return "PIT";
   if (row.pos === 1) return "LEADER";
   if (row.gap == null) return "—";
   return typeof row.gap === "number" ? `+${row.gap.toFixed(1)}` : String(row.gap);
 };
+
+/** The whole-feed data outage covering time t, or null. */
+export const outageAt = (rep, t) => rep.outages.find((o) => t >= o.a && t <= o.b) || null;
 
 /** Active race-control band (SC / VSC / RED) at time t, or null. */
 export const bandAt = (rep, t) => rep.bands.find((b) => t >= b.a && t <= b.b) || null;

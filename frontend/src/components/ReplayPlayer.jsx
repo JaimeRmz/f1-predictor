@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { TeamMark } from "./TeamMark.jsx";
-import { carStateAt, boardAt, lapAt, lapStartTime, bandAt, raceClock, trackBounds, gapLabel } from "../lib/replay.js";
+import { carStateAt, boardAt, lapAt, lapStartTime, bandAt, outageAt, raceClock, trackBounds, gapLabel } from "../lib/replay.js";
 import "../pages/replay.css";
 
 const SPEEDS = [1, 4, 16, 64];
@@ -64,6 +64,10 @@ const ReplayPlayer = ({ rep }) => {
     if (staticRef.current) g.drawImage(staticRef.current, 0, 0);
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
     const { X, Y } = fitRef.current, t = timeRef.current;
+    if (outageAt(rep, t)) {
+      g.font = "700 12px 'JetBrains Mono', monospace"; g.fillStyle = "rgba(255,176,32,0.95)"; g.textAlign = "center";
+      g.fillText("NO POSITION DATA FOR THIS MOMENT (feed outage)", sizeRef.current.w / 2, 22); g.textAlign = "start";
+    }
     const top3 = new Set(boardAt(rep, t).filter((r) => r.pos <= 3 && !r.out).map((r) => r.code));
     g.font = "600 9px 'JetBrains Mono', monospace";
     const pass = [[true, false], [false, false], [false, true]];                 // grey OUT cars first, then the field, then the top 3 on top
@@ -177,11 +181,13 @@ const ReplayPlayer = ({ rep }) => {
             <span>LAP <b>{ui.lap || "–"}</b> OF {rep.lapsTotal}</span>
             <span className="rp-clock">{ui.clock}</span>
             {band && <span className={`rp-band ${band.kind}`}>{band.kind === "SC" ? "SAFETY CAR" : band.kind === "VSC" ? "VIRTUAL SAFETY CAR" : "RED FLAG"}</span>}
+            {ui.outage && <span className="rp-band GAP" title="OpenF1 sent no usable positions for most cars at this moment">DATA GAP · NO POSITIONS</span>}
           </div>
 
           <div className="rp-scrub">
             <div className="rp-marks" aria-hidden="true">
               {rep.bands.map((b, i) => <span key={i} className={`rp-mark ${b.kind}`} style={{ left: pct(Math.max(b.a, rep.startT)), width: `${(100 * (Math.min(b.b, rep.endT) - Math.max(b.a, rep.startT))) / span}%` }} title={b.kind === "SC" ? "Safety car" : b.kind === "VSC" ? "Virtual safety car" : "Red flag"} />)}
+              {rep.outages.map((o, i) => <span key={`o${i}`} className="rp-mark GAP" style={{ left: pct(Math.max(o.a, rep.startT)), width: `${Math.max(0.4, (100 * (Math.min(o.b, rep.endT) - Math.max(o.a, rep.startT))) / span)}%` }} title="Data gap: no positions from the feed" />)}
               {rep.pits.map((p, i) => p.t >= rep.startT && p.t <= rep.endT && <span key={`p${i}`} className="rp-tick" style={{ left: pct(p.t) }} title={`${p.d} pit stop, lap ${p.lap}`} />)}
             </div>
             <label className="rp-range"><span>TIME</span>
@@ -190,7 +196,7 @@ const ReplayPlayer = ({ rep }) => {
             <label className="rp-range"><span>LAP</span>
               <input type="range" min={1} max={rep.lapsTotal} step={1} value={Math.max(ui.lap, 1)} onChange={(e) => { const ts = lapStartTime(rep, Number(e.target.value)); if (ts != null) seek(ts); }} aria-label="Jump to lap" aria-valuetext={`Lap ${Math.max(ui.lap, 1)} of ${rep.lapsTotal}`} />
             </label>
-            <div className="rp-legend" aria-hidden="true"><i className="SC" /> safety car <i className="VSC" /> virtual SC <i className="RED" /> red flag <i className="tick" /> pit stop</div>
+            <div className="rp-legend" aria-hidden="true"><i className="SC" /> safety car <i className="VSC" /> virtual SC <i className="RED" /> red flag <i className="GAP" /> data gap <i className="tick" /> pit stop</div>
           </div>
         </div>
 
@@ -198,13 +204,13 @@ const ReplayPlayer = ({ rep }) => {
           <h2>Order <small>official positions</small></h2>
           <ol>
             {ui.board.map((r) => (
-              <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}`} style={{ "--team": r.colour }}>
+              <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}${r.noData ? " nodata" : ""}`} style={{ "--team": r.colour }}>
                 <b>{r.out ? "–" : r.pos}</b><i className="rp-bar" /><TeamMark team={r.team} size={18} /><span className="rp-code">{r.code}</span>
                 <em title="Gap to the leader, as of the start of the current lap">{gapLabel(r)}</em>
               </li>
             ))}
           </ol>
-          <p className="rp-note">Gaps update once a lap. Positions are the official feed; they can lag the dots by a moment.</p>
+          <p className="rp-note">Gaps update once a lap. Positions are the official feed; they can lag the dots by a moment. NO DATA means OpenF1 sent no position for that car just now.</p>
         </aside>
       </div>
     </div>
@@ -212,7 +218,7 @@ const ReplayPlayer = ({ rep }) => {
 };
 
 function snapshot(rep, t) {
-  return { t, lap: lapAt(rep, t), clock: raceClock(rep, t), band: bandAt(rep, t), board: boardAt(rep, t) };
+  return { t, lap: lapAt(rep, t), clock: raceClock(rep, t), band: bandAt(rep, t), outage: outageAt(rep, t), board: boardAt(rep, t) };
 }
 
 export default ReplayPlayer;

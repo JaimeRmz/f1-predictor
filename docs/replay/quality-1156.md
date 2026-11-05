@@ -1,7 +1,7 @@
 # Replay quality: British Grand Prix 2025 (raceId 1156)
 
 - file: 331 KB gzipped; 20 cars; track 5777 m (outline closed from a 44.3 m gap)
-- order vs OpenF1 /position (378 checks, every 15 s): leader 0.997, top 3 0.992, exact positions 0.969, within one place 0.997
+- order vs OpenF1 /position (378 checks, every 15 s), strict vs lenient: leader 0.984 strict / 0.997 lenient; positions 0.969 exactly right / 0.997 within one place; top 3 0.992
 - share of the race with usable positions (median car): 1.0
 - longest location gap: 0 s; zero-filled cars: none; dropped drivers: none
 - retired: BOR, HAD, ANT, LAW; disqualified after the race: none; did not start: COL

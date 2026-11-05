@@ -59,3 +59,10 @@
   .rp-board ol { columns: 1; }
 }
 @media (prefers-reduced-motion: reduce) { .rp * { scroll-behavior: auto; } }
+
+/* data gaps: a car with no position data (board tag) and whole-feed outages (badge, canvas note, time-bar marker) */
+.rp-band.GAP { color: #ffb020; border-color: #ffb020; border-style: dashed; background: rgba(255, 176, 32, 0.08); }
+.rp-mark.GAP { background: repeating-linear-gradient(45deg, #ffb020 0 3px, rgba(255, 176, 32, 0.25) 3px 6px); opacity: 1; min-width: 4px; }
+.rp-legend i.GAP { background: repeating-linear-gradient(45deg, #ffb020 0 2px, rgba(255, 176, 32, 0.3) 2px 4px); }
+.rp-board li.nodata { opacity: 0.75; }
+.rp-board li.nodata em { color: #ffb020; font-weight: 700; font-size: 0.66rem; letter-spacing: 0.04em; }

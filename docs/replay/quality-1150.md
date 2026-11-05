@@ -1,7 +1,7 @@
 # Replay quality: Miami Grand Prix 2025 (raceId 1150)
 
 - file: 323 KB gzipped; 20 cars; track 5321 m (outline closed from a 20.4 m gap)
-- order vs OpenF1 /position (344 checks, every 15 s): leader 0.805, top 3 0.794, exact positions 0.788, within one place 0.85
+- order vs OpenF1 /position (344 checks, every 15 s), strict vs lenient: leader 0.805 strict / 0.805 lenient; positions 0.788 exactly right / 0.85 within one place; top 3 0.794
 - share of the race with usable positions (median car): 1.0
 - longest location gap: 172 s; zero-filled cars: RUS; dropped drivers: none
 - retired: BOR, DOO, LAW, BEA; disqualified after the race: none; did not start: none

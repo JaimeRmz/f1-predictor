@@ -1,7 +1,7 @@
 # Replay quality: Miami Grand Prix 2026 (raceId 1172)
 
 - file: 355 KB gzipped; 22 cars; track 5311 m (outline closed from a 30.4 m gap)
-- order vs OpenF1 /position (362 checks, every 15 s): leader 0.997, top 3 0.983, exact positions 0.97, within one place 0.998
+- order vs OpenF1 /position (362 checks, every 15 s), strict vs lenient: leader 0.983 strict / 0.997 lenient; positions 0.97 exactly right / 0.998 within one place; top 3 0.983
 - share of the race with usable positions (median car): 1.0
 - longest location gap: 1110 s; zero-filled cars: HAD; dropped drivers: none
 - retired: HAD, GAS, HUL, LAW; disqualified after the race: none; did not start: none

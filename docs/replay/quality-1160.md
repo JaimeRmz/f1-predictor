@@ -1,7 +1,7 @@
 # Replay quality: Italian Grand Prix 2025 (raceId 1160)
 
 - file: 284 KB gzipped; 20 cars; track 5744 m (outline closed from a 12.3 m gap)
-- order vs OpenF1 /position (282 checks, every 15 s): leader 1.0, top 3 0.996, exact positions 0.989, within one place 1.0
+- order vs OpenF1 /position (282 checks, every 15 s), strict vs lenient: leader 1.0 strict / 1.0 lenient; positions 0.989 exactly right / 1.0 within one place; top 3 0.996
 - share of the race with usable positions (median car): 1.0
 - longest location gap: 0 s; zero-filled cars: none; dropped drivers: none
 - retired: ALO; disqualified after the race: none; did not start: HUL
