@@ -1,18 +1,20 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
-} from "recharts";
-import { StatCard, BackendPanel, SkeletonList, SectionHeader } from "../shared.jsx";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BackendPanel, SkeletonList } from "../shared.jsx";
 import { GlassPanel } from "../components/GlassPanel.jsx";
 import { TelemetryTraces } from "../components/TelemetryTraces.jsx";
-import { API, TEAM_COLORS, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026 } from "../constants.js";
+import { TeamMark } from "../components/TeamMark.jsx";
+import Panel from "../components/DashPanel.jsx";
+import { API } from "../constants.js";
+import { TEAMS } from "../teams.js";
+import { teamIdOf, teamColor } from "../lib/homeModel.js";
+import "./home.css";
 
-// ── DRIVERS PAGE ───────────────────────────────────────────────
-// driverRef → team accent color (2026 grid + overrides); null → neutral glass
-// for historical drivers outside the current grid.
-const teamColorForRef = (ref) =>
-  TEAM_COLORS[CONSTRUCTOR_OVERRIDES[ref] || STANDINGS_GRID_2026.find(d => d.driverRef === ref)?.team] || null;
+// ── CHAMPIONSHIP · DRIVERS ─────────────────────────────────────
+// Career explorer. Team logo and colour appear only for drivers on the current grid (or with a known override);
+// historical drivers show their name alone rather than a guessed team.
+const tidOf = (ref) => teamIdOf({ driverRef: ref });
 
 const DriversPage = () => {
   const [drivers, setDrivers] = useState([]);
@@ -21,12 +23,11 @@ const DriversPage = () => {
   const [loading, setLoading] = useState(false);
   const [offline, setOffline] = useState(false);
 
-  // setState only ever runs inside the async callbacks (or the retry click
-  // handler below), never synchronously inside the mount effect.
+  // setState only ever runs inside the async callbacks (or the retry click handler below), never synchronously inside
+  // the mount effect.
   const fetchRoster = () => {
-    axios.get(`${API}/drivers`).then(r => setDrivers(r.data)).catch(() => setOffline(true));
+    axios.get(`${API}/drivers`).then((r) => setDrivers(r.data)).catch(() => setOffline(true));
   };
-
   useEffect(fetchRoster, []);
 
   const loadDriver = async (ref) => {
@@ -47,96 +48,105 @@ const DriversPage = () => {
   };
 
   const firstYear = stats?.by_year?.[0]?.year;
-  const lastYear  = stats?.by_year?.[stats.by_year.length - 1]?.year;
+  const lastYear = stats?.by_year?.[stats.by_year.length - 1]?.year;
+  const tid = selected ? tidOf(selected) : null;
+  const color = tid ? teamColor(tid) : null;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      <SectionHeader variant="glass" eyebrow="Career Explorer · 2010–2026" title="Drivers" />
-      <div className="drivers-grid" style={{ display: "grid", gridTemplateColumns: "190px 1fr", gap: "1rem" }}>
-      <GlassPanel tilt={false} style={{ padding: "0.5rem", maxHeight: "640px", overflowY: "auto" }}>
-        <div style={{ padding: "0.5rem 0.5rem 0.4rem", borderBottom: "1px solid var(--border)", marginBottom: "0.25rem" }}>
-          <span className="section-label">All Drivers</span>
+    <div className="hm">
+      <header className="hm-title">
+        <div>
+          <div className="hm-eyebrow">CAREER EXPLORER · 2010–2026</div>
+          <h1 className="wordfit">Driver <em>explorer</em></h1>
         </div>
-        {drivers.length === 0 && !offline && (
-          <div aria-hidden="true" style={{ padding: "0.25rem 0.6rem" }}>
-            {Array.from({ length: 14 }, (_, i) => (
-              <div key={i} className="skeleton-block" style={{ height: "16px", width: `${55 + ((i * 17) % 35)}%`, margin: "0.55rem 0" }} />
-            ))}
-          </div>
-        )}
-        {drivers.map(d => (
-          <button key={d.driverRef} onClick={() => loadDriver(d.driverRef)}
-            className={`driver-list-item${selected === d.driverRef ? " driver-list-active" : ""}`}
-            style={{
-              display: "block", width: "100%", textAlign: "left",
-              background: selected === d.driverRef ? "var(--red)" : "none",
-              border: "none", padding: "0.4rem 0.6rem", cursor: "pointer",
-              color: selected === d.driverRef ? "#fff" : "var(--muted)",
-              fontSize: "0.75rem", fontWeight: "700", letterSpacing: "0.04em",
-              textTransform: "uppercase", marginBottom: "1px",
-              fontFamily: "var(--sans)",
-            }}>{d.driver_name}</button>
-        ))}
-      </GlassPanel>
-      <div>
-        {offline && <BackendPanel detail="The driver data request failed." onRetry={retry} />}
-        {!selected && !offline && (
-          <GlassPanel style={{ padding: "4rem 3rem", minHeight: "260px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", textAlign: "center" }}>
-            <span style={{ position: "absolute", inset: 0, overflow: "hidden", borderRadius: "inherit", zIndex: 0 }}><TelemetryTraces opacity={0.2} /></span>
-            <span style={{ position: "relative", zIndex: 2, width: "8px", height: "8px", borderRadius: "50%", background: "var(--red)", animation: "pulse 1.6s ease-in-out infinite" }} />
-            <p style={{ position: "relative", zIndex: 2, fontFamily: "var(--mono)", color: "var(--muted)", fontSize: "0.72rem", letterSpacing: "0.12em", margin: 0 }}>SELECT A DRIVER</p>
-          </GlassPanel>
-        )}
-        {loading && <SkeletonList rows={5} metrics={1} />}
-        {stats && !loading && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <GlassPanel tint={teamColorForRef(selected)} style={{ padding: "1.1rem 1.5rem" }}>
-              <h2 className="hud-title" style={{ fontSize: "1.6rem", margin: "0 0 0.2rem", letterSpacing: "0.03em", color: teamColorForRef(selected) || "var(--text)" }}>{stats.career.name.toUpperCase()}</h2>
-              <p style={{ fontFamily: "var(--mono)", color: "var(--muted)", fontSize: "0.65rem", letterSpacing: "0.1em", margin: 0 }}>{stats.career.races} RACES · {firstYear}–{lastYear}</p>
-            </GlassPanel>
-            <div className="stat-cards-row" style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-              <StatCard label="Wins" value={stats.career.wins} accent="var(--red)" />
-              <StatCard label="Podiums" value={stats.career.podiums} />
-              <StatCard label="Podium %" value={`${stats.career.podium_rate}%`} />
-              <StatCard label="Avg Grid" value={stats.career.avg_grid} />
-              <StatCard label="Avg Finish" value={stats.career.avg_finish} />
-            </div>
-            <GlassPanel className="chart-enter" style={{ padding: "20px" }}>
-              <div className="section-label" style={{ marginBottom: "1rem" }}>Wins & Podiums Per Season</div>
-              <ResponsiveContainer width="100%" height={180}>
-                <BarChart data={stats.by_year}>
-                  <CartesianGrid strokeDasharray="2 4" stroke="var(--dimmed)" />
-                  <XAxis dataKey="year" stroke="var(--dimmed)" tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "var(--mono)" }} />
-                  <YAxis stroke="var(--dimmed)" tick={{ fill: "var(--muted)", fontSize: 10, fontFamily: "var(--mono)" }} />
-                  <Tooltip contentStyle={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "0px", fontSize: "0.72rem", fontFamily: "var(--mono)" }} />
-                  <Bar dataKey="wins" name="Wins" fill="#e10600" radius={0} />
-                  <Bar dataKey="podiums" name="Podiums" fill="var(--dimmed)" radius={0} />
-                </BarChart>
-              </ResponsiveContainer>
-            </GlassPanel>
-            <GlassPanel className="chart-enter">
-              <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-                <span className="section-label">Best Circuits by Podium Rate</span>
-              </div>
-              <div style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "0.65rem" }}>
-                {stats.circuit_stats.slice(0, 6).map((c, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                    <span style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", fontWeight: "500", width: "100px", flexShrink: 0 }}>{c.circuitRef}</span>
-                    <div style={{ flex: 1, height: "2px", background: "var(--dimmed)", overflow: "hidden" }}>
-                      <div className="prob-bar" style={{ height: "100%", width: `${c.podium_rate * 100}%`, background: "var(--red)" }} />
-                    </div>
-                    <span style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", color: "var(--red)", fontWeight: "700", width: "36px", textAlign: "right" }}>{(c.podium_rate * 100).toFixed(0)}%</span>
-                  </div>
+      </header>
+
+      <div className="dr-grid">
+        <GlassPanel className="hm-panel" tilt={false}>
+          <div className="hm-panel-h"><h2>All drivers</h2><p>Pick a driver to see their career.</p></div>
+          <div className="dr-list" role="listbox" aria-label="Drivers">
+            {drivers.length === 0 && !offline && (
+              <div aria-hidden="true" style={{ padding: "0.25rem 0.6rem" }}>
+                {Array.from({ length: 14 }, (_, i) => (
+                  <div key={i} className="skeleton-block" style={{ height: "16px", width: `${55 + ((i * 17) % 35)}%`, margin: "0.55rem 0" }} />
                 ))}
               </div>
-            </GlassPanel>
+            )}
+            {drivers.map((d) => {
+              const t = tidOf(d.driverRef);
+              return (
+                <button key={d.driverRef} type="button" role="option" aria-selected={selected === d.driverRef} onClick={() => loadDriver(d.driverRef)}
+                  className={`dr-item${selected === d.driverRef ? " on" : ""}`} style={{ "--team": teamColor(t) }}>
+                  <i className="hm-bar" style={{ visibility: t ? "visible" : "hidden" }} />
+                  {t ? <TeamMark team={t} size={16} /> : <span style={{ width: 22 }} />}
+                  <span>{d.driver_name}</span>
+                </button>
+              );
+            })}
           </div>
-        )}
-      </div>
+        </GlassPanel>
+
+        <div className="hm-main">
+          {offline && <BackendPanel detail="The driver data request failed." onRetry={retry} />}
+          {!selected && !offline && (
+            <GlassPanel style={{ padding: "4rem 3rem", minHeight: "260px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "1rem", textAlign: "center" }}>
+              <span style={{ position: "absolute", inset: 0, overflow: "hidden", borderRadius: "inherit", zIndex: 0 }}><TelemetryTraces opacity={0.2} /></span>
+              <span style={{ position: "relative", zIndex: 2, width: "8px", height: "8px", borderRadius: "50%", background: "var(--red)", animation: "pulse 1.6s ease-in-out infinite" }} />
+              <p className="hm-note" style={{ position: "relative", zIndex: 2, margin: 0, letterSpacing: "0.12em" }}>SELECT A DRIVER</p>
+            </GlassPanel>
+          )}
+          {loading && <SkeletonList rows={5} metrics={1} />}
+          {stats && !loading && (
+            <>
+              <GlassPanel tint={color} className="hm-panel" tilt={false} style={{ padding: "1.2rem 1.4rem", "--team": color }}>
+                <div className="dr-head">
+                  <div>
+                    <div className="hm-eyebrow">{stats.career.races} RACES · {firstYear}–{lastYear}{tid ? ` · ${TEAMS[tid]?.name.toUpperCase()}` : ""}</div>
+                    <h2 className="dr-name">{stats.career.name}</h2>
+                  </div>
+                  {tid && <TeamMark team={tid} size={40} />}
+                </div>
+              </GlassPanel>
+
+              <Panel title="Career at a glance" caption="Totals over every race in the data.">
+                <div className="hm-tiles">
+                  {[["WINS", stats.career.wins, true], ["PODIUMS", stats.career.podiums], ["PODIUM RATE", `${stats.career.podium_rate}%`], ["AVG GRID", stats.career.avg_grid], ["AVG FINISH", stats.career.avg_finish]].map(([l, v, hot]) => (
+                    <div key={l} className="hm-tile"><label>{l}</label><b className={hot ? "red" : ""}>{v}</b></div>
+                  ))}
+                </div>
+              </Panel>
+
+              <div className="hm-pair">
+                <Panel title="Wins and podiums per season" caption="Red bars are wins, grey bars are podium finishes.">
+                  <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={stats.by_year}>
+                      <CartesianGrid strokeDasharray="2 4" stroke="var(--dimmed)" />
+                      <XAxis dataKey="year" stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10, fontFamily: "var(--mono)" }} />
+                      <YAxis stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10, fontFamily: "var(--mono)" }} />
+                      <Tooltip contentStyle={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "0px", fontSize: "0.72rem", fontFamily: "var(--mono)" }} />
+                      <Bar dataKey="wins" name="Wins" fill="#e10600" radius={0} />
+                      <Bar dataKey="podiums" name="Podiums" fill="rgba(236,236,236,0.28)" radius={0} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </Panel>
+                <Panel title="Best circuits" caption="Share of races at each circuit that ended on the podium, with how many races that is based on. One or two races is limited history.">
+                  <div className="dr-circuits">
+                    {stats.circuit_stats.slice(0, 6).map((c, i) => (
+                      <div key={i} className="dr-circ">
+                        <span>{c.circuitRef}</span>
+                        <div className="hm-meter" aria-hidden="true"><i style={{ width: `${c.podium_rate * 100}%`, background: "var(--red)", opacity: c.races <= 2 ? 0.45 : 1 }} /></div>
+                        <b>{(c.podium_rate * 100).toFixed(0)}%<small>{c.races} race{c.races === 1 ? "" : "s"}{c.races <= 2 ? " · limited history" : ""}</small></b>
+                      </div>
+                    ))}
+                  </div>
+                </Panel>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
 };
-
 
 export default DriversPage;

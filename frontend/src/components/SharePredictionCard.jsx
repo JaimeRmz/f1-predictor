@@ -12,7 +12,8 @@ import { forwardRef } from "react";
 //
 // Props:
 //   race       { flagUrl, name, date, round }
-//   picks      model's [{ driver_name, team, color, win_probability, podium_probability }] (3)
+//   picks      model's [{ driver_name, team, color, win_probability, podium_probability }] (3); the solo card
+//              prefers win_share_label / podium_share_label (shares of the field) when given
 //   userPicks  optional [{ driver_name, team, color }] (3) → renders comparison
 //   siteUrl    string
 //   tag        header badge text (default "MODEL PREDICTION")
@@ -117,8 +118,8 @@ const SoloBody = ({ picks }) => {
           </div>
         </div>
         <div style={{ textAlign: "right", flexShrink: 0 }}>
-          <div style={{ fontSize: "104px", fontWeight: 900, lineHeight: 0.9, color: "var(--gold)", fontVariantNumeric: "tabular-nums" }}>{pct(p1.win_probability)}</div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "15px", fontWeight: 700, letterSpacing: "0.18em", color: "var(--muted)", marginTop: "8px" }}>WIN PROBABILITY</div>
+          <div style={{ fontSize: "104px", fontWeight: 900, lineHeight: 0.9, color: "var(--gold)", fontVariantNumeric: "tabular-nums" }}>{p1.win_share_label ?? pct(p1.win_probability)}</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "15px", fontWeight: 700, letterSpacing: "0.18em", color: "var(--muted)", marginTop: "8px" }}>{p1.win_share_label ? "WIN SHARE" : "WIN PROBABILITY"}</div>
         </div>
       </div>
 
@@ -138,8 +139,8 @@ const SoloBody = ({ picks }) => {
               </div>
             </div>
             <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <div style={{ fontSize: "40px", fontWeight: 900, lineHeight: 1, color: "var(--text)", fontVariantNumeric: "tabular-nums" }}>{pct(p.podium_probability)}</div>
-              <div style={{ fontFamily: "var(--mono)", fontSize: "12px", fontWeight: 700, letterSpacing: "0.16em", color: "var(--muted)", marginTop: "6px" }}>PODIUM</div>
+              <div style={{ fontSize: "40px", fontWeight: 900, lineHeight: 1, color: "var(--text)", fontVariantNumeric: "tabular-nums" }}>{p.podium_share_label ?? pct(p.podium_probability)}</div>
+              <div style={{ fontFamily: "var(--mono)", fontSize: "12px", fontWeight: 700, letterSpacing: "0.16em", color: "var(--muted)", marginTop: "6px" }}>{p.podium_share_label ? "PODIUM SHARE" : "PODIUM"}</div>
             </div>
           </div>
         ))}

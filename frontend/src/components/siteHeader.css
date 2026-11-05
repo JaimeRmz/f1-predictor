@@ -1,0 +1,58 @@
+/* Minimal site header. Opaque dark fill + blur so page content never shows through while scrolling. */
+.sh {
+  position: sticky; top: 0; z-index: var(--z-chrome, 40);
+  background: rgba(10, 10, 12, 0.985);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-top: 2px solid rgba(225, 6, 0, 0.45);
+  border-bottom: 1px solid var(--hud-line);
+  box-shadow: 0 10px 30px -18px rgba(225, 6, 0, 0.35);
+}
+.sh-in { width: min(1320px, 100vw - 3rem); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 54px; }
+.sh-logo { background: none; border: 0; padding: 0; cursor: pointer; display: flex; align-items: center; }
+.sh-logo img { height: 28px; width: auto; display: block; }
+.sh-logo:focus-visible, .sh-link:focus-visible, .sh-item:focus-visible, .sh-burger:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+.sh-nav { display: flex; align-items: center; gap: 0.2rem; }
+.sh-link {
+  background: none; border: 0; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; color: rgba(236, 236, 236, 0.66);
+  padding: 1.05rem 0.85rem; margin-bottom: -1px;
+}
+.sh-link:hover { color: var(--ink); background: rgba(255, 255, 255, 0.04); }
+.sh-link.on { color: var(--ink); border-bottom-color: var(--red); }
+.sh-more { position: relative; }
+.sh-pop, .sh-menu {
+  background: rgb(14, 14, 18); border: 1px solid var(--hud-line); box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.8);
+}
+.sh-pop { position: absolute; right: 0; top: calc(100% - 4px); min-width: 11rem; border-radius: 12px; padding: 0.35rem; display: flex; flex-direction: column; }
+.sh-item {
+  background: none; border: 0; text-align: left; cursor: pointer; font-family: var(--mono); font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.14em; color: rgba(236, 236, 236, 0.78); padding: 0.7rem 0.85rem; border-radius: 8px;
+}
+.sh-item:hover { background: rgba(255, 255, 255, 0.06); color: var(--ink); }
+.sh-item.on { color: var(--ink); box-shadow: inset 3px 0 0 var(--red); }
+.sh-dot { width: 9px; height: 9px; border-radius: 50%; margin-left: 0.9rem; flex: none; display: inline-block; animation: pulse 2s infinite; }
+.sh-dot.waking { animation-duration: 1.2s; }
+.sh-mobile { display: none; align-items: center; gap: 0.4rem; }
+.sh-burger { background: none; border: 1px solid var(--hud-line); border-radius: 9px; width: 42px; height: 38px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; cursor: pointer; }
+.sh-burger span { width: 18px; height: 2px; background: var(--ink); border-radius: 1px; }
+.sh-menu { position: absolute; left: 0; right: 0; top: 100%; padding: 0.5rem 0.75rem 0.8rem; display: flex; flex-direction: column; border-left: 0; border-right: 0; border-radius: 0 0 14px 14px; }
+.sh-menu .sh-item { padding: 0.85rem 0.9rem; font-size: 0.8rem; }
+.sh-sep { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; color: rgba(236, 236, 236, 0.66); padding: 0.7rem 0.9rem 0.2rem; border-top: 1px solid var(--border); margin-top: 0.35rem; }
+@media (max-width: 768px) {
+  .sh-in { width: calc(100vw - 2rem); height: 50px; }
+  .sh-nav { display: none; }
+  .sh-mobile { display: flex; }
+  .sh-dot { margin-left: 0; margin-right: 0.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .sh-dot { animation: none; } }
+
+/* in-section tabs (Race: Next Race | Predictor; Championship: Standings | Drivers | 2026 Season) */
+.sub-nav { display: flex; gap: 0.4rem; margin: 0 0 1rem; flex-wrap: wrap; }
+.sub-nav.wide { width: min(1320px, 100vw - 3rem); margin-left: calc(50% - min(660px, 50vw - 1.5rem)); }
+.sub-tab {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; cursor: pointer; color: rgba(236, 236, 236, 0.78);
+  background: rgba(255, 255, 255, 0.04); border: 1px solid var(--hud-line); border-radius: 999px; padding: 0.42rem 0.95rem;
+}
+.sub-tab:hover { border-color: rgba(236, 236, 236, 0.4); }
+.sub-tab[aria-pressed="true"] { background: var(--red); border-color: var(--red); color: #fff; }
+.sub-tab:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }

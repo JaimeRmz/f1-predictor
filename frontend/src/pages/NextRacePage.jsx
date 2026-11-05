@@ -1,231 +1,138 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { SectionHeader, CountUp, BackendPanel, SkeletonList } from "../shared.jsx";
+import { useState } from "react";
 import { GlassPanel } from "../components/GlassPanel.jsx";
+import { TeamMark } from "../components/TeamMark.jsx";
 import { TelemetryTraces } from "../components/TelemetryTraces.jsx";
-import { API, CONSTRUCTOR_OVERRIDES, STANDINGS_GRID_2026, TEAM_COLORS, NEXT_RACE, SITE_URL, flagUrl } from "../constants.js";
+import RaceStrip from "../components/RaceStrip.jsx";
+import TitleRow from "../components/RaceTitle.jsx";
+import Forecast from "../components/ForecastTable.jsx";
+import Panel from "../components/DashPanel.jsx";
 import SharePredictionCard from "../components/SharePredictionCard.jsx";
+import { useRaceRows } from "../lib/useRaceRows.js";
+import { dayTime, tz } from "../lib/timeFmt.js";
+import { BackendPanel, WakingPanel, SkeletonList } from "../shared.jsx";
+import { NEXT_RACE, SITE_URL, flagUrl } from "../constants.js";
+import { TEAMS } from "../teams.js";
 import { useShareCard } from "../useShareCard.js";
+import { defaultRound, raceByRound, phaseOf, rankRows, teamColor, pctLabel, raceNote } from "../lib/homeModel.js";
+import "./home.css";
 
-// ── NEXT RACE PAGE (driven entirely by NEXT_RACE in constants.js) ──
-// Countdown owns its own 1-second interval state, so each tick re-renders
-// only this small component — not the whole page (3 lists × 22 rows).
-const RaceCountdown = () => {
-  const [countdown, setCountdown] = useState("");
+// ── RACE PAGE ──────────────────────────────────────────────────
+// Same language as Home: race strip, title row, shares of the field, team logos. Every earlier feature is kept:
+// predicted qualifying order, pre-race prediction for every driver, the weekend schedule, the share-image button and the
+// context note. Rows come from the same sources as before: /whatif (predicted grid) for upcoming rounds, /predict
+// (real grid) for completed ones. Scores are shown as shares of this race's field; raw scores are in the tooltips.
+const RacePage = () => {
+  const [round, setRound] = useState(defaultRound);
+  const race = raceByRound(round) || raceByRound(defaultRound());
+  const isNext = race.raceId === NEXT_RACE.raceId;
+  const upcoming = race.kind === "upcoming";
+  const phase = phaseOf(race);
+  const { res, slow, retry } = useRaceRows([race]);
+  const cur = res[race.raceId];
+  const ranked = cur?.status === "ready" ? rankRows(cur.rows) : [];
+  const byGrid = [...ranked].sort((a, b) => (a.grid ?? 99) - (b.grid ?? 99));
 
-  useEffect(() => {
-    const raceDate = new Date(NEXT_RACE.raceISO);
-    const tick = () => {
-      const now = new Date();
-      const diff = raceDate - now;
-      if (diff <= 0) { setCountdown("RACE DAY"); return; }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      setCountdown(`${String(d).padStart(2,"0")}D ${String(h).padStart(2,"0")}H ${String(m).padStart(2,"0")}M ${String(s).padStart(2,"0")}S`);
-    };
-    tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // .hud-countdown keeps the digits crisp: the surrounding hero is frosted, but
-  // backdrop-filter only blurs what sits behind an element — never its own text —
-  // and the class blocks any inherited filter from softening these glyphs.
-  return <div className="live-pulse hud-countdown" style={{ fontSize: "1.6rem", fontWeight: "700", letterSpacing: "0.04em", color: "#fff" }}>{countdown}</div>;
-};
-
-const NextRacePage = () => {
-  const [predictions, setPredictions] = useState([]);
-  const [predLoading, setPredLoading] = useState(true);
-  const [offline, setOffline] = useState(false);
-
-  // setState only ever runs inside the async callbacks (or the retry click
-  // handler below), never synchronously inside the mount effect.
-  const fetchPredictions = () => {
-    axios.post(`${API}/whatif?circuitRef=${NEXT_RACE.circuitRef}&auto_quali=true`, STANDINGS_GRID_2026)
-      .then(r => { setPredictions([...r.data].sort((a, b) => a.grid - b.grid)); setPredLoading(false); })
-      .catch(() => { setPredLoading(false); setOffline(true); });
-  };
-
-  useEffect(fetchPredictions, []);
-
-  const retry = () => { setPredLoading(true); setOffline(false); fetchPredictions(); };
-
-  const teamColors = TEAM_COLORS;
-
-  // ── Shareable prediction card ──
-  // The card wants the model's podium order (top-3 by podium_probability),
-  // whereas `predictions` above is sorted by grid — so re-sort here. Capture
-  // plumbing (toPng, flag decode, share/download) lives in the shared hook.
+  // ── Shareable prediction card (next race only: its date comes from NEXT_RACE) ──
   const { cardRef, shareState, share } = useShareCard(`${NEXT_RACE.circuitRef}-gp-prediction.png`, "Model prediction before qualifying.");
-
-  const podiumRanked = [...predictions].sort((a, b) => (b.podium_probability ?? 0) - (a.podium_probability ?? 0));
-  const sharePicks = podiumRanked.slice(0, 3).map(p => {
-    const team = CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team;
-    return {
-      driver_name: p.driver_name,
-      team,
-      color: TEAM_COLORS[team] || "#5a5a6e",
-      win_probability: p.win_probability,
-      podium_probability: p.podium_probability,
-    };
-  });
+  const canShare = isNext && ranked.length >= 3;
+  const sharePicks = ranked.slice(0, 3).map((r) => ({
+    driver_name: r.driver_name,
+    team: TEAMS[r.teamId]?.name || "Team unknown",
+    color: teamColor(r.teamId),
+    win_share_label: pctLabel(r.winPct, r.winShare),
+    podium_share_label: pctLabel(r.podiumPct, r.podiumShare),
+  }));
   const shareRace = {
-    flagUrl: flagUrl(NEXT_RACE.circuitRef),
-    name: NEXT_RACE.name,
-    round: NEXT_RACE.round,
+    flagUrl: flagUrl(NEXT_RACE.circuitRef), name: NEXT_RACE.name, round: NEXT_RACE.round,
     date: new Date(NEXT_RACE.raceISO).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" }),
   };
-  const canShare = !predLoading && sharePicks.length === 3;
 
-  // Sessions come from NEXT_RACE.sessions (UTC) and are shown in the viewer's
-  // own time zone, so no zone is hardcoded and nothing here is race-specific.
-  const dayFmt = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" });
-  const timeFmt = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit", timeZoneName: "short" });
-  const schedule = NEXT_RACE.sessions.map(x => {
-    const d = new Date(x.iso);
-    return { ...x, day: dayFmt.format(d), time: timeFmt.format(d) };
-  });
-  const weekendFmt = new Intl.DateTimeFormat(undefined, { month: "long", day: "numeric" });
-  const weekendLabel = `${weekendFmt.format(new Date(NEXT_RACE.sessions[0].iso))}–${new Date(NEXT_RACE.raceISO).getDate()}, ${new Date(NEXT_RACE.raceISO).getFullYear()}`;
+  const gridTitle = upcoming ? "Predicted starting grid" : "Starting grid";
+  const gridCaption = upcoming
+    ? "Order from the qualifying model (XGBoost regressor). It updates after real qualifying."
+    : "The real starting grid for this race.";
+  const forecastCaption = upcoming
+    ? "Pre-qualifying prediction: it uses the predicted grid on the right and this circuit's history. Relative strength inside this race's field, not a calibrated chance. Win shares add up to 100%. Tap or hover a figure for the raw model score."
+    : "Replay with the real grid, so it is not a forecast made before the race. Relative strength inside this race's field, not a calibrated chance. Win shares add up to 100%. Tap or hover a figure for the raw model score.";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-      {/* Hero */}
-      <div className="canada-hero scanline-overlay accent-strip glass-sheen" style={{ padding: "1.6rem 1.75rem", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-        <TelemetryTraces color="#ffffff" opacity={0.12} />
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.8, marginBottom: "0.35rem" }}>ROUND {NEXT_RACE.round} · 2026 FIA FORMULA ONE WORLD CHAMPIONSHIP</div>
-          <div className="hud-title" style={{ fontSize: "1.7rem", letterSpacing: "0.04em" }}>{NEXT_RACE.flag} {NEXT_RACE.name.toUpperCase()}</div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", fontWeight: "500", opacity: 0.8, marginTop: "0.3rem" }}>{NEXT_RACE.circuit} · {NEXT_RACE.location} · {weekendLabel}</div>
-        </div>
-        <div style={{ position: "relative", zIndex: 1, textAlign: "right" }}>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", fontWeight: "700", letterSpacing: "0.25em", opacity: 0.75, marginBottom: "0.3rem" }}>RACE COUNTDOWN</div>
-          <RaceCountdown />
-        </div>
+    <div className="hm">
+      <RaceStrip round={race.round} onSelect={setRound} />
+      <div className="hm-herotrace">
+        <TelemetryTraces color="#ffffff" opacity={0.1} />
+        <TitleRow race={race} phase={phase} />
       </div>
-      {predLoading && <div className="loading-bar" />}
 
-      {/* Schedule */}
-      <GlassPanel className="chart-enter">
-        <div style={{ padding: "0.75rem 1rem", borderBottom: "1px solid var(--border)" }}>
-          <span className="section-label">Race Weekend Schedule · Your local time</span>
-        </div>
-        {schedule.map((s, i) => (
-          <div key={i} className="stagger-item data-row" style={{
-            "--i": i,
-            display: "flex", alignItems: "center", gap: "1rem", padding: "0.85rem 1rem",
-            background: s.featured ? "rgba(225,6,0,0.06)" : "transparent",
-            borderBottom: i < schedule.length - 1 ? "1px solid var(--border)" : "none",
-            borderLeft: s.featured ? "3px solid var(--red)" : "3px solid transparent",
-          }}>
-            <span style={{ fontSize: "1rem" }}>{s.emoji}</span>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: "700", fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>{s.session}</div>
-              <div style={{ fontFamily: "var(--mono)", fontSize: "0.65rem", color: "var(--muted)", marginTop: "2px" }}>{s.day} · {s.time}</div>
-            </div>
-            {s.featured && <span style={{ fontFamily: "var(--mono)", fontSize: "0.6rem", color: "var(--red)", letterSpacing: "0.1em", animation: "pulse 1.5s infinite" }}>● UPCOMING</span>}
-          </div>
-        ))}
-      </GlassPanel>
-
-      {offline && <BackendPanel detail={`The ${NEXT_RACE.circuit} prediction request failed.`} onRetry={retry} />}
-
-      {/* Predicted qualifying order */}
-      <SectionHeader eyebrow="XGBoost Regressor · Qualifying Model" title={`Predicted Qualifying Order — ${NEXT_RACE.circuit}`} />
-      {predLoading && <SkeletonList rows={6} metrics={1} />}
-      {!predLoading && predictions.length > 0 && (
-        <div className="chart-enter" style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {predictions.map((p, i) => {
-            const team = CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team;
-            const color = teamColors[team] || null;
-            return (
-              <GlassPanel key={p.driverRef} tint={color} className="data-row stagger-item" style={{
-                "--i": i,
-                display: "flex", alignItems: "center", gap: "0.85rem", padding: "0.6rem 1rem",
-              }}>
-                <div style={{ fontFamily: "var(--mono)", fontSize: "0.75rem", fontWeight: "700", color: i === 0 ? "var(--red)" : "var(--muted)", width: "26px", flexShrink: 0 }}>P{p.grid}</div>
-                <div style={{ flex: 1, fontWeight: "700", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>{p.driver_name}</div>
-                <div style={{ fontFamily: "var(--mono)", fontSize: "0.62rem", color: color || "var(--muted)", opacity: 0.7 }}>{team}</div>
+      <div className="hm-grid">
+        <div className="hm-main">
+          {!cur && (slow ? <WakingPanel /> : <SkeletonList rows={8} metrics={2} />)}
+          {cur?.status === "error" && (cur.http
+            ? (
+              <GlassPanel style={{ borderColor: "var(--border-red)", padding: "2rem", textAlign: "center" }}>
+                <div className="hm-eyebrow red">FORECAST UNAVAILABLE</div>
+                <p className="hm-note">The server is up but could not compute this forecast ({String(cur.http)}). Nothing is shown rather than possibly-wrong scores.</p>
+                <button type="button" className="hm-link" onClick={retry}>Retry</button>
               </GlassPanel>
-            );
-          })}
+            )
+            : <BackendPanel detail={`The ${race.name} prediction request failed.`} onRetry={retry} />)}
+          {ranked.length > 0 && (
+            <Forecast ranked={ranked} defaultAll note={raceNote(race.raceId)} title={upcoming ? "Pre-race prediction" : "Model replay"} caption={forecastCaption} />
+          )}
         </div>
-      )}
 
-      {/* Pre-race prediction */}
-      <SectionHeader eyebrow={`XGBoost · ${NEXT_RACE.circuit} Circuit History · Uses Predicted Grid Above`} title={`${NEXT_RACE.name.replace("Grand Prix", "GP")} Pre-Race Prediction`} />
-      {predLoading && <SkeletonList rows={8} />}
-      {!predLoading && predictions.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-          {predictions.map((p, i) => {
-            const team = CONSTRUCTOR_OVERRIDES[p.driverRef] || p.team;
-            const color = teamColors[team] || "var(--dimmed)";
-            return (
-              <GlassPanel key={i} tint={color} className="data-row stagger-item row-gap-tight" style={{
-                "--i": i, padding: "16px", display: "flex", alignItems: "center", gap: "1rem",
-              }}>
-                <div style={{ fontFamily: "var(--mono)", fontSize: "0.85rem", fontWeight: "700", color: "var(--muted)", width: "28px", flexShrink: 0 }}>P{p.grid}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: "700", fontSize: "0.88rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>{p.driver_name}</div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: "11px", color, opacity: 0.5, marginTop: "2px" }}>{team}</div>
-                </div>
-                <div className="next-race-metric" style={{ textAlign: "right", minWidth: "70px" }}>
-                  <div className={p.win_probability > 0.25 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", fontSize: "0.82rem", fontWeight: "700", color: p.win_probability > 0.25 ? "var(--gold)" : "var(--muted)" }}><CountUp value={(p.win_probability ?? 0) * 100} suffix="%" /></div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", marginTop: "2px", letterSpacing: "0.06em" }}>WIN</div>
-                </div>
-                <div className="next-race-metric" style={{ textAlign: "right", minWidth: "80px" }}>
-                  <div className={p.podium_probability > 0.5 ? "live-pulse" : undefined} style={{ fontFamily: "var(--mono)", fontSize: "0.82rem", fontWeight: "700", color: p.podium_probability > 0.5 ? "var(--red)" : "var(--muted)" }}><CountUp value={p.podium_probability * 100} suffix="%" /></div>
-                  <div style={{ fontFamily: "var(--mono)", fontSize: "0.58rem", color: "var(--muted)", marginTop: "2px", letterSpacing: "0.06em" }}>PODIUM</div>
-                </div>
-              </GlassPanel>
-            );
-          })}
-        </div>
-      )}
+        <aside className="hm-side">
+          {ranked.length > 0 && (
+            <Panel title={gridTitle} caption={gridCaption}>
+              <ol className="hm-grid-list">
+                {byGrid.map((r) => (
+                  <li key={r.driverRef} style={{ "--team": teamColor(r.teamId) }}>
+                    <b>P{r.grid}</b><i className="hm-bar" /><TeamMark team={r.teamId} size={20} />
+                    <span>{r.code}</span><em>{r.driver_name}</em>
+                  </li>
+                ))}
+              </ol>
+            </Panel>
+          )}
 
-      {/* Share prediction */}
-      {canShare && (
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "4px" }}>
-          <button
-            onClick={share}
-            disabled={shareState === "working"}
-            className={`glass-button${shareState === "working" ? "" : " is-armed"}`}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: "0.5rem",
-              color: shareState === "working" ? "var(--muted)" : "#fff",
-              padding: "0.7rem 1.6rem", fontSize: "0.72rem", fontWeight: "700", letterSpacing: "0.12em",
-              textTransform: "uppercase", cursor: shareState === "working" ? "wait" : "pointer",
-              fontFamily: "var(--mono)",
-            }}
-          >
-            {shareState === "working"
-              ? <><span style={{ animation: "pulse 1s infinite" }}>●</span> Generating…</>
-              : <>📸 Share Prediction</>}
-          </button>
-        </div>
-      )}
+          <Panel title="Race weekend schedule" caption={`Your local time (${tz}).`}>
+            {isNext ? (
+              <ul className="hm-sched">{NEXT_RACE.sessions.map((s) => (
+                <li key={s.session} className={s.featured ? "race" : ""}>
+                  <span><i aria-hidden="true">{s.emoji}</i> {s.session}</span>
+                  <time dateTime={s.iso}>{dayTime.format(new Date(s.iso))}</time>
+                </li>
+              ))}</ul>
+            ) : <p className="hm-note">{race.kind === "completed" ? "This round is complete." : "Session times for this round are not in the app yet."}</p>}
+          </Panel>
 
-      {/* Off-screen capture target for the share card. Laid out (not display:none)
-          but pushed off-viewport so html-to-image can snapshot it correctly. */}
+          <Panel title="Share this prediction" caption="Saves an image of the model's top 3 for the next race.">
+            {canShare ? (
+              <button type="button" className="hm-more" style={{ margin: 0, width: "100%" }} onClick={share} disabled={shareState === "working"}>
+                {shareState === "working" ? "GENERATING…" : "📸 SHARE PREDICTION"}
+              </button>
+            ) : <p className="hm-note">{isNext ? "Available once the prediction has loaded." : "Sharing is available for the next race only."}</p>}
+          </Panel>
+
+          {isNext && (
+            <Panel title="About this prediction" caption="What the model is and is not using right now.">
+              <p className="hm-note">
+                Standard race weekend: three practice sessions. The grid is auto-predicted by the qualifying model and updates after real qualifying.
+                Circuit podium rate uses exponential decay (0.75 per year) to weight recent {NEXT_RACE.circuit} history more heavily.
+              </p>
+            </Panel>
+          )}
+        </aside>
+      </div>
+
+      {/* Off-screen capture target for the share card: laid out (not display:none) but pushed off-viewport so
+          html-to-image can snapshot it. */}
       {canShare && (
         <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: 0, pointerEvents: "none" }}>
           <SharePredictionCard ref={cardRef} race={shareRace} picks={sharePicks} siteUrl={SITE_URL} />
         </div>
       )}
-
-      {/* Context note */}
-      <GlassPanel style={{ padding: "20px", display: "flex", gap: "0.75rem" }}>
-        <span style={{ fontFamily: "var(--mono)", color: "var(--red)", fontSize: "0.65rem", fontWeight: "700", flexShrink: 0 }}>NOTE</span>
-        <p style={{ fontFamily: "var(--mono)", fontSize: "0.68rem", color: "var(--muted)", margin: 0, lineHeight: 1.8 }}>
-          Standard race weekend — three practice sessions. Grid auto-predicted by qualifying model · updates after real qualifying. Circuit Podium Rate uses exponential decay (0.75^years) weighting recent {NEXT_RACE.circuit} history more heavily.
-        </p>
-      </GlassPanel>
     </div>
   );
 };
 
-
-export default NextRacePage;
+export default RacePage;
