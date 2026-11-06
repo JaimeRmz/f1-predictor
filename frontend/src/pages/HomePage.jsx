@@ -137,17 +137,27 @@ const LastRacePanel = ({ race, last, rows, snap }) => {
   const picks = kind === "genuine" ? [snap.snap.predicted_p1, snap.snap.predicted_p2, snap.snap.predicted_p3].map((ref) => nameOf(rows.rows, ref)) : null;
   const hits = picks ? picks.filter((p) => actual.some((a) => a.name === p.name)).length : 0;
   const MSG = {
-    pending: "Checking for a pre-race snapshot…",
-    none: "No pre-race snapshot was frozen for this race, so there is no foresight pick to show.",
-    "after-cutoff": "The only snapshot for this race was taken after the qualifying cutoff, so it is not shown as a prediction.",
-    unavailable: "Pre-race snapshots could not be loaded right now, so no model pick is shown.",
+    pending: "Checking for a pre-race pick…",
+    none: "No pre-race pick was saved for this race.",
+    "after-cutoff": "No pre-race pick was saved for this race.",       // a snapshot taken after qualifying is never shown as a prediction
+    unavailable: "Pre-race picks could not be loaded right now.",
   };
+  const actualBlock = (
+    <div><label className="green">ACTUAL TOP 3</label>{actual.length === 3 ? <Podium3 list={actual} tone="green" /> : <p className="hm-note">Finishing order not available.</p>}</div>
+  );
   return (
     <Panel title={title} caption={cap}>
-      <div className="hm-two">
-        <div><label className="teal">MODEL'S TOP 3 · FROZEN BEFORE QUALIFYING</label>{picks ? <Podium3 list={picks} tone="teal" /> : <p className="hm-note">{MSG[kind]}</p>}</div>
-        <div><label className="green">ACTUAL TOP 3</label>{actual.length === 3 ? <Podium3 list={actual} tone="green" /> : <p className="hm-note">Finishing order not available.</p>}</div>
-      </div>
+      {picks ? (
+        <div className="hm-two">
+          <div><label className="teal">MODEL'S TOP 3 · FROZEN BEFORE QUALIFYING</label><Podium3 list={picks} tone="teal" /></div>
+          {actualBlock}
+        </div>
+      ) : (
+        <>
+          <p className="hm-note dim hm-nopick">{MSG[kind]}</p>
+          {actualBlock}
+        </>
+      )}
       {picks && actual.length === 3 && <p className="hm-note dim">{hits} of 3 podium places named.</p>}
     </Panel>
   );

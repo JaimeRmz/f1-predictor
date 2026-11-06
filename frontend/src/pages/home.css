@@ -300,3 +300,4 @@
 .hm-foot { margin: 0.2rem 1.15rem 0.9rem; padding-top: 0.7rem; border-top: 1px solid var(--border); }
 
 .md-stage .md-note { display: block; font-size: 0.64rem; font-weight: 400; color: var(--hm-muted); margin-top: 0.2rem; font-family: var(--mono); }
+.hm-nopick { margin: 0 0 12px; }
