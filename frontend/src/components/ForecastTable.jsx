@@ -14,7 +14,7 @@ const Forecast = ({ ranked, title = "Full forecast", caption = "Relative strengt
     <GlassPanel className="hm-panel" tilt={false}>
       <div className="hm-panel-h"><h2>{title}</h2><p>{caption}</p></div>
       <div className="hm-tbl" role="table" aria-label="Forecast">
-        <div className="hm-tr hm-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="hm-hide-m">PODIUM SHARE</span><span className="gold">WIN SHARE</span><span className="teal">PODIUM SHARE</span></div>
+        <div className="hm-tr hm-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="hm-hide-m">PODIUM SHARE</span><span className="gold">WIN<span className="hm-hide-m"> SHARE</span></span><span className="teal">PODIUM<span className="hm-hide-m"> SHARE</span></span></div>
         {shown.map((r) => (
           <div className="hm-tr" role="row" key={r.driverRef} style={{ "--team": teamColor(r.teamId) }}>
             <span className="hm-n">{r.pos}</span>

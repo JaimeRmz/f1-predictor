@@ -169,8 +169,8 @@ const PredictorPage = () => {
                 <ResponsiveContainer width="100%" height={360}>
                   <BarChart data={predictions} layout="vertical" margin={{ left: 8, right: 24 }}>
                     <CartesianGrid strokeDasharray="2 4" stroke="var(--dimmed)" horizontal={false} />
-                    <XAxis type="number" domain={[0, 1]} tickFormatter={(v) => v.toFixed(1)} stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10, fontFamily: "var(--mono)" }} />
-                    <YAxis type="category" dataKey="driver_name" width={130} stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 11 }} />
+                    <XAxis type="number" domain={[0, 1]} tickFormatter={(v) => v.toFixed(1)} stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 10, fontFamily: "var(--mono)" }} />
+                    <YAxis type="category" dataKey="driver_name" width={130} stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 11 }} />
                     <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(225,6,0,0.04)" }} />
                     <Bar dataKey="podium_probability" name="Podium model score" radius={0}>
                       {predictions.map((p, i) => <Cell key={i} fill={p.podium === 1 ? "#00c853" : i === 0 ? "#e10600" : i < 3 ? "#ff4422" : "#2a2a38"} />)}
@@ -182,8 +182,8 @@ const PredictorPage = () => {
                 <ResponsiveContainer width="100%" height={360}>
                   <LineChart data={predictions.map((p, i) => ({ name: p.driver_name.split(" ").pop(), predicted: i + 1, actual: p.positionOrder }))}>
                     <CartesianGrid strokeDasharray="2 4" stroke="var(--dimmed)" />
-                    <XAxis dataKey="name" stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10 }} />
-                    <YAxis reversed stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10, fontFamily: "var(--mono)" }} domain={[1, 20]} />
+                    <XAxis dataKey="name" stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 10 }} />
+                    <YAxis reversed stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 10, fontFamily: "var(--mono)" }} domain={[1, 20]} />
                     <Tooltip contentStyle={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "0px", fontSize: "0.72rem", fontFamily: "var(--mono)" }} />
                     <Legend wrapperStyle={{ fontSize: "0.7rem", fontFamily: "var(--mono)" }} />
                     <Line type="monotone" dataKey="predicted" stroke="#e10600" strokeWidth={2} dot={{ r: 3, fill: "#e10600" }} name="Model" />

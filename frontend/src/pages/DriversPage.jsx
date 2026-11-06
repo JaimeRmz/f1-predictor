@@ -121,8 +121,8 @@ const DriversPage = () => {
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={stats.by_year}>
                       <CartesianGrid strokeDasharray="2 4" stroke="var(--dimmed)" />
-                      <XAxis dataKey="year" stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10, fontFamily: "var(--mono)" }} />
-                      <YAxis stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10, fontFamily: "var(--mono)" }} />
+                      <XAxis dataKey="year" stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 10, fontFamily: "var(--mono)" }} />
+                      <YAxis stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 10, fontFamily: "var(--mono)" }} />
                       <Tooltip contentStyle={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "0px", fontSize: "0.72rem", fontFamily: "var(--mono)" }} />
                       <Bar dataKey="wins" name="Wins" fill="#e10600" radius={0} />
                       <Bar dataKey="podiums" name="Podiums" fill="rgba(236,236,236,0.28)" radius={0} />

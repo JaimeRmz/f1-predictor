@@ -17,12 +17,12 @@
      the app already uses everywhere; ink/dim/faint are the design-system names
      from the concept, aliased onto them so both spellings resolve the same. */
   --ink:   #ececec;
-  /* --dim (aka --muted) is the secondary TEXT colour: 0.66 gives >= 4.5:1 (WCAG AA) on the void
+  /* --dim (aka --muted) is the secondary TEXT colour: 0.70 (was 0.66) gives >= 4.5:1 (WCAG AA) on the void
      (analytic 6.7:1) and on lit/tinted glass up to roughly rgb(70,70,70) (measured in the
      honesty-copy change). It was 0.45 (3.98:1 on the void, ~1.4-3 on lit glass).
      --faint (aka --dimmed) is DECORATIVE ONLY (tracks, hairlines, fills): at 0.14 it is ~1.4:1,
      so never use it as a text colour -- use --muted. */
-  --dim:   rgba(236, 236, 236, 0.66);
+  --dim:   rgba(236, 236, 236, 0.70);
   --faint: rgba(236, 236, 236, 0.14);
   --text:   var(--ink);
   --muted:  var(--dim);
@@ -301,7 +301,7 @@ body::after {
 .app-main { padding: 1.5rem 2rem 4rem; }
 .app-main.home-wide { padding: 1.5rem 40px 4rem; }
 @media (max-width: 600px) { .app-main.home-wide { padding-left: 20px; padding-right: 20px; } }
-.app-foot { text-align: center; padding: 0 1rem 2rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: rgba(236, 236, 236, 0.6); }
+.app-foot { text-align: center; padding: 0 1rem 2rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); }
 
 /* ── Sweep line ── */
 .sweep-line {

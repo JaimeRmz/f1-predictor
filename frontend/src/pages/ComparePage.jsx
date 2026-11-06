@@ -108,8 +108,8 @@ const ComparePage = () => {
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={data.head_to_head}>
                   <CartesianGrid strokeDasharray="2 4" stroke="var(--dimmed)" />
-                  <XAxis dataKey="circuit" stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 9, fontFamily: "var(--mono)" }} />
-                  <YAxis stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.66)", fontSize: 10, fontFamily: "var(--mono)" }} unit="%" />
+                  <XAxis dataKey="circuit" stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 9, fontFamily: "var(--mono)" }} />
+                  <YAxis stroke="var(--dimmed)" tick={{ fill: "rgba(236,236,236,0.7)", fontSize: 10, fontFamily: "var(--mono)" }} unit="%" />
                   <Tooltip contentStyle={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "0px", fontSize: "0.72rem", fontFamily: "var(--mono)" }} />
                   <Legend wrapperStyle={{ fontSize: "0.7rem", fontFamily: "var(--mono)" }} />
                   <Bar dataKey="driver1_podium_rate" name={data.driver1.name.split(" ").pop()} fill="#e10600" radius={0} />

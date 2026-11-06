@@ -2,7 +2,7 @@
    Semantic colours: red = actions/P1, teal = model, gold = win score, green = actual outcomes.
    Small text uses --hm-muted (0.66 ink, ~7:1 on the void), never the dimmer --muted. */
 .hm {
-  --hm-muted: rgba(236, 236, 236, 0.66);
+  --hm-muted: var(--muted);       /* the one muted text colour (index.css --dim, 70%) */
   display: flex; flex-direction: column; gap: 1.1rem;
   width: min(1320px, 100vw - 3rem);
   margin-left: calc(50% - min(660px, 50vw - 1.5rem));

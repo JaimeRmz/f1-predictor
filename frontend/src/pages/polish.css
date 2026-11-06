@@ -1,0 +1,26 @@
+/* Polish pass: a small type scale and label rules for Home and the Race sim. Scoped to .home / .rp-compact so other pages keep their sizes.
+   Scale (4 sizes): --fs-label 0.68rem (small uppercase mono labels), --fs-small 0.78rem (captions, notes, table text),
+   --fs-body 1rem, --fs-title 1.15rem (card titles). One muted text colour: --muted (70% ink). */
+:root { --fs-label: 0.68rem; --fs-small: 0.78rem; --fs-body: 1rem; --fs-title: 1.15rem; }
+
+.home label, .home .hm-eyebrow, .home .hm-sec span, .home .hm-count-cap, .home .hm-th, .home .hm-pos, .home .hm-chip,
+.home .rp-board h2, .home .rp-mode-btn, .home .rs-full, .home .rp-readout, .home .hm-more, .home .hm-top-scores label { font-size: var(--fs-label); }
+.home .hm-note, .home .hm-note.dim, .home .hm-panel-h p, .home .rs-cap, .home .rs-note, .home .rp-note, .home .hm-tr, .home .hm-sched li, .home .hm-rel small { font-size: var(--fs-small); }
+.home .hm-panel-h h2, .home .hm-sec h2, .home .rs-head h2 { font-size: var(--fs-title); }
+.home .hm-chip { font-size: 11px; }                                  /* pills: fixed by the cleanup brief */
+.home .rp-btn { font-size: var(--fs-label); }
+
+/* labels stay on one line where they can */
+.home label, .home .hm-th span, .home .hm-top-scores label, .home .rp-board h2, .home .rs-full, .home .hm-sec span { white-space: nowrap; }
+
+@media (max-width: 768px) {
+  /* small uppercase mono labels: letter-spacing at most .14em on mobile */
+  .home label, .home .hm-eyebrow, .home .hm-sec span, .home .hm-count-cap, .home .hm-th, .home .hm-pos, .home .hm-more,
+  .home .rp-board h2, .home .rp-mode-btn, .home .rs-full, .home .rp-readout, .sh-sep, .home .hm-tr, .home .rp-btn { letter-spacing: 0.1em; }
+  .home .hm-sec span { white-space: normal; }
+  .home .hm-th { letter-spacing: 0.06em; }
+}
+@media (max-width: 480px) {
+  .home .hm-eyebrow { letter-spacing: 0.06em; font-size: 0.62rem; }      /* the long kicker fits on one line at 390 px */
+  .home .hm-count-cap { letter-spacing: 0.06em; }
+}

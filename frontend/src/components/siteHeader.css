@@ -23,7 +23,7 @@
 .sh-nav { display: flex; align-items: center; gap: 0.2rem; }
 .sh-link {
   background: none; border: 0; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap;
-  font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; color: rgba(236, 236, 236, 0.66);
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; color: var(--muted);
   padding: 1.05rem 0.85rem; margin-bottom: -1px;
 }
 .sh-link:hover { color: var(--ink); background: rgba(255, 255, 255, 0.04); }
@@ -46,7 +46,7 @@
 .sh-burger span { width: 18px; height: 2px; background: var(--ink); border-radius: 1px; }
 .sh-menu { position: absolute; left: 0; right: 0; top: 100%; padding: 0.5rem 0.75rem 0.8rem; display: flex; flex-direction: column; border-left: 0; border-right: 0; border-radius: 0 0 14px 14px; }
 .sh-menu .sh-item { padding: 0.85rem 0.9rem; font-size: 0.8rem; }
-.sh-sep { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; color: rgba(236, 236, 236, 0.66); padding: 0.7rem 0.9rem 0.2rem; border-top: 1px solid var(--border); margin-top: 0.35rem; }
+.sh-sep { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; color: var(--muted); padding: 0.7rem 0.9rem 0.2rem; border-top: 1px solid var(--border); margin-top: 0.35rem; }
 @media (max-width: 1060px) { .sh-word { font-size: 11px; letter-spacing: 0.2em; } .sh-logo { gap: 9px; } .sh-link { padding-left: 0.6rem; padding-right: 0.6rem; } }
 @media (max-width: 380px) { .sh-word { font-size: 10.5px; letter-spacing: 0.16em; } .sh-logo { gap: 8px; } }
 @media (max-width: 768px) {

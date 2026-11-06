@@ -20,6 +20,7 @@ import {
 } from "../lib/homeModel.js";
 import "./home.css";
 import "./homeClean.css";
+import "./polish.css";
 
 // ── HOME · pit-wall dashboard ──────────────────────────────────
 // Every number comes from the same sources the other pages use: /whatif (upcoming rounds, predicted grid),
