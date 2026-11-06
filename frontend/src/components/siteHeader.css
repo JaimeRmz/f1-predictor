@@ -1,11 +1,17 @@
-/* Minimal site header. Opaque dark fill + blur so page content never shows through while scrolling. */
+/* Minimal site header. FULLY OPAQUE (#0a0a0c, no alpha anywhere) so page content can never show through it, and above every ambient
+   overlay (vignette 60, grain 80, scanlines 81; modals are 999+). On iPhone it extends up under the status bar: viewport-fit=cover in
+   index.html + padding-top: env(safe-area-inset-top), filled by the same opaque colour. The thin red accent line is a ::before pinned to the
+   top of the header content (just under the safe area), not a border that can float between header and page. */
 .sh {
-  position: sticky; top: 0; z-index: var(--z-chrome, 40);
-  background: rgba(10, 10, 12, 0.985);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  border-top: 2px solid rgba(225, 6, 0, 0.45);
-  border-bottom: 1px solid var(--hud-line);
+  position: sticky; top: 0; z-index: 900;
+  background: #0a0a0c;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 2px);
+  border-bottom: 1px solid #2a2a2d;
   box-shadow: 0 10px 30px -18px rgba(225, 6, 0, 0.35);
+}
+.sh::before {
+  content: ""; position: absolute; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 2px;
+  background: #6b0807; pointer-events: none;
 }
 .sh-in { width: min(1320px, 100vw - 3rem); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 54px; }
 .sh-logo { background: none; border: 0; padding: 0; cursor: pointer; display: flex; align-items: center; }
