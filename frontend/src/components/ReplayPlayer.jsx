@@ -16,10 +16,10 @@ const STEP_S = 10;
 //   compact     smaller layout: no scrubbers or legend, top-10 order board, SPEEDS without 64x
 //   deferPlay   the picture is only a preview of the start: Play asks onPlayRequest() (to download the real replay) instead of playing; seeking is off
 //   loading     the real replay is being downloaded after Play was pressed
-//   preview     the board shows the starting grid only (no gaps, no GAP / INT toggle)
+//   preview     this is only the start grid of a completed race (before its real replay is downloaded): the board is titled "STARTING GRID"
 //   autoPlay    start playing when this player mounts (used right after the visitor pressed Play and the replay arrived); ignored under reduced motion
-//   openFull    node rendered at the end of the controls ("OPEN FULL VIEW")
-const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = false, onPlayRequest = null, loading = false, preview = false, autoPlay = false, openFull = null }) => {
+//   (compact also fixes the track height at 300 px, titles the board by state and shows no gaps before the start)
+const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = false, onPlayRequest = null, loading = false, preview = false, autoPlay = false }) => {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
   const staticRef = useRef(null);            // offscreen layer: outline, pit lane, start/finish
@@ -125,7 +125,7 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
     const resize = () => {
       const w = Math.max(280, Math.round(wrap.clientWidth));
       const b = bounds.current, aspect = (b.maxY - b.minY) / (b.maxX - b.minX);
-      const h = Math.round(Math.min(Math.max(w * Math.min(Math.max(aspect, 0.55), 1.05), 260), 560));
+      const h = compact ? 300 : Math.round(Math.min(Math.max(w * Math.min(Math.max(aspect, 0.55), 1.05), 260), 560));
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       sizeRef.current = { w, h, dpr };
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
@@ -136,7 +136,7 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
     const ro = new ResizeObserver(resize);
     ro.observe(wrap);
     return () => ro.disconnect();
-  }, [buildStatic]);
+  }, [buildStatic, compact]);
 
   // ── actions ──
   const seek = useCallback((t) => {
@@ -177,6 +177,8 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
   const span = rep.endT - rep.startT;
   const pct = (t) => `${(100 * (t - rep.startT)) / span}%`;
   const band = ui.band;
+  const started = playing || ui.t > rep.startT + 0.5;
+  const boardTitle = !started ? (projected && !preview ? "PREDICTED STARTING GRID" : "STARTING GRID") : projected ? "ORDER IN THIS ILLUSTRATION" : "ORDER · OFFICIAL POSITIONS";
 
   return (
     <div className={`rp${compact ? " rp-compact" : ""}`} ref={wrapRef} tabIndex={0} onKeyDown={onKeyDown} aria-label="Race replay player. Space plays or pauses, left and right arrows step ten seconds, shift with arrows steps a lap, up and down change speed.">
@@ -193,7 +195,6 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
             <div className="rp-speeds" role="group" aria-label="Playback speed">
               {speeds.map((s) => <button key={s} type="button" className="rp-btn rp-sp" aria-pressed={speed === s} disabled={deferPlay} onClick={() => chooseSpeed(s)}>{s}x</button>)}
             </div>
-            {openFull}
           </div>
 
           <div className="rp-readout" aria-live="off">
@@ -219,7 +220,7 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
           </div>}
         </div>
 
-        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} preview={preview} compact={compact} limit={compact ? 10 : null} note={!compact} tires={stints ? tiresAt(rep, stints, ui.t) : null} />
+        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} compact={compact} limit={compact ? 10 : null} note={!compact} grid={compact && !started} title={compact ? boardTitle : null} tires={stints ? tiresAt(rep, stints, ui.t) : null} />
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ import {
   rankRows, teamColor, pctLabel, classifySnapshot, actualTop3, lastRaceFor, driverCode, teamIdOf,
 } from "../lib/homeModel.js";
 import "./home.css";
+import "./homeClean.css";
 
 // ── HOME · pit-wall dashboard ──────────────────────────────────
 // Every number comes from the same sources the other pages use: /whatif (upcoming rounds, predicted grid),
@@ -62,9 +63,8 @@ const Top3Card = ({ r, i }) => {
   const color = teamColor(r.teamId);
   return (
     <GlassPanel tint={color} className="hm-top" style={{ "--team": color }}>
-      <div className="hm-top-head"><span className="hm-pos">P{i + 1}</span><TeamMark team={r.teamId} size={34} /></div>
+      <div className="hm-top-head"><span className="hm-pos">P{i + 1}<em> · {TEAMS[r.teamId]?.name || "Team unknown"}</em></span><TeamMark team={r.teamId} size={26} /></div>
       <div className="hm-top-name"><span className="hm-bar" />{r.driver_name}</div>
-      <div className="hm-top-team">{r.code} · {TEAMS[r.teamId]?.name || "Team unknown"}</div>
       <div className="hm-top-scores">
         <div><label className="gold">WIN SHARE</label><b className="gold"><ScoreFigure raw={r.win}>{pctLabel(r.winPct, r.winShare)}</ScoreFigure></b></div>
         <div><label className="teal">PODIUM SHARE</label><b className="teal"><ScoreFigure raw={r.podium}>{pctLabel(r.podiumPct, r.podiumShare)}</ScoreFigure></b></div>
@@ -180,9 +180,9 @@ const HomePage = ({ onOpenReplay = null }) => {
   const through = champ.data?.as_of?.round;
 
   return (
-    <div className="hm">
+    <div className="hm home">
       <RaceStrip round={race.round} onSelect={setRound} />
-      <TitleRow race={race} phase={phase} />
+      <TitleRow race={race} phase={phase} brand />
 
       {ranked.length > 0 && (
         <section aria-labelledby="hm-top3">
@@ -197,6 +197,7 @@ const HomePage = ({ onOpenReplay = null }) => {
       <div className="hm-grid">
         <div className="hm-main">
           {ranked.length > 0 && <Forecast ranked={ranked} note={raceNote(race.raceId)} />}
+          <LastRacePanel race={race} last={last} rows={last ? res[last.raceId] : null} snap={snap} />
         {!cur && (slow ? <WakingPanel /> : <SkeletonList rows={5} metrics={2} />)}
         {cur?.status === "error" && (cur.http
           ? (
@@ -211,7 +212,6 @@ const HomePage = ({ onOpenReplay = null }) => {
         <aside className="hm-side">
           <ChampionPanel champ={champ} />
           <ReliabilityPanel />
-          <LastRacePanel race={race} last={last} rows={last ? res[last.raceId] : null} snap={snap} />
           <SchedulePanel race={race} />
         </aside>
       </div>

@@ -22,13 +22,14 @@ const Countdown = ({ race }) => {
   );
 };
 
-const TitleRow = ({ race, phase }) => {
+// `brand`: Home only; puts "F1 PREDICTOR" first in the kicker and shows just the city.
+const TitleRow = ({ race, phase, brand = false }) => {
   const { base, suffix } = titleParts(race.name);
   const where = race.raceId === NEXT_RACE.raceId ? NEXT_RACE.location : race.circuit; // only places the app actually knows
   return (
     <header className="hm-title">
       <div>
-        <div className="hm-eyebrow">ROUND {race.round}{where ? ` · ${where.toUpperCase()}` : ""} · {PHASE_LABEL[phase]}</div>
+        <div className="hm-eyebrow">{brand ? "F1 PREDICTOR · " : ""}ROUND {race.round}{where ? ` · ${(brand ? where.split(",")[0] : where).toUpperCase()}` : ""} · {PHASE_LABEL[phase]}</div>
         <h1>{base} <em>Grand Prix</em>{suffix && <span> {suffix}</span>}</h1>
       </div>
       <Countdown race={race} />

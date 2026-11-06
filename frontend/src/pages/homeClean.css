@@ -1,0 +1,43 @@
+/* Home cleanup. Everything is scoped to .hm.home so the Race, Replay and other pages (which share home.css) look exactly as before. */
+.hm.home { gap: 22px; width: 100%; margin-left: 0; }
+/* race pills */
+.home .hm-chip { font-size: 11px; padding: 8px 14px; }
+.home .hm-strip { padding: 0.3rem 0.1rem; }
+/* hero: 52 px title, countdown as a compact card on the right (wraps below on narrow screens) */
+.home .hm-title { align-items: center; gap: 14px 28px; padding: 0; }
+.home .hm-eyebrow { margin-bottom: 8px; font-size: 0.7rem; }
+.home .hm-title > div:first-child { flex: 1 1 0; min-width: min(100%, 440px); }
+.home .hm-title h1 { font-size: clamp(2rem, 4.2vw, 52px); text-wrap: balance; }
+.home .hm-count { margin-left: auto; padding: 12px 16px; border: 1px solid var(--hud-line); border-radius: 12px; background: rgba(255, 255, 255, 0.04); text-align: left; }
+.home .hm-digits { gap: 0.8rem; justify-content: flex-start; font-size: clamp(1.3rem, 2.2vw, 1.7rem); }
+.home .hm-count-cap { margin-top: 6px; font-size: 0.64rem; }
+.home .hm-count.off { padding: 10px 16px; }
+/* section header + cards */
+.home .hm-sec { margin: 0 0 10px; }
+.home .hm-panel-h { padding: 14px 20px 10px; }
+.home .hm-panel-b { padding: 14px 20px 16px; }
+.home .hm-tbl { padding: 0.2rem 0.4rem 0.6rem; }
+/* top 3: position + team on one line, the name, then WIN and PODIUM side by side */
+.home .hm-top3 { gap: 14px; }
+.home .hm-top { padding: 14px 20px 16px; }
+.home .hm-pos { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.home .hm-pos em { font-style: normal; font-weight: 600; color: var(--hm-muted); }
+.home .hm-top:first-child .hm-pos { color: #ff6b61; }
+.home .hm-top-name { margin-top: 10px; font-size: clamp(1.15rem, 1.9vw, 1.6rem); }
+.home .hm-top-scores { margin-top: 12px; padding-top: 10px; gap: 14px; }
+.home .hm-top-scores b { font-size: clamp(1.6rem, 2.6vw, 2.2rem); margin-top: 2px; }
+/* lower sections: two balanced columns, the last card of each stretches so neither leaves a gap */
+.home .hm-grid { gap: 22px; align-items: stretch; }
+.home .hm-main, .home .hm-side { gap: 22px; }
+.home .hm-main > :last-child, .home .hm-side > :last-child { flex: 1 1 auto; }
+@media (max-width: 768px) {
+  .hm.home { gap: 18px; }
+  .home .hm-chip { min-height: 44px; }
+  .home .hm-title { align-items: flex-start; }
+  .home .hm-count { margin-left: 0; width: 100%; }
+  .home .hm-top3 { margin: 0; }
+  .home .hm-top { flex: 0 0 86%; }
+  .home .hm-more, .home .hm-link, .home .rs-full { min-height: 44px; }
+  .home .hm-panel-h, .home .hm-panel-b { padding-left: 16px; padding-right: 16px; }
+  .rs-card { padding: 14px 16px; }
+}

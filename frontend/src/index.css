@@ -296,6 +296,12 @@ body::after {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* page container: Home is wider (1240 px, 40 px sides, 20 px on phones); other pages keep their 2rem sides */
+.app-main { padding: 1.5rem 2rem 4rem; }
+.app-main.home-wide { padding: 1.5rem 40px 4rem; }
+@media (max-width: 600px) { .app-main.home-wide { padding-left: 20px; padding-right: 20px; } }
+.app-foot { text-align: center; padding: 0 1rem 2rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: rgba(236, 236, 236, 0.6); }
+
 /* ── Sweep line ── */
 .sweep-line {
   position: fixed; top: 0; left: 0; height: 2px;
