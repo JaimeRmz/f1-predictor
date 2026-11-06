@@ -58,7 +58,7 @@
 
 /* top 3 */
 .hm-top3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.hm-top { padding: 1.3rem 1.4rem 1.25rem; }
+.hm-top { padding: var(--card-pad); }
 .hm-top-head { display: flex; justify-content: space-between; align-items: center; }
 .hm-pos { font-family: var(--mono); font-weight: 700; font-size: 0.95rem; letter-spacing: 0.1em; color: var(--hm-muted); }
 .hm-top:first-child .hm-pos { color: #ff6b61; } /* lighter red: 4.5:1+ on the card */
@@ -71,10 +71,10 @@
 /* grid */
 .hm-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
 .hm-main, .hm-side { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
-.hm-panel-h { padding: 0.95rem 1.15rem 0.7rem; border-bottom: 1px solid var(--border); }
+.hm-panel-h { padding: 16px 20px 10px; border-bottom: 1px solid var(--border); }
 .hm-panel-h h2 { font-family: var(--display); font-size: 1rem; font-weight: 700; letter-spacing: 0.02em; }
 .hm-panel-h p { font-family: var(--mono); font-size: 0.72rem; line-height: 1.55; color: var(--hm-muted); margin-top: 0.3rem; }
-.hm-panel-b { padding: 1rem 1.15rem 1.1rem; }
+.hm-panel-b { padding: 12px 20px 16px; }
 .hm-note { font-family: var(--mono); font-size: 0.76rem; line-height: 1.7; color: var(--hm-muted); margin-top: 0.6rem; }
 .hm-note.dim { font-size: 0.72rem; }
 .hm-panel-b > .hm-note:first-child { margin-top: 0; }

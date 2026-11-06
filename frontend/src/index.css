@@ -70,7 +70,8 @@
   --glass-base: rgba(10, 12, 16, 0.42);   /* the frosted fill under the gradient */
   --glass-blur: 22px;                     /* backdrop-filter radius (mobile dials down) */
   --glass-sat: 170%;                      /* backdrop-filter saturation */
-  --glass-radius: 20px;                   /* cards */
+  --glass-radius: 14px;                   /* cards: one radius site-wide */
+  --card-pad: 16px 20px;                  /* cards: one padding */
   --glass-radius-row: 13px;               /* dense list rows — 20px reads bubbly at row height */
   --hud-line: rgba(236, 236, 236, 0.16);  /* hairline borders + corner brackets */
 
@@ -362,6 +363,7 @@ body::after {
    absolutely positioned <span>s by <HudBrackets>; each shows only its two
    relevant borders. Border color is set inline (team tint, or neutral). */
 .hud-bracket {
+  display: none;
   position: absolute; width: 9px; height: 9px; pointer-events: none;
   border: 0 solid transparent; z-index: 1;
 }

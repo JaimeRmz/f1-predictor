@@ -100,7 +100,7 @@
 
 /* ── Home "Race sim": one glass card ── */
 .rs { margin: 0; }
-.rs-card { padding: 16px 20px; }
+.rs-card { padding: var(--card-pad); }
 .rs-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 12px; }
 .rs-head h2 { font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.06em; font-weight: 800; }
 .rs-full { display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.4rem; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; color: var(--ink); text-decoration: none; border-radius: 8px; }
@@ -114,7 +114,7 @@
 /* the body: two columns, stretched to one height; the board's rows share that height */
 .rp-compact .rp-grid { display: flex; align-items: stretch; gap: 16px; }
 .rp-compact .rp-stage { flex: 2 1 0; min-width: 0; background: none; border: 0; box-shadow: none; padding: 0; display: flex; flex-direction: column; }
-.rp-compact .rp-board { flex: 1 1 0; min-width: 250px; display: flex; flex-direction: column; padding: 10px 14px 12px; background: rgba(255, 255, 255, 0.025); border: 1px solid var(--hud-line); border-radius: 12px; box-shadow: none; }
+.rp-compact .rp-board { flex: 1 1 0; min-width: 250px; display: flex; flex-direction: column; padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
 .rp-compact .rp-board ol { flex: 1; display: flex; flex-direction: column; }
 .rp-compact .rp-board li { flex: 1 1 0; min-height: 26px; padding: 0; }
 .rp-compact .rp-board h2 { font-family: var(--mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; color: var(--hm-muted); }

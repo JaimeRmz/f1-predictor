@@ -14,12 +14,9 @@
 .home .hm-count.off { padding: 10px 16px; }
 /* section header + cards */
 .home .hm-sec { margin: 0 0 10px; }
-.home .hm-panel-h { padding: 14px 20px 10px; }
-.home .hm-panel-b { padding: 14px 20px 16px; }
 .home .hm-tbl { padding: 0.2rem 0.4rem 0.6rem; }
 /* top 3: position + team on one line, the name, then WIN and PODIUM side by side */
 .home .hm-top3 { gap: 14px; }
-.home .hm-top { padding: 14px 20px 16px; }
 .home .hm-pos { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .home .hm-pos em { font-style: normal; font-weight: 600; color: var(--hm-muted); }
 .home .hm-top:first-child .hm-pos { color: #ff6b61; }
@@ -38,6 +35,4 @@
   .home .hm-top3 { margin: 0; }
   .home .hm-top { flex: 0 0 86%; }
   .home .hm-more, .home .hm-link, .home .rs-full { min-height: 44px; }
-  .home .hm-panel-h, .home .hm-panel-b { padding-left: 16px; padding-right: 16px; }
-  .rs-card { padding: 14px 16px; }
 }

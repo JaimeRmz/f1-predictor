@@ -112,7 +112,7 @@ export const glassStyle = (tint, { glow = true } = {}) => ({
   // them down — backdrop-filter blur is the main perf cost on mobile Safari.
   backdropFilter: "blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 170%))",
   WebkitBackdropFilter: "blur(var(--glass-blur, 22px)) saturate(var(--glass-sat, 170%))",
-  border: `1px solid ${tint ? hexA(tint, 0.28) : "var(--hud-line)"}`,
+  border: "1px solid var(--hud-line)",                       // one border for every card; a team tint only colours the fill and glow
   borderRadius: "var(--glass-radius, 20px)",
   // Rim light first (bright hairline on the top edge, dark on the bottom — the
   // sense of physical thickness), then the cast shadow underneath.

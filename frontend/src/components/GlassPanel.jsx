@@ -5,7 +5,7 @@ import { hexA, glassStyle, prefersReducedMotion } from "../constants.js";
 // "Pit Wall / Broadcast HUD" panel: a frosted-glass surface that behaves like a
 // live telemetry monitor. Frosted fill over --glass-base, a hairline --hud-line
 // border, an optional translucent team-tint overlay with a matching outer glow,
-// and 4 broadcast-camera corner brackets.
+// (corner brackets were removed site-wide in the polish pass; the `brackets` prop still exists but defaults to off).
 //
 // Phase 2 adds motion, all of it self-disabling for reduced-motion / touch:
 //   • cursor parallax tilt (a few degrees of rotateX/Y toward the pointer)
@@ -62,7 +62,7 @@ export const HudBrackets = ({ tint }) => {
 // motions individually (e.g. the What-If drag rows set tilt={false} because the
 // drag gesture drives `transform` itself).
 export const GlassPanel = forwardRef(function GlassPanel(
-  { tint, glow = true, brackets = true, tilt = true, sweep = true, className = "", style, children, ...rest }, ref
+  { tint, glow = true, brackets = false, tilt = true, sweep = true, className = "", style, children, ...rest }, ref
 ) {
   const elRef = useRef(null);
   const bandRef = useRef(null);
