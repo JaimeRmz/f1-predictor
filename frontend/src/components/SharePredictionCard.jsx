@@ -119,7 +119,7 @@ const SoloBody = ({ picks }) => {
         </div>
         <div style={{ textAlign: "right", flexShrink: 0 }}>
           <div style={{ fontSize: "104px", fontWeight: 900, lineHeight: 0.9, color: "var(--gold)", fontVariantNumeric: "tabular-nums" }}>{p1.win_share_label ?? pct(p1.win_probability)}</div>
-          <div style={{ fontFamily: "var(--mono)", fontSize: "15px", fontWeight: 700, letterSpacing: "0.18em", color: "var(--muted)", marginTop: "8px" }}>{p1.win_share_label ? "WIN SHARE" : "WIN PROBABILITY"}</div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "15px", fontWeight: 700, letterSpacing: "0.18em", color: "var(--muted)", marginTop: "8px" }}>{p1.win_share_label ? "WIN SHARE" : "WIN SCORE"}</div>
         </div>
       </div>
 

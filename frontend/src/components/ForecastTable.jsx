@@ -6,7 +6,7 @@ import { teamColor, pctLabel } from "../lib/homeModel.js";
 import "../pages/home.css";
 
 const SHOW_DEFAULT = 10;
-const Forecast = ({ ranked, title = "Full forecast", caption = "Relative strength inside this race's field, not a calibrated chance. Win shares add up to 100%. Tap or hover a figure for the raw model score.", defaultAll = false, note = null }) => {
+const Forecast = ({ ranked, title = "Full forecast", caption = "Relative strength inside this race's field. Shares add up to 100%. They are not calibrated forecasts. Tap or hover a figure for the raw model score.", defaultAll = false, note = null }) => {
   const [all, setAll] = useState(defaultAll);
   const shown = all ? ranked : ranked.slice(0, SHOW_DEFAULT);
   const max = Math.max(...ranked.map((r) => r.podiumShare ?? 0), 0.0001);

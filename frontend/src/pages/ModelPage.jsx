@@ -121,7 +121,7 @@ const ModelPage = () => {
               across a field the win scores add up to about 3 and the podium scores to about 5, not to 1 and 3.
               Home therefore shows shares: a driver's raw win score divided by the field's total (so win shares add up to 100%), and the raw podium
               score divided by the field's total times 3 (podium shares add up to 300%, since three drivers finish on the podium).
-              Shares describe relative strength inside one race's field, not a calibrated chance. The raw model score is available on tap or hover on every figure on Home.
+              Shares describe relative strength inside one race's field. They are not calibrated forecasts. The raw model score is available on tap or hover on every figure on Home.
               Drivers are ranked by raw podium score; shares never change the order.
             </p>
           </Panel>

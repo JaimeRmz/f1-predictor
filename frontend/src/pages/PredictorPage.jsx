@@ -145,7 +145,7 @@ const PredictorPage = () => {
           </div>
 
           {tab === "drivers" && (
-            <Panel title="Every driver" caption={`${isUpcoming ? "Pre-qualifying" : "Replay"} shares of this race's field, not a calibrated chance. Win shares add up to 100%. Tap or hover a figure for the raw model score.`}>
+            <Panel title="Every driver" caption={`${isUpcoming ? "Pre-qualifying" : "Replay"} shares of this race's field. Shares add up to 100%. They are not calibrated forecasts. Tap or hover a figure for the raw model score.`}>
               <div className="pr-tbl" role="table" aria-label="All drivers">
                 <div className="pr-tr pr-th" role="row"><span>POS</span><span /><span>DRIVER</span><span className="gold">WIN SHARE</span><span className="teal">PODIUM SHARE</span><span className="hm-hide-m" /></div>
                 {rows.map((r) => (

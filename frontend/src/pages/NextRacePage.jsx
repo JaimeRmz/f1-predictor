@@ -52,8 +52,8 @@ const RacePage = () => {
     ? "Order from the qualifying model (XGBoost regressor). It updates after real qualifying."
     : "The real starting grid for this race.";
   const forecastCaption = upcoming
-    ? "Pre-qualifying prediction: it uses the predicted grid on the right and this circuit's history. Relative strength inside this race's field, not a calibrated chance. Win shares add up to 100%. Tap or hover a figure for the raw model score."
-    : "Replay with the real grid, so it is not a forecast made before the race. Relative strength inside this race's field, not a calibrated chance. Win shares add up to 100%. Tap or hover a figure for the raw model score.";
+    ? "Pre-qualifying prediction: it uses the predicted grid on the right and this circuit's history. Relative strength inside this race's field. Shares add up to 100%. They are not calibrated forecasts. Tap or hover a figure for the raw model score."
+    : "Replay with the real grid, so it is not a forecast made before the race. Relative strength inside this race's field. Shares add up to 100%. They are not calibrated forecasts. Tap or hover a figure for the raw model score.";
 
   return (
     <div className="hm">

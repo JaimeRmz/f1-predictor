@@ -237,7 +237,7 @@ const WhatIfPage = () => {
       <Panel title={`${NEXT_RACE_NAME} · ${NEXT_RACE.circuit}`} caption="Move drivers up or down the starting grid and watch the model's podium shares change.">
         <p className="hm-note">
           The grid starts as the predicted qualifying order for {NEXT_RACE.circuit}. Drag a driver (press and hold on touch screens) to simulate an alternative qualifying result.
-          Each change triggers a live XGBoost prediction. Shares are relative strength inside this race's field, not a calibrated chance; tap or hover a figure for the raw model score.
+          Each change triggers a live XGBoost prediction. Shares are relative strength inside this race's field. They are not calibrated forecasts; tap or hover a figure for the raw model score.
         </p>
       </Panel>
 
