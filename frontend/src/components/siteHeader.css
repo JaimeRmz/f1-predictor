@@ -1,15 +1,24 @@
-/* Minimal site header. Opaque dark fill + blur so page content never shows through while scrolling. */
+/* Minimal site header. FULLY OPAQUE (#0a0a0c, no alpha anywhere) so page content can never show through it, and above every ambient
+   overlay (vignette 60, grain 80, scanlines 81; modals are 999+). On iPhone it extends up under the status bar: viewport-fit=cover in
+   index.html + padding-top: env(safe-area-inset-top), filled by the same opaque colour. The thin red accent line is a ::before pinned to the
+   top of the header content (just under the safe area), not a border that can float between header and page. */
 .sh {
-  position: sticky; top: 0; z-index: var(--z-chrome, 40);
-  background: rgba(10, 10, 12, 0.985);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  border-top: 2px solid rgba(225, 6, 0, 0.45);
-  border-bottom: 1px solid var(--hud-line);
+  position: sticky; top: 0; z-index: 900;
+  background: #0a0a0c;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 2px);
+  border-bottom: 1px solid #2a2a2d;
   box-shadow: 0 10px 30px -18px rgba(225, 6, 0, 0.35);
 }
-.sh-in { width: min(1320px, 100vw - 3rem); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 54px; }
+.sh::before {
+  content: ""; position: absolute; left: 0; right: 0; top: env(safe-area-inset-top, 0px); height: 2px;
+  background: #6b0807; pointer-events: none;
+}
+.sh-in { width: min(1320px, 100vw - 3rem); margin: 0 auto; display: flex; flex-wrap: nowrap; align-items: center; justify-content: space-between; height: 54px; }
 .sh-logo { background: none; border: 0; padding: 0; cursor: pointer; display: flex; align-items: center; }
-.sh-logo img { height: 28px; width: auto; display: block; }
+.sh-logo img { height: 28px; width: auto; display: block; flex: none; }
+.sh-logo { gap: 12px; }
+.sh-div { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.2); flex: none; }
+.sh-word { font-family: var(--mono); font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(236, 236, 236, 0.86); white-space: nowrap; }
 .sh-logo:focus-visible, .sh-link:focus-visible, .sh-item:focus-visible, .sh-burger:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 .sh-nav { display: flex; align-items: center; gap: 0.2rem; }
 .sh-link {
@@ -38,8 +47,11 @@
 .sh-menu { position: absolute; left: 0; right: 0; top: 100%; padding: 0.5rem 0.75rem 0.8rem; display: flex; flex-direction: column; border-left: 0; border-right: 0; border-radius: 0 0 14px 14px; }
 .sh-menu .sh-item { padding: 0.85rem 0.9rem; font-size: 0.8rem; }
 .sh-sep { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.2em; color: rgba(236, 236, 236, 0.66); padding: 0.7rem 0.9rem 0.2rem; border-top: 1px solid var(--border); margin-top: 0.35rem; }
+@media (max-width: 1060px) { .sh-word { font-size: 11px; letter-spacing: 0.2em; } .sh-logo { gap: 9px; } .sh-link { padding-left: 0.6rem; padding-right: 0.6rem; } }
+@media (max-width: 380px) { .sh-word { font-size: 10.5px; letter-spacing: 0.16em; } .sh-logo { gap: 8px; } }
 @media (max-width: 768px) {
   .sh-in { width: calc(100vw - 2rem); height: 50px; }
+  .sh-logo { min-width: 0; }
   .sh-nav { display: none; }
   .sh-mobile { display: flex; }
   .sh-dot { margin-left: 0; margin-right: 0.5rem; }

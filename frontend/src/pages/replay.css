@@ -98,26 +98,37 @@
 .rp-tyre.I { background: #071309; color: #55d64a; border-color: #43b02a; }
 .rp-tyre.W { background: #07101c; color: #5aa0ff; border-color: #2f7de1; }
 
-/* ── Home "Race sim" band ── */
-.rs { margin: 1.1rem 0 0.4rem; }
-.rs-chip { font-family: var(--mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid; white-space: nowrap; }
-.rs-chip.proj { color: #ffb020; border: 1px dashed #ffb020; background: rgba(255, 176, 32, 0.08); }
-.rs-chip.real { color: var(--teal); border-color: var(--teal); background: rgba(46, 230, 200, 0.08); }
-.rs .pr-notice { margin-bottom: 0.8rem; }
+/* ── Home "Race sim": one glass card ── */
+.rs { margin: 0; }
+.rs-card { padding: 16px 20px; }
+.rs-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 12px; }
+.rs-head h2 { font-family: var(--display); font-size: 1.05rem; letter-spacing: 0.06em; font-weight: 800; }
+.rs-full { display: inline-flex; align-items: center; min-height: 44px; padding: 0 0.4rem; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; color: var(--ink); text-decoration: none; border-radius: 8px; }
+.rs-full:hover { color: var(--teal); }
+.rs-full:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 .rs-body { min-width: 0; }
-.rs-note { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--hm-muted); padding: 0.9rem 1rem; border: 1px solid var(--hud-line); border-radius: 12px; }
-.rs-hold { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; padding: 1rem; border: 1px solid var(--hud-line); border-radius: 12px; }
-.rs .rp-credit { text-align: left; }
-.rp-compact .rp-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.rs-cap { display: flex; gap: 0.6rem; align-items: flex-start; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.72rem; line-height: 1.6; color: var(--hm-muted); }
+.rs-cap i { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--hm-muted); display: inline-grid; place-items: center; font-style: italic; font-family: var(--sans); font-size: 0.62rem; line-height: 1; margin-top: 2px; }
+.rs-note { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--hm-muted); padding: 0.4rem 0 0.2rem; }
+.rs-hold { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; padding: 0.5rem 0; }
+/* the body: two columns, stretched to one height; the board's rows share that height */
+.rp-compact .rp-grid { display: flex; align-items: stretch; gap: 16px; }
+.rp-compact .rp-stage { flex: 2 1 0; min-width: 0; background: none; border: 0; box-shadow: none; padding: 0; display: flex; flex-direction: column; }
+.rp-compact .rp-board { flex: 1 1 0; min-width: 250px; display: flex; flex-direction: column; padding: 10px 14px 12px; background: rgba(255, 255, 255, 0.025); border: 1px solid var(--hud-line); border-radius: 12px; box-shadow: none; }
+.rp-compact .rp-board ol { flex: 1; display: flex; flex-direction: column; }
+.rp-compact .rp-board li { flex: 1 1 0; min-height: 26px; padding: 0; }
+.rp-compact .rp-board h2 { font-family: var(--mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; color: var(--hm-muted); }
+.rp-compact .rp-board-h { margin-bottom: 6px; }
 .rp-compact .rp-btn, .rp-compact .rp-mode-btn { min-height: 44px; }
 .rp-compact .rp-btn:disabled { opacity: 0.55; cursor: default; }
-.rp-compact .rp-speeds { margin-left: 0; }
-.rp-compact .rs-full, .rs-hold .rs-full { display: inline-flex; align-items: center; text-decoration: none; margin-left: auto; }
-.rp-compact .rp-board li { padding: 0.22rem 0; }
+.rp-compact .rp-speeds { margin-left: auto; }
+.rp-compact .rp-controls { margin-top: 12px; }
+.rp-compact .rp-readout { margin-top: 8px; }
 @media (max-width: 900px) {
-  .rp-compact .rp-grid { grid-template-columns: minmax(0, 1fr); }
-  .rp-compact .rp-speeds { width: auto; }
+  .rp-compact .rp-grid { flex-direction: column; }
+  .rp-compact .rp-board { min-width: 0; }
+  .rp-compact .rp-board li { min-height: 30px; }
+  .rp-compact .rp-speeds { margin-left: 0; width: auto; }
   .rp-compact .rp-speeds .rp-btn { flex: 0 0 auto; min-width: 44px; }
-  .rp-compact .rs-full { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .rs * { transition: none !important; animation: none !important; } }

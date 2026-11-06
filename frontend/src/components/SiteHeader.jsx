@@ -43,8 +43,10 @@ const SiteHeader = ({ page, setPage, onNavigate }) => {
   return (
     <header className="sh" ref={ref}>
       <div className="sh-in">
-        <button type="button" className="sh-logo" aria-label="Home" onClick={() => go(SECTIONS[0].pages[0])}>
+        <button type="button" className="sh-logo" aria-label="F1 Predictor, home" onClick={() => go(SECTIONS[0].pages[0])}>
           <img src="/f1-logo.png" alt="F1" />
+          <span className="sh-div" aria-hidden="true" />
+          <span className="sh-word">PREDICTOR</span>
         </button>
 
         <nav className="sh-nav" aria-label="Main">

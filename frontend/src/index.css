@@ -93,7 +93,7 @@
   :root { --glass-blur: 12px; --glass-sat: 150%; }
 }
 
-html { scroll-behavior: smooth; background: var(--bg); }
+html { scroll-behavior: smooth; background: #0a0a0c; color-scheme: dark; }
 
 /* Everything above the void is transparent so the ambient layer (grain,
    vignette, red glow) shows through the whole stack rather than being
@@ -109,7 +109,9 @@ body {
   /* Soft red ambient glow behind the hero/header. Painted as the body's own
      fixed background rather than an overlay element so it can never sit above
      content — it is genuinely the backmost layer. */
-  background-color: var(--void);
+  background-color: #0a0a0c;
+  /* with viewport-fit=cover the page can sit under the notch / home bar: keep the side and bottom safe areas clear */
+  padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
   background-image: radial-gradient(ellipse 75vw 62vh at 50% -8vh, rgba(var(--red-rgb), 0.14), transparent 70%);
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -293,6 +295,12 @@ body::after {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* page container: Home is wider (1240 px, 40 px sides, 20 px on phones); other pages keep their 2rem sides */
+.app-main { padding: 1.5rem 2rem 4rem; }
+.app-main.home-wide { padding: 1.5rem 40px 4rem; }
+@media (max-width: 600px) { .app-main.home-wide { padding-left: 20px; padding-right: 20px; } }
+.app-foot { text-align: center; padding: 0 1rem 2rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em; color: rgba(236, 236, 236, 0.6); }
 
 /* ── Sweep line ── */
 .sweep-line {

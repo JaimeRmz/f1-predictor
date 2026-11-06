@@ -65,7 +65,7 @@ export default function App() {
     <div style={{ minHeight: "100vh", color: "var(--text)", fontFamily: "var(--sans)" }}>
       <SiteHeader page={page} setPage={setPage} onNavigate={handleNavigate} />
 
-      <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "1.5rem 2rem 4rem", position: "relative" }}>
+      <main className={page === PAGES.home ? "app-main home-wide" : "app-main"} style={{ maxWidth: page === PAGES.home ? "1240px" : "1100px", margin: "0 auto", position: "relative" }}>
         {showSweep && <div className="sweep-line" />}
         {sec && sec.pages.length > 1 && (
           <div className={`sub-nav${[PAGES.race, PAGES.predictor, PAGES.replay, PAGES.champ, PAGES.drivers, PAGES.season].includes(page) ? " wide" : ""}`} role="group" aria-label={`${sec.label} pages`}>
@@ -80,6 +80,7 @@ export default function App() {
           </Suspense>
         </div>
       </main>
+      <footer className="app-foot">Unofficial fan project. Not affiliated with Formula 1.</footer>
     </div>
     </MotionConfig>
     </AuthProvider>
