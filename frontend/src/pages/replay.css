@@ -139,3 +139,11 @@
 .rp-row-hit:hover { background: rgba(255, 255, 255, 0.05); }
 .rp-row-hit:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
 .rp-board li.sel { background: rgba(255, 255, 255, 0.09); box-shadow: inset 3px 0 0 var(--team, #fff); border-radius: 6px; }
+
+/* compact player: two control rows at most. Row 1 = play / pause, -10 s, +10 s. Row 2 = speeds on the left, lap and clock on the right. */
+.rp-compact .rp-row2 { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; margin-top: 8px; flex-wrap: nowrap; }
+.rp-compact .rp-row2 .rp-speeds { margin-left: 0; width: auto; flex: none; }
+.rp-compact .rp-row2 .rp-readout { margin-top: 0; flex-wrap: nowrap; justify-content: flex-end; gap: 0.2rem 0.8rem; white-space: nowrap; }
+.rp-compact .rp-controls { flex-wrap: nowrap; }
+.rp-compact .rp-controls .rp-btn { flex: 0 0 auto; }
+@media (max-width: 400px) { .rp-compact .rp-row2 .rp-readout .rp-band { display: none; } .rp-compact .rp-row2 { gap: 0.4rem; } .rp-compact .rp-row2 .rp-speeds .rp-btn { min-width: 44px; padding-left: 0.5rem; padding-right: 0.5rem; } }

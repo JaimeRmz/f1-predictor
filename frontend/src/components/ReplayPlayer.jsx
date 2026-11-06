@@ -205,8 +205,22 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
   };
 
   const span = rep.endT - rep.startT;
-  const pct = (t) => `${(100 * (t - rep.startT)) / span}%`;
   const band = ui.band;
+  const speedsEl = (
+  <div className="rp-speeds" role="group" aria-label="Playback speed">
+    {speeds.map((s) => <button key={s} type="button" className="rp-btn rp-sp" aria-pressed={speed === s} disabled={deferPlay} onClick={() => chooseSpeed(s)}>{s}x</button>)}
+  </div>
+  );
+  const readoutEl = (
+  <div className="rp-readout" aria-live="off">
+    <span>LAP <b>{ui.lap || "–"}</b> OF {rep.lapsTotal}</span>
+    <span className="rp-clock">{ui.clock}</span>
+    {band && <span className={`rp-band ${band.kind}`}>{band.kind === "SC" ? "SAFETY CAR" : band.kind === "VSC" ? "VIRTUAL SAFETY CAR" : "RED FLAG"}</span>}
+    {ui.outage && <span className="rp-band GAP" title="OpenF1 sent no usable positions for most cars at this moment">DATA GAP · NO POSITIONS</span>}
+  </div>
+  );
+
+  const pct = (t) => `${(100 * (t - rep.startT)) / span}%`;
   const started = playing || ui.t > rep.startT + 0.5;
   const boardTitle = !started ? (projected && !preview ? "PREDICTED STARTING GRID" : "STARTING GRID") : projected ? "ORDER IN THIS ILLUSTRATION" : "ORDER · OFFICIAL POSITIONS";
 
@@ -222,17 +236,10 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
             <button type="button" className="rp-btn" onClick={() => seek(timeRef.current - STEP_S)} disabled={deferPlay} aria-label="Back ten seconds">−10 s</button>
             <button type="button" className="rp-btn" onClick={() => seek(timeRef.current + STEP_S)} disabled={deferPlay} aria-label="Forward ten seconds">+10 s</button>
             {!compact && <button type="button" className="rp-btn" onClick={() => jumpLap(1)} aria-label="Next lap">LAP ⏭</button>}
-            <div className="rp-speeds" role="group" aria-label="Playback speed">
-              {speeds.map((s) => <button key={s} type="button" className="rp-btn rp-sp" aria-pressed={speed === s} disabled={deferPlay} onClick={() => chooseSpeed(s)}>{s}x</button>)}
-            </div>
+            {!compact && speedsEl}
           </div>
 
-          <div className="rp-readout" aria-live="off">
-            <span>LAP <b>{ui.lap || "–"}</b> OF {rep.lapsTotal}</span>
-            <span className="rp-clock">{ui.clock}</span>
-            {band && <span className={`rp-band ${band.kind}`}>{band.kind === "SC" ? "SAFETY CAR" : band.kind === "VSC" ? "VIRTUAL SAFETY CAR" : "RED FLAG"}</span>}
-            {ui.outage && <span className="rp-band GAP" title="OpenF1 sent no usable positions for most cars at this moment">DATA GAP · NO POSITIONS</span>}
-          </div>
+          {compact ? <div className="rp-row2">{speedsEl}{readoutEl}</div> : readoutEl}
 
           {!compact && <div className="rp-scrub">
             <div className="rp-marks" aria-hidden="true">
