@@ -6,18 +6,18 @@ import { COMPOUND_NAME } from "../lib/stints.js";
  * The order board shared by the Replay page (real and projected) and the Home race sim.
  * rows: boardAt() rows sorted by position. mode: "gap" | "int" (see orderLabels). limit: show only the first N rows (Home).
  */
-const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compact = false, note = true, tires = null }) => {
-  const labels = orderLabels(rows, mode);
+const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compact = false, note = true, tires = null, preview = false }) => {
+  const labels = preview ? rows.map(() => "") : orderLabels(rows, mode);
   const shown = limit ? rows.slice(0, limit) : rows;
   return (
     <aside className={`rp-board${compact ? " compact" : ""}${tires ? " has-tyre" : ""}`} aria-label="Order board">
       <div className="rp-board-h">
-        <h2>Order <small>{projected ? "in this illustration" : "official positions"}</small></h2>
-        <div className="rp-mode" role="group" aria-label="Order board column">
+        <h2>{preview ? "Starting grid" : "Order"} <small>{preview ? "before the start" : projected ? "in this illustration" : "official positions"}</small></h2>
+        {!preview && <div className="rp-mode" role="group" aria-label="Order board column">
           {[["gap", "GAP", "Gap to the leader"], ["int", "INT", "Interval: time to the car ahead"]].map(([m, label, title]) => (
             <button key={m} type="button" className="rp-mode-btn" aria-pressed={mode === m} title={title} onClick={() => onMode(m)}>{label}</button>
           ))}
-        </div>
+        </div>}
       </div>
       <ol>
         {shown.map((r, i) => (
@@ -28,7 +28,7 @@ const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compa
           </li>
         ))}
       </ol>
-      {note && <p className="rp-note">{projected
+      {note && !preview && <p className="rp-note">{projected
         ? "Gaps update once a lap. Order and gaps come from the illustration itself, not from a timing feed."
         : "Gaps update once a lap. Positions are the official feed; they can lag the dots by a moment. NO DATA means OpenF1 sent no position for that car just now."}
       {mode === "int" && " INT is the time to the car ahead; a dash means no real time difference is available (a lapped car, or the order changed since the lap began)."}</p>}

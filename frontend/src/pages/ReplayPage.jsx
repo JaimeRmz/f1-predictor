@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GlassPanel } from "../components/GlassPanel.jsx";
 import Panel from "../components/DashPanel.jsx";
 import RaceStrip from "../components/RaceStrip.jsx";
@@ -6,7 +6,7 @@ import ReplayPlayer from "../components/ReplayPlayer.jsx";
 import { STINTS_CREDIT } from "../lib/stints.js";
 import ProjectedRace from "../components/ProjectedRace.jsx";
 import { SkeletonList } from "../shared.jsx";
-import { useManifest, useReplayRace } from "../lib/useReplayData.js";
+import { useManifest, useReplayRace, REPLAY_CREDIT } from "../lib/useReplayData.js";
 import { titleParts, CALENDAR } from "../lib/homeModel.js";
 import "./home.css";
 import "./replay.css";
@@ -15,7 +15,6 @@ import "./replay.css";
 // Real recorded positions of a completed race, replayed on the track outline. The files are produced offline by
 // scripts/build_replay.py from OpenF1 historical data and served from VITE_REPLAY_BASE_URL (a public storage bucket) or, in
 // development, /replay-dev/. When the base URL or a race file is missing, this page says so and the rest of the site is unaffected.
-const CREDIT = "Position data: OpenF1 (CC BY-NC-SA 4.0). Replay is interpolated from ~3.8 Hz samples and is not official timing.";
 
 const Unavailable = ({ children }) => (
   <Panel title="Replay not available" caption="Replays need the replay files, which are not set up for this view.">
@@ -25,9 +24,11 @@ const Unavailable = ({ children }) => (
 
 const UPCOMING = CALENDAR.filter((r) => r.kind === "upcoming");
 
-const ReplayPage = () => {
+// `initial`: a chip id to open first (the Home race sim's "OPEN FULL VIEW"): a raceId, or "p<raceId>" for a projected race.
+const ReplayPage = ({ initial = null, onOpened = null }) => {
   const manifest = useManifest();
-  const [picked, setPicked] = useState(null);
+  const [picked, setPicked] = useState(initial);
+  useEffect(() => { onOpened?.(); }, []);                  // eslint-disable-line react-hooks/exhaustive-deps -- the target is used once, on open
   const races = manifest.races;
   // Upcoming rounds sit at the end of the strip (id "p<raceId>") and open the Projected race instead of a recorded replay.
   const projectedRace = typeof picked === "string" ? UPCOMING.find((r) => `p${r.raceId}` === picked) || null : null;
@@ -75,7 +76,7 @@ const ReplayPage = () => {
         <p className="rp-credit">
           {projectedRace
             ? <>Projected race (illustration): the model's ranking played out as a race. It shows the order the model expects, not a forecast of the exact finishing order or of events such as pit stops, safety cars or incidents.<br />Circuit shapes and typical times derived from OpenF1 position data (CC BY-NC-SA 4.0).</>
-            : <>Replay of real recorded positions, interpolated; not official timing.<br />{manifest.license || CREDIT} {STINTS_CREDIT}</>}
+            : <>Replay of real recorded positions, interpolated; not official timing.<br />{manifest.license || REPLAY_CREDIT} {STINTS_CREDIT}</>}
         </p>
       )}
     </div>

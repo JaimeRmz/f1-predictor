@@ -97,3 +97,27 @@
 .rp-tyre.H { background: #111; color: #f4f4f4; border-color: #f4f4f4; }
 .rp-tyre.I { background: #071309; color: #55d64a; border-color: #43b02a; }
 .rp-tyre.W { background: #07101c; color: #5aa0ff; border-color: #2f7de1; }
+
+/* ── Home "Race sim" band ── */
+.rs { margin: 1.1rem 0 0.4rem; }
+.rs-chip { font-family: var(--mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+.rs-chip.proj { color: #ffb020; border: 1px dashed #ffb020; background: rgba(255, 176, 32, 0.08); }
+.rs-chip.real { color: var(--teal); border-color: var(--teal); background: rgba(46, 230, 200, 0.08); }
+.rs .pr-notice { margin-bottom: 0.8rem; }
+.rs-body { min-width: 0; }
+.rs-note { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--hm-muted); padding: 0.9rem 1rem; border: 1px solid var(--hud-line); border-radius: 12px; }
+.rs-hold { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; padding: 1rem; border: 1px solid var(--hud-line); border-radius: 12px; }
+.rs .rp-credit { text-align: left; }
+.rp-compact .rp-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.rp-compact .rp-btn, .rp-compact .rp-mode-btn { min-height: 44px; }
+.rp-compact .rp-btn:disabled { opacity: 0.55; cursor: default; }
+.rp-compact .rp-speeds { margin-left: 0; }
+.rp-compact .rs-full, .rs-hold .rs-full { display: inline-flex; align-items: center; text-decoration: none; margin-left: auto; }
+.rp-compact .rp-board li { padding: 0.22rem 0; }
+@media (max-width: 900px) {
+  .rp-compact .rp-grid { grid-template-columns: minmax(0, 1fr); }
+  .rp-compact .rp-speeds { width: auto; }
+  .rp-compact .rp-speeds .rp-btn { flex: 0 0 auto; min-width: 44px; }
+  .rp-compact .rs-full { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .rs * { transition: none !important; animation: none !important; } }
