@@ -1,11 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Panel from "./DashPanel.jsx";
 import ReplayPlayer from "./ReplayPlayer.jsx";
 import { SkeletonList } from "../shared.jsx";
 import { useRaceRows } from "../lib/useRaceRows.js";
 import { usePackIndex, usePack, useProjectedRace } from "../lib/useProjectedRace.js";
-import { randomSeed, typicalSeed, PROJECTED_LABEL } from "../lib/projectedRace.js";
-import { inputsFromRows } from "../lib/projectedInputs.js";
+import { DEFAULT_SEED, PROJECTED_LABEL } from "../lib/projectedRace.js";
 import "../pages/replay.css";
 
 const Unavailable = ({ title = "Projected race not available", children }) => (
@@ -14,10 +13,9 @@ const Unavailable = ({ title = "Projected race not available", children }) => (
   </Panel>
 );
 
-// One illustrative race for an upcoming round, drawn in the browser from the model's existing scores and replayed by the same player as
+// One illustrative race for an upcoming round, played out in the browser in the order of the Race page table and replayed by the same player as
 // the recorded races. Nothing here is a forecast and no score or share on the site is changed by it.
 const ProjectedRace = ({ race }) => {
-  const [picked, setPicked] = useState(null);                  // null = the typical race for these scores
   const index = usePackIndex();
   const entry = index.status === "ready" ? index.circuits[race.circuitRef] || null : null;
   const packState = usePack(entry);
@@ -25,14 +23,7 @@ const ProjectedRace = ({ race }) => {
   const { res, slow, retry } = useRaceRows(raceList);
   const rowsState = res[race.raceId];
   const rows = rowsState?.status === "ready" ? rowsState.rows : null;
-  const typical = useMemo(() => {
-    if (!rows) return null;
-    const { grid, scores } = inputsFromRows(rows);
-    const codes = grid.map((g) => g.code).filter((c) => Number.isFinite(scores[c].podium));
-    return codes.length > 1 ? typicalSeed(codes, scores) : null;
-  }, [rows]);
-  const seed = picked ?? typical ?? 1;
-  const { rep, error } = useProjectedRace(packState.pack, rows, seed);
+  const { rep, error } = useProjectedRace(packState.pack, rows, DEFAULT_SEED);
 
   if (index.status === "loading") return <SkeletonList rows={4} metrics={1} />;
   if (index.status === "unavailable") return <Unavailable>The circuit files are not available on this deployment (no replay location is configured, or it could not be reached). Nothing else is affected.</Unavailable>;
@@ -62,14 +53,11 @@ const ProjectedRace = ({ race }) => {
         <p>{PROJECTED_LABEL}</p>
       </div>
       <div className="pr-bar">
-        <span className="pr-seed">SEED <b>{seed}</b>{picked === null && <em> · typical race</em>}</span>
         <span className="pr-basis">{race.circuit} · track shape and typical times from the {entry.year} race</span>
-        <button type="button" className="rp-btn pr-again" onClick={() => setPicked(randomSeed())}>↻ RUN ANOTHER RACE</button>
       </div>
-      <ReplayPlayer key={`${race.raceId}-${seed}`} rep={rep} projected />
+      <ReplayPlayer key={race.raceId} rep={rep} projected />
       <p className="pr-how">
-        The finishing order starts from the model's own ranking and is shuffled by about as much as the model was off in past races: front runners usually finish near the front, big upsets are rare but possible.
-        Cars start from the predicted grid, make one or two stops in the real pit lane and never crash or retire. The same seed always gives the same race.
+        Cars start from the predicted grid, make one or two stops in the real pit lane and never crash or retire.
         The scores and shares shown on the Race page are unchanged.
       </p>
     </>

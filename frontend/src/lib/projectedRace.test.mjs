@@ -1,6 +1,8 @@
 // node src/lib/run-test.mjs   (run from frontend/)
 import assert from "node:assert/strict";
-import { generateProjectedRace, rankAnchoredOrder, modelRanking, mulberry32, drawnOrder, typicalSeed } from "./projectedRace.js";
+import { generateProjectedRace, rankAnchoredOrder, modelRanking, mulberry32, drawnOrder, typicalSeed, DEFAULT_SEED } from "./projectedRace.js";
+import { rankRows, driverCode } from "./homeModel.js";
+import { ROWS } from "./projectedFixtures.mjs";
 import { decodeReplay, decodeDelta, boardAt, lapAt } from "./replay.js";
 import { inputsFromRows } from "./projectedInputs.js";
 
@@ -211,6 +213,30 @@ ok(strongOnTop > runs * 0.3, "the top-scored drivers are on the podium in many r
     ok(ms < 1500, `${name}: typicalSeed took ${ms.toFixed(0)} ms`);
     console.log(`   (${name}: typical seed ${seed}, ${ms.toFixed(0)} ms, order ${drawnOrder(cs, sc, seed).join(" ")})`);
   }
+}
+
+// ── the site plays out the model's order: the finishing order equals the Race page "Full forecast" table order
+{
+  for (const [ref, rows] of Object.entries(ROWS)) {
+    const { grid: g, scores: sc, order } = inputsFromRows(rows);
+    const table = rankRows(rows).map((r) => driverCode(r.driver_name));        // exactly what the Race page table lists, top to bottom
+    eq(order, table, `${ref}: inputsFromRows().order is the Race page table order`);
+    for (const seed of [DEFAULT_SEED, 77, 4242]) {
+      const j = generateProjectedRace(pack, g, sc, seed, order);
+      eq(j.race.projected.order, table, `${ref}: the sim's finishing order equals the Race page order (seed ${seed})`);
+      const cls = j.drivers.slice().sort((p, q) => q.laps - p.laps || j.lap_starts[p.code].at(-1) - j.lap_starts[q.code].at(-1)).map((d) => d.code);
+      eq(cls, table, `${ref}: the cars actually cross the line in the Race page order (seed ${seed})`);
+      eq(j.drivers.map((d) => d.code).sort((p, q) => j.board[p].at(-1)[1] - j.board[q].at(-1)[1]), table, `${ref}: the order board ends on the Race page order (seed ${seed})`);
+    }
+    eq(generateProjectedRace(pack, g, sc, DEFAULT_SEED, order).race.projected.order.join(), table.join(), `${ref}: deterministic`);
+  }
+  // Brazil and Las Vegas by name
+  for (const ref of ["interlagos", "vegas"]) {
+    const { grid: g, scores: sc, order } = inputsFromRows(ROWS[ref]);
+    eq(generateProjectedRace(pack, g, sc, DEFAULT_SEED, order).race.projected.order, rankRows(ROWS[ref]).map((r) => driverCode(r.driver_name)), `${ref} fixture: sim order = Race page order`);
+  }
+  let threw = false; try { generateProjectedRace(pack, grid, scoresOf(), 1, ["VER"]); } catch { threw = true; }
+  ok(threw, "an incomplete finishing order is refused");
 }
 
 // ── drivers without a model score are not simulated
