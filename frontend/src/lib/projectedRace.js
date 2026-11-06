@@ -396,14 +396,26 @@ export const generateProjectedRace = (pack, grid, scores, seed, finishOrder = nu
   };
   const xs = cars.map(() => new Array(nSec)), ys = cars.map(() => new Array(nSec));
   const rankKey = (c, mr) => mr * 1e3 - (finishTime(c) - LIGHTS_OUT) * 1e-4;
-  const board = {}, boardLast = {};
-  cars.forEach((c) => { board[c.code] = []; boardLast[c.code] = -1; });
+  const board = {}, boardLast = {}, gapS = {};
+  cars.forEach((c) => { board[c.code] = []; boardLast[c.code] = -1; gapS[c.code] = new Array(nSec).fill(null); });
+  // Gap to the leader, every second, from the SAME sorted list as the order board (rows below). "Time since the leader was at this car's
+  // spot": t - (the leader's time at the car's current position). The further back a car is, the earlier the leader passed its spot, so the gap
+  // can only grow down the order. A car a full lap or more behind the leader's position shows laps down (stored as a negative whole number);
+  // once both have taken the flag the gap is the difference of their finishing times (or laps down). null before the start.
+  const Tat = (c, m) => { if (m <= 0) return c.T[0]; if (m >= c.M) return c.T[c.M]; const k = Math.floor(m); return c.T[k] + (m - k) * (c.T[k + 1] - c.T[k]); };
+  const gapAt = (lead, c, t, mL, mC) => {
+    if (t >= finishTime(c) && t >= finishTime(lead)) { const dn = lead.n - c.n; return dn > 0 ? -dn : Math.round((finishTime(c) - finishTime(lead)) * 10) / 10; }
+    const down = Math.floor((mL - mC) / V + 1e-9);
+    if (down >= 1) return -down;
+    return Math.round(Math.max(0, t - Tat(lead, mC)) * 10) / 10;
+  };
   const orderAt = (t) => cars.map((c) => ({ c, st: stateAt(c, t) })).sort((a, b) => rankKey(b.c, b.st.mrank) - rankKey(a.c, a.st.mrank));
   for (let t = 0; t < nSec; t++) {
     const rows = orderAt(t);
     rows.forEach((r, p) => {
       xs[r.c.i][t] = r.st.x; ys[r.c.i][t] = r.st.y;
       if (boardLast[r.c.code] !== p + 1) { board[r.c.code].push([t, p + 1]); boardLast[r.c.code] = p + 1; }
+      if (p > 0 && t >= LIGHTS_OUT + 1 && r.st.mrank > 0) gapS[r.c.code][t] = gapAt(rows[0].c, r.c, t, rows[0].st.mrank, r.st.mrank);
     });
   }
   const laps = [];
@@ -449,7 +461,7 @@ export const generateProjectedRace = (pack, grid, scores, seed, finishOrder = nu
     drivers: cars.map((c, idx) => ({ n: c.number ?? idx + 1, code: c.code, name: c.name, team: c.team, colour: c.colour, status: null, out_t: null, laps: c.n })),
     track: { outline: pack.outline, sf: pack.sf, pit: { x: pack.pit.x, y: pack.pit.y }, length_m: pack.length_m, closure_m: 0, reference: "circuit pack" },
     pos: Object.fromEntries(cars.map((c) => [c.code, { x: enc(xs[c.i]), y: enc(ys[c.i]) }])),
-    gaps: {}, in_pit: inPit, lap_starts: lapStarts, laps, board, pits,
+    gaps: {}, in_pit: inPit, lap_starts: lapStarts, laps, board, gap_s: gapS, pits,
     flags: [{ t: Math.round(winnerT * 10) / 10, lap: K, kind: "CHEQUERED", msg: "CHEQUERED FLAG" }],
     bands: [],
   };

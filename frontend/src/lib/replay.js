@@ -54,6 +54,7 @@ export const decodeReplay = (j) => {
     status: d.status, outT: d.out_t, laps: d.laps,
     x: decodeDelta(j.pos[d.code].x), y: decodeDelta(j.pos[d.code].y),
     holes: j.gaps?.[d.code] || null, pitRuns: j.in_pit?.[d.code] || null,
+    gapS: j.gap_s?.[d.code] || null,                      // projected races only: gap to the leader every second, same sorted list as the board
     lapStarts: Float64Array.from(j.lap_starts?.[d.code] || []),
     boardT: Float32Array.from((j.board[d.code] || []).map((e) => e[0])),
     boardP: Uint8Array.from((j.board[d.code] || []).map((e) => e[1])),
@@ -107,9 +108,13 @@ export const lapStartTime = (rep, lap) => {
 export const boardAt = (rep, t) => {
   const lapIdx = lapRowIndex(rep, t);
   const gaps = lapIdx >= 0 ? rep.laps[lapIdx].gap : {};
+  const sec = Math.min(Math.max(Math.floor(t), 0), rep.race.n - 1);
   const rows = rep.cars.map((car) => {
     const st = carStateAt(rep, car, t);
-    return { code: car.code, team: car.team, colour: car.colour, pos: officialPosition(car, t) ?? 99, out: st.out, inPit: st.inPit, dsq: st.dsq, noData: st.hidden, gap: gaps?.[car.code] ?? null, status: car.status };
+    // projected: the per-second gap that was computed together with the order (negative whole number = laps down)
+    const gs = car.gapS ? car.gapS[sec] : undefined;
+    const gap = car.gapS ? (gs == null ? null : gs < 0 ? `+${-gs} ${gs === -1 ? "LAP" : "LAPS"}` : gs) : (gaps?.[car.code] ?? null);
+    return { code: car.code, team: car.team, colour: car.colour, pos: officialPosition(car, t) ?? 99, out: st.out, inPit: st.inPit, dsq: st.dsq, noData: st.hidden, gap, status: car.status };
   });
   rows.sort((a, b) => a.pos - b.pos || (a.code < b.code ? -1 : 1));
   return rows;

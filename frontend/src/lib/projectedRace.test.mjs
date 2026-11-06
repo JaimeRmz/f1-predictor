@@ -239,6 +239,32 @@ ok(strongOnTop > runs * 0.3, "the top-scored drivers are on the podium in many r
   ok(threw, "an incomplete finishing order is refused");
 }
 
+// ── the board: gaps are non-decreasing down the displayed order at EVERY time step (order and gaps come from the same sorted list)
+{
+  let samples = 0, checkedRows = 0;
+  for (const [ref, rows] of Object.entries(ROWS)) {
+    const { grid: g, scores: sc, order } = inputsFromRows(rows);
+    for (const seed of [DEFAULT_SEED, 77, 4242]) {
+      const rep = decodeReplay(generateProjectedRace(pack, g, sc, seed, order));
+      for (let t = rep.startT; t <= rep.endT; t += 0.5) {
+        const board = boardAt(rep, t);
+        eq(board.map((r) => r.pos), board.map((_, i) => i + 1), `${ref}/${seed}: positions are 1..N at ${t}s`);
+        let last = -1, lastLaps = 0;
+        for (const r of board) {
+          if (r.pos === 1 || r.gap == null) continue;
+          if (typeof r.gap === "number") { ok(lastLaps === 0, `${ref}/${seed} t=${t}: a timed gap sits behind a lapped car (${r.code})`); ok(r.gap >= last - 1e-9, `${ref}/${seed} t=${t}: gap ${r.gap} (${r.code}, P${r.pos}) is smaller than the car ahead's ${last}`); last = r.gap; }
+          else { const n = Number(r.gap.match(/\+(\d+)/)[1]); ok(n >= lastLaps, `${ref}/${seed} t=${t}: laps down decrease at ${r.code}`); lastLaps = n; }
+          checkedRows++;
+        }
+        samples++;
+      }
+      // the leader on the board is the car that finishes first, and the final board order is the Race page order
+      eq(boardAt(rep, rep.endT).map((r) => r.code), order, `${ref}/${seed}: the final board is the table order`);
+    }
+  }
+  ok(samples > 3000 && checkedRows > 40000, `board monotonicity checked at ${samples} time steps (${checkedRows} rows)`);
+}
+
 // ── drivers without a model score are not simulated
 {
   const withExtra = [...grid, { code: "XXX", name: "No Score", team: "Team 9", colour: "ffffff" }, { code: "YYY", name: "Bad Score", team: "Team 9", colour: "ffffff" }];
