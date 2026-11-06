@@ -34,6 +34,11 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
   const [playing, setPlaying] = useState(autoStart);
   const [speed, setSpeed] = useState(4);
   const [orderMode, setOrderMode] = useOrderMode();
+  // Track labels: dots only, except the race leader and the driver the visitor picked (tap a dot or a board row; hover on desktop).
+  const [sel, setSel] = useState(null);
+  const selRef = useRef(null);
+  const hoverRef = useRef(null);
+  const hitRef = useRef([]);                 // screen positions of the dots drawn in the last frame, for tap / hover hit-testing
   const stints = useStints(projected ? null : rep.race.raceId);        // real replays only; null (nothing shown) while loading or when the race has no file
   const [ui, setUi] = useState(() => snapshot(rep, rep.startT));
 
@@ -84,20 +89,28 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
       g.font = "700 12px 'JetBrains Mono', monospace"; g.fillStyle = "rgba(255,176,32,0.95)"; g.textAlign = "center";
       g.fillText("NO POSITION DATA FOR THIS MOMENT (feed outage)", sizeRef.current.w / 2, 22); g.textAlign = "start";
     }
-    const top3 = new Set(boardAt(rep, t).filter((r) => r.pos <= 3 && !r.out).map((r) => r.code));
+    const board = boardAt(rep, t);
+    const top3 = new Set(board.filter((r) => r.pos <= 3 && !r.out).map((r) => r.code));
+    const leader = board.find((r) => r.pos === 1 && !r.out)?.code;
+    const hits = [];
     g.font = "600 9px 'JetBrains Mono', monospace";
     const pass = [[true, false], [false, false], [false, true]];                 // grey OUT cars first, then the field, then the top 3 on top
     for (const [outPass, topPass] of pass) {
       for (const car of rep.cars) {
         const st = carStateAt(rep, car, t);
-        if (st.hidden || st.out !== outPass || top3.has(car.code) !== topPass) continue;
+        if (st.hidden || st.out !== outPass || (top3.has(car.code) || car.code === selRef.current || car.code === hoverRef.current) !== topPass) continue;
         const px = X(st.x), py = Y(st.y);
-        g.beginPath(); g.arc(px, py, st.out ? 3.6 : 5.2, 0, 6.2832);
+        const picked = car.code === selRef.current || car.code === hoverRef.current;
+        hits.push({ code: car.code, px, py });
+        g.beginPath(); g.arc(px, py, st.out ? 3.6 : picked ? 7 : 5.2, 0, 6.2832);
         g.fillStyle = st.out ? "#5a5a63" : car.colour; g.fill();
-        if (topPass) { g.lineWidth = 1.6; g.strokeStyle = "#fff"; g.stroke(); }
-        g.fillStyle = st.out ? "#85858f" : "#ececec"; g.fillText(car.code, px + 7, py - 6);
+        if (topPass || picked) { g.lineWidth = picked ? 2.2 : 1.6; g.strokeStyle = "#fff"; g.stroke(); }
+        if (picked || car.code === leader) {                                     // labels: the leader and the picked driver only
+          g.fillStyle = st.out ? "#85858f" : "#ffffff"; g.fillText(car.code, px + (picked ? 10 : 8), py - 7);
+        }
       }
     }
+    hitRef.current = hits;
   }, [rep]);
 
   // ── clock + loop ──
@@ -149,6 +162,23 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
     if (!ctl.current.playing && timeRef.current >= rep.endT) seek(rep.startT);
     ctl.current.playing = !ctl.current.playing; setPlaying(ctl.current.playing); uiDirty.current = true;
   }, [rep, seek, deferPlay, onPlayRequest]);
+  const choose = useCallback((code) => {
+    const next = selRef.current === code ? null : code;                // tap again to clear
+    selRef.current = next; setSel(next); dirty.current = true;
+  }, []);
+  const pickAt = (e, radius) => {
+    const rect = canvasRef.current.getBoundingClientRect(), x = e.clientX - rect.left, y = e.clientY - rect.top;
+    let best = null, bd = radius * radius;
+    for (const h of hitRef.current) { const d = (h.px - x) ** 2 + (h.py - y) ** 2; if (d <= bd) { bd = d; best = h; } }
+    return best;
+  };
+  const onCanvasMove = (e) => {
+    if (e.pointerType === "touch") return;
+    const code = pickAt(e, 14)?.code ?? null;
+    if (hoverRef.current !== code) { hoverRef.current = code; dirty.current = true; canvasRef.current.style.cursor = code ? "pointer" : "default"; }
+  };
+  const onCanvasLeave = () => { if (hoverRef.current) { hoverRef.current = null; dirty.current = true; } };
+  const onCanvasClick = (e) => { const h = pickAt(e, 22); if (h) choose(h.code); };      // 22 px: a comfortable finger target around a 10 px dot
   const chooseSpeed = useCallback((s) => { if (deferPlay) return; ctl.current.speed = s; setSpeed(s); }, [deferPlay]);
   const jumpLap = useCallback((delta) => {
     const cur = lapAt(rep, timeRef.current), next = Math.min(Math.max(cur + delta, 1), rep.lapsTotal);
@@ -184,7 +214,7 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
     <div className={`rp${compact ? " rp-compact" : ""}`} ref={wrapRef} tabIndex={0} onKeyDown={onKeyDown} aria-label="Race replay player. Space plays or pauses, left and right arrows step ten seconds, shift with arrows steps a lap, up and down change speed.">
       <div className="rp-grid">
         <div className="rp-stage">
-          <div className="rp-canvaswrap"><canvas ref={canvasRef} role="img" aria-label={projected ? `Track map of the ${rep.race.name} with the cars on the starting grid and, once played, the illustration` : `Track map of the ${rep.race.name} ${rep.race.year} with every car's recorded position`} /></div>
+          <div className="rp-canvaswrap"><canvas ref={canvasRef} onPointerMove={onCanvasMove} onPointerLeave={onCanvasLeave} onClick={onCanvasClick} role="img" aria-label={projected ? `Track map of the ${rep.race.name} with the cars on the starting grid and, once played, the illustration` : `Track map of the ${rep.race.name} ${rep.race.year} with every car's recorded position`} /></div>
 
           <div className="rp-controls">
             <button type="button" className="rp-btn rp-play" onClick={toggle} disabled={loading} aria-busy={loading || undefined} aria-label={loading ? "Loading the replay" : playing ? "Pause replay" : "Play replay"}>{loading ? "LOADING…" : playing ? "❚❚ PAUSE" : "▶ PLAY"}</button>
@@ -220,7 +250,7 @@ const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = fal
           </div>}
         </div>
 
-        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} compact={compact} limit={compact ? 10 : null} note={!compact} grid={compact && !started} title={compact ? boardTitle : null} tires={stints ? tiresAt(rep, stints, ui.t) : null} />
+        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} compact={compact} limit={compact ? 10 : null} note={!compact} selected={sel} onSelect={choose} grid={compact && !started} title={compact ? boardTitle : null} tires={stints ? tiresAt(rep, stints, ui.t) : null} />
       </div>
     </div>
   );

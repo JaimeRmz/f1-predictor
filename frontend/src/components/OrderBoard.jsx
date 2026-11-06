@@ -6,7 +6,7 @@ import { COMPOUND_NAME } from "../lib/stints.js";
  * The order board shared by the Replay page (real and projected) and the Home race sim.
  * rows: boardAt() rows sorted by position. mode: "gap" | "int" (see orderLabels). limit: show only the first N rows (Home).
  */
-const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compact = false, note = true, tires = null, grid = false, title = null }) => {
+const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compact = false, note = true, tires = null, grid = false, title = null, selected = null, onSelect = null }) => {
   const labels = grid ? rows.map(() => "") : orderLabels(rows, mode);        // before the start there are no gaps to show
   const shown = limit ? rows.slice(0, limit) : rows;
   return (
@@ -21,7 +21,8 @@ const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compa
       </div>
       <ol>
         {shown.map((r, i) => (
-          <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}${r.noData ? " nodata" : ""}`} style={{ "--team": r.colour }}>
+          <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}${r.noData ? " nodata" : ""}${selected === r.code ? " sel" : ""}`} style={{ "--team": r.colour }}>
+            {onSelect && <button type="button" className="rp-row-hit" aria-pressed={selected === r.code} aria-label={`Highlight ${r.code} on the track`} onClick={() => onSelect(r.code)} />}
             <b>{r.out ? "–" : r.pos}</b><i className="rp-bar" /><TeamMark team={r.team} size={18} /><span className="rp-code">{r.code}</span>
             {tires && <span className="rp-tyre-slot">{tires[r.code] && <i className={`rp-tyre ${tires[r.code]}`} role="img" aria-label={`${COMPOUND_NAME[tires[r.code]]} tyres`} title={`${COMPOUND_NAME[tires[r.code]]} tyres`}>{tires[r.code]}</i>}</span>}
             <em title={mode === "int" ? (projected ? "Time to the car directly ahead" : "Time to the car directly ahead, as of the start of the current lap") : (projected ? "Gap to the leader" : "Gap to the leader, as of the start of the current lap")}>{labels[i]}</em>

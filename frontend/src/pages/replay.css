@@ -132,3 +132,10 @@
   .rp-compact .rp-speeds .rp-btn { flex: 0 0 auto; min-width: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { .rs * { transition: none !important; animation: none !important; } }
+
+/* tap a board row (or a dot) to highlight that driver on the track: the row is a transparent full-row button */
+.rp-board li { position: relative; }
+.rp-row-hit { position: absolute; inset: 0; width: 100%; background: none; border: 0; padding: 0; margin: 0; cursor: pointer; border-radius: 6px; }
+.rp-row-hit:hover { background: rgba(255, 255, 255, 0.05); }
+.rp-row-hit:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+.rp-board li.sel { background: rgba(255, 255, 255, 0.09); box-shadow: inset 3px 0 0 var(--team, #fff); border-radius: 6px; }
