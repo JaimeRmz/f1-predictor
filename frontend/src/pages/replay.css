@@ -87,3 +87,13 @@
 /* the TIME / LAP sliders: label on the left, slider filling the rest (a later generic label rule had turned this into stacked blocks) */
 .rp .rp-range { display: grid; grid-template-columns: 3rem minmax(0, 1fr); align-items: center; gap: 0.6rem; }
 .rp .rp-range span { white-space: nowrap; }
+
+/* tyre compound badge on the Order board (real replay only): a letter inside a coloured circle, never colour alone */
+.rp-board.has-tyre li { grid-template-columns: 1.4rem 4px auto 2.6rem 1.3rem minmax(0, 1fr); }
+.rp-tyre-slot { display: inline-flex; width: 1.3rem; justify-content: center; }
+.rp-tyre { display: inline-grid; place-items: center; width: 1.15rem; height: 1.15rem; border-radius: 50%; font-style: normal; font-weight: 800; font-size: 0.64rem; line-height: 1; border: 2px solid; }
+.rp-tyre.S { background: #15060a; color: #ff4d4d; border-color: #e10600; }
+.rp-tyre.M { background: #15130a; color: #ffd12e; border-color: #ffd12e; }
+.rp-tyre.H { background: #111; color: #f4f4f4; border-color: #f4f4f4; }
+.rp-tyre.I { background: #071309; color: #55d64a; border-color: #43b02a; }
+.rp-tyre.W { background: #07101c; color: #5aa0ff; border-color: #2f7de1; }

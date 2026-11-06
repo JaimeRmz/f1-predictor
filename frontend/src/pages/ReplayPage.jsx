@@ -3,6 +3,7 @@ import { GlassPanel } from "../components/GlassPanel.jsx";
 import Panel from "../components/DashPanel.jsx";
 import RaceStrip from "../components/RaceStrip.jsx";
 import ReplayPlayer from "../components/ReplayPlayer.jsx";
+import { STINTS_CREDIT } from "../lib/stints.js";
 import ProjectedRace from "../components/ProjectedRace.jsx";
 import { SkeletonList } from "../shared.jsx";
 import { useManifest, useReplayRace } from "../lib/useReplayData.js";
@@ -74,7 +75,7 @@ const ReplayPage = () => {
         <p className="rp-credit">
           {projectedRace
             ? <>Projected race (illustration): the model's ranking played out as a race. It shows the order the model expects, not a forecast of the exact finishing order or of events such as pit stops, safety cars or incidents.<br />Circuit shapes and typical times derived from OpenF1 position data (CC BY-NC-SA 4.0).</>
-            : <>Replay of real recorded positions, interpolated; not official timing.<br />{manifest.license || CREDIT}</>}
+            : <>Replay of real recorded positions, interpolated; not official timing.<br />{manifest.license || CREDIT} {STINTS_CREDIT}</>}
         </p>
       )}
     </div>

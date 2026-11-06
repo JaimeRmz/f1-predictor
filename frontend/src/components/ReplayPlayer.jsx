@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import OrderBoard from "./OrderBoard.jsx";
 import { useOrderMode } from "../lib/useOrderMode.js";
+import { useStints } from "../lib/useStints.js";
+import { tiresAt } from "../lib/stints.js";
 import { carStateAt, boardAt, lapAt, lapStartTime, bandAt, outageAt, raceClock, trackBounds } from "../lib/replay.js";
 import "../pages/replay.css";
 
@@ -22,6 +24,7 @@ const ReplayPlayer = ({ rep, projected = false }) => {
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(4);
   const [orderMode, setOrderMode] = useOrderMode();
+  const stints = useStints(projected ? null : rep.race.raceId);        // real replays only; null (nothing shown) while loading or when the race has no file
   const [ui, setUi] = useState(() => snapshot(rep, rep.startT));
 
   const bounds = useRef(trackBounds(rep));
@@ -202,7 +205,7 @@ const ReplayPlayer = ({ rep, projected = false }) => {
           </div>
         </div>
 
-        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} />
+        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} tires={stints ? tiresAt(rep, stints, ui.t) : null} />
       </div>
     </div>
   );

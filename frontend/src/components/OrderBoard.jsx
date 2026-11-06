@@ -1,15 +1,16 @@
 import { TeamMark } from "./TeamMark.jsx";
 import { orderLabels } from "../lib/replay.js";
+import { COMPOUND_NAME } from "../lib/stints.js";
 
 /**
  * The order board shared by the Replay page (real and projected) and the Home race sim.
  * rows: boardAt() rows sorted by position. mode: "gap" | "int" (see orderLabels). limit: show only the first N rows (Home).
  */
-const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compact = false, note = true }) => {
+const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compact = false, note = true, tires = null }) => {
   const labels = orderLabels(rows, mode);
   const shown = limit ? rows.slice(0, limit) : rows;
   return (
-    <aside className={`rp-board${compact ? " compact" : ""}`} aria-label="Order board">
+    <aside className={`rp-board${compact ? " compact" : ""}${tires ? " has-tyre" : ""}`} aria-label="Order board">
       <div className="rp-board-h">
         <h2>Order <small>{projected ? "in this illustration" : "official positions"}</small></h2>
         <div className="rp-mode" role="group" aria-label="Order board column">
@@ -22,6 +23,7 @@ const OrderBoard = ({ rows, mode, onMode, projected = false, limit = null, compa
         {shown.map((r, i) => (
           <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}${r.noData ? " nodata" : ""}`} style={{ "--team": r.colour }}>
             <b>{r.out ? "–" : r.pos}</b><i className="rp-bar" /><TeamMark team={r.team} size={18} /><span className="rp-code">{r.code}</span>
+            {tires && <span className="rp-tyre-slot">{tires[r.code] && <i className={`rp-tyre ${tires[r.code]}`} role="img" aria-label={`${COMPOUND_NAME[tires[r.code]]} tyres`} title={`${COMPOUND_NAME[tires[r.code]]} tyres`}>{tires[r.code]}</i>}</span>}
             <em title={mode === "int" ? "Time to the car directly ahead, as of the start of the current lap" : "Gap to the leader, as of the start of the current lap"}>{labels[i]}</em>
           </li>
         ))}

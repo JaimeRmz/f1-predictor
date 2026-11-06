@@ -4,6 +4,7 @@ import zlib from "node:zlib";
 import {
   decodeDelta, cubicAt, decodeReplay, findOutages, outageAt, carStateAt, officialPosition, lapAt, lapStartTime, boardAt, gapLabel, orderLabels, bandAt, raceClock, trackBounds, parseReplayBuffer,
 } from "./replay.js";
+import { decodeStints, compoundAt, carLapAt, tiresAt } from "./stints.js";
 
 let n = 0;
 const t = (name, got, want) => { assert.deepEqual(got, want, name); n++; };
@@ -129,5 +130,23 @@ t("a hole under 4 s is not reported", findOutages([{ status: null, outT: null, h
   t("gaps that disagree with the order (an overtake since the lap start) give -", orderLabels([R(1, null), R(2, 9), R(3, 7)], "int")[2], "-");
   t("first row with no car ahead: -; the next one still has a real difference", orderLabels([R(2, 5), R(3, 7)], "int"), ["-", "+2.0"]);
   t("empty board", orderLabels([], "int"), []);
+}
+// ── tyre stints: lookup by lap
+{
+  const st = [["M", 1, 27], ["H", 28, 57]];
+  t("compound on an ordinary lap", [compoundAt(st, 1), compoundAt(st, 14), compoundAt(st, 57)], ["M", "M", "H"]);
+  t("a lap exactly on a stop: the in-lap is the old tyre, the next lap the new one", [compoundAt(st, 27), compoundAt(st, 28)], ["M", "H"]);
+  t("outside every stint or unknown lap: null", [compoundAt(st, 0), compoundAt(st, 58), compoundAt(st, NaN), compoundAt(st, null)], [null, null, null, null]);
+  t("a car with no data: null", [compoundAt(undefined, 5), compoundAt(null, 5), compoundAt([], 5)], [null, null, null]);
+  t("a hole between stints gives null, not a guess", compoundAt([["S", 1, 10], ["H", 15, 30]], 12), null);
+  const ls = new Float64Array([100, 200, 300]);
+  t("car lap from its own crossings", [carLapAt(ls, 50), carLapAt(ls, 100), carLapAt(ls, 199.9), carLapAt(ls, 200), carLapAt(ls, 999)], [1, 1, 1, 2, 3]);
+  t("car lap with no data: null", [carLapAt(undefined, 5), carLapAt(new Float64Array(), 5)], [null, null]);
+  const dec = decodeStints({ v: 1, stints: { AAA: [["H", 28, 57], ["M", 1, 27]], BBB: [["X", 1, 5]], CCC: "bad", DDD: [["S", 9, 3]] } });
+  t("decodeStints keeps valid stints sorted and drops the rest", [[...dec.keys()], dec.get("AAA")], [["AAA"], [["M", 1, 27], ["H", 28, 57]]]);
+  t("decodeStints of junk is null (never throws)", [decodeStints(null), decodeStints({}), decodeStints({ stints: 3 }), decodeStints({ stints: { A: [] } })], [null, null, null, null]);
+  const repT = { cars: [{ code: "AAA", lapStarts: new Float64Array([10, 20, 30]) }, { code: "ZZZ", lapStarts: new Float64Array([10, 20, 30]) }, { code: "NOL", lapStarts: new Float64Array() }] };
+  const sm = new Map([["AAA", [["M", 1, 1], ["H", 2, 3]]], ["NOL", [["S", 1, 9]]]]);
+  t("tiresAt switches at the lap after the stop and omits cars with no data", [tiresAt(repT, sm, 15), tiresAt(repT, sm, 25), tiresAt(repT, null, 25)], [{ AAA: "M" }, { AAA: "H" }, {}]);
 }
 console.log(`${n} replay tests passed`);

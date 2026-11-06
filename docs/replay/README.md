@@ -33,6 +33,17 @@ both modes; OUT / DSQ / PIT / NO DATA tags win; a lapped car (text gap such as "
 order (an overtake since the lap began) shows "-" in INT mode; a retired car is skipped when looking for "the car ahead". The choice is kept in
 `localStorage` (key `f1.orderMode`, wrapped in try/catch; without storage the board starts on GAP). Buttons carry `aria-pressed`.
 
+## Tyre compounds on the Order board (real replay only)
+`python scripts/build_stints.py` writes `stints-<raceId>.json` (about 1 KB each, 42 files) next to the replay files:
+`{"v":1,"raceId":1172,"source":"...","stints":{"NOR":[["M",1,27],["H",28,57]]}}` = [compound letter S/M/H/I/W, first lap, last lap].
+Sources, first match wins: `data/openf1_strategy/<raceId>.json` (already in the repo, 9 races), a local OpenF1 response cache
+(`analysis/cache/openf1`, 4 races), then OpenF1 `/stints` (one call per race, at most 25 a minute; 29 calls the first time). The script only reads the
+replay `.json.gz` files, it never rewrites them. Coverage per race (cars with stint data / cars in the replay): `docs/replay/STINTS.md`.
+In the player (`useStints`, `stints.js`) the file is fetched only when a real replay opens; each car shows a letter inside a coloured circle
+(S red, M yellow, H white, I green, W blue) that changes on the lap after a stop (a car's own lap, from its own line crossings; the in-lap keeps the
+old tyre). A race without a file, or a car without stint data, shows nothing and nothing breaks. The Projected race shows no tyre info.
+The replay credit line adds "Tyre data: OpenF1 /stints (CC BY-NC-SA 4.0)."
+
 ## Try it locally
 ```
 python scripts/build_replay.py --race-id 1147        # Japan 2025 (needs the data/*.csv in the repo and network)
@@ -44,7 +55,7 @@ Everything else (all 43): `python scripts/build_replay.py --all` (about 80 s a r
 ## Hosting in production (Supabase Storage)
 The page works without any of this: when `VITE_REPLAY_BASE_URL` is unset or unreachable it shows "Replay not available".
 1. Supabase dashboard → **Storage → New bucket**: name **`replay`**, **Public bucket: on**, file size limit 5 MB, allowed MIME types left empty.
-2. Upload the contents of `frontend/public/replay-dev/` (the 43 `*.json.gz` files and `manifest.json`) to the root of the bucket. In the dashboard:
+2. Upload the contents of `frontend/public/replay-dev/` (the 43 `*.json.gz` files, `manifest.json`, and for tyres the 42 `stints-<raceId>.json` files) to the root of the bucket. In the dashboard:
    open the bucket and drag the files in. With the CLI (linked project): `supabase storage cp -r frontend/public/replay-dev ss:///replay --experimental`.
    Set the content type of `manifest.json` to `application/json` and of the `.gz` files to `application/gzip`. Do **not** set `Content-Encoding: gzip`:
    the player inflates the files itself.

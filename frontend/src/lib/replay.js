@@ -54,6 +54,7 @@ export const decodeReplay = (j) => {
     status: d.status, outT: d.out_t, laps: d.laps,
     x: decodeDelta(j.pos[d.code].x), y: decodeDelta(j.pos[d.code].y),
     holes: j.gaps?.[d.code] || null, pitRuns: j.in_pit?.[d.code] || null,
+    lapStarts: Float64Array.from(j.lap_starts?.[d.code] || []),
     boardT: Float32Array.from((j.board[d.code] || []).map((e) => e[0])),
     boardP: Uint8Array.from((j.board[d.code] || []).map((e) => e[1])),
   }));
