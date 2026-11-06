@@ -1,7 +1,7 @@
 // node docs/projected/capture-projected.cjs <scratch-dir>
 // Drives the Projected race mode in a real browser (vite dev server :5173, circuit packs in frontend/public/replay-dev/, the LOCAL backend
-// :8000 for model scores; every other non-local request is blocked). Checks the default "typical race" seed, the legend, the TIME / LAP
-// slider layout and that nothing autoplays, then screenshots Brazil and Las Vegas at lap ~22.
+// :8000 for model scores; every other non-local request is blocked). Checks the notice copy, that there is no seed / "run another race" / "typical race" UI, the legend, the
+// TIME / LAP slider layout and that nothing autoplays, then screenshots Brazil and Las Vegas at lap ~22.
 const path = require('path');
 const puppeteer = require(path.resolve(__dirname, '../../frontend/node_modules/puppeteer-core'));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -25,7 +25,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     await page.evaluate(src => [...document.querySelectorAll('.hm-chip')].find(b => new RegExp(src).test(b.innerText)).click(), re.source);
     await page.waitForSelector('.pr-notice', { timeout: 120000 }); await page.waitForSelector('.rp canvas', { timeout: 30000 }); await sleep(1200);
     const i = await page.evaluate(() => ({
-      seed: document.querySelector('.pr-seed').innerText.replace(/\s+/g, ' '), play: document.querySelector('.rp-play').innerText, legend: document.querySelector('.rp-legend').innerText.replace(/\s+/g, ' '),
+      notice: document.querySelector('.pr-notice').innerText.replace(/\s+/g, ' '), noSeedUi: !document.querySelector('.pr-seed') && !document.querySelector('.pr-again') && !/typical race|run another|seed/i.test(document.querySelector('.pr-bar').innerText), play: document.querySelector('.rp-play').innerText, legend: document.querySelector('.rp-legend').innerText.replace(/\s+/g, ' '),
       sliders: [...document.querySelectorAll('.rp-range')].map(l => { const s = l.querySelector('span').getBoundingClientRect(), n = l.querySelector('input').getBoundingClientRect(); return { label: l.querySelector('span').innerText, sameRow: Math.abs((s.y + s.height / 2) - (n.y + n.height / 2)) < 12, labelLeftOfSlider: s.x + s.width <= n.x }; }),
       h1: document.querySelector('h1').innerText.replace(/\s+/g, ' '), order: [...document.querySelectorAll('.rp-board li .rp-code')].map(e => e.innerText).join(' '),
     }));

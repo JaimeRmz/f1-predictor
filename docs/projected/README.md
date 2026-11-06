@@ -1,15 +1,25 @@
 # Projected race
 
-One illustrative race for an upcoming round, on the Replay page (strip chips marked `PROJECTED`). It is generated in the browser, replayed by
-the same player as the recorded races, and never read as a forecast. It changes no score, share or probability anywhere on the site.
+The model's ranking played out as a race, for an upcoming round, on the Replay page (strip chips marked `PROJECTED`). It is generated in the
+browser and replayed by the same player as the recorded races. It changes no score or share anywhere on the site.
 
-**What it is:** dots running lap by lap on the real circuit, starting from the model's predicted grid, finishing in an order drawn from the
-the model's own ranking shuffled by noise set from the model's real backtest errors (a "rank-anchored" draw: see the header of `frontend/src/lib/projectedRace.js`), with 1-2 stops on the real pit
-lane path, lapped cars at the back, and a seed shown on screen (same seed = same race; "Run another race" draws a new one).
-The race opens on a **typical** seed (the most common outcome): of 10,000 seeds, keep only those where the model's rank-1 driver
-(`modelRanking()[0]`) wins, then take the one whose finishing order is closest to the median order (each driver's mean finishing place
-over all 10,000 seeds). It is deterministic and computed in the browser from the same scores (~0.1-0.2 s). Brazil (rank-1 ANT, who wins ~28% of
-draws): seed 6590, order ANT VER LEC HAD RUS HAM NOR PIA BOR LAW ...
+**What it shows:** dots running lap by lap on the real circuit, starting from the model's predicted grid and **finishing in exactly the order of
+the Race page's "Full forecast" table** (`rankRows()` in `homeModel.js`: podium score, ties by win score), so the animation and the page always
+agree for every circuit. Gaps grow monotonically with the finishing order, cars make 1-2 stops in the real pit lane, lapped cars sit at the back.
+There is no seed display, no "Run another race" button and no "typical race" label; the race always uses `DEFAULT_SEED` (1), which only varies
+gaps, stop timing and pace noise, never the order. The ILLUSTRATION label stays, with this copy:
+"The model's ranking played out as a race. It shows the order the model expects, not a forecast of the exact finishing order or of events such as
+pit stops, safety cars or incidents." The Replay page footer says the same.
+
+**How the order gets in:** `inputsFromRows(rows).order` lists driver codes in table order and `generateProjectedRace(pack, grid, scores, seed, finishOrder)`
+ends the race in that order. `modelRanking()` (win score first) is no longer used for the order; on the saved model rows it differs from the table for
+Brazil (the last three places), Las Vegas (VER and ANT swap at the top) and Abu Dhabi (the same swap, plus the last three); Qatar is identical.
+The table wins in every case.
+
+## The random draw (kept, unused)
+The earlier version drew the order at random (rank-anchored noise fitted to the model's backtest errors, a seed on screen, "Run another race", a
+"typical" seed chosen among 10,000). That code is still in `projectedRace.js` (`rankAnchoredOrder`, `drawnOrder`, `typicalSeed`, `randomSeed`,
+`DRAW_PARAMS`) and its tests still run, but the site does not call it, so a random mode can come back later.
 
 ## How the draw was set (analysis/23-26_projected_draw_*)
 `analysis/23_projected_draw_profile.py` measures the model's real error by predicted rank over the 43 backtest races (predicted-grid condition,
@@ -19,19 +29,18 @@ retirements removed). `analysis/24_projected_draw_fit.py` fits a first set of no
 place seen in the real races for their rank, and the average finishing place never improves as the model rank gets worse (to within 0.3 places).
 `analysis/25_projected_draw_compare.mjs` prints the old-vs-new table (`analysis/out/projected_draw_compare.txt`).
 **What it is not:** no crashes, retirements, safety cars or red flags; a driver with no model score is not simulated.
-The label "Illustration: one possible race consistent with the model's scores. It does not predict specific events such as pit stops, safety
-cars or incidents." is always on screen.
+The ILLUSTRATION label is always on screen.
 
 ## Files
 | | |
 |---|---|
 | `scripts/build_circuit_packs.py` | reads the replay files, writes `pack-<circuitRef>.json` (3-4 KB each) and `packs.json` next to them |
-| `frontend/src/lib/projectedRace.js` | pure generator `(pack, grid, scores, seed) -> replay file object`; ~120 ms for 71 laps x 20 cars |
-| `frontend/src/lib/projectedRace.test.mjs` | unit tests (`node src/lib/run-test.mjs` from `frontend/`) |
+| `frontend/src/lib/projectedRace.js` | pure generator `(pack, grid, scores, seed, finishOrder?) -> replay file object`; ~120 ms for 71 laps x 20 cars |
+| `frontend/src/lib/projectedRace.test.mjs`, `projectedFixtures.mjs` | unit tests (`node src/lib/run-test.mjs` from `frontend/`); the fixtures are saved model rows for the four upcoming rounds |
 | `frontend/src/lib/projectedInputs.js`, `useProjectedRace.js`, `components/ProjectedRace.jsx` | rows -> inputs, fetching, UI |
 
 ## Try it locally
-1. Fill `frontend/public/replay-dev/` with `python backend/scripts/build_replay.py --all` (see `docs/replay/README.md`).
+1. Fill `frontend/public/replay-dev/` with `python scripts/build_replay.py --all` (see `docs/replay/README.md`).
 2. `python scripts/build_circuit_packs.py` (adds the packs and `packs.json` to that folder).
 3. Run the backend locally (`uvicorn`, port 8000) and `npm run dev` in `frontend/`, then Race > Replay > a `PROJECTED` chip.
 

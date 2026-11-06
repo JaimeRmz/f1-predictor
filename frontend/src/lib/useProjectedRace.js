@@ -50,12 +50,12 @@ export const usePack = (entry) => {
   return s.file === file ? s : { status: "loading", pack: null };
 };
 
-/** One projected race for (pack, model rows, seed), decoded for the existing player. Same inputs always give the same race. */
+/** One projected race for (pack, model rows, seed), decoded for the existing player. It finishes in the Race page table order. Same inputs always give the same race. */
 export const useProjectedRace = (pack, rows, seed) => useMemo(() => {
   if (!pack || !rows) return { rep: null, error: null };
   try {
-    const { grid, scores } = inputsFromRows(rows);
-    const j = generateProjectedRace(pack, grid, scores, seed);
+    const { grid, scores, order } = inputsFromRows(rows);
+    const j = generateProjectedRace(pack, grid, scores, seed, order);
     return { rep: decodeReplay(j), error: null };
   } catch (e) {
     return { rep: null, error: e.message || "Could not build the illustration" };

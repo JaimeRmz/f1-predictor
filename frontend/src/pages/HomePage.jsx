@@ -6,6 +6,7 @@ import RaceStrip from "../components/RaceStrip.jsx";
 import TitleRow from "../components/RaceTitle.jsx";
 import Forecast from "../components/ForecastTable.jsx";
 import Panel from "../components/DashPanel.jsx";
+import RaceSimBand from "../components/RaceSimBand.jsx";
 import ScoreFigure from "../components/ScoreFigure.jsx";
 import { useRaceRows } from "../lib/useRaceRows.js";
 import { tz, dayTime } from "../lib/timeFmt.js";
@@ -166,7 +167,7 @@ const SchedulePanel = ({ race }) => {
 };
 
 // ── page ───────────────────────────────────────────────────────
-const HomePage = () => {
+const HomePage = ({ onOpenReplay = null }) => {
   const [round, setRound] = useState(defaultRound);
   const race = raceByRound(round) || raceByRound(defaultRound());
   const last = lastRaceFor(race);
@@ -192,6 +193,7 @@ const HomePage = () => {
           <div className="hm-top3">{ranked.slice(0, 3).map((r, i) => <Top3Card key={r.driverRef} r={r} i={i} />)}</div>
         </section>
       )}
+      {ranked.length > 0 && <RaceSimBand key={race.raceId} race={race} rows={cur.rows} onOpenFull={onOpenReplay} />}
       <div className="hm-grid">
         <div className="hm-main">
           {ranked.length > 0 && <Forecast ranked={ranked} note={raceNote(race.raceId)} />}

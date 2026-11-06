@@ -1,14 +1,25 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { TeamMark } from "./TeamMark.jsx";
-import { carStateAt, boardAt, lapAt, lapStartTime, bandAt, outageAt, raceClock, trackBounds, gapLabel } from "../lib/replay.js";
+import OrderBoard from "./OrderBoard.jsx";
+import { useOrderMode } from "../lib/useOrderMode.js";
+import { useStints } from "../lib/useStints.js";
+import { tiresAt } from "../lib/stints.js";
+import { carStateAt, boardAt, lapAt, lapStartTime, bandAt, outageAt, raceClock, trackBounds } from "../lib/replay.js";
 import "../pages/replay.css";
 
 const SPEEDS = [1, 4, 16, 64];
+const COMPACT_SPEEDS = [1, 4, 16];
 const STEP_S = 10;
 
 // Canvas player. The animation loop (requestAnimationFrame) owns the clock in a ref and draws straight to the canvas; React state is
 // touched only a few times a second (the readout, scrubbers and order board), never per frame.
-const ReplayPlayer = ({ rep, projected = false }) => {
+// Props for the Home "Race sim" band (everything optional; the Replay page passes none of them):
+//   compact     smaller layout: no scrubbers or legend, top-10 order board, SPEEDS without 64x
+//   deferPlay   the picture is only a preview of the start: Play asks onPlayRequest() (to download the real replay) instead of playing; seeking is off
+//   loading     the real replay is being downloaded after Play was pressed
+//   preview     the board shows the starting grid only (no gaps, no GAP / INT toggle)
+//   autoPlay    start playing when this player mounts (used right after the visitor pressed Play and the replay arrived); ignored under reduced motion
+//   openFull    node rendered at the end of the controls ("OPEN FULL VIEW")
+const ReplayPlayer = ({ rep, projected = false, compact = false, deferPlay = false, onPlayRequest = null, loading = false, preview = false, autoPlay = false, openFull = null }) => {
   const wrapRef = useRef(null);
   const canvasRef = useRef(null);
   const staticRef = useRef(null);            // offscreen layer: outline, pit lane, start/finish
@@ -17,11 +28,16 @@ const ReplayPlayer = ({ rep, projected = false }) => {
   const timeRef = useRef(rep.startT);
   const dirty = useRef(true);
   const uiDirty = useRef(true);
-  const ctl = useRef({ playing: false, speed: 4 });
-  const [playing, setPlaying] = useState(false);
+  // autoPlay = the visitor just pressed Play and the replay arrived. Under reduced motion it waits for another press.
+  const [autoStart] = useState(() => autoPlay && !(typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches));
+  const ctl = useRef({ playing: autoStart, speed: 4 });
+  const [playing, setPlaying] = useState(autoStart);
   const [speed, setSpeed] = useState(4);
+  const [orderMode, setOrderMode] = useOrderMode();
+  const stints = useStints(projected ? null : rep.race.raceId);        // real replays only; null (nothing shown) while loading or when the race has no file
   const [ui, setUi] = useState(() => snapshot(rep, rep.startT));
 
+  const speeds = compact ? COMPACT_SPEEDS : SPEEDS;
   const bounds = useRef(trackBounds(rep));
 
   // ── drawing ──
@@ -124,14 +140,16 @@ const ReplayPlayer = ({ rep, projected = false }) => {
 
   // ── actions ──
   const seek = useCallback((t) => {
+    if (deferPlay) return;
     timeRef.current = Math.min(Math.max(t, rep.startT), rep.endT);
     dirty.current = true; uiDirty.current = false; setUi(snapshot(rep, timeRef.current));
-  }, [rep]);
+  }, [rep, deferPlay]);
   const toggle = useCallback(() => {
+    if (deferPlay) { onPlayRequest?.(); return; }
     if (!ctl.current.playing && timeRef.current >= rep.endT) seek(rep.startT);
     ctl.current.playing = !ctl.current.playing; setPlaying(ctl.current.playing); uiDirty.current = true;
-  }, [rep, seek]);
-  const chooseSpeed = useCallback((s) => { ctl.current.speed = s; setSpeed(s); }, []);
+  }, [rep, seek, deferPlay, onPlayRequest]);
+  const chooseSpeed = useCallback((s) => { if (deferPlay) return; ctl.current.speed = s; setSpeed(s); }, [deferPlay]);
   const jumpLap = useCallback((delta) => {
     const cur = lapAt(rep, timeRef.current), next = Math.min(Math.max(cur + delta, 1), rep.lapsTotal);
     const ts = lapStartTime(rep, next);
@@ -151,8 +169,8 @@ const ReplayPlayer = ({ rep, projected = false }) => {
       if (e.shiftKey) jumpLap(dir); else seek(timeRef.current + dir * STEP_S);
     } else if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       e.preventDefault();
-      const i = SPEEDS.indexOf(ctl.current.speed) + (e.key === "ArrowUp" ? 1 : -1);
-      chooseSpeed(SPEEDS[Math.min(Math.max(i, 0), SPEEDS.length - 1)]);
+      const i = speeds.indexOf(ctl.current.speed) + (e.key === "ArrowUp" ? 1 : -1);
+      chooseSpeed(speeds[Math.min(Math.max(i, 0), speeds.length - 1)]);
     }
   };
 
@@ -161,20 +179,21 @@ const ReplayPlayer = ({ rep, projected = false }) => {
   const band = ui.band;
 
   return (
-    <div className="rp" ref={wrapRef} tabIndex={0} onKeyDown={onKeyDown} aria-label="Race replay player. Space plays or pauses, left and right arrows step ten seconds, shift with arrows steps a lap, up and down change speed.">
+    <div className={`rp${compact ? " rp-compact" : ""}`} ref={wrapRef} tabIndex={0} onKeyDown={onKeyDown} aria-label="Race replay player. Space plays or pauses, left and right arrows step ten seconds, shift with arrows steps a lap, up and down change speed.">
       <div className="rp-grid">
         <div className="rp-stage">
-          <div className="rp-canvaswrap"><canvas ref={canvasRef} role="img" aria-label={`Track map of the ${rep.race.name} ${rep.race.year} with every car's recorded position`} /></div>
+          <div className="rp-canvaswrap"><canvas ref={canvasRef} role="img" aria-label={projected ? `Track map of the ${rep.race.name} with the cars on the starting grid and, once played, the illustration` : `Track map of the ${rep.race.name} ${rep.race.year} with every car's recorded position`} /></div>
 
           <div className="rp-controls">
-            <button type="button" className="rp-btn rp-play" onClick={toggle} aria-label={playing ? "Pause replay" : "Play replay"}>{playing ? "❚❚ PAUSE" : "▶ PLAY"}</button>
-            <button type="button" className="rp-btn" onClick={() => jumpLap(-1)} aria-label="Previous lap">⏮ LAP</button>
-            <button type="button" className="rp-btn" onClick={() => seek(timeRef.current - STEP_S)} aria-label="Back ten seconds">−10 s</button>
-            <button type="button" className="rp-btn" onClick={() => seek(timeRef.current + STEP_S)} aria-label="Forward ten seconds">+10 s</button>
-            <button type="button" className="rp-btn" onClick={() => jumpLap(1)} aria-label="Next lap">LAP ⏭</button>
+            <button type="button" className="rp-btn rp-play" onClick={toggle} disabled={loading} aria-busy={loading || undefined} aria-label={loading ? "Loading the replay" : playing ? "Pause replay" : "Play replay"}>{loading ? "LOADING…" : playing ? "❚❚ PAUSE" : "▶ PLAY"}</button>
+            {!compact && <button type="button" className="rp-btn" onClick={() => jumpLap(-1)} aria-label="Previous lap">⏮ LAP</button>}
+            <button type="button" className="rp-btn" onClick={() => seek(timeRef.current - STEP_S)} disabled={deferPlay} aria-label="Back ten seconds">−10 s</button>
+            <button type="button" className="rp-btn" onClick={() => seek(timeRef.current + STEP_S)} disabled={deferPlay} aria-label="Forward ten seconds">+10 s</button>
+            {!compact && <button type="button" className="rp-btn" onClick={() => jumpLap(1)} aria-label="Next lap">LAP ⏭</button>}
             <div className="rp-speeds" role="group" aria-label="Playback speed">
-              {SPEEDS.map((s) => <button key={s} type="button" className="rp-btn rp-sp" aria-pressed={speed === s} onClick={() => chooseSpeed(s)}>{s}x</button>)}
+              {speeds.map((s) => <button key={s} type="button" className="rp-btn rp-sp" aria-pressed={speed === s} disabled={deferPlay} onClick={() => chooseSpeed(s)}>{s}x</button>)}
             </div>
+            {openFull}
           </div>
 
           <div className="rp-readout" aria-live="off">
@@ -184,7 +203,7 @@ const ReplayPlayer = ({ rep, projected = false }) => {
             {ui.outage && <span className="rp-band GAP" title="OpenF1 sent no usable positions for most cars at this moment">DATA GAP · NO POSITIONS</span>}
           </div>
 
-          <div className="rp-scrub">
+          {!compact && <div className="rp-scrub">
             <div className="rp-marks" aria-hidden="true">
               {rep.bands.map((b, i) => <span key={i} className={`rp-mark ${b.kind}`} style={{ left: pct(Math.max(b.a, rep.startT)), width: `${(100 * (Math.min(b.b, rep.endT) - Math.max(b.a, rep.startT))) / span}%` }} title={b.kind === "SC" ? "Safety car" : b.kind === "VSC" ? "Virtual safety car" : "Red flag"} />)}
               {rep.outages.map((o, i) => <span key={`o${i}`} className="rp-mark GAP" style={{ left: pct(Math.max(o.a, rep.startT)), width: `${Math.max(0.4, (100 * (Math.min(o.b, rep.endT) - Math.max(o.a, rep.startT))) / span)}%` }} title="Data gap: no positions from the feed" />)}
@@ -197,23 +216,10 @@ const ReplayPlayer = ({ rep, projected = false }) => {
               <input type="range" min={1} max={rep.lapsTotal} step={1} value={Math.max(ui.lap, 1)} onChange={(e) => { const ts = lapStartTime(rep, Number(e.target.value)); if (ts != null) seek(ts); }} aria-label="Jump to lap" aria-valuetext={`Lap ${Math.max(ui.lap, 1)} of ${rep.lapsTotal}`} />
             </label>
             <div className="rp-legend" aria-hidden="true">{!projected && <><i className="SC" /> safety car <i className="VSC" /> virtual SC <i className="RED" /> red flag <i className="GAP" /> data gap </>}<i className="tick" /> pit stop</div>
-          </div>
+          </div>}
         </div>
 
-        <aside className="rp-board" aria-label="Order board">
-          <h2>Order <small>{projected ? "in this illustration" : "official positions"}</small></h2>
-          <ol>
-            {ui.board.map((r) => (
-              <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}${r.noData ? " nodata" : ""}`} style={{ "--team": r.colour }}>
-                <b>{r.out ? "–" : r.pos}</b><i className="rp-bar" /><TeamMark team={r.team} size={18} /><span className="rp-code">{r.code}</span>
-                <em title="Gap to the leader, as of the start of the current lap">{gapLabel(r)}</em>
-              </li>
-            ))}
-          </ol>
-          <p className="rp-note">{projected
-            ? "Gaps update once a lap. Order and gaps come from the illustration itself, not from a timing feed."
-            : "Gaps update once a lap. Positions are the official feed; they can lag the dots by a moment. NO DATA means OpenF1 sent no position for that car just now."}</p>
-        </aside>
+        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} preview={preview} compact={compact} limit={compact ? 10 : null} note={!compact} tires={stints ? tiresAt(rep, stints, ui.t) : null} />
       </div>
     </div>
   );

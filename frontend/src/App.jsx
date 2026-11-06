@@ -32,6 +32,7 @@ export default function App() {
   const [page, setPage] = useState("Home");
   const [pageKey, setPageKey] = useState(0);
   const [showSweep, setShowSweep] = useState(false);
+  const [replayTarget, setReplayTarget] = useState(null);      // chip the Replay page opens on (set by the Home race sim's OPEN FULL VIEW)
 
   const handleNavigate = () => {
     setPageKey(k => k + 1);
@@ -40,9 +41,9 @@ export default function App() {
   };
 
   const pages = {
-    [PAGES.home]: <HomePage />,
+    [PAGES.home]: <HomePage onOpenReplay={(target) => { setReplayTarget(target); setPage(PAGES.replay); handleNavigate(); }} />,
     [PAGES.predictor]: <PredictorPage />,
-    [PAGES.replay]: <ReplayPage />,
+    [PAGES.replay]: <ReplayPage initial={replayTarget} onOpened={() => setReplayTarget(null)} />,
     [PAGES.race]: <NextRacePage />,
     [PAGES.whatif]: <WhatIfPage />,
     [PAGES.picks]: <MyPicksPage />, // kept, but no longer linked from the nav

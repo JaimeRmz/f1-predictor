@@ -1,14 +1,18 @@
 // "Projected race": ONE illustrative race on a real circuit, built in the browser from a circuit pack, the predicted grid and the
 // model's existing scores. It returns the replay file format (see backend/scripts/build_replay.py) so the same player draws it.
 //
-// This is an illustration, not a forecast. Nothing here changes a score or a share, and nothing in the output is shown as a probability.
+// NOTE: the site now plays out the model's own order (finishOrder = the Race page table order, see projectedInputs.js) with DEFAULT_SEED.
+// The random draw below (rankAnchoredOrder, drawnOrder, typicalSeed, randomSeed, DRAW_PARAMS) is kept but UNUSED by the site, so a
+// "run another race" mode can come back later. It is still covered by the unit tests.
+//
+// This is an illustration, not a forecast. Nothing here changes a score or a share, and nothing in the output is shown as a percentage.
 // What is drawn: dots running lap by lap from the predicted grid, a finishing order drawn from the model's scores, 1-2 pit stops on the
 // real pit-lane path, lapped cars at the back. What is NOT modelled: crashes, retirements, safety cars, red flags, weather, penalties.
 //
 // How the finishing order is drawn (rank-anchored): start from the model's own ranking for the race (the highest win score takes P1, the rest
 // follow by podium score), add noise to each rank whose size comes from the model's real backtest errors for that rank (a place or two
 // most of the time, now and then a big upset), and sort. So front runners usually finish near the front, big upsets are rare but possible, and the back of the
-// field stays at the back. Drivers with no model score are not simulated. The scores are used for the ranking only; nothing is shown as a probability.
+// field stays at the back. Drivers with no model score are not simulated. The scores are used for the ranking only; nothing is shown as a percentage.
 // (An earlier draw weighted every driver by its scores plus a floor and was too flat below the top six: see analysis/25_projected_draw_compare.mjs.)
 //
 // How the race is shaped: finishing times are fixed first (the drawn order plus random gaps, some cars lapped). Each driver's race pace is
@@ -28,7 +32,10 @@ const PIT_MPS = 21;               // pit lane speed limit, m/s (about 75 km/h)
 const AFTER = 0.8;                // fraction of a lap a car cruises after its flag, then parks
 
 /** Shown with every projected race. */
-export const PROJECTED_LABEL = "Illustration: one possible race consistent with the model's scores. It does not predict specific events such as pit stops, safety cars or incidents.";
+export const PROJECTED_LABEL = "The model's ranking played out as a race. It shows the order the model expects, not a forecast of the exact finishing order or of events such as pit stops, safety cars or incidents.";
+
+/** The projected race always uses this seed (it only varies gaps, stops and pace noise, never the finishing order). */
+export const DEFAULT_SEED = 1;
 
 // ── seeded randomness
 export const mulberry32 = (seed) => {
@@ -198,9 +205,11 @@ const quantileSample = (q, u) => {                 // inverse CDF through (0.1, 
  * @param grid   [{ code, name, team, colour, number? }] in predicted grid order (pole first)
  * @param scores { [code]: { win, podium } } the model's existing scores; drivers without a finite podium score are not simulated
  * @param seed   integer; the same seed gives the same race
+ * @param finishOrder optional driver codes in finishing order (the Race page table order). When given, the race ends in exactly this order;
+ *                    when omitted the order is drawn (rankAnchoredOrder, currently unused by the site)
  * @returns the replay file object (format v1) plus `race.projected` = { seed, order, ... }
  */
-export const generateProjectedRace = (pack, grid, scores, seed) => {
+export const generateProjectedRace = (pack, grid, scores, seed, finishOrder = null) => {
   if (!pack?.pit) throw new Error("This circuit pack has no pit lane path");
   const rnd = mulberry32(seed);
   const tr = buildTrack(pack), V = tr.V, K = pack.laps, L = tr.L, Z = tr.zones.length;
@@ -210,9 +219,14 @@ export const generateProjectedRace = (pack, grid, scores, seed) => {
   const lapRef = pack.lap_s * (1 + 0.008 * normal(rnd));
   const loss0 = Math.min(30, Math.max(12, pack.pit_loss_s ?? 21));
 
-  // 1. finishing order drawn from the model's scores
+  // 1. finishing order: the model's table order when given, otherwise drawn from the model's scores
   const codes = racers.map((r) => r.code);
-  const order = rankAnchoredOrder(codes, scores, rnd);                 // order[p] = racer index finishing in place p+1
+  const drawn = rankAnchoredOrder(codes, scores, rnd);                 // always drawn, so the rest of the random stream is the same either way
+  let order = drawn;                                                   // order[p] = racer index finishing in place p+1
+  if (finishOrder) {
+    order = finishOrder.filter((c) => codes.includes(c)).map((c) => codes.indexOf(c));
+    if (order.length !== N || new Set(order).size !== N) throw new Error("The finishing order must list every simulated driver once");
+  }
   const place = new Array(N); order.forEach((c, p) => { place[c] = p; });
 
   // 2. finishing gaps: who is lapped, and the target time of each car's last crossing

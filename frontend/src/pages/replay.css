@@ -37,6 +37,13 @@
 .rp-legend i { display: inline-block; width: 12px; height: 8px; border-radius: 2px; margin-left: 0.6rem; }
 .rp-legend i.SC { background: #ffb020; } .rp-legend i.VSC { background: #f5d033; } .rp-legend i.RED { background: #e10600; } .rp-legend i.tick { width: 2px; height: 8px; background: #ececec; }
 .rp-board { padding: 0.8rem 0.9rem 0.9rem; }
+.rp-board-h { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.55rem; flex-wrap: wrap; }
+.rp-board .rp-board-h h2 { margin: 0; }
+.rp-mode { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.rp-mode-btn { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; min-height: 32px; min-width: 44px; padding: 0 0.7rem; background: transparent; color: var(--hm-muted); border: 0; cursor: pointer; }
+.rp-mode-btn + .rp-mode-btn { border-left: 1px solid var(--border); }
+.rp-mode-btn[aria-pressed="true"] { background: rgba(0, 210, 190, 0.16); color: var(--ink); }
+.rp-mode-btn:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
 .rp-board h2 { font-family: var(--display); font-size: 0.98rem; font-weight: 700; margin-bottom: 0.55rem; }
 .rp-board h2 small { font-family: var(--mono); font-size: 0.64rem; font-weight: 400; color: var(--hm-muted); letter-spacing: 0.08em; margin-left: 0.4rem; }
 .rp-board ol { list-style: none; }
@@ -67,20 +74,50 @@
 .rp-board li.nodata { opacity: 0.75; }
 .rp-board li.nodata em { color: #ffb020; font-weight: 700; font-size: 0.66rem; letter-spacing: 0.04em; }
 
-/* projected race: the always-visible illustration notice, seed row and method note */
+/* projected race: the always-visible illustration notice, basis row and method note */
 .pr-notice { display: flex; gap: 0.8rem; align-items: flex-start; padding: 0.8rem 1rem; border: 1px solid rgba(255, 176, 32, 0.55); border-left-width: 4px; border-radius: 12px; background: rgba(255, 176, 32, 0.08); }
 .pr-notice b { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.14em; color: #ffb020; padding-top: 0.15rem; white-space: nowrap; }
 .pr-notice p { font-size: 0.95rem; line-height: 1.5; color: var(--ink); margin: 0; }
 .pr-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.2rem; margin: 0.8rem 0; font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.08em; color: var(--hm-muted); }
-.pr-seed b { color: var(--ink); font-size: 0.95rem; letter-spacing: 0.1em; margin-left: 0.3rem; font-variant-numeric: tabular-nums; }
-.pr-again { margin-left: auto; }
 .pr-how { margin-top: 0.8rem; font-size: 0.82rem; line-height: 1.6; color: var(--hm-muted); max-width: 70ch; }
 @media (max-width: 900px) {
   .pr-notice { flex-direction: column; gap: 0.3rem; }
-  .pr-again { margin-left: 0; width: 100%; }
 }
 
 /* the TIME / LAP sliders: label on the left, slider filling the rest (a later generic label rule had turned this into stacked blocks) */
 .rp .rp-range { display: grid; grid-template-columns: 3rem minmax(0, 1fr); align-items: center; gap: 0.6rem; }
 .rp .rp-range span { white-space: nowrap; }
-.pr-seed em { font-style: normal; color: var(--teal); letter-spacing: 0.08em; }
+
+/* tyre compound badge on the Order board (real replay only): a letter inside a coloured circle, never colour alone */
+.rp-board.has-tyre li { grid-template-columns: 1.4rem 4px auto 2.6rem 1.3rem minmax(0, 1fr); }
+.rp-tyre-slot { display: inline-flex; width: 1.3rem; justify-content: center; }
+.rp-tyre { display: inline-grid; place-items: center; width: 1.15rem; height: 1.15rem; border-radius: 50%; font-style: normal; font-weight: 800; font-size: 0.64rem; line-height: 1; border: 2px solid; }
+.rp-tyre.S { background: #15060a; color: #ff4d4d; border-color: #e10600; }
+.rp-tyre.M { background: #15130a; color: #ffd12e; border-color: #ffd12e; }
+.rp-tyre.H { background: #111; color: #f4f4f4; border-color: #f4f4f4; }
+.rp-tyre.I { background: #071309; color: #55d64a; border-color: #43b02a; }
+.rp-tyre.W { background: #07101c; color: #5aa0ff; border-color: #2f7de1; }
+
+/* ── Home "Race sim" band ── */
+.rs { margin: 1.1rem 0 0.4rem; }
+.rs-chip { font-family: var(--mono); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; padding: 0.3rem 0.7rem; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+.rs-chip.proj { color: #ffb020; border: 1px dashed #ffb020; background: rgba(255, 176, 32, 0.08); }
+.rs-chip.real { color: var(--teal); border-color: var(--teal); background: rgba(46, 230, 200, 0.08); }
+.rs .pr-notice { margin-bottom: 0.8rem; }
+.rs-body { min-width: 0; }
+.rs-note { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--hm-muted); padding: 0.9rem 1rem; border: 1px solid var(--hud-line); border-radius: 12px; }
+.rs-hold { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; padding: 1rem; border: 1px solid var(--hud-line); border-radius: 12px; }
+.rs .rp-credit { text-align: left; }
+.rp-compact .rp-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.rp-compact .rp-btn, .rp-compact .rp-mode-btn { min-height: 44px; }
+.rp-compact .rp-btn:disabled { opacity: 0.55; cursor: default; }
+.rp-compact .rp-speeds { margin-left: 0; }
+.rp-compact .rs-full, .rs-hold .rs-full { display: inline-flex; align-items: center; text-decoration: none; margin-left: auto; }
+.rp-compact .rp-board li { padding: 0.22rem 0; }
+@media (max-width: 900px) {
+  .rp-compact .rp-grid { grid-template-columns: minmax(0, 1fr); }
+  .rp-compact .rp-speeds { width: auto; }
+  .rp-compact .rp-speeds .rp-btn { flex: 0 0 auto; min-width: 44px; }
+  .rp-compact .rs-full { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .rs * { transition: none !important; animation: none !important; } }
