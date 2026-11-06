@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import zlib from "node:zlib";
 import {
-  decodeDelta, cubicAt, decodeReplay, findOutages, outageAt, carStateAt, officialPosition, lapAt, lapStartTime, boardAt, gapLabel, bandAt, raceClock, trackBounds, parseReplayBuffer,
+  decodeDelta, cubicAt, decodeReplay, findOutages, outageAt, carStateAt, officialPosition, lapAt, lapStartTime, boardAt, gapLabel, orderLabels, bandAt, raceClock, trackBounds, parseReplayBuffer,
 } from "./replay.js";
 
 let n = 0;
@@ -113,4 +113,21 @@ t("exactly half the racing cars missing counts as an outage", half, [{ a: 10, b:
 const retiredIgnored = findOutages([{ status: "dnf", outT: 5, holes: [[10, 20]] }, { status: null, outT: null, holes: [[10, 20]] }], 40);
 t("retired cars are not counted as racing", retiredIgnored, [{ a: 10, b: 20 }]);
 t("a hole under 4 s is not reported", findOutages([{ status: null, outT: null, holes: [[10, 12]] }], 40), []);
+// ── interval mode (gap to the car ahead)
+{
+  const R = (pos, gap, extra = {}) => ({ code: `C${pos}`, pos, gap, out: false, dsq: false, noData: false, inPit: false, ...extra });
+  const rows = [R(1, null), R(2, 3.2), R(3, 5.0), R(4, "+1 LAP"), R(5, "+1 LAP"), R(6, "+2 LAP")];
+  t("gap mode is the plain gap label", orderLabels(rows, "gap"), ["LEADER", "+3.2", "+5.0", "+1 LAP", "+1 LAP", "+2 LAP"]);
+  t("default mode is gap", orderLabels(rows), orderLabels(rows, "gap"));
+  t("interval: leader stays LEADER, others show the neighbour difference, lapped cars show -", orderLabels(rows, "int"), ["LEADER", "+3.2", "+1.8", "-", "-", "-"]);
+  t("interval of the car behind the leader is its own gap", orderLabels([R(1, null), R(2, 0.8)], "int")[1], "+0.8");
+  const withOut = [R(1, null), R(2, 4), R(3, 9, { out: true }), R(4, 12.5)];
+  t("a retired car is OUT in both modes and is skipped as the car ahead", [orderLabels(withOut, "gap")[2], orderLabels(withOut, "int")[2], orderLabels(withOut, "int")[3]], ["OUT", "OUT", "+8.5"]);
+  t("retired car in front of a lapped one: still -", orderLabels([R(1, null), R(2, 4, { out: true }), R(3, "+1 LAP")], "int")[2], "-");
+  t("pit / no data / DSQ tags win in interval mode", orderLabels([R(1, null), R(2, 3, { inPit: true }), R(3, 6, { noData: true }), R(4, 8, { dsq: true })], "int").slice(1), ["PIT", "NO DATA", "DSQ"]);
+  t("an unknown gap gives -", orderLabels([R(1, null), R(2, null), R(3, 6)], "int").slice(1), ["-", "-"]);
+  t("gaps that disagree with the order (an overtake since the lap start) give -", orderLabels([R(1, null), R(2, 9), R(3, 7)], "int")[2], "-");
+  t("first row with no car ahead: -; the next one still has a real difference", orderLabels([R(2, 5), R(3, 7)], "int"), ["-", "+2.0"]);
+  t("empty board", orderLabels([], "int"), []);
+}
 console.log(`${n} replay tests passed`);

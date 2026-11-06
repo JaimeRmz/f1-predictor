@@ -37,6 +37,13 @@
 .rp-legend i { display: inline-block; width: 12px; height: 8px; border-radius: 2px; margin-left: 0.6rem; }
 .rp-legend i.SC { background: #ffb020; } .rp-legend i.VSC { background: #f5d033; } .rp-legend i.RED { background: #e10600; } .rp-legend i.tick { width: 2px; height: 8px; background: #ececec; }
 .rp-board { padding: 0.8rem 0.9rem 0.9rem; }
+.rp-board-h { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.55rem; flex-wrap: wrap; }
+.rp-board .rp-board-h h2 { margin: 0; }
+.rp-mode { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.rp-mode-btn { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; min-height: 32px; min-width: 44px; padding: 0 0.7rem; background: transparent; color: var(--hm-muted); border: 0; cursor: pointer; }
+.rp-mode-btn + .rp-mode-btn { border-left: 1px solid var(--border); }
+.rp-mode-btn[aria-pressed="true"] { background: rgba(0, 210, 190, 0.16); color: var(--ink); }
+.rp-mode-btn:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
 .rp-board h2 { font-family: var(--display); font-size: 0.98rem; font-weight: 700; margin-bottom: 0.55rem; }
 .rp-board h2 small { font-family: var(--mono); font-size: 0.64rem; font-weight: 400; color: var(--hm-muted); letter-spacing: 0.08em; margin-left: 0.4rem; }
 .rp-board ol { list-style: none; }

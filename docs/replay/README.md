@@ -26,6 +26,13 @@ Positions are decimetres, delta-encoded, one sample per second from 90 s before 
   drawn and stops show as a PIT tag on the board; the race gets the `pit_lane_not_drawn` flag in `manifest.json`.
 - A race that fails a check (for example under 95% leader agreement with the official feed) is flagged in `manifest.json`, never hidden.
 
+## Order board: GAP / INT
+The Order panel (real Replay and Projected race) has a two-way toggle, **GAP** (default: gap to the leader) and **INT** (interval: time to the car
+directly ahead = the difference between neighbouring gaps). `orderLabels()` in `frontend/src/lib/replay.js` does the maths: the leader shows LEADER in
+both modes; OUT / DSQ / PIT / NO DATA tags win; a lapped car (text gap such as "+1 LAP"), an unknown gap, or a pair of gaps that disagree with the
+order (an overtake since the lap began) shows "-" in INT mode; a retired car is skipped when looking for "the car ahead". The choice is kept in
+`localStorage` (key `f1.orderMode`, wrapped in try/catch; without storage the board starts on GAP). Buttons carry `aria-pressed`.
+
 ## Try it locally
 ```
 python scripts/build_replay.py --race-id 1147        # Japan 2025 (needs the data/*.csv in the repo and network)

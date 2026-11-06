@@ -134,6 +134,25 @@ export const gapLabel = (row) => {
   return typeof row.gap === "number" ? `+${row.gap.toFixed(1)}` : String(row.gap);
 };
 
+/**
+ * Labels for the order board in "gap" (to the leader, as gapLabel) or "int" (interval: the time to the car directly ahead) mode.
+ * `rows` must be sorted by position (boardAt does that). The interval is the difference between neighbouring gaps. The car ahead is the
+ * nearest car in front that is still running (OUT / DSQ cars are skipped). Everything that is not a plain time keeps its tag (LEADER,
+ * OUT, DSQ, NO DATA, PIT). If either car is a lap or more down (the gap is text such as "+1 LAP"), or a gap is unknown, or the two gaps
+ * disagree (the later car looks ahead), no real time difference exists and the label is "-". Gap mode never changes anything.
+ */
+export const orderLabels = (rows, mode = "gap") => rows.map((row, i) => {
+  const base = gapLabel(row);
+  if (mode !== "int" || row.out || row.dsq || row.noData || row.inPit || row.pos === 1) return base;
+  let j = i - 1;
+  while (j >= 0 && (rows[j].out || rows[j].dsq)) j--;
+  if (j < 0) return "-";
+  const ahead = rows[j].pos === 1 ? 0 : rows[j].gap;
+  if (typeof row.gap !== "number" || typeof ahead !== "number") return "-";
+  const d = row.gap - ahead;
+  return d >= 0 ? `+${d.toFixed(1)}` : "-";
+});
+
 /** The whole-feed data outage covering time t, or null. */
 export const outageAt = (rep, t) => rep.outages.find((o) => t >= o.a && t <= o.b) || null;
 

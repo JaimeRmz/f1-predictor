@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { TeamMark } from "./TeamMark.jsx";
-import { carStateAt, boardAt, lapAt, lapStartTime, bandAt, outageAt, raceClock, trackBounds, gapLabel } from "../lib/replay.js";
+import OrderBoard from "./OrderBoard.jsx";
+import { useOrderMode } from "../lib/useOrderMode.js";
+import { carStateAt, boardAt, lapAt, lapStartTime, bandAt, outageAt, raceClock, trackBounds } from "../lib/replay.js";
 import "../pages/replay.css";
 
 const SPEEDS = [1, 4, 16, 64];
@@ -20,6 +21,7 @@ const ReplayPlayer = ({ rep, projected = false }) => {
   const ctl = useRef({ playing: false, speed: 4 });
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(4);
+  const [orderMode, setOrderMode] = useOrderMode();
   const [ui, setUi] = useState(() => snapshot(rep, rep.startT));
 
   const bounds = useRef(trackBounds(rep));
@@ -200,20 +202,7 @@ const ReplayPlayer = ({ rep, projected = false }) => {
           </div>
         </div>
 
-        <aside className="rp-board" aria-label="Order board">
-          <h2>Order <small>{projected ? "in this illustration" : "official positions"}</small></h2>
-          <ol>
-            {ui.board.map((r) => (
-              <li key={r.code} className={`${r.out ? "out" : ""}${r.inPit ? " pit" : ""}${r.noData ? " nodata" : ""}`} style={{ "--team": r.colour }}>
-                <b>{r.out ? "–" : r.pos}</b><i className="rp-bar" /><TeamMark team={r.team} size={18} /><span className="rp-code">{r.code}</span>
-                <em title="Gap to the leader, as of the start of the current lap">{gapLabel(r)}</em>
-              </li>
-            ))}
-          </ol>
-          <p className="rp-note">{projected
-            ? "Gaps update once a lap. Order and gaps come from the illustration itself, not from a timing feed."
-            : "Gaps update once a lap. Positions are the official feed; they can lag the dots by a moment. NO DATA means OpenF1 sent no position for that car just now."}</p>
-        </aside>
+        <OrderBoard rows={ui.board} mode={orderMode} onMode={setOrderMode} projected={projected} />
       </div>
     </div>
   );
