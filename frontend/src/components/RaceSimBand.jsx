@@ -5,7 +5,7 @@ import { SkeletonList } from "../shared.jsx";
 import { usePackIndex, usePack, useProjectedRace } from "../lib/useProjectedRace.js";
 import { useManifest, useReplayRace } from "../lib/useReplayData.js";
 import { DEFAULT_SEED } from "../lib/projectedRace.js";
-import { simMode, replayTargetFor, circuitRefOf, PROJECTED_NOTICE } from "../lib/raceSim.js";
+import { simMode, replayTargetFor, circuitRefOf, PROJECTED_NOTICE, RACE_OVER_NOTE, NO_REPLAY_NOTE } from "../lib/raceSim.js";
 import "../pages/replay.css";
 
 // Home "Race sim" band: the same player and generator as the Replay page, in a compact layout.
@@ -59,7 +59,7 @@ const Replay = ({ race, rows, entry, onOpenFull }) => {
   const press = () => { setArmed(true); setWantPlay(true); };
   let body;
   if (armed && data.status === "ready") body = <ReplayPlayer key="real" rep={data.rep} compact autoPlay={wantPlay} />;
-  else if (armed && data.status === "unavailable") body = <Note>Replay unavailable right now. Nothing else is affected.</Note>;
+  else if (armed && data.status === "unavailable") body = <Note>{NO_REPLAY_NOTE}</Note>;         // listed in the manifest but the file is missing or broken: same message as no entry at all
   else if (preview.rep) body = <ReplayPlayer key="grid" rep={preview.rep} projected preview compact deferPlay loading={armed && wantPlay} onPlayRequest={press} />;
   else body = (
     <div className="rs-hold">
@@ -77,14 +77,20 @@ const Completed = ({ race, rows, onOpenFull }) => {
   const manifest = useManifest();
   const { mode, entry } = simMode(race, manifest);
   if (mode === "loading") return <Frame race={race}><SkeletonList rows={3} metrics={1} /></Frame>;
-  if (mode === "no-replay") return <Frame race={race}><Note>No replay available for this race.</Note></Frame>;
+  if (mode === "no-replay") return <Frame race={race}><Note>{NO_REPLAY_NOTE}</Note></Frame>;
   if (mode === "unavailable") return <Frame race={race}><Note>Replays are not available on this deployment.</Note></Frame>;
   return <Replay race={race} rows={rows} entry={entry} onOpenFull={onOpenFull} />;
 };
 
-/** `rows`: the model rows Home already fetched for this race (predicted grid for upcoming rounds, real grid for completed ones). */
-const RaceSimBand = ({ race, rows, onOpenFull }) => (
-  race.kind === "upcoming" ? <Projected race={race} rows={rows} onOpenFull={onOpenFull} /> : <Completed race={race} rows={rows} onOpenFull={onOpenFull} />
-);
+/**
+ * `rows`: the model rows Home already fetched for this race (predicted grid for upcoming rounds, real grid for completed ones).
+ * `raceOver`: the race has finished but its results are not in the data yet (see isRaceOver): no projection, no grid, no Play button.
+ */
+const RaceSimBand = ({ race, rows, onOpenFull, raceOver = false }) => {
+  if (race.kind === "upcoming" && simMode(race, null, raceOver).mode === "race-over") {
+    return <Frame race={race}><Note>{RACE_OVER_NOTE}</Note></Frame>;
+  }
+  return race.kind === "upcoming" ? <Projected race={race} rows={rows} onOpenFull={onOpenFull} /> : <Completed race={race} rows={rows} onOpenFull={onOpenFull} />;
+};
 
 export default RaceSimBand;

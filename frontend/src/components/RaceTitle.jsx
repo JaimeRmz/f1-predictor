@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NEXT_RACE } from "../constants.js";
-import { PHASE_LABEL, titleParts, countdownTarget, countdownParts } from "../lib/homeModel.js";
+import { PHASE_LABEL, titleParts, countdownTarget, countdownParts, phaseOf } from "../lib/homeModel.js";
 import { tz, dayTime, pad } from "../lib/timeFmt.js";
 import "../pages/home.css";
 
@@ -9,7 +9,7 @@ const Countdown = ({ race }) => {
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(t); }, []);
   const tgt = countdownTarget(race, now);
   if (!tgt) {
-    return <div className="hm-count off"><div className="hm-count-cap">{race.kind === "completed" ? "RACE COMPLETED" : "SESSION TIMES NOT IN THE APP YET"}</div></div>;
+    return <div className="hm-count off"><div className="hm-count-cap">{race.kind === "completed" ? "RACE COMPLETED" : phaseOf(race) === "final-pending" ? "RACE FINISHED · RESULTS LOADING" : "SESSION TIMES NOT IN THE APP YET"}</div></div>;
   }
   const p = countdownParts(tgt.at - now);
   return (

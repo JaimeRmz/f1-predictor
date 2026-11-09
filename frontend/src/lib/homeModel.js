@@ -58,16 +58,21 @@ export const titleParts = (name) => {
   return m ? { base: m[1], suffix: m[2] } : { base: name, suffix: "" };
 };
 
-// Where a round sits relative to `now`. Only NEXT_RACE has session times in the app, so every other upcoming round
-// is "pre" without a countdown.
+// Where a round sits relative to `now`. Only NEXT_RACE has session times in the app (qualifying cutoff, countdown), but EVERY upcoming round
+// carries its race start (`raceISO`), so "race over, results not loaded yet" (start + 3 h passed while the round is still listed as upcoming)
+// works for any of them.
+export const RACE_OVER_AFTER_MS = 3 * 3600e3;
 export const phaseOf = (race, now = Date.now()) => {
   if (!race) return null;
   if (race.kind === "completed") return "final";
+  const startISO = race.raceISO || (race.raceId === NEXT_RACE.raceId ? NEXT_RACE.raceISO : null);
+  if (startISO && now >= new Date(startISO).getTime() + RACE_OVER_AFTER_MS) return "final-pending";
   if (race.raceId !== NEXT_RACE.raceId) return "pre";
-  if (now >= new Date(NEXT_RACE.raceISO).getTime() + 3 * 3600e3) return "final-pending";
   if (now >= new Date(NEXT_RACE.qualiCutoffISO).getTime()) return "post";
   return "pre";
 };
+/** Race finished (start + 3 h passed) but the round is still upcoming, i.e. its results are not in the data yet. */
+export const isRaceOver = (race, now = Date.now()) => phaseOf(race, now) === "final-pending";
 
 export const PHASE_LABEL = {
   pre: "PRE-QUALIFYING OUTLOOK",
