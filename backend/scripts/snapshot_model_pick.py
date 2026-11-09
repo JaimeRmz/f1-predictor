@@ -102,6 +102,13 @@ COMPLETED_2026 = [
     # #1 and #2), so both cutoffs (2026-10-24T21:00Z, 2026-10-31T21:00Z) passed
     # with no snapshot. --backfill would insert a hindsight pick from the real
     # grid. Their Model column stays empty -- never backfill.
+    #
+    # 1188 (Brazilian GP, round 20) is COMPLETED and DOES have a genuine pre-race
+    # snapshot (frozen 2026-11-05T19:38Z, before the 2026-11-07T18:00Z cutoff;
+    # source whatif_auto_quali, inputs_as_of_race_id 1187). Listing it here only
+    # mirrors the frontend's COMPLETED_2026; --backfill never overwrites, so the
+    # stored row stays exactly as frozen (it is reported as SKIPPED).
+    (1188, 20, "Brazilian GP"),
 ]
 COMPLETED_IDS = {rid for rid, _, _ in COMPLETED_2026}
 RACE_NAME = {rid: name for rid, _, name in COMPLETED_2026}
