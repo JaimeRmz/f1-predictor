@@ -202,6 +202,10 @@ def build_race(raw, race, n_results=None, log=print, dbg=None):
     cheq = [ep(m["date"]) for m in rcm if m.get("flag") == "CHEQUERED"]
     ends = [ep(l["date_start"]) + (l.get("lap_duration") or 0) for l in laps if l.get("date_start")]
     race_end = max(cheq) if cheq else max(ends)
+    # OpenF1 sometimes lists one extra lap for a car that started it AT the chequered flag (Brazil 2026: the winner got a "lap 72" 0.1 s before the
+    # flag, the real distance was 71). A lap that starts at or after the flag is not a racing lap, so it is dropped before laps are counted.
+    if cheq:
+        laps = [l for l in laps if not (l.get("date_start") and ep(l["date_start"]) >= race_end - 0.5)]
     W0, W1 = lights_out - 90, race_end + 45
     T = np.arange(math.ceil(W0), math.floor(W1) + 1, 1.0)
     T0 = float(T[0])

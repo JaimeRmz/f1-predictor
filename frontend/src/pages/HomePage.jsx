@@ -149,6 +149,9 @@ const LastRacePanel = ({ race, last, rows, snap }) => {
         <div><label className="green">ACTUAL TOP 3</label>{actual.length === 3 ? <Podium3 list={actual} tone="green" /> : <p className="hm-note">Finishing order not available.</p>}</div>
       </div>
       {picks && actual.length === 3 && <p className="hm-note dim">{hits} of 3 podium places named.</p>}
+      {picks && actual.length === 3 && (
+        <p className="hm-note hm-verdict">{picks[0].name === actual[0].name ? `The model's winner pick (${picks[0].name}) won.` : `The model picked ${picks[0].name} to win; ${actual[0].name} won.`}</p>
+      )}
     </Panel>
   );
 };
@@ -193,7 +196,7 @@ const HomePage = ({ onOpenReplay = null }) => {
           <div className="hm-top3">{ranked.slice(0, 3).map((r, i) => <Top3Card key={r.driverRef} r={r} i={i} />)}</div>
         </section>
       )}
-      {ranked.length > 0 && <RaceSimBand key={race.raceId} race={race} rows={cur.rows} onOpenFull={onOpenReplay} />}
+      {ranked.length > 0 && <RaceSimBand key={race.raceId} race={race} rows={cur.rows} onOpenFull={onOpenReplay} raceOver={phase === "final-pending"} />}
       <div className="hm-grid">
         <div className="hm-main">
           {ranked.length > 0 && <Forecast ranked={ranked} note={raceNote(race.raceId)} />}

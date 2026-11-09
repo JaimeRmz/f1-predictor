@@ -124,11 +124,13 @@ export const glassStyle = (tint, { glow = true } = {}) => ({
 });
 
 // ── Constants shared by Predictor + Season2026 pages ───────────
+// `raceISO` is the race start (UTC, from races.csv / Jolpica). With it the Home page can tell "race over, results not loaded yet" for ANY
+// upcoming round, not only NEXT_RACE. Hand-maintained: there is no schedule endpoint yet, so advancing a race (move it to COMPLETED_2026,
+// point NEXT_RACE at the next one) is still a manual edit after each ingest.
 export const UPCOMING_RACES_2026 = [
-  { raceId: 1188, round: 20, name: "Brazilian Grand Prix",       circuit: "São Paulo",   circuitRef: "interlagos",   date: "Nov 8"  },
-  { raceId: 1189, round: 21, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "vegas",        date: "Nov 22" },
-  { raceId: 1190, round: 22, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29" },
-  { raceId: 1191, round: 23, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina",  circuitRef: "yas_marina",   date: "Dec 6"  },
+  { raceId: 1189, round: 21, name: "Las Vegas Grand Prix",       circuit: "Las Vegas",   circuitRef: "vegas",        date: "Nov 22", raceISO: "2026-11-22T04:00:00Z" },
+  { raceId: 1190, round: 22, name: "Qatar Grand Prix",           circuit: "Lusail",      circuitRef: "losail",       date: "Nov 29", raceISO: "2026-11-29T16:00:00Z" },
+  { raceId: 1191, round: 23, name: "Abu Dhabi Grand Prix",       circuit: "Yas Marina",  circuitRef: "yas_marina",   date: "Dec 6",  raceISO: "2026-12-06T13:00:00Z" },
 ];
 export const UPCOMING_IDS = new Set(UPCOMING_RACES_2026.map(r => String(r.raceId)));
 
@@ -157,27 +159,27 @@ export const flagUrl = (circuitRef) => {
 // The current upcoming race, as the single source of truth for the countdown,
 // the What-If/Next-Race pages, and the prediction picker's lock. `qualiCutoffISO`
 // is the picker's lock time (qualifying start) and `sessions` the weekend
-// schedule; both are UTC, from Jolpica 2026 round 20 / races.csv row 1188
-// (verified against the Jolpica schedule 2026-11-02). The pages render the
+// schedule; both are UTC, from Jolpica 2026 round 21 / races.csv row 1189
+// (races.csv and the Jolpica schedule agree, checked 2026-11-09). The pages render the
 // sessions in the viewer's own time zone, so nothing here is zone-specific.
-// Brazil is a NORMAL weekend (no sprint_date in races.csv row 1188).
+// Las Vegas is a NORMAL weekend (no sprint in Jolpica or races.csv row 1189).
 // Hand-maintained until the schedule endpoint exists (Stage 0 automation work).
 export const NEXT_RACE = {
-  raceId: 1188,
-  round: 20,
-  name: "Brazilian Grand Prix",
-  circuit: "Interlagos",
-  location: "São Paulo, Brazil",
-  circuitRef: "interlagos",
-  flag: "🇧🇷",
-  raceISO: "2026-11-08T17:00:00Z",
-  qualiCutoffISO: "2026-11-07T18:00:00Z",
+  raceId: 1189,
+  round: 21,
+  name: "Las Vegas Grand Prix",
+  circuit: "Las Vegas",
+  location: "Las Vegas, United States",
+  circuitRef: "vegas",
+  flag: "🇺🇸",
+  raceISO: "2026-11-22T04:00:00Z",
+  qualiCutoffISO: "2026-11-21T04:00:00Z",
   sessions: [
-    { session: "Practice 1", iso: "2026-11-06T15:30:00Z", emoji: "🔧" },
-    { session: "Practice 2", iso: "2026-11-06T19:00:00Z", emoji: "🔧" },
-    { session: "Practice 3", iso: "2026-11-07T14:30:00Z", emoji: "🔧" },
-    { session: "Qualifying", iso: "2026-11-07T18:00:00Z", emoji: "⚡" },
-    { session: "Race",       iso: "2026-11-08T17:00:00Z", emoji: "🏁", featured: true },
+    { session: "Practice 1", iso: "2026-11-20T00:30:00Z", emoji: "🔧" },
+    { session: "Practice 2", iso: "2026-11-20T04:00:00Z", emoji: "🔧" },
+    { session: "Practice 3", iso: "2026-11-21T00:30:00Z", emoji: "🔧" },
+    { session: "Qualifying", iso: "2026-11-21T04:00:00Z", emoji: "⚡" },
+    { session: "Race",       iso: "2026-11-22T04:00:00Z", emoji: "🏁", featured: true },
   ],
 };
 
@@ -227,6 +229,9 @@ export const COMPLETED_2026 = [
   // of the Model ratio.
   { raceId: 1186, round: 18, name: "United States GP",      flag: "🇺🇸", qualiISO: "2026-10-24T21:00:00Z" },
   { raceId: 1187, round: 19, name: "Mexico City GP",        flag: "🇲🇽", qualiISO: "2026-10-31T21:00:00Z" },
+  // Brazilian GP (1188) DOES have a frozen pre-race snapshot (taken 2026-11-05T19:38Z, before the 2026-11-07T18:00Z cutoff; picks
+  // antonelli / max_verstappen / russell). Norris won; the Last race card shows pick and result side by side as saved.
+  { raceId: 1188, round: 20, name: "Brazilian GP",          flag: "🇧🇷", qualiISO: "2026-11-07T18:00:00Z" },
 ];
 
 // Roster ordered by post-Mexico City GP (round 19) championship standings.
