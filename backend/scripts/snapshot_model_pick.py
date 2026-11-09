@@ -364,6 +364,9 @@ def snapshot_one(supa, api_base, race_id, refs, names, probs, wins, rnd, name, *
         **{k: v for k, v in PROVENANCE.items() if k in PROVENANCE_KEYS and v is not None},
     }
     if dry_run:
+        print("row that WOULD be written (nothing is):")
+        for k, v in row.items():
+            print(f"  {k:<22} {v}")
         return "DRY-RUN (no write)"
 
     existing = supa.get_snapshot(race_id)
