@@ -1,0 +1,19 @@
+{
+ "a_real_grid": {
+  "podium_auc": 0.9537709948320414,
+  "winner_auc": 0.966314470889385,
+  "recall": 0.9147286821705426,
+  "precision": 0.5198237885462555,
+  "races": 43,
+  "rows": 897
+ },
+ "b_predicted_quali": {
+  "podium_auc": 0.9127068792099728,
+  "winner_auc": 0.9160024104966171,
+  "recall": 0.8837209302325582,
+  "precision": 0.4851063829787234,
+  "races": 43,
+  "rows": 892
+ },
+ "top10_grid_overlap": 0.7948717948717948
+}

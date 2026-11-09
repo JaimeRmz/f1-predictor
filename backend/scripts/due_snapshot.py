@@ -29,7 +29,9 @@ import requests
 
 import season_data
 
-JOLPICA_SEASON_URL = "https://api.jolpi.ca/ergast/f1/{season}.json?limit=100"
+# JOLPICA_BASE lets the offline tests point the scripts at a local stand-in; unset, it is the real Jolpica.
+JOLPICA_BASE = os.environ.get("JOLPICA_BASE", "https://api.jolpi.ca/ergast/f1")
+JOLPICA_SEASON_URL = JOLPICA_BASE + "/{season}.json?limit=100"
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://ykpkieabxvipkyyynypr.supabase.co")
 
 # The races to consider are DERIVED from data/races.csv + results.csv

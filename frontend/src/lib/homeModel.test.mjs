@@ -1,7 +1,8 @@
 // node src/lib/run-test.mjs   (run from frontend/; needs Vite for import.meta.env)
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { canonicalTeam } from "../teams.js";
-import { raceNote, RACE_NOTES, rowsWithShares, BACKTEST_FULL, teamIdByDriverName, normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
+import { raceNote, RACE_NOTES, rowsWithShares, BACKTEST, BACKTEST_FULL, teamIdByDriverName, normalizeShares, roundShares, pctLabel, shareLabel, titleParts, driverCode, rankRows, classifySnapshot, countdownParts, phaseOf, raceByRound, lastRaceFor } from "./homeModel.js";
 
 let n = 0;
 const t = (name, got, want) => { assert.deepEqual(got, want, name); n++; };
@@ -79,7 +80,12 @@ t("team by driver name (unknown driver)", teamIdByDriverName("Nobody Here"), nul
 const kept = rowsWithShares([{ driver_name: "A B", driverRef: "x", podium_probability: 0.2, win_probability: 0.1 }, { driver_name: "C D", driverRef: "y", podium_probability: 0.9, win_probability: 0.9 }]);
 t("rowsWithShares keeps the given order", kept.map((r) => r.code), ["B", "D"]);
 t("rowsWithShares percents total", [sumOf(kept.map((r) => r.winPct)), sumOf(kept.map((r) => r.podiumPct))], [100, 300]);
-t("backtest: model 9/43 vs points leader 12/43 before qualifying", [BACKTEST_FULL.predicted.rows[0].hits, BACKTEST_FULL.predicted.rows[1].hits, BACKTEST_FULL.races], [9, 12, 43]);
+// The figures on the site are generated, never typed: they must equal analysis/out/rolled/winner_hit_ci.json (analysis/29_emit_frontend_figures.py).
+const WH = JSON.parse(fs.readFileSync(new URL("../../../analysis/out/rolled/winner_hit_ci.json", import.meta.url), "utf8"));
+const wil = (k) => [WH[k].hits, [Number(WH[k].wilson[0].toFixed(2)), Number(WH[k].wilson[1].toFixed(2))]];
+t("backtest (before qualifying): the Model and points-leader rows equal the script's output", [[BACKTEST_FULL.predicted.rows[0].hits, BACKTEST_FULL.predicted.rows[0].ci], [BACKTEST_FULL.predicted.rows[1].hits, BACKTEST_FULL.predicted.rows[1].ci]], [wil("b_predicted_quali|all_43|model"), wil("b_predicted_quali|all_43|prior_standings")]);
+t("backtest (after qualifying) rows equal the script's output", BACKTEST_FULL.real.rows.map((r) => [r.hits, r.ci]), ["model", "prior_standings", "prior_constructor", "prior_grid"].map((m) => wil(`a_real_grid|all_43|${m}`)));
+t("BACKTEST (Home) is the same as the Model page's table, 43 races", [BACKTEST.model.hits, BACKTEST.model.ci, BACKTEST.standingsLeader.hits, BACKTEST.standingsLeader.ci, BACKTEST.races], [BACKTEST_FULL.predicted.rows[0].hits, BACKTEST_FULL.predicted.rows[0].ci, BACKTEST_FULL.predicted.rows[1].hits, BACKTEST_FULL.predicted.rows[1].ci, 43]);
 t("R20 has the Camara footnote", /Câmara.*debut.*does not score him/.test(raceNote(1188)), true);
 t("no footnote leaks into other rounds", [raceNote(1187), raceNote(1189), raceNote(1190), raceNote(1191), raceNote(undefined)], [null, null, null, null, null]);
 t("only R20 has a note", Object.keys(RACE_NOTES), ["1188"]);

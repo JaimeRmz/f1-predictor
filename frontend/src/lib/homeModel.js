@@ -7,7 +7,7 @@ import { canonicalTeam, TEAMS } from "../teams.js";
 // prior standings leader. Source: analysis/out/winner_hit_ci.json, keys b_predicted_quali|all_43|{model,prior_standings}.
 export const BACKTEST = {
   races: 43,
-  model: { hits: 9, ci: [0.11, 0.35] },
+  model: { hits: 14, ci: [0.20, 0.47] },
   standingsLeader: { hits: 12, ci: [0.17, 0.43] },
 };
 
@@ -20,10 +20,10 @@ export const BACKTEST_FULL = {
   predicted: {
     label: "Before qualifying", sub: "the model uses its own predicted grid",
     rows: [
-      { key: "model", label: "Model", hits: 9, ci: [0.11, 0.35], model: true },
+      { key: "model", label: "Model", hits: 14, ci: [0.20, 0.47], model: true },
       { key: "standings", label: "Pick the points leader", hits: 12, ci: [0.17, 0.43] },
       { key: "constructor", label: "Pick the best team's lead driver", hits: 13, ci: [0.19, 0.45] },
-      { key: "grid", label: "Pick the predicted pole sitter", hits: 8, ci: [0.10, 0.33] },
+      { key: "grid", label: "Pick the predicted pole sitter", hits: 12, ci: [0.17, 0.43] },
     ],
   },
   real: {

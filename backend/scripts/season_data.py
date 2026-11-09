@@ -64,6 +64,24 @@ def unpredicted(roster_pairs, records):
     return [ref for ref, _ in roster_pairs if ref not in got]
 
 
+def entry_list(season, window=3, min_appearances=2, race_id=None):
+    """[(driverRef, seed_grid, constructorRef)]: roster() plus the constructor each driver races for in the NEXT race.
+
+    The model's roll-forward features are built per constructor, so the team has to be stated, not inferred from a stored row at
+    prediction time. Here it is the constructor of the driver's most recent result row in `season`, unless ENTRY_CHANGES[race_id]["team"]
+    says otherwise ({driverRef: constructorRef}, for a team change that has been announced but not raced yet).
+    """
+    pairs = roster(season, window, min_appearances, race_id)
+    cons = {r["constructorId"]: r["constructorRef"] for r in _rows("constructors.csv")}
+    drv = {r["driverId"]: r["driverRef"] for r in _rows("drivers.csv")}
+    order = {r["raceId"]: r["round"] for r in season_races(season)}
+    latest = {}
+    for r in sorted((x for x in _rows("results.csv") if int(x["raceId"]) in order), key=lambda x: order[int(x["raceId"])]):
+        latest[drv[r["driverId"]]] = cons[r["constructorId"]]
+    override = ENTRY_CHANGES.get(race_id, {}).get("team", {})
+    return [(ref, grid, override.get(ref) or latest[ref]) for ref, grid in pairs if (override.get(ref) or latest.get(ref))]
+
+
 def roster(season, window=3, min_appearances=2, race_id=None):
     """[(driverRef, seed_grid)] for the next race, ordered by current standings.
 

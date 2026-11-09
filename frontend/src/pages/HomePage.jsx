@@ -108,12 +108,12 @@ const bar = (hits, ci) => (
 const ReliabilityPanel = () => {
   const m = BACKTEST.model, s = BACKTEST.standingsLeader, n = BACKTEST.races;
   return (
-    <Panel title="How reliable is this?" caption="Before qualifying, the model does not beat simply picking the points leader.">
+    <Panel title="How reliable is this?" caption="Before qualifying, the model is not shown to beat simply picking the points leader.">
       <div className="hm-rel">
         <div><label className="teal">MODEL'S WINNER PICK</label><b className="teal">{Math.round((100 * m.hits) / n)}%</b><small>{m.hits} of {n} past races</small>{bar(m.hits, m.ci)}</div>
         <div><label>POINTS LEADER PICK</label><b>{Math.round((100 * s.hits) / n)}%</b><small>{s.hits} of {n} past races</small>{bar(s.hits, s.ci)}</div>
       </div>
-      <p className="hm-note dim">Backtest on {n} races the model had not seen (2025–2026), using its pre-qualifying prediction. Thin line = 95% range; the two ranges overlap widely, so neither is clearly better.</p>
+      <p className="hm-note dim">Backtest on {n} races the model had not seen (2025–2026), using its pre-qualifying prediction. Thin line = 95% range; the two ranges overlap widely, so neither is clearly better. The forecast pipeline was corrected so forecasts include the latest race; these figures were recomputed on the same races and are not significantly different from the earlier ones.</p>
     </Panel>
   );
 };
