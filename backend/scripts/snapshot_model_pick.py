@@ -458,7 +458,8 @@ def last_completed_race_id():
     taken from this repo's results.csv: if an ingest was missed, the repo and the
     backend would be stale together and agree with each other."""
     try:
-        payload = get_json_with_retry(f"https://api.jolpi.ca/ergast/f1/{SEASON}/last/results.json", "Jolpica last results")
+        base = os.environ.get("JOLPICA_BASE", "https://api.jolpi.ca/ergast/f1")      # overridden only by the offline tests
+        payload = get_json_with_retry(f"{base}/{SEASON}/last/results.json", "Jolpica last results")
         races = payload["MRData"]["RaceTable"]["Races"]
     except (RuntimeError, KeyError, TypeError) as e:
         die(f"STALE-DATA GUARD: could not read Jolpica's last completed race ({e}), so data freshness "
