@@ -195,11 +195,21 @@ def predict_upcoming(api_base, race_id):
     if not race:
         die(f"raceId {race_id} isn't an upcoming {SEASON} race (it has result rows, or isn't in races.csv)")
     circuit = race["circuitRef"]
-    roster = season_data.roster(SEASON, race_id=race_id)
+    entries = season_data.entry_list(SEASON, race_id=race_id)
+    roster = [(ref, grid) for ref, grid, _ in entries]
     if len(roster) < 20:
         die(f"derived roster has only {len(roster)} drivers -- refusing to snapshot on a partial entry list")
-    PROVENANCE["source"] = "whatif_auto_quali"
-    body = [{"driverRef": ref, "grid": grid} for ref, grid in roster]
+    # The forecast must be built from features ENTERING this race (rolled forward from the last completed race). An API that does
+    # not say so is an older deploy that would silently use last race's state: refuse rather than write a mislabelled pick.
+    m = get_json_with_retry(f"{api_base}/meta", "API /meta")
+    entering = m.get("features_entering") or {}
+    if m.get("feature_roll") != "rolled_forward" or entering.get("raceId") != race_id:
+        die(f"ROLL-FORWARD GUARD: the API says feature_roll={m.get('feature_roll')!r}, features_entering={entering or None}, "
+            f"but this snapshot is for raceId {race_id}. The deployed backend predates the roll-forward fix or its data is not "
+            "at the race before this one. Refusing to snapshot (nothing was written).")
+    print(f"features entering: raceId {entering['raceId']} {entering.get('name')} (rolled forward from the last completed race)")
+    PROVENANCE["source"] = "whatif_auto_quali_rolled"
+    body = [{"driverRef": ref, "grid": grid, "constructorRef": cref} for ref, grid, cref in entries]
     r = requests.post(
         f"{api_base}/whatif",
         params={"circuitRef": circuit, "auto_quali": "true"},
@@ -217,7 +227,19 @@ def predict_upcoming(api_base, race_id):
     if missing:
         print(f"WARNING: /whatif returned no prediction for {missing} (no history rows in the model's data). "
               "They are left out of this pick; check the entry list.", file=sys.stderr)
+    print_forecast_table(data)
     return top3_from_records(data)
+
+
+def print_forecast_table(records):
+    """The whole field the pick was drawn from, as shares (win shares add up to 100%), with the raw scores."""
+    win_sum = sum(r.get("win_probability", 0) for r in records) or 1.0
+    pod_sum = sum(r.get("podium_probability", 0) for r in records) or 1.0
+    print(f"\n{'driver':<18}{'team':<16}{'pred grid':>9}{'win score':>11}{'win share':>10}{'podium score':>14}{'podium share':>13}")
+    for r in sorted(records, key=lambda d: d.get("podium_probability", 0), reverse=True):
+        print(f"{r['driverRef']:<18}{str(r.get('team', ''))[:15]:<16}{r.get('grid', ''):>9}{r.get('win_probability', 0):>11.4f}"
+              f"{100 * r.get('win_probability', 0) / win_sum:>9.0f}%{r.get('podium_probability', 0):>14.4f}{300 * r.get('podium_probability', 0) / pod_sum:>12.0f}%")
+    print()
 
 
 # ── Supabase (service-role) ──────────────────────────────────────
@@ -365,7 +387,7 @@ def run_single(args, supa, api_base):
         refs, names, probs, wins, podium_refs = predict_upcoming(api_base, race_id)
         race = upcoming_by_id().get(race_id, {})
         rnd, name = race.get("round", "—"), race.get("name", f"race {race_id}")
-        source = "/whatif auto-quali"
+        source = "/whatif auto-quali, features rolled forward"
     else:
         refs, names, probs, wins, podium_refs = predict_completed(api_base, race_id)
         rnd, name = RACE_ROUND[race_id], RACE_NAME[race_id]

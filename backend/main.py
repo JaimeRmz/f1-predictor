@@ -36,6 +36,9 @@ quali_driver_season_avg = {}
 quali_driver_last3_avg = {}
 quali_driver_champ_pos = {}
 quali_constructor_champ_pos = {}
+# Roll-forward inputs (see lookups.roll_forward_features): the standings tables and the race the features are entering.
+driver_standings = constructor_standings = None
+NEXT_RACE_INFO = None
 
 
 def _load():
@@ -45,6 +48,7 @@ def _load():
     global driver_last5_lookup, driver_circuit_dcpr, driver_circuit_quali_avg_lookup
     global quali_constructor_season_avg, quali_driver_season_avg, quali_driver_last3_avg
     global quali_driver_champ_pos, quali_constructor_champ_pos
+    global driver_standings, constructor_standings, NEXT_RACE_INFO
 
     t0 = time.perf_counter()
 
@@ -99,6 +103,9 @@ def _load():
         quali_driver_champ_pos = L["quali_driver_champ_pos"]
         quali_constructor_champ_pos = L["quali_constructor_champ_pos"]
         df = _df
+        driver_standings = pd.read_csv(os.path.join(DATA_DIR, "driver_standings.csv"))
+        constructor_standings = pd.read_csv(os.path.join(DATA_DIR, "constructor_standings.csv"))
+        NEXT_RACE_INFO = _next_race(pd.read_csv(os.path.join(DATA_DIR, "races.csv")), _df)
         # Identity of what answers requests, recorded with every frozen
         # snapshot (see /meta). Hashing the artifacts means "which model made
         # this pick" is a fact about the bytes, not a label someone must bump.
@@ -158,24 +165,53 @@ def require_ready():
         raise HTTPException(status_code=503, detail="Models are still loading")
 
 
-def get_quali_features_for_driver(driver_ref: str, circuit_ref: str = ""):
-    """Builds a QUALI_FEATURES-ordered feature row + that driver's most recent
-    race row (for name/team lookup), or None if the driver has no history at all."""
+def _next_race(races, data):
+    """The race the live features are ENTERING: the first race on the calendar after the newest race in the data
+    ({raceId, year, round, name}), or None when the calendar has nothing after it."""
+    last = data.sort_values(["year", "round"]).iloc[-1]
+    later = races[(races["year"] > last["year"]) | ((races["year"] == last["year"]) & (races["round"] > last["round"]))]
+    if later.empty:
+        return None
+    n = later.sort_values(["year", "round"]).iloc[0]
+    return {"raceId": int(n["raceId"]), "year": int(n["year"]), "round": int(n["round"]), "name": str(n["name"])}
+
+
+def _next_year():
+    """Season of the race being predicted. If the calendar has no later race, assume the newest season in the data."""
+    return NEXT_RACE_INFO["year"] if NEXT_RACE_INFO else int(df["year"].max())
+
+
+def rolled_for(entries):
+    """roll_forward_features for [{"driverRef", "constructorRef"}] against the live data (the state entering the next race)."""
+    from lookups import roll_forward_features
+    return roll_forward_features(df, _next_year(), entries, driver_standings, constructor_standings)
+
+
+def get_quali_features_for_driver(driver_ref: str, circuit_ref: str = "", constructor_ref: str = None, rolled: dict = None):
+    """Builds a QUALI_FEATURES-ordered feature row (rolled forward: the state entering the NEXT race) + that driver's most
+    recent race row (for name lookup), or None if the driver has no history at all.
+
+    The constructor should come from the entry list (`constructor_ref`) so a team switch counts from the first race for the new
+    team. Callers that only have a driverRef (/whatif/qualifying) get the constructor of the driver's latest row, documented
+    as the fallback for ref-only callers. `rolled` is that driver's precomputed roll_forward_features entry (batch callers)."""
     driver_data = df[df["driverRef"] == driver_ref]
     if driver_data.empty:
         return None
     latest = driver_data.sort_values(["year", "round"]).iloc[-1]
-    constructor_ref = latest["constructorRef"]
+    if rolled is None:
+        rolled = rolled_for([{"driverRef": driver_ref, "constructorRef": constructor_ref or latest["constructorRef"]}]).get(driver_ref)
+        if rolled is None:
+            return None
     feat = {
-        "constructor_season_quali_avg": quali_constructor_season_avg.get(constructor_ref, 11.0),
+        "constructor_season_quali_avg": rolled["constructor_season_quali_avg"],
         "driver_circuit_quali_avg": driver_circuit_quali_avg_lookup.get((driver_ref, circuit_ref), 11.0),
-        "driver_season_quali_avg": quali_driver_season_avg.get(driver_ref, 11.0),
-        "driver_last3_quali_avg": quali_driver_last3_avg.get(driver_ref, 11.0),
-        "driver_recent_form": latest["driver_recent_form"],
-        "driver_last5_points": driver_last5_lookup.get(driver_ref, 0),
-        "driver_dnf_rate": latest["driver_dnf_rate"],
-        "driver_championship_position": quali_driver_champ_pos.get(driver_ref, 11),
-        "constructor_championship_position": quali_constructor_champ_pos.get(constructor_ref, 6),
+        "driver_season_quali_avg": rolled["driver_season_quali_avg"],
+        "driver_last3_quali_avg": rolled["driver_last3_quali_avg"],
+        "driver_recent_form": rolled["driver_recent_form"],
+        "driver_last5_points": rolled["driver_last5_points"],
+        "driver_dnf_rate": rolled["driver_dnf_rate"],
+        "driver_championship_position": rolled["driver_championship_position"],
+        "constructor_championship_position": rolled["constructor_championship_position"],
     }
     return feat, latest
 
@@ -190,10 +226,15 @@ def meta():
         "model_version": STATE["model_version"],
         "git_commit": os.environ.get("RENDER_GIT_COMMIT"),
         "data_rows": int(len(df)),
+        # The newest race IN the data (the data horizon).
         "inputs_as_of": {
             "raceId": int(last["raceId"]), "year": int(last["year"]),
             "round": int(last["round"]), "name": str(last["name_race"]),
         },
+        # The race the /whatif features are ENTERING: rolled forward so they include inputs_as_of's result. null when the
+        # calendar has no later race. (Before this field existed /whatif used the state entering inputs_as_of's own race.)
+        "feature_roll": "rolled_forward",
+        "features_entering": NEXT_RACE_INFO,
     }
 
 
@@ -327,8 +368,11 @@ def predict_qualifying(race_id: int):
 def whatif_qualifying(driver_refs: list[str], circuitRef: str = ""):
     require_ready()
     rows, valid = [], []
+    # Ref-only callers have no entry list: each driver's constructor is the one on his latest row (the documented fallback).
+    latest_cons = df.sort_values(['year', 'round']).drop_duplicates('driverRef', keep='last').set_index('driverRef')['constructorRef'].to_dict()
+    rolled = rolled_for([{"driverRef": r, "constructorRef": latest_cons[r]} for r in driver_refs if r in latest_cons])
     for ref in driver_refs:
-        got = get_quali_features_for_driver(ref, circuitRef)
+        got = get_quali_features_for_driver(ref, circuitRef, rolled=rolled.get(ref))
         if got is None:
             continue
         feat, latest = got
@@ -506,11 +550,24 @@ def whatif_predict(drivers: list[dict], circuitRef: str = "", auto_quali: bool =
     # of trusting each driver dict's caller-supplied 'grid' (which the
     # What-If page's manual drag-and-drop UI still relies on when auto_quali
     # is left off).
+    # The constructor comes from the ENTRY LIST: an explicit constructorRef, or a team name that maps to one. An entry with
+    # neither is rejected, never filled in from the driver's latest row (that is how a team switch used to be missed).
+    from lookups import resolve_constructor_ref
+    known_refs = set(df['constructorRef'].unique())
+    entries = []
+    for d in drivers:
+        cref = resolve_constructor_ref(d.get('constructorRef') or d.get('team'), known_refs)
+        if not cref:
+            raise HTTPException(status_code=422, detail=f"No constructor for {d.get('driverRef')}: send constructorRef (or a known team name). Got "
+                                                       f"constructorRef={d.get('constructorRef')!r}, team={d.get('team')!r}.")
+        entries.append({"driverRef": d['driverRef'], "constructorRef": cref})
+    rolled = rolled_for(entries)            # state entering the NEXT race; drivers with no history are absent
+    cname = df.drop_duplicates('constructorRef', keep='last').set_index('constructorRef')['name_constructor'].to_dict()
     predicted_grid = {}
     if auto_quali:
         quali_rows, quali_refs = [], []
-        for d in drivers:
-            got = get_quali_features_for_driver(d['driverRef'], circuitRef)
+        for d, e in zip(drivers, entries):
+            got = get_quali_features_for_driver(d['driverRef'], circuitRef, e['constructorRef'], rolled=rolled.get(d['driverRef']))
             if got is None:
                 continue
             feat, _latest = got
@@ -523,15 +580,18 @@ def whatif_predict(drivers: list[dict], circuitRef: str = "", auto_quali: bool =
             predicted_grid = {ref: i + 1 for i, (ref, _) in enumerate(order)}
 
     results = []
-    for d in drivers:
-        driver_data = df[df['driverRef'] == d['driverRef']].copy()
-        if driver_data.empty:
-            continue
+    for d, e in zip(drivers, entries):
+        r = rolled.get(d['driverRef'])
+        if r is None:
+            continue                         # no history rows: the model cannot score him (the caller compares lists)
+        driver_data = df[df['driverRef'] == d['driverRef']]
         latest = driver_data.sort_values(['year', 'round']).iloc[-1].copy()
         grid_value = predicted_grid.get(d['driverRef'], d['grid']) if auto_quali else d['grid']
         latest['grid'] = grid_value
         latest['driver_circuit_podium_rate'] = driver_circuit_dcpr.get((d['driverRef'], circuitRef), 0.0)
-        latest['driver_last5_points'] = driver_last5_lookup.get(d['driverRef'], 0)
+        for k in ("driver_season_points", "constructor_season_points", "driver_recent_form", "constructor_recent_form",
+                  "driver_dnf_rate", "constructor_dnf_rate", "driver_last5_points"):
+            latest[k] = r[k]
         X = pd.DataFrame([latest[features]])[features]
         podium_prob = float(podium_model.predict_proba(X)[0][1])
         win_prob = float(winner_model.predict_proba(X)[0][1])
@@ -540,7 +600,7 @@ def whatif_predict(drivers: list[dict], circuitRef: str = "", auto_quali: bool =
         result = {
             "driver_name": latest['driver_name'],
             "driverRef": d['driverRef'],
-            "team": latest['name_constructor'],
+            "team": cname.get(e['constructorRef'], latest['name_constructor']),
             "grid": grid_value,
             "podium_probability": round(podium_prob, 4),
             "win_probability": round(win_prob, 4),
